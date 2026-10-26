@@ -1,0 +1,31 @@
+[Unit]
+Description=Ace of Angels private VPN dogfight host
+Wants=network-online.target
+# Ordering also covers Tailscale when installed and enabled for internet play.
+After=network-online.target tailscaled.service
+StartLimitIntervalSec=600
+StartLimitBurst=4
+
+[Service]
+Type=simple
+User=aoa
+Group=aoa
+WorkingDirectory=/opt/ace-of-angels
+EnvironmentFile=/etc/ace-of-angels/host.env
+StateDirectory=ace-of-angels
+StateDirectoryMode=0750
+UMask=0027
+ExecStart=/usr/bin/python3 -I -u /opt/ace-of-angels/tools/dedicated_host.py /etc/ace-of-angels/SCRTY.BIN /var/lib/ace-of-angels/host.jsonl --config /etc/ace-of-angels/rotation.json --state-file /var/lib/ace-of-angels/rotation-state.json --profile vpn-dogfight --bind-address ${AOA_BIND_ADDRESS} --max-players ${AOA_MAX_PLAYERS} --status-file /var/lib/ace-of-angels/status.json
+Restart=on-failure
+RestartSec=30
+# The controller stops its child; both unwind socket/log context managers.
+KillSignal=SIGINT
+KillMode=mixed
+TimeoutStopSec=15
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+
+[Install]
+WantedBy=multi-user.target

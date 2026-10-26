@@ -1,0 +1,303 @@
+{
+  "schema": 1,
+  "recorded_utc": "2026-10-26T18:44:04.333228+00:00",
+  "scope": "Unattended Linux host: automated real-process tests, deployed systemd service, synthetic Windows clients over LAN, deliberate stalled-child recovery, and guest reboot. No new real-client rendering acceptance.",
+  "configuration": {
+    "maps": [
+      "CTF_arena",
+      "CTF_arena_b",
+      "ast_fld_a"
+    ],
+    "kill_limit": 10,
+    "time_limit_seconds": 900,
+    "restart_warning_seconds": 30,
+    "intermission_seconds": 5,
+    "idle_recycle_seconds": 300,
+    "recycle_arena_joins": 40,
+    "recycle_station_admissions": 56,
+    "health_timeout_seconds": 30,
+    "terrain": true
+  },
+  "source_sha256": {
+    "tools/dedicated_host.py": "c68f4ef05656d1c2eb3ccd494ce287549d78e1c16e41fb1d958c59714943e1f8",
+    "tools/station_stub.py": "4fdc4c4a5736bb41b7ed9347679d12bf3999739a70fd3a777892799d57d4ab64",
+    "tools/station_runtime.py": "25407c50d53f174d8156acbdaee64f72fd7758d5de5a28956de59fa0cb896f09",
+    "tools/test_dedicated_host.py": "d6f141f67c05f6ce6a5102467e641062d75f3b97bfb715d7519b4700101948df",
+    "tools/test_internet_play.py": "a5eb1ffd6fd7833dcf55b30767dadaf27a16747cd2d1fac1c4e239eed10a68ed",
+    "deploy/linux/aoa-host.service": "93a3e7e532443c06c73dc33d802578bcc39be8fdac83c4ecb299f0bd4a400194",
+    "deploy/linux/rotation.json.example": "f6867a63f445b97f74bea1ea8aa8439c071abfa9c80ec6c329330834896f98a2"
+  },
+  "tests": {
+    "linux": {
+      "passed": 94,
+      "skipped": 11,
+      "suites": [
+        {
+          "suite": "test_network_bounds",
+          "exit_code": 0,
+          "tests": 6,
+          "skipped": 0
+        },
+        {
+          "suite": "test_relay_motion",
+          "exit_code": 0,
+          "tests": 7,
+          "skipped": 0
+        },
+        {
+          "suite": "test_relay_recovery",
+          "exit_code": 0,
+          "tests": 1,
+          "skipped": 0
+        },
+        {
+          "suite": "test_station_runtime",
+          "exit_code": 0,
+          "tests": 8,
+          "skipped": 0
+        },
+        {
+          "suite": "test_station_sessions",
+          "exit_code": 0,
+          "tests": 5,
+          "skipped": 0
+        },
+        {
+          "suite": "test_station_stub",
+          "exit_code": 0,
+          "tests": 27,
+          "skipped": 0
+        },
+        {
+          "suite": "test_guest_admission",
+          "exit_code": 0,
+          "tests": 1,
+          "skipped": 0
+        },
+        {
+          "suite": "test_combat_delivery",
+          "exit_code": 0,
+          "tests": 1,
+          "skipped": 0
+        },
+        {
+          "suite": "test_client_extensions",
+          "exit_code": 0,
+          "tests": 1,
+          "skipped": 0
+        },
+        {
+          "suite": "test_lan_dogfight",
+          "exit_code": 0,
+          "tests": 4,
+          "skipped": 0
+        },
+        {
+          "suite": "test_internet_play",
+          "exit_code": 0,
+          "tests": 8,
+          "skipped": 0,
+          "verification": "Final retest passed all 8 tests after waiting for console initialization and explicit fixture shutdown."
+        },
+        {
+          "suite": "test_powerups",
+          "exit_code": 0,
+          "tests": 7,
+          "skipped": 0
+        },
+        {
+          "suite": "test_target_ships",
+          "exit_code": 0,
+          "tests": 10,
+          "skipped": 0
+        },
+        {
+          "suite": "test_host_control",
+          "exit_code": 0,
+          "tests": 4,
+          "skipped": 3
+        },
+        {
+          "suite": "test_prepare_client",
+          "exit_code": 0,
+          "tests": 8,
+          "skipped": 8
+        },
+        {
+          "suite": "test_dedicated_host",
+          "exit_code": 0,
+          "tests": 7,
+          "skipped": 0
+        }
+      ]
+    },
+    "windows": {
+      "passed": 103,
+      "skipped": 2,
+      "suites": [
+        {
+          "suite": "test_network_bounds",
+          "exit_code": 0,
+          "tests": 6,
+          "skipped": 0
+        },
+        {
+          "suite": "test_relay_motion",
+          "exit_code": 0,
+          "tests": 7,
+          "skipped": 0
+        },
+        {
+          "suite": "test_relay_recovery",
+          "exit_code": 0,
+          "tests": 1,
+          "skipped": 0
+        },
+        {
+          "suite": "test_station_runtime",
+          "exit_code": 0,
+          "tests": 8,
+          "skipped": 1
+        },
+        {
+          "suite": "test_station_sessions",
+          "exit_code": 0,
+          "tests": 5,
+          "skipped": 0
+        },
+        {
+          "suite": "test_station_stub",
+          "exit_code": 0,
+          "tests": 27,
+          "skipped": 0
+        },
+        {
+          "suite": "test_guest_admission",
+          "exit_code": 0,
+          "tests": 1,
+          "skipped": 0
+        },
+        {
+          "suite": "test_combat_delivery",
+          "exit_code": 0,
+          "tests": 1,
+          "skipped": 0
+        },
+        {
+          "suite": "test_client_extensions",
+          "exit_code": 0,
+          "tests": 1,
+          "skipped": 0
+        },
+        {
+          "suite": "test_lan_dogfight",
+          "exit_code": 0,
+          "tests": 4,
+          "skipped": 0
+        },
+        {
+          "suite": "test_internet_play",
+          "exit_code": 0,
+          "tests": 8,
+          "skipped": 0,
+          "verification": "Final retest passed all 8 tests after waiting for console initialization and explicit fixture shutdown."
+        },
+        {
+          "suite": "test_powerups",
+          "exit_code": 0,
+          "tests": 7,
+          "skipped": 0
+        },
+        {
+          "suite": "test_target_ships",
+          "exit_code": 0,
+          "tests": 10,
+          "skipped": 0
+        },
+        {
+          "suite": "test_host_control",
+          "exit_code": 0,
+          "tests": 4,
+          "skipped": 0
+        },
+        {
+          "suite": "test_prepare_client",
+          "exit_code": 0,
+          "tests": 8,
+          "skipped": 0
+        },
+        {
+          "suite": "test_dedicated_host",
+          "exit_code": 0,
+          "tests": 7,
+          "skipped": 1
+        }
+      ]
+    }
+  },
+  "live_lan_checks": [
+    {
+      "map": "CTF_arena",
+      "confirmed_kills": 10,
+      "terrain_marker_verified": true,
+      "clients": 2,
+      "station_udp": true,
+      "listing_tcp": true,
+      "arena_udp": true,
+      "flight_entry": true,
+      "remote_player_loads": true,
+      "missile_launches_and_impacts": 3,
+      "death_and_respawn": true,
+      "scope": "Synthetic clients on Windows, actual Linux VM over LAN; no real game rendering."
+    },
+    {
+      "map": "CTF_arena_b",
+      "confirmed_kills": 1,
+      "terrain_marker_verified": true,
+      "clients": 2,
+      "station_udp": true,
+      "listing_tcp": true,
+      "arena_udp": true,
+      "flight_entry": true,
+      "remote_player_loads": true,
+      "missile_launches_and_impacts": 3,
+      "death_and_respawn": true,
+      "scope": "Synthetic clients on Windows, actual Linux VM over LAN; no real game rendering."
+    }
+  ],
+  "production_transition": {
+    "trigger": "10 kills by one pilot",
+    "from_map": "CTF_arena",
+    "to_map": "CTF_arena_b",
+    "warning_seconds": 30,
+    "intermission_seconds": 5,
+    "controller_pid_unchanged": true,
+    "systemd_restart_count_during_transition": 0,
+    "admission_counters_reset": true,
+    "native_map_marker_and_spawn_verified": true
+  },
+  "watchdog": {
+    "method": "SIGSTOP only the verified empty game child",
+    "detection_seconds": 30,
+    "forced_stop_timeout_seconds": 10,
+    "systemd_retry_seconds": 30,
+    "recovered_automatically": true,
+    "retained_map": "CTF_arena_b",
+    "windows_combat_check_after_recovery_passed": true
+  },
+  "guest_reboot": {
+    "before_boot_id": "d854c6a9-c438-40f1-9589-833bf5612637",
+    "after_boot_id": "25c91bc0-9756-42bc-bc92-e1a7988fc347",
+    "service_enabled_and_running": true,
+    "saved_map_restored": "CTF_arena_b",
+    "sessions_completed": 1,
+    "admission_counters_reset": true
+  },
+  "remaining_acceptance": [
+    "Real clients must quit/relaunch and rejoin between maps; seamless transitions are not implemented.",
+    "Timed transition tested with an accelerated timer; deployed configuration verified as 900 seconds.",
+    "Native map marker and spawn verified synthetically; visual terrain/rejoin on both real clients remains to be checked.",
+    "Internet/VPN path remains untested.",
+    "DHCP reservation and durable player state remain separate work."
+  ]
+}

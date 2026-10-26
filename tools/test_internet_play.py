@@ -298,7 +298,7 @@ class LiveVpnSessionTests(unittest.TestCase):
         self.addCleanup(directory.cleanup)
         status_path = Path(directory.name) / "status.json"
         args = parse_args(["key", "log", "--profile", "vpn-dogfight", "--bind-address", VPN_ADDRESS,
-                           "--port", "0", "--arena-port", "0", "--tcp", "0", "--seconds", "45",
+                           "--port", "0", "--arena-port", "0", "--tcp", "0", "--seconds", "90",
                            "--kill-limit", "1", "--time-limit", "0", "--console", "--status-file", str(status_path),
                            "--impair-rtt-ms", "60", "--impair-jitter-ms", "20", "--impair-loss", "3",
                            "--impair-duplicate", "1", "--impair-seed", "7"])
@@ -308,6 +308,7 @@ class LiveVpnSessionTests(unittest.TestCase):
         read_end, write_end = os.pipe()
         console_in = os.fdopen(read_end, "r")
         console_out = os.fdopen(write_end, "w")
+        self.addCleanup(console_in.close)
         self.addCleanup(console_out.close)
 
         def fixture_bind(sock, endpoint):
@@ -329,9 +330,13 @@ class LiveVpnSessionTests(unittest.TestCase):
             worker = threading.Thread(target=server, daemon=True)
             worker.start()
             deadline = time.monotonic() + 3
-            while len(bindings) < 3 and time.monotonic() < deadline:
+            # TCP binds before run() constructs Console(sys.stdin). Keep the
+            # patched pipe installed until the first status confirms the full
+            # loop is initialized, or Linux can read the original stdin.
+            while (len(bindings) < 3 or not status_path.exists()) and time.monotonic() < deadline:
                 time.sleep(0.01)
         self.assertEqual(len(bindings), 3, failures)
+        self.assertTrue(status_path.exists(), "host initialization did not finish")
         station, arena, tcp = [("127.0.0.1", port) for _, port in bindings]
 
         def pump(duration):
@@ -439,7 +444,16 @@ class LiveVpnSessionTests(unittest.TestCase):
             self.assertFalse(any(row.get("event") == "arena_departure" and row.get("slot") == 1 for row in logs),
                              "the active client sharing the IP must stay")
         finally:
-            worker.join(50)
+            # Stop after the assertions, not during their loss/retry sequence.
+            # The previous 45-second fixture lifetime could expire just before
+            # the final kick/despawn on a small Linux VM. Per-event deadlines
+            # above still bound every expected response.
+            try:
+                console_out.write("quit\n")
+                console_out.flush()
+            except OSError:
+                pass
+            worker.join(10)
             for client in clients:
                 client.sock.close()
         self.assertFalse(worker.is_alive())

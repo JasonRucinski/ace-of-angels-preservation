@@ -40,6 +40,7 @@ import json
 import hashlib
 import errno
 import math
+import os
 import queue
 import secrets
 import select
@@ -63,6 +64,7 @@ import vessel_combat
 from station_runtime import DatagramBudget, EventLog, StationTCPServer, parse_args
 
 NUL = bytes(1)
+SESSION_COMPLETE = 75  # Dedicated controller advances the rotation only on this clean exit.
 # Player relation index (the client stores index + 1 at player +0x1CC:
 # 1 Friendly, 2 Unfriendly, 3 Neutral, 4 Hostile, 5 Allied; the "Set target
 # to ..." commands at 0x442376 onwards use these values).
@@ -1100,7 +1102,11 @@ def main():
         raise ValueError("SCRTY.BIN must contain exactly 256 bytes")
     try:
         with EventLog(args.log, args.raw_capture, args.log_max_bytes, args.log_backups) as log, ExitStack() as resources:
-            run(args, key, log, resources)
+            return run(args, key, log, resources)
+    except KeyboardInterrupt:
+        # systemd uses SIGINT, like a foreground Ctrl+C, so the context
+        # managers close sockets and drain logs before a successful exit.
+        print("Host stopped", flush=True)
     except OSError as error:
         raise SystemExit(f"Host I/O failed: {error}. Check that {args.bind_address} belongs to this PC and the ports are free.") from error
 
@@ -1201,6 +1207,26 @@ def run(args, key, log, resources):
     console = host_ops.Console(sys.stdin) if args.console else None
     REJOIN_SILENCE = 5.0
     overflowed = set()  # peers whose reliable queue overflowed, departed next pass
+    restart_reason, restart_due = None, None
+    restart_notices = set()
+    idle_since = started
+
+    def announce_restart(now):
+        remaining = max(0, math.ceil(restart_due - now))
+        text = f"Next map {args.next_map} in {remaining}s. Quit and relaunch to rejoin."
+        for peer in list(ping_due):
+            deliver(peer, arena_message(text))
+
+    def schedule_restart(reason, now):
+        nonlocal restart_reason, restart_due
+        if restart_due is not None:
+            return
+        restart_reason, restart_due = reason, now + args.restart_warning
+        log({"t": round(time.time(), 3), "event": "session_restart_scheduled", "reason": reason,
+             "map": args.map, "next_map": args.next_map, "restart_in_s": args.restart_warning})
+        print(f"Session ending ({reason}); next map {args.next_map} in {args.restart_warning:g}s", flush=True)
+        refresh_server_list()
+        announce_restart(now)
 
     def player_stats(addr):
         """(kills, deaths, rating, score): server counts, client-reported rest."""
@@ -1246,10 +1272,17 @@ def run(args, key, log, resources):
 
     def end_match(reason, now):
         """Announce the result, reset the scoreboard and start the next match."""
+        if restart_due is not None:
+            return
         loaded = {arena_players[peer]: peer for peer in ping_due if peer in arena_players}
         names = {slot: arena_pilots.get(peer) or f"LocalPilot{slot}" for slot, peer in loaded.items()}
         text = f"{match.result(deaths.kills, names)} ({reason})"
         log({"t": round(time.time(), 3), "event": "match_end", "reason": reason})
+        if args.managed_session:
+            for peer in loaded.values():
+                deliver(peer, arena_message(text))
+            schedule_restart(reason, now)
+            return  # Keep the final scoreboard until the session closes.
         deaths.kills.clear()
         deaths.deaths.clear()
         match.next(now)
@@ -1260,7 +1293,7 @@ def run(args, key, log, resources):
 
     def refresh_server_list():
         hosted_port = arena.getsockname()[1] if args.arena and reply else None
-        available = (len(arena_connections) < args.max_players and
+        available = (restart_due is None and len(arena_connections) < args.max_players and
                      len(arena_connections) + len(retired_endpoints) < 49)
         job_bodies[5] = server_list_body(len(arena_connections), hosted_port, mode, available, len(station.peers),
                                        args.advertised_address, args.map, args.backdrop)
@@ -1365,7 +1398,8 @@ def run(args, key, log, resources):
         for peer in arena_players:
             entry = meter.endpoints.get(peer, {"rx_bytes": 0, "tx_bytes": 0})
             traffic_mark[peer] = (now, entry["rx_bytes"], entry["tx_bytes"])
-        return {"schema": 1, "profile": args.profile, "mode": mode, "map": args.map, "uptime_s": round(now - started),
+        return {"schema": 1, "pid": os.getpid(), "profile": args.profile, "mode": mode, "map": args.map,
+                "uptime_s": round(now - started),
                 "match": match.number, "players": players, "max_players": args.max_players,
                 "arena_joins_used": next_player_slot - 1, "arena_joins_limit": 49,
                 "station_sessions": len(station.peers), "station_admissions_used": station.next_id - 1,
@@ -1376,7 +1410,12 @@ def run(args, key, log, resources):
                                                               "destroyed": targets.destroyed},
                 "reliable_pending": len(removals.pending), "events_expired": getattr(removals, "expired", 0),
                 "traffic": dict(meter.totals(), dropped_in=meter.dropped_in, dropped_out=meter.dropped_out),
-                "impairment": impair_out.describe() if impair_out.active else None}
+                "impairment": impair_out.describe() if impair_out.active else None,
+                "lifecycle": {"managed": args.managed_session, "next_map": args.next_map,
+                              "kill_limit": args.kill_limit, "time_limit_s": args.time_limit,
+                              "match_elapsed_s": None if match.started is None else round(now - match.started),
+                              "restart_reason": restart_reason,
+                              "restart_in_s": None if restart_due is None else max(0, math.ceil(restart_due - now))}}
 
     def remove_by_host(slot, ban):
         peer = next((peer for peer, taken in arena_players.items() if taken == slot), None)
@@ -1417,6 +1456,27 @@ def run(args, key, log, resources):
     end = time.monotonic() + seconds if seconds else None
     while end is None or time.monotonic() < end:
         now = time.monotonic()
+        if args.managed_session:
+            if arena_connections:
+                idle_since = now
+            if next_player_slot - 1 >= args.recycle_arena_joins:
+                schedule_restart("arena admission threshold", now)
+            elif station.next_id - 1 >= args.recycle_station_admissions:
+                schedule_restart("Station admission threshold", now)
+            elif (args.idle_recycle and not arena_connections and station.next_id > 1
+                  and now - idle_since >= args.idle_recycle):
+                schedule_restart("idle session cleanup", now)
+            if restart_due is not None:
+                if now >= restart_due:
+                    log({"t": round(time.time(), 3), "event": "session_restart", "reason": restart_reason,
+                         "map": args.map, "next_map": args.next_map})
+                    if args.status_file is not None:
+                        host_ops.write_status(args.status_file, host_status(now))
+                    return SESSION_COMPLETE
+                for threshold in (10, 5):
+                    if threshold < args.restart_warning and restart_due - now <= threshold and threshold not in restart_notices:
+                        restart_notices.add(threshold)
+                        announce_restart(now)
         for sock in sockets:
             sock.flush(now)
         for peer in list(overflowed):
@@ -1616,8 +1676,13 @@ def run(args, key, log, resources):
                 now = time.monotonic()
                 if message_type == 0x0A and len(payload) == 381:
                     new_session = addr not in station.peers
+                    if new_session and restart_due is not None:
+                        receiver.sendto(aoanet.encode(*ack_connect(payload, result=4), key), addr)
+                        continue
                     identity = station.admit(addr, payload, now)
                     if identity is not None:
+                        if new_session and not arena_connections:
+                            idle_since = now
                         if new_session and args.sustained_delivery:
                             # A player whose client crashed or lost its link logs in
                             # again from a new endpoint on the same IP. Remove the
@@ -1642,6 +1707,9 @@ def run(args, key, log, resources):
                 # admission, without postponing or restarting flight. Endpoint
                 # replacement needs an explicit departure/expiry policy first.
                 first_join = addr not in arena_connections
+                if first_join and restart_due is not None:
+                    receiver.sendto(aoanet.encode(*ack_connect(payload, kind=0, result=4), key), addr)
+                    continue
                 if first_join and addr not in retired_endpoints and len(arena_connections) >= args.max_players:
                     receiver.sendto(aoanet.encode(*ack_connect(payload, kind=0, result=4), key), addr)
                     continue
@@ -1798,4 +1866,4 @@ def run(args, key, log, resources):
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

@@ -3,6 +3,7 @@ import argparse
 import ipaddress
 import json
 import math
+import os
 import queue
 import selectors
 import socket
@@ -79,6 +80,15 @@ def parse_args(argv=None):
     parser.add_argument("--spawn-spacing", type=float, default=1000.0, help="distance between relay spawns")
     parser.add_argument("--kill-limit", type=int, default=20, help="relay match ends at this many kills; 0 disables")
     parser.add_argument("--time-limit", type=float, default=600.0, help="relay match length in seconds; 0 disables")
+    parser.add_argument("--managed-session", action="store_true",
+                        help="dedicated controller: warn, drain and exit 75 after a match or admission limit")
+    parser.add_argument("--next-map", choices=online_terrain.MAP_NAMES,
+                        help="next map announced by the dedicated controller")
+    parser.add_argument("--restart-warning", type=float, default=30, help="managed restart countdown in seconds")
+    parser.add_argument("--recycle-arena-joins", type=int, default=40)
+    parser.add_argument("--recycle-station-admissions", type=int, default=56)
+    parser.add_argument("--idle-recycle", type=float, default=300,
+                        help="managed session: recycle used admissions after this long with no arena players")
     parser.add_argument("--raw-capture", action="store_true")
     parser.add_argument("--experimental-terrain", action="store_true",
                         help="native terrain for --map; requires the online-terrain-v2 (or later) client patch "
@@ -172,6 +182,14 @@ def parse_args(argv=None):
         parser.error("--kill-limit must be 0..1000 and --time-limit 0..86400 seconds")
     if not 1 <= args.max_players <= 49:
         parser.error("--max-players must be 1..49")
+    if not math.isfinite(args.restart_warning) or not 0 <= args.restart_warning <= 300:
+        parser.error("--restart-warning must be 0..300 seconds")
+    if not math.isfinite(args.idle_recycle) or not 0 <= args.idle_recycle <= 86400:
+        parser.error("--idle-recycle must be 0..86400 seconds")
+    if not 1 <= args.recycle_arena_joins <= 48 or not 1 <= args.recycle_station_admissions <= 63:
+        parser.error("recycling thresholds must be below the 49 arena / 64 Station lifetime limits")
+    if args.managed_session and not (args.experimental_relay and args.sustained_delivery and args.next_map):
+        parser.error("--managed-session requires the relay, sustained delivery and --next-map")
     if args.experimental_flight or args.experimental_relay:
         if not args.arena or not args.ack:
             parser.error("experimental flight/relay requires --arena and --ack")
@@ -213,7 +231,7 @@ class EventLog:
     Raw mode is an explicit diagnostic capture, never a production setting.
     """
     METADATA = ("t", "event", "udp_port", "tcp_port", "wire_len", "type", "crc_ok",
-                "len", "job", "status", "bytes_sent", "slot", "reason")
+                "len", "job", "status", "bytes_sent", "slot", "reason", "map", "next_map", "restart_in_s")
     MAX_RECORD = 16000
 
     def __init__(self, path, raw=False, max_bytes=1024 * 1024, backups=3, queue_size=1024):
@@ -311,6 +329,10 @@ class StationTCPServer:
         self.stop = threading.Event()
         self.listener = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
+            # Fresh Linux sessions must rebind while old TCP connections are
+            # in TIME_WAIT. Do not enable Winsock's different reuse semantics.
+            if os.name == "posix":
+                self.listener.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             self.listener.bind((bind_address, port))
             self.listener.listen(8)
             self.listener.setblocking(False)

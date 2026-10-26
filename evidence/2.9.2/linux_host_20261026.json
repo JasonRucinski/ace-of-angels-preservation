@@ -1,0 +1,174 @@
+{
+  "schema": 1,
+  "recorded_utc": "2026-10-26T17:52:47.022489+00:00",
+  "scope": "Actual Ubuntu VM on a separate LAN Proxmox machine; synthetic tests and user-reported real-client LAN flight/combat, with subsequent server-log audit. No internet/VPN path tested.",
+  "environment": {
+    "hypervisor": "Proxmox VE 8.2.4",
+    "guest": "Ubuntu Server 24.04.4 LTS",
+    "python": "3.12.3",
+    "vcpus": 1,
+    "ram_mib": 2048,
+    "disk_gib": 12,
+    "max_players": 2,
+    "profile": "vpn-dogfight",
+    "network": "Bridged private LAN, DHCP"
+  },
+  "source_sha256": {
+    "tools/station_stub.py": "6aa8b7971e3a1fc5e0c53b6b96bbb30e9ff6b88f34801b65ee644d80786bc82b",
+    "tools/test_station_runtime.py": "35c094476ad06bbae58546a68b010a6669f74f45626e1fa0b7f1e3736171cf4c",
+    "deploy/linux/aoa-host.service": "4d6c3efe34a0fa150b1a50619e2093dce1d0eae3ad6db57f9edef047cf01c4c2",
+    "deploy/linux/host.env.example": "8ad1c5c979f324438b453cdede775f4d9f5a26a2011afd10752d86ea54f5c0b8"
+  },
+  "key_sha256": "a2ed2a58a8ca138319696f2853abc2d3d3add8b0e13ed5300642ca16395e97ff",
+  "linux_tests": {
+    "command": "python3 -I -S tools/<suite>.py",
+    "passed": 87,
+    "skipped": 11,
+    "skip_reason": "3 host-control checks and 8 client-preparation checks require local game assets",
+    "suites": [
+      {
+        "suite": "test_network_bounds",
+        "exit_code": 0,
+        "tests": 6,
+        "skipped": 0
+      },
+      {
+        "suite": "test_relay_motion",
+        "exit_code": 0,
+        "tests": 7,
+        "skipped": 0
+      },
+      {
+        "suite": "test_relay_recovery",
+        "exit_code": 0,
+        "tests": 1,
+        "skipped": 0
+      },
+      {
+        "suite": "test_station_runtime",
+        "exit_code": 0,
+        "tests": 8,
+        "skipped": 0,
+        "verification": "Corrected SO_LINGER layout; all 8 tests passed on Linux rerun."
+      },
+      {
+        "suite": "test_station_sessions",
+        "exit_code": 0,
+        "tests": 5,
+        "skipped": 0
+      },
+      {
+        "suite": "test_station_stub",
+        "exit_code": 0,
+        "tests": 27,
+        "skipped": 0
+      },
+      {
+        "suite": "test_guest_admission",
+        "exit_code": 0,
+        "tests": 1,
+        "skipped": 0
+      },
+      {
+        "suite": "test_combat_delivery",
+        "exit_code": 0,
+        "tests": 1,
+        "skipped": 0
+      },
+      {
+        "suite": "test_client_extensions",
+        "exit_code": 0,
+        "tests": 1,
+        "skipped": 0
+      },
+      {
+        "suite": "test_lan_dogfight",
+        "exit_code": 0,
+        "tests": 4,
+        "skipped": 0
+      },
+      {
+        "suite": "test_internet_play",
+        "exit_code": 0,
+        "tests": 8,
+        "skipped": 0
+      },
+      {
+        "suite": "test_powerups",
+        "exit_code": 0,
+        "tests": 7,
+        "skipped": 0
+      },
+      {
+        "suite": "test_target_ships",
+        "exit_code": 0,
+        "tests": 10,
+        "skipped": 0
+      },
+      {
+        "suite": "test_host_control",
+        "exit_code": 0,
+        "tests": 4,
+        "skipped": 3
+      },
+      {
+        "suite": "test_prepare_client",
+        "exit_code": 0,
+        "tests": 8,
+        "skipped": 8
+      }
+    ]
+  },
+  "windows_tests": {
+    "command": "python -I -S tools/<suite>.py",
+    "passed": 86,
+    "skipped": 12,
+    "notes": "Same 15 suites; extra skip is the POSIX SIGINT test. Runtime suite rerun passed after SO_LINGER portability fix."
+  },
+  "service": {
+    "unit_verified": true,
+    "unprivileged_user": "aoa",
+    "enabled_at_guest_boot": true,
+    "vm_onboot_enabled": true,
+    "ssh_disconnect_survived": true,
+    "clean_restart_log_flushed": true,
+    "forced_crash_restarted": true,
+    "crash_restart_seconds": 30,
+    "guest_reboot_autostart_verified": true,
+    "dhcp_address_retained_at_reboot": true,
+    "fresh_status_after_reboot": true,
+    "empty_admissions_after_final_restart": true
+  },
+  "lan_smoke_before_and_after_reboot": {
+    "clients": 2,
+    "station_udp": true,
+    "listing_tcp": true,
+    "arena_udp": true,
+    "flight_entry": true,
+    "remote_player_loads": true,
+    "missile_launches_and_impacts": 3,
+    "death_and_respawn": true,
+    "scope": "Synthetic clients on Windows, actual Linux VM over LAN; no real game rendering."
+  },
+  "user_reported_acceptance": {
+    "date": "2026-10-26",
+    "source": "User confirmation in this conversation",
+    "report": "yes i was able to get into the arena and fly around",
+    "scope": "One real Windows client connected to the deployed Linux host over the LAN",
+    "arena_entry": true,
+    "flight": true,
+    "independently_observed_by_agent": false
+  },
+  "not_verified": [
+    "Client scoreboard display and visible respawn on both real Windows PCs",
+    "Tailscale or other internet transport",
+    "Proxmox host reboot (only guest reboot tested)",
+    "Hosted GitHub Actions run"
+  ],
+  "remaining_limits": [
+    "DHCP reservation needed before depending on a fixed bind address indefinitely",
+    "49 lifetime arena joins or 64 Station admissions per process",
+    "Pilots, scores and bans are reset by restart"
+  ],
+  "two_pc_combat_followup": "linux_two_pc_combat_20261026.json"
+}
