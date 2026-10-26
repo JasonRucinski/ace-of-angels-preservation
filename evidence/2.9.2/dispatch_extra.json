@@ -1,0 +1,2071 @@
+{
+ "file": "work/2.9.2/members/15_AOACLIENT.EXE",
+ "switch_insn": "0x430565",
+ "base": 10,
+ "max_index": 171,
+ "index_table": "0x4311f0",
+ "jump_table": "0x4310b4",
+ "default": "0x43107b",
+ "distinct_targets": 79,
+ "cases": [
+  {
+   "type": 10,
+   "type_hex": "0x0a",
+   "target": "0x430dda",
+   "is_default": false,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "connect request from [%s]?!"
+   ]
+  },
+  {
+   "type": 11,
+   "type_hex": "0x0b",
+   "target": "0x43056c",
+   "is_default": false,
+   "calls": [
+    "0x431630"
+   ],
+   "strings": []
+  },
+  {
+   "type": 12,
+   "type_hex": "0x0c",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 13,
+   "type_hex": "0x0d",
+   "target": "0x430e24",
+   "is_default": false,
+   "calls": [
+    "0x49f640"
+   ],
+   "strings": []
+  },
+  {
+   "type": 14,
+   "type_hex": "0x0e",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 15,
+   "type_hex": "0x0f",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 16,
+   "type_hex": "0x10",
+   "target": "0x430c81",
+   "is_default": false,
+   "calls": [
+    "0x432440"
+   ],
+   "strings": []
+  },
+  {
+   "type": 17,
+   "type_hex": "0x11",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 18,
+   "type_hex": "0x12",
+   "target": "0x430e7b",
+   "is_default": false,
+   "calls": [
+    "0x4332f0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 19,
+   "type_hex": "0x13",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 20,
+   "type_hex": "0x14",
+   "target": "0x430c1a",
+   "is_default": false,
+   "calls": [
+    "0x526d00"
+   ],
+   "strings": [
+    "WARNING ::ReceiveServerRequestConnectAck What am I doing here?"
+   ]
+  },
+  {
+   "type": 21,
+   "type_hex": "0x15",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 22,
+   "type_hex": "0x16",
+   "target": "0x430c51",
+   "is_default": false,
+   "calls": [
+    "0x526d00"
+   ],
+   "strings": [
+    "PANIC- CClientComm::ReceiveHTTPResourceList"
+   ]
+  },
+  {
+   "type": 23,
+   "type_hex": "0x17",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 24,
+   "type_hex": "0x18",
+   "target": "0x430c69",
+   "is_default": false,
+   "calls": [
+    "0x526d00"
+   ],
+   "strings": [
+    "PANIC- CClientComm::ReceiveHTTPStartTransfer"
+   ]
+  },
+  {
+   "type": 25,
+   "type_hex": "0x19",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 26,
+   "type_hex": "0x1a",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 27,
+   "type_hex": "0x1b",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 28,
+   "type_hex": "0x1c",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 29,
+   "type_hex": "0x1d",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 30,
+   "type_hex": "0x1e",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 31,
+   "type_hex": "0x1f",
+   "target": "0x430dff",
+   "is_default": false,
+   "calls": [
+    "0x4342c0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 32,
+   "type_hex": "0x20",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 33,
+   "type_hex": "0x21",
+   "target": "0x430db5",
+   "is_default": false,
+   "calls": [
+    "0x4348e0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 34,
+   "type_hex": "0x22",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 35,
+   "type_hex": "0x23",
+   "target": "0x430dff",
+   "is_default": false,
+   "calls": [
+    "0x4342c0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 36,
+   "type_hex": "0x24",
+   "target": "0x430881",
+   "is_default": false,
+   "calls": [
+    "0x4be970"
+   ],
+   "strings": []
+  },
+  {
+   "type": 37,
+   "type_hex": "0x25",
+   "target": "0x430579",
+   "is_default": false,
+   "calls": [
+    "0x526d00",
+    "0x4a66a0",
+    "0x4c1400",
+    "0x529700"
+   ],
+   "strings": [
+    "CClientComm::ReceiveLoadObject Being asked to load [%s:%s]",
+    "FLIGHTLOOPWATCHDOGTIMEOUT"
+   ]
+  },
+  {
+   "type": 38,
+   "type_hex": "0x26",
+   "target": "0x4305fb",
+   "is_default": false,
+   "calls": [
+    "0x4a6320",
+    "0x4c1400",
+    "0x529700",
+    "0x47aec0"
+   ],
+   "strings": [
+    "FLIGHTLOOPWATCHDOGTIMEOUT"
+   ]
+  },
+  {
+   "type": 39,
+   "type_hex": "0x27",
+   "target": "0x4306c1",
+   "is_default": false,
+   "calls": [
+    "0x4e0660",
+    "0x4a7f90"
+   ],
+   "strings": []
+  },
+  {
+   "type": 40,
+   "type_hex": "0x28",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 41,
+   "type_hex": "0x29",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 42,
+   "type_hex": "0x2a",
+   "target": "0x430dc2",
+   "is_default": false,
+   "calls": [
+    "0x4b16b0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 43,
+   "type_hex": "0x2b",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 44,
+   "type_hex": "0x2c",
+   "target": "0x430684",
+   "is_default": false,
+   "calls": [
+    "0x526d00",
+    "0x4858b0",
+    "0x44b5c0"
+   ],
+   "strings": [
+    "CClientComm::ReceiveEnterFlightLoop Setting up flight game loop"
+   ]
+  },
+  {
+   "type": 45,
+   "type_hex": "0x2d",
+   "target": "0x430710",
+   "is_default": false,
+   "calls": [
+    "0x4a6fb0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 46,
+   "type_hex": "0x2e",
+   "target": "0x43074e",
+   "is_default": false,
+   "calls": [
+    "0x526d00",
+    "0x47aec0"
+   ],
+   "strings": [
+    "setting comm param [%d] to [%f]"
+   ]
+  },
+  {
+   "type": 47,
+   "type_hex": "0x2f",
+   "target": "0x43078e",
+   "is_default": false,
+   "calls": [
+    "0x526d00",
+    "0x4a7900"
+   ],
+   "strings": [
+    "ReceiveChangeGfx"
+   ]
+  },
+  {
+   "type": 48,
+   "type_hex": "0x30",
+   "target": "0x4307da",
+   "is_default": false,
+   "calls": [
+    "0x433fc0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 49,
+   "type_hex": "0x31",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 50,
+   "type_hex": "0x32",
+   "target": "0x4307e7",
+   "is_default": false,
+   "calls": [
+    "0x526d00"
+   ],
+   "strings": [
+    "Change Manuever received: [%d:%d] [%d:%d] [%d:%d]"
+   ]
+  },
+  {
+   "type": 51,
+   "type_hex": "0x33",
+   "target": "0x43083a",
+   "is_default": false,
+   "calls": [
+    "0x526d00",
+    "0x4a3f80"
+   ],
+   "strings": [
+    "Change Thrust received [Acc %d:Vel %d]"
+   ]
+  },
+  {
+   "type": 52,
+   "type_hex": "0x34",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 53,
+   "type_hex": "0x35",
+   "target": "0x4308ad",
+   "is_default": false,
+   "calls": [
+    "0x526d00"
+   ],
+   "strings": [
+    "Change ECM received: [%d]"
+   ]
+  },
+  {
+   "type": 54,
+   "type_hex": "0x36",
+   "target": "0x4308e9",
+   "is_default": false,
+   "calls": [
+    "0x526d00"
+   ],
+   "strings": [
+    "Change ECCM received: [%d]"
+   ]
+  },
+  {
+   "type": 55,
+   "type_hex": "0x37",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 56,
+   "type_hex": "0x38",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 57,
+   "type_hex": "0x39",
+   "target": "0x430927",
+   "is_default": false,
+   "calls": [
+    "0x431a30"
+   ],
+   "strings": []
+  },
+  {
+   "type": 58,
+   "type_hex": "0x3a",
+   "target": "0x430934",
+   "is_default": false,
+   "calls": [
+    "0x4312d0",
+    "0x526d00"
+   ],
+   "strings": [
+    "I hit [%s] (now {%.1f, %.1f, %.1f}!"
+   ]
+  },
+  {
+   "type": 59,
+   "type_hex": "0x3b",
+   "target": "0x4309bd",
+   "is_default": false,
+   "calls": [
+    "0x526d00",
+    "0x4a42e0"
+   ],
+   "strings": [
+    "Server commanding a ship reset of [%d]"
+   ]
+  },
+  {
+   "type": 60,
+   "type_hex": "0x3c",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 61,
+   "type_hex": "0x3d",
+   "target": "0x4309f6",
+   "is_default": false,
+   "calls": [
+    "0x431b10"
+   ],
+   "strings": []
+  },
+  {
+   "type": 62,
+   "type_hex": "0x3e",
+   "target": "0x430a03",
+   "is_default": false,
+   "calls": [
+    "0x526d00"
+   ],
+   "strings": [
+    "being commanded to hang up. doing it"
+   ]
+  },
+  {
+   "type": 63,
+   "type_hex": "0x3f",
+   "target": "0x430a28",
+   "is_default": false,
+   "calls": [],
+   "strings": []
+  },
+  {
+   "type": 64,
+   "type_hex": "0x40",
+   "target": "0x430a45",
+   "is_default": false,
+   "calls": [
+    "0x491aa0",
+    "0x4917f0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 65,
+   "type_hex": "0x41",
+   "target": "0x430a7a",
+   "is_default": false,
+   "calls": [
+    "0x57d3ac"
+   ],
+   "strings": []
+  },
+  {
+   "type": 66,
+   "type_hex": "0x42",
+   "target": "0x430ab8",
+   "is_default": false,
+   "calls": [
+    "0x4afc00"
+   ],
+   "strings": []
+  },
+  {
+   "type": 67,
+   "type_hex": "0x43",
+   "target": "0x430ad0",
+   "is_default": false,
+   "calls": [
+    "0x431d30"
+   ],
+   "strings": []
+  },
+  {
+   "type": 68,
+   "type_hex": "0x44",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 69,
+   "type_hex": "0x45",
+   "target": "0x430728",
+   "is_default": false,
+   "calls": [
+    "0x4a7170"
+   ],
+   "strings": []
+  },
+  {
+   "type": 70,
+   "type_hex": "0x46",
+   "target": "0x430add",
+   "is_default": false,
+   "calls": [],
+   "strings": []
+  },
+  {
+   "type": 71,
+   "type_hex": "0x47",
+   "target": "0x430af9",
+   "is_default": false,
+   "calls": [
+    "0x4a44d0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 72,
+   "type_hex": "0x48",
+   "target": "0x430da8",
+   "is_default": false,
+   "calls": [
+    "0x431ea0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 73,
+   "type_hex": "0x49",
+   "target": "0x430b11",
+   "is_default": false,
+   "calls": [
+    "0x431f20"
+   ],
+   "strings": []
+  },
+  {
+   "type": 74,
+   "type_hex": "0x4a",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 75,
+   "type_hex": "0x4b",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 76,
+   "type_hex": "0x4c",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 77,
+   "type_hex": "0x4d",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 78,
+   "type_hex": "0x4e",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 79,
+   "type_hex": "0x4f",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 80,
+   "type_hex": "0x50",
+   "target": "0x430b1e",
+   "is_default": false,
+   "calls": [
+    "0x432100"
+   ],
+   "strings": []
+  },
+  {
+   "type": 81,
+   "type_hex": "0x51",
+   "target": "0x430d9b",
+   "is_default": false,
+   "calls": [
+    "0x432270"
+   ],
+   "strings": []
+  },
+  {
+   "type": 82,
+   "type_hex": "0x52",
+   "target": "0x430e63",
+   "is_default": false,
+   "calls": [
+    "0x4adaa0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 83,
+   "type_hex": "0x53",
+   "target": "0x430b2b",
+   "is_default": false,
+   "calls": [
+    "0x4312a0",
+    "0x526d00"
+   ],
+   "strings": [
+    "WARNING ::ReceiveMovePowerupTo obj not active %d"
+   ]
+  },
+  {
+   "type": 84,
+   "type_hex": "0x54",
+   "target": "0x430ba4",
+   "is_default": false,
+   "calls": [
+    "0x431400",
+    "0x526d00"
+   ],
+   "strings": [
+    "WARNING ::ReceiveSpecMode [%ld] not active"
+   ]
+  },
+  {
+   "type": 85,
+   "type_hex": "0x55",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 86,
+   "type_hex": "0x56",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 87,
+   "type_hex": "0x57",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 88,
+   "type_hex": "0x58",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 89,
+   "type_hex": "0x59",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 90,
+   "type_hex": "0x5a",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 91,
+   "type_hex": "0x5b",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 92,
+   "type_hex": "0x5c",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 93,
+   "type_hex": "0x5d",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 94,
+   "type_hex": "0x5e",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 95,
+   "type_hex": "0x5f",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 96,
+   "type_hex": "0x60",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 97,
+   "type_hex": "0x61",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 98,
+   "type_hex": "0x62",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 99,
+   "type_hex": "0x63",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 100,
+   "type_hex": "0x64",
+   "target": "0x43100e",
+   "is_default": false,
+   "calls": [
+    "0x434c80"
+   ],
+   "strings": []
+  },
+  {
+   "type": 101,
+   "type_hex": "0x65",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 102,
+   "type_hex": "0x66",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 103,
+   "type_hex": "0x67",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 104,
+   "type_hex": "0x68",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 105,
+   "type_hex": "0x69",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 106,
+   "type_hex": "0x6a",
+   "target": "0x430c8e",
+   "is_default": false,
+   "calls": [
+    "0x446e50",
+    "0x4b0e00",
+    "0x4a0bb0"
+   ],
+   "strings": [
+    "Aye Aye, sir!"
+   ]
+  },
+  {
+   "type": 107,
+   "type_hex": "0x6b",
+   "target": "0x43101b",
+   "is_default": false,
+   "calls": [
+    "0x4bfad0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 108,
+   "type_hex": "0x6c",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 109,
+   "type_hex": "0x6d",
+   "target": "0x430cc6",
+   "is_default": false,
+   "calls": [
+    "0x526d00",
+    "0x4a8010"
+   ],
+   "strings": [
+    "CClientComm::ReceiveSetParam()"
+   ]
+  },
+  {
+   "type": 110,
+   "type_hex": "0x6e",
+   "target": "0x430cf0",
+   "is_default": false,
+   "calls": [
+    "0x526d00"
+   ],
+   "strings": [
+    "CClientComm::ReceiveUpdateStoredPlayer"
+   ]
+  },
+  {
+   "type": 111,
+   "type_hex": "0x6f",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 112,
+   "type_hex": "0x70",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 113,
+   "type_hex": "0x71",
+   "target": "0x430d76",
+   "is_default": false,
+   "calls": [
+    "0x452f70"
+   ],
+   "strings": []
+  },
+  {
+   "type": 114,
+   "type_hex": "0x72",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 115,
+   "type_hex": "0x73",
+   "target": "0x430d8e",
+   "is_default": false,
+   "calls": [
+    "0x432510"
+   ],
+   "strings": []
+  },
+  {
+   "type": 116,
+   "type_hex": "0x74",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 117,
+   "type_hex": "0x75",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 118,
+   "type_hex": "0x76",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 119,
+   "type_hex": "0x77",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 120,
+   "type_hex": "0x78",
+   "target": "0x430e0c",
+   "is_default": false,
+   "calls": [
+    "0x526d00"
+   ],
+   "strings": [
+    "PANIC- cePacketPlayersOnlineGameInfo"
+   ]
+  },
+  {
+   "type": 121,
+   "type_hex": "0x79",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 122,
+   "type_hex": "0x7a",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 123,
+   "type_hex": "0x7b",
+   "target": "0x430c32",
+   "is_default": false,
+   "calls": [
+    "0x4b0330",
+    "0x4c50d0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 124,
+   "type_hex": "0x7c",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 125,
+   "type_hex": "0x7d",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 126,
+   "type_hex": "0x7e",
+   "target": "0x430e56",
+   "is_default": false,
+   "calls": [
+    "0x433230"
+   ],
+   "strings": []
+  },
+  {
+   "type": 127,
+   "type_hex": "0x7f",
+   "target": "0x430e88",
+   "is_default": false,
+   "calls": [
+    "0x433240"
+   ],
+   "strings": []
+  },
+  {
+   "type": 128,
+   "type_hex": "0x80",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 129,
+   "type_hex": "0x81",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 130,
+   "type_hex": "0x82",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 131,
+   "type_hex": "0x83",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 132,
+   "type_hex": "0x84",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 133,
+   "type_hex": "0x85",
+   "target": "0x430e95",
+   "is_default": false,
+   "calls": [
+    "0x4332d0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 134,
+   "type_hex": "0x86",
+   "target": "0x430ea2",
+   "is_default": false,
+   "calls": [
+    "0x4ae6c0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 135,
+   "type_hex": "0x87",
+   "target": "0x430eba",
+   "is_default": false,
+   "calls": [
+    "0x433330"
+   ],
+   "strings": []
+  },
+  {
+   "type": 136,
+   "type_hex": "0x88",
+   "target": "0x430ec7",
+   "is_default": false,
+   "calls": [
+    "0x433410"
+   ],
+   "strings": []
+  },
+  {
+   "type": 137,
+   "type_hex": "0x89",
+   "target": "0x430ed4",
+   "is_default": false,
+   "calls": [
+    "0x433510"
+   ],
+   "strings": []
+  },
+  {
+   "type": 138,
+   "type_hex": "0x8a",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 139,
+   "type_hex": "0x8b",
+   "target": "0x430ee1",
+   "is_default": false,
+   "calls": [
+    "0x4335b0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 140,
+   "type_hex": "0x8c",
+   "target": "0x430eee",
+   "is_default": false,
+   "calls": [
+    "0x4335d0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 141,
+   "type_hex": "0x8d",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 142,
+   "type_hex": "0x8e",
+   "target": "0x430f13",
+   "is_default": false,
+   "calls": [
+    "0x4335f0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 143,
+   "type_hex": "0x8f",
+   "target": "0x430efb",
+   "is_default": false,
+   "calls": [
+    "0x4ae920"
+   ],
+   "strings": []
+  },
+  {
+   "type": 144,
+   "type_hex": "0x90",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 145,
+   "type_hex": "0x91",
+   "target": "0x4310ac",
+   "is_default": false,
+   "calls": [],
+   "strings": []
+  },
+  {
+   "type": 146,
+   "type_hex": "0x92",
+   "target": "0x430f20",
+   "is_default": false,
+   "calls": [
+    "0x433660"
+   ],
+   "strings": []
+  },
+  {
+   "type": 147,
+   "type_hex": "0x93",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 148,
+   "type_hex": "0x94",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 149,
+   "type_hex": "0x95",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 150,
+   "type_hex": "0x96",
+   "target": "0x430f2d",
+   "is_default": false,
+   "calls": [
+    "0x526d00"
+   ],
+   "strings": [
+    "PANIC -- CClientComm::ReceiveOCResult"
+   ]
+  },
+  {
+   "type": 151,
+   "type_hex": "0x97",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 152,
+   "type_hex": "0x98",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 153,
+   "type_hex": "0x99",
+   "target": "0x430f45",
+   "is_default": false,
+   "calls": [
+    "0x4a4550"
+   ],
+   "strings": []
+  },
+  {
+   "type": 154,
+   "type_hex": "0x9a",
+   "target": "0x430f5d",
+   "is_default": false,
+   "calls": [
+    "dword ptr [edx + 8]"
+   ],
+   "strings": []
+  },
+  {
+   "type": 155,
+   "type_hex": "0x9b",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 156,
+   "type_hex": "0x9c",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 157,
+   "type_hex": "0x9d",
+   "target": "0x430f93",
+   "is_default": false,
+   "calls": [
+    "0x4337a0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 158,
+   "type_hex": "0x9e",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 159,
+   "type_hex": "0x9f",
+   "target": "0x430fa0",
+   "is_default": false,
+   "calls": [
+    "0x4300f0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 160,
+   "type_hex": "0xa0",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 161,
+   "type_hex": "0xa1",
+   "target": "0x430fb9",
+   "is_default": false,
+   "calls": [
+    "0x433860"
+   ],
+   "strings": []
+  },
+  {
+   "type": 162,
+   "type_hex": "0xa2",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 163,
+   "type_hex": "0xa3",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 164,
+   "type_hex": "0xa4",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 165,
+   "type_hex": "0xa5",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 166,
+   "type_hex": "0xa6",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 167,
+   "type_hex": "0xa7",
+   "target": "0x4310ac",
+   "is_default": false,
+   "calls": [],
+   "strings": []
+  },
+  {
+   "type": 168,
+   "type_hex": "0xa8",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 169,
+   "type_hex": "0xa9",
+   "target": "0x430fc6",
+   "is_default": false,
+   "calls": [
+    "0x4aed80"
+   ],
+   "strings": []
+  },
+  {
+   "type": 170,
+   "type_hex": "0xaa",
+   "target": "0x430fde",
+   "is_default": false,
+   "calls": [
+    "0x4aeda0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 171,
+   "type_hex": "0xab",
+   "target": "0x430ff6",
+   "is_default": false,
+   "calls": [
+    "0x526d00"
+   ],
+   "strings": [
+    "!!!!!!!!!! CClientComm::ReceiveRefreshSquadRoster() for god's sake tell Jolly saw this!!"
+   ]
+  },
+  {
+   "type": 172,
+   "type_hex": "0xac",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 173,
+   "type_hex": "0xad",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 174,
+   "type_hex": "0xae",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 175,
+   "type_hex": "0xaf",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 176,
+   "type_hex": "0xb0",
+   "target": "0x431033",
+   "is_default": false,
+   "calls": [
+    "0x4bf970"
+   ],
+   "strings": []
+  },
+  {
+   "type": 177,
+   "type_hex": "0xb1",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 178,
+   "type_hex": "0xb2",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 179,
+   "type_hex": "0xb3",
+   "target": "0x43104b",
+   "is_default": false,
+   "calls": [
+    "0x4adff0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 180,
+   "type_hex": "0xb4",
+   "target": "0x43107b",
+   "is_default": true,
+   "calls": [
+    "0x57d800",
+    "0x526d00"
+   ],
+   "strings": [
+    "::ReceiveExtraPacket Unhandled packet type[%d] from [%s]:#%d !"
+   ]
+  },
+  {
+   "type": 181,
+   "type_hex": "0xb5",
+   "target": "0x431063",
+   "is_default": false,
+   "calls": [
+    "0x4aee60"
+   ],
+   "strings": []
+  }
+ ]
+}

@@ -1,0 +1,9 @@
+{
+  "client": "work/2.7.1/members/15_AOACLIENT.EXE",
+  "key": "work/2.7.1/members/29_SCRTY.BIN",
+  "encrypt_va": "0x60f5b0",
+  "decrypt_va": "0x60f6a0",
+  "cases": 220,
+  "mismatches": 0,
+  "examples": []
+}

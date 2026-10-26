@@ -1,0 +1,65 @@
+{
+  "date": "2026-10-25",
+  "scope": "One real 2.9.2 client on loopback against the relay with --powerup-zones; findings 9.44",
+  "client": {
+    "copy_of": "game/2.9.2 (patch version 18, 53910b7c5c2016053c60ddb99711cfaa923f7952a7002cbc5ddbe2c5de014e7b)",
+    "station_host": "127.0.0.2 (prepare_client --station, so the user's running host on 127.0.0.1 was left alone)",
+    "sha256": "0dd7ee22cbcec1270bb25f4279da88f9bccc56cee82a10209476d11c738b2513"
+  },
+  "host": {
+    "profile": "local-relay, bound to 127.0.0.2 by a test-only launcher that overrides only the address",
+    "map": "JRMAP advertised, no terrain",
+    "zones": "the 11 kind-6 records of jrmap292.trn plus one synthetic Shield +5 zone, half-size 0, at (0, 0, 150), 150 units ahead of the slot-1 spawn"
+  },
+  "spawn": {
+    "objects_created": 12,
+    "world_object_indices": "100-111",
+    "tags": "0x40000064-0x4000006F, as sent",
+    "object_type_+0x1F4": 6,
+    "powerup_flag_+0x210": 1,
+    "types_+0x211_match_zones": true,
+    "names": [
+      "Repair Power Up",
+      "Shield Power +20",
+      "Shield Power +10",
+      "Shield Power +5",
+      "Missile Power Up"
+    ],
+    "model_radius_[+0x19C]+0x164": 79.76,
+    "positions_match_sent_integers": true
+  },
+  "unpatched_2_9_2_behaviour": {
+    "collidable_+0x2FB": 0,
+    "pickups_in_10_s_overlapping_the_ship": 0,
+    "reason": "SetTerrainType 0x49A560 puts type 6 in the case that clears +0x2FB; the collision pass 0x4B2E90 skips objects with +0x2FB clear (0x4B3013). 2.7.1's SetTerrainType 0x4EE130 marks type 6 collidable."
+  },
+  "with_+0x2FB_set_in_memory": {
+    "pickups": 1,
+    "client_message": "0x44, 4 bytes, inside a reliable 0x1B envelope",
+    "relay": "logged Shield Power +5 and sent 0x53",
+    "after_5_s": "+0x2F7 back to 1 and +0x338 back to 0, but the model's enabled byte [+0x19C]+0x150 stayed 0, so it was neither drawn nor collidable; no second pickup"
+  },
+  "with_model_+0x150_also_set_in_memory": {
+    "pickups": 2,
+    "note": "second pickup at once; the reappear countdown 0x49ABD0 sets only +0x2F7, never the model byte that the hide path 0x49CD70 cleared"
+  },
+  "not_verified": [
+    "a second client seeing another player's pickup",
+    "JRMAP's own zones in play",
+    "the Missile, Shield +10/+20 and Repair effects"
+  ],
+  "patched_client_powerup_pickup_v1": {
+    "client": "scratch copy prepared at patch version 19, Station 127.0.0.2",
+    "sha256": "f2f0c457e3dab8ee3dfb4c5bd9ce2a40a684e675ac92f6e0dbf5fef58fa131da",
+    "memory_writes": "none",
+    "collidable_+0x2FB_on_all_12": true,
+    "pickups": 22,
+    "rejected": 0,
+    "pickup_interval_s": {
+      "min": 5.0,
+      "max": 5.05,
+      "mean": 5.029
+    },
+    "screen": "F5 capture (work/powerup-live/pickup-capture1.png, not in the repository) 0.3 s after a logged pickup shows the client's yellow 'Shield +5' HUD text"
+  }
+}

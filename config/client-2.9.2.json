@@ -1,0 +1,56 @@
+{
+  "schema": 1,
+  "client": "2.9.2",
+  "installer_sha256": "90c4a47e5df320171667209288edbe9899f957a397cb982bc459f17c785cbe38",
+  "scope": "Pinned static bundle dependencies for local setup; mutable audio is existence/size checked, not hash verified; not a complete map/content-download manifest",
+  "required": {
+    "ACTIVESKIN.OCX": {
+      "bytes": 352256,
+      "sha256": "2eefa74e6f1086bfd9a164e350ae0d61e9b0ceefaaa923775c80c2a2869a015d"
+    },
+    "SCRTY.BIN": {
+      "bytes": 256,
+      "sha256": "a2ed2a58a8ca138319696f2853abc2d3d3add8b0e13ed5300642ca16395e97ff"
+    },
+    "AOAOBJECTS.ODB": {
+      "bytes": 5041075,
+      "sha256": "22d0d355e758993cb34037eeec80376e5d95851d7f29b2036fd78673c3f81880"
+    },
+    "DATA.AOA": {
+      "bytes": 1690796,
+      "sha256": "0e101bbfeae864a20641e4e431a7882cc58be7664e0c158b1bec0e94c48b09e8"
+    },
+    "FX.AOA": {
+      "bytes": 14186,
+      "sha256": "eabc364dd7ec657985abc42e921d524589ffe116562387dbc57f455fd95c6663"
+    },
+    "HUD.AOA": {
+      "bytes": 1958597,
+      "sha256": "f883b115d75914aa10e169928093d7baef0ca546219bb681dfa37d74bca1d792"
+    },
+    "IMAGES.AOA": {
+      "bytes": 733160,
+      "sha256": "0999d110deefbe9f6909043d6b570ca8ae03a3755857c79e22df2be1ccc522ae"
+    },
+    "SCENARIOS.AOA": {
+      "bytes": 1489,
+      "sha256": "4215a1f5c379c8b53aad13b3cf511af5756cf15144584fc57cf79b914be659f5"
+    },
+    "SCRIPTS.AOA": {
+      "bytes": 4157,
+      "sha256": "2a9c7b1cc07e1b8c2d5e917f8ace34f0a1b4974fee757dfaa4beca76445ed35f"
+    },
+    "TEXTURES.AOA": {
+      "bytes": 17817070,
+      "sha256": "060ce8ea65dea219581d49df9d782fdec6c8b5f0b06939e8b40c9a7828a47c88"
+    }
+  },
+  "mutable": {
+    "SOUNDS.AOA": {
+      "initial_bytes": 1230636,
+      "initial_sha256": "449420494f9cca3aea3d98170ec23fbc69c9330bbf27bf8256281b0bdb5d908f",
+      "max_bytes": 33554432,
+      "reason": "Original client appends decoded WAVs on first run; see docs/assets.md"
+    }
+  }
+}

@@ -1,0 +1,163 @@
+[
+ {
+  "name": "encrypt",
+  "ref_va": "0x60f5b0",
+  "bytes": 240,
+  "masked": 4,
+  "kind": "identical_masked",
+  "other_va": "0x52af50"
+ },
+ {
+  "name": "decrypt",
+  "ref_va": "0x60f6a0",
+  "bytes": 224,
+  "masked": 4,
+  "kind": "identical_masked",
+  "other_va": "0x52b040"
+ },
+ {
+  "name": "setkey",
+  "ref_va": "0x60f580",
+  "bytes": 48,
+  "masked": 4,
+  "kind": "not_found",
+  "full_hits": 0
+ },
+ {
+  "name": "crc16",
+  "ref_va": "0x60fcd0",
+  "bytes": 80,
+  "masked": 4,
+  "kind": "identical_masked",
+  "other_va": "0x52b3a0"
+ },
+ {
+  "name": "compress",
+  "ref_va": "0x60eb60",
+  "bytes": 576,
+  "masked": 32,
+  "kind": "identical_masked",
+  "other_va": "0x52a3f0"
+ },
+ {
+  "name": "compress_pass",
+  "ref_va": "0x60f040",
+  "bytes": 400,
+  "masked": 20,
+  "kind": "identical_masked",
+  "other_va": "0x52a8d0"
+ },
+ {
+  "name": "decompress",
+  "ref_va": "0x60eda0",
+  "bytes": 304,
+  "masked": 24,
+  "kind": "identical_masked",
+  "other_va": "0x52a630"
+ },
+ {
+  "name": "decompress_pass",
+  "ref_va": "0x60f1d0",
+  "bytes": 544,
+  "masked": 56,
+  "kind": "identical_masked",
+  "other_va": "0x52aa60"
+ },
+ {
+  "name": "decompress_fixed",
+  "ref_va": "0x60eed0",
+  "bytes": 29,
+  "masked": 0,
+  "kind": "identical_masked",
+  "other_va": "0x52a760"
+ },
+ {
+  "name": "ccompress_ctor",
+  "ref_va": "0x60e820",
+  "bytes": 48,
+  "masked": 8,
+  "kind": "identical_masked",
+  "other_va": "0x52a0b0"
+ },
+ {
+  "name": "ccomm_ctor",
+  "ref_va": "0x60da50",
+  "bytes": 368,
+  "masked": 80,
+  "kind": "prefix",
+  "prefix_bytes": 48,
+  "other_va": "0x529990"
+ },
+ {
+  "name": "SendPacket",
+  "ref_va": "0x60ddb0",
+  "bytes": 320,
+  "masked": 44,
+  "kind": "not_found",
+  "full_hits": 0
+ },
+ {
+  "name": "RecvPacket",
+  "ref_va": "0x60def0",
+  "bytes": 176,
+  "masked": 16,
+  "kind": "not_found",
+  "full_hits": 0
+ },
+ {
+  "name": "SendConnectRequest",
+  "ref_va": "0x4d2400",
+  "bytes": 320,
+  "masked": 48,
+  "kind": "not_found",
+  "full_hits": 0
+ },
+ {
+  "name": "ConnectToStation",
+  "ref_va": "0x45ad80",
+  "bytes": 384,
+  "masked": 56,
+  "kind": "not_found",
+  "full_hits": 0
+ },
+ {
+  "name": "ReceiveAckConnect",
+  "ref_va": "0x45bdd0",
+  "bytes": 1024,
+  "masked": 224,
+  "kind": "not_found",
+  "full_hits": 0
+ },
+ {
+  "name": "dispatch_base",
+  "ref_va": "0x4d1830",
+  "bytes": 932,
+  "masked": 288,
+  "kind": "not_found",
+  "full_hits": 0
+ },
+ {
+  "name": "ReceiveExtraPacket",
+  "ref_va": "0x45b430",
+  "bytes": 1536,
+  "masked": 420,
+  "kind": "not_found",
+  "full_hits": 0
+ },
+ {
+  "name": "archive_header",
+  "ref_va": "0x60cab0",
+  "bytes": 416,
+  "masked": 60,
+  "kind": "identical_masked",
+  "other_va": "0x528cd0"
+ },
+ {
+  "name": "archive_entry",
+  "ref_va": "0x60ce00",
+  "bytes": 288,
+  "masked": 36,
+  "kind": "identical_masked",
+  "other_va": "0x528fc0"
+ }
+]

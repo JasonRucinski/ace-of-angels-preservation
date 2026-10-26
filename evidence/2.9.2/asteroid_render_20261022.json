@@ -1,0 +1,40 @@
+{
+  "date": "2026-10-22",
+  "scope": "Reversible asteroid mesh-distance workaround; user confirmed popping fixed on 2026-10-22",
+  "patch": "asteroid-mesh-distance-v1",
+  "site": "0x543222",
+  "cave": "0x58ba00",
+  "model_prefixes": [
+    "Astr-",
+    "Astr_"
+  ],
+  "original_surface_distance": 61000,
+  "patched_surface_distance": 900000,
+  "live_snapshot": {
+    "asteroid_instances": 63,
+    "asteroid_billboards": 63,
+    "active_asteroid_billboards": 18,
+    "mesh_resources": 9,
+    "distinct_mesh_vertex_hashes": 3
+  },
+  "automated_validation": {
+    "asteroid_render_tests": 5,
+    "object_lod_tests": 4,
+    "full_gate": "work/asteroid-render-verification/gate.json",
+    "full_gate_passed": true,
+    "full_gate_tests": 78,
+    "full_gate_emulators": 9
+  },
+  "installed": {
+    "enabled": true,
+    "sha256": "45c9f2de5267298de0ad67074fa72ddfee9577f3216863baac26db6e657079c3",
+    "undo_sha256": "b2d47f049b2097807b331451f11fa1b4258d9e097c2b6d0d1dff17483c845824",
+    "visual_acceptance": "user confirmed: that did it",
+    "scope": "Astr-* and Astr_* surface-distance cutoff 61000 to 900000; texture LOD unchanged"
+  },
+  "limitations": [
+    "Does not repair the cached-image generation algorithm",
+    "GPU correctness and frame-rate cost require manual flight",
+    "Read-only snapshots are non-atomic"
+  ]
+}

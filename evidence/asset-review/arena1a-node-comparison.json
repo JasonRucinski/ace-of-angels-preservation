@@ -1,0 +1,13 @@
+{
+  "older_versions": [
+    "2.8.0",
+    "2.8.2"
+  ],
+  "baseline_version": "2.9.2",
+  "older_nodes": 383,
+  "baseline_nodes": 303,
+  "older_only_names": 80,
+  "all_older_only_names_start_with_turret": true,
+  "positions_file": "work/asset-review/arena1a-old-only-nodes.json",
+  "limitation": "Names and positions only; node behavior and multiplayer spawning unverified."
+}

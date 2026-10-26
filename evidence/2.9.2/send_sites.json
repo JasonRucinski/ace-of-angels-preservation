@@ -1,0 +1,1381 @@
+{
+ "file": "work/2.9.2/members/15_AOACLIENT.EXE",
+ "count": 101,
+ "sites": [
+  {
+   "type": 9,
+   "type_hex": "0x09",
+   "length": 12,
+   "va": "0x486ce5",
+   "function": "0x486c20",
+   "size_matches": [
+    "SPing",
+    "SSetPosition",
+    "SPacketManueverChange",
+    "SPacketRatingConstants",
+    "SPosUpdate",
+    "SPlayersOnlineInner",
+    "SPacketSetECM"
+   ]
+  },
+  {
+   "type": 10,
+   "type_hex": "0x0a",
+   "length": 381,
+   "va": "0x486f60",
+   "function": "0x486f54",
+   "size_matches": []
+  },
+  {
+   "type": 27,
+   "type_hex": "0x1b",
+   "length": null,
+   "va": "0x485d53",
+   "function": "0x485b90",
+   "size_matches": []
+  },
+  {
+   "type": 29,
+   "type_hex": "0x1d",
+   "length": 5,
+   "va": "0x489f77",
+   "function": "0x489f30",
+   "size_matches": [
+    "SPacketGameserverConnectStatus",
+    "SPacketPlaySound",
+    "SPacketSetToTargetsTarget",
+    "SPacketIAmInvulnerable"
+   ]
+  },
+  {
+   "type": 31,
+   "type_hex": "0x1f",
+   "length": null,
+   "va": "0x4348bc",
+   "function": "0x434730",
+   "size_matches": []
+  },
+  {
+   "type": 32,
+   "type_hex": "0x20",
+   "length": null,
+   "va": "0x4300d2",
+   "function": "0x4300b4",
+   "size_matches": []
+  },
+  {
+   "type": 33,
+   "type_hex": "0x21",
+   "length": null,
+   "va": "0x487110",
+   "function": "0x486fb0",
+   "size_matches": []
+  },
+  {
+   "type": 33,
+   "type_hex": "0x21",
+   "length": 294,
+   "va": "0x488b1e",
+   "function": "0x488a80",
+   "size_matches": [
+    "SPacketMessage"
+   ]
+  },
+  {
+   "type": 33,
+   "type_hex": "0x21",
+   "length": 294,
+   "va": "0x488d2b",
+   "function": "0x488c50",
+   "size_matches": [
+    "SPacketMessage"
+   ]
+  },
+  {
+   "type": 33,
+   "type_hex": "0x21",
+   "length": 294,
+   "va": "0x488eb0",
+   "function": "0x488d50",
+   "size_matches": [
+    "SPacketMessage"
+   ]
+  },
+  {
+   "type": 37,
+   "type_hex": "0x25",
+   "length": 191,
+   "va": "0x48a76d",
+   "function": "0x48a460",
+   "size_matches": []
+  },
+  {
+   "type": 42,
+   "type_hex": "0x2a",
+   "length": 146,
+   "va": "0x48909b",
+   "function": "0x489020",
+   "size_matches": []
+  },
+  {
+   "type": 48,
+   "type_hex": "0x30",
+   "length": 21,
+   "va": "0x485a4f",
+   "function": "0x485960",
+   "size_matches": []
+  },
+  {
+   "type": 48,
+   "type_hex": "0x30",
+   "length": 21,
+   "va": "0x485b2f",
+   "function": "0x485a6b",
+   "size_matches": []
+  },
+  {
+   "type": 52,
+   "type_hex": "0x34",
+   "length": 3,
+   "va": "0x489d0b",
+   "function": "0x489cb0",
+   "size_matches": [
+    "SPacketRequestSendObject",
+    "SPacketWYSIWIGDamage"
+   ]
+  },
+  {
+   "type": 55,
+   "type_hex": "0x37",
+   "length": null,
+   "va": "0x486b49",
+   "function": "0x486ad0",
+   "size_matches": []
+  },
+  {
+   "type": 60,
+   "type_hex": "0x3c",
+   "length": 64,
+   "va": "0x485946",
+   "function": "0x4858b0",
+   "size_matches": [
+    "SChangeGfxRequest",
+    "SPacketSendFile",
+    "SPacketSquadInviteMember",
+    "SPacketSquadUnInviteMember"
+   ]
+  },
+  {
+   "type": 68,
+   "type_hex": "0x44",
+   "length": 4,
+   "va": "0x485e0c",
+   "function": "0x485db0",
+   "size_matches": [
+    "SPacketRequestHTTPTransfer",
+    "SPacketStationPing",
+    "SPacketMessageAck",
+    "SPacketThrustChange",
+    "SPacketECMChange",
+    "SPacketECCMChange",
+    "SPacketIHaveDied",
+    "SPacketHitPowerup",
+    "SPacketGetSquadRoster",
+    "SPacketGetMOTDList",
+    "SPacketDeleteMOTD",
+    "SMyROI",
+    "SPacketResourceAck",
+    "SPacketUnlockScenario",
+    "SPacketECMEffectiveness",
+    "SPacketEWEffectiveness",
+    "SPacketMissilePredictFactor",
+    "SPacketExecuteFireMissile",
+    "SProcessingScenario",
+    "SPacketChangeMood",
+    "SPacketIDestroyedObject",
+    "SPacketMOTDPreview",
+    "SPacketBeginSerialLoad"
+   ]
+  },
+  {
+   "type": 69,
+   "type_hex": "0x45",
+   "length": null,
+   "va": "0x488fa6",
+   "function": "0x488ed0",
+   "size_matches": []
+  },
+  {
+   "type": 72,
+   "type_hex": "0x48",
+   "length": 20,
+   "va": "0x4871ac",
+   "function": "0x48715c",
+   "size_matches": [
+    "SPremapNames",
+    "SPacketImpactMissile",
+    "SPacketCollisionKtx"
+   ]
+  },
+  {
+   "type": 73,
+   "type_hex": "0x49",
+   "length": 6,
+   "va": "0x4875aa",
+   "function": "0x487520",
+   "size_matches": [
+    "SPacketDisableObject",
+    "SPacketEmitSound",
+    "SPacketPlayerToScenario"
+   ]
+  },
+  {
+   "type": 77,
+   "type_hex": "0x4d",
+   "length": 1,
+   "va": "0x489db7",
+   "function": "0x489d20",
+   "size_matches": [
+    "SKilledBy",
+    "SRemovePlayer",
+    "SPacketYouDie",
+    "SPacketResetShip",
+    "SPacketRequestStats",
+    "SPacketImQuitting",
+    "SPacketKeepAlive",
+    "SPacketRenumberMOTD",
+    "SPacketStationInfoRequest"
+   ]
+  },
+  {
+   "type": 78,
+   "type_hex": "0x4e",
+   "length": 1,
+   "va": "0x48726b",
+   "function": "0x487248",
+   "size_matches": [
+    "SKilledBy",
+    "SRemovePlayer",
+    "SPacketYouDie",
+    "SPacketResetShip",
+    "SPacketRequestStats",
+    "SPacketImQuitting",
+    "SPacketKeepAlive",
+    "SPacketRenumberMOTD",
+    "SPacketStationInfoRequest"
+   ]
+  },
+  {
+   "type": 78,
+   "type_hex": "0x4e",
+   "length": 1,
+   "va": "0x4872b7",
+   "function": "0x487248",
+   "size_matches": [
+    "SKilledBy",
+    "SRemovePlayer",
+    "SPacketYouDie",
+    "SPacketResetShip",
+    "SPacketRequestStats",
+    "SPacketImQuitting",
+    "SPacketKeepAlive",
+    "SPacketRenumberMOTD",
+    "SPacketStationInfoRequest"
+   ]
+  },
+  {
+   "type": 78,
+   "type_hex": "0x4e",
+   "length": 1,
+   "va": "0x487303",
+   "function": "0x487248",
+   "size_matches": [
+    "SKilledBy",
+    "SRemovePlayer",
+    "SPacketYouDie",
+    "SPacketResetShip",
+    "SPacketRequestStats",
+    "SPacketImQuitting",
+    "SPacketKeepAlive",
+    "SPacketRenumberMOTD",
+    "SPacketStationInfoRequest"
+   ]
+  },
+  {
+   "type": 78,
+   "type_hex": "0x4e",
+   "length": 1,
+   "va": "0x48737c",
+   "function": "0x487358",
+   "size_matches": [
+    "SKilledBy",
+    "SRemovePlayer",
+    "SPacketYouDie",
+    "SPacketResetShip",
+    "SPacketRequestStats",
+    "SPacketImQuitting",
+    "SPacketKeepAlive",
+    "SPacketRenumberMOTD",
+    "SPacketStationInfoRequest"
+   ]
+  },
+  {
+   "type": 78,
+   "type_hex": "0x4e",
+   "length": 1,
+   "va": "0x4873d2",
+   "function": "0x487358",
+   "size_matches": [
+    "SKilledBy",
+    "SRemovePlayer",
+    "SPacketYouDie",
+    "SPacketResetShip",
+    "SPacketRequestStats",
+    "SPacketImQuitting",
+    "SPacketKeepAlive",
+    "SPacketRenumberMOTD",
+    "SPacketStationInfoRequest"
+   ]
+  },
+  {
+   "type": 78,
+   "type_hex": "0x4e",
+   "length": 1,
+   "va": "0x487429",
+   "function": "0x487358",
+   "size_matches": [
+    "SKilledBy",
+    "SRemovePlayer",
+    "SPacketYouDie",
+    "SPacketResetShip",
+    "SPacketRequestStats",
+    "SPacketImQuitting",
+    "SPacketKeepAlive",
+    "SPacketRenumberMOTD",
+    "SPacketStationInfoRequest"
+   ]
+  },
+  {
+   "type": 79,
+   "type_hex": "0x4f",
+   "length": 1,
+   "va": "0x485853",
+   "function": "0x4857b0",
+   "size_matches": [
+    "SKilledBy",
+    "SRemovePlayer",
+    "SPacketYouDie",
+    "SPacketResetShip",
+    "SPacketRequestStats",
+    "SPacketImQuitting",
+    "SPacketKeepAlive",
+    "SPacketRenumberMOTD",
+    "SPacketStationInfoRequest"
+   ]
+  },
+  {
+   "type": 81,
+   "type_hex": "0x51",
+   "length": 6,
+   "va": "0x48750e",
+   "function": "0x487470",
+   "size_matches": [
+    "SPacketDisableObject",
+    "SPacketEmitSound",
+    "SPacketPlayerToScenario"
+   ]
+  },
+  {
+   "type": 82,
+   "type_hex": "0x52",
+   "length": 9,
+   "va": "0x486c04",
+   "function": "0x486b60",
+   "size_matches": [
+    "SPacketHitFlag",
+    "SPacketPlayerSpecMode",
+    "SPacketRequestData",
+    "SPacketPreQualifiedLoginAck"
+   ]
+  },
+  {
+   "type": 84,
+   "type_hex": "0x54",
+   "length": 9,
+   "va": "0x489450",
+   "function": "0x489380",
+   "size_matches": [
+    "SPacketHitFlag",
+    "SPacketPlayerSpecMode",
+    "SPacketRequestData",
+    "SPacketPreQualifiedLoginAck"
+   ]
+  },
+  {
+   "type": 93,
+   "type_hex": "0x5d",
+   "length": 4,
+   "va": "0x4895d9",
+   "function": "0x4895a0",
+   "size_matches": [
+    "SPacketRequestHTTPTransfer",
+    "SPacketStationPing",
+    "SPacketMessageAck",
+    "SPacketThrustChange",
+    "SPacketECMChange",
+    "SPacketECCMChange",
+    "SPacketIHaveDied",
+    "SPacketHitPowerup",
+    "SPacketGetSquadRoster",
+    "SPacketGetMOTDList",
+    "SPacketDeleteMOTD",
+    "SMyROI",
+    "SPacketResourceAck",
+    "SPacketUnlockScenario",
+    "SPacketECMEffectiveness",
+    "SPacketEWEffectiveness",
+    "SPacketMissilePredictFactor",
+    "SPacketExecuteFireMissile",
+    "SProcessingScenario",
+    "SPacketChangeMood",
+    "SPacketIDestroyedObject",
+    "SPacketMOTDPreview",
+    "SPacketBeginSerialLoad"
+   ]
+  },
+  {
+   "type": 94,
+   "type_hex": "0x5e",
+   "length": 4,
+   "va": "0x48962b",
+   "function": "0x4895f0",
+   "size_matches": [
+    "SPacketRequestHTTPTransfer",
+    "SPacketStationPing",
+    "SPacketMessageAck",
+    "SPacketThrustChange",
+    "SPacketECMChange",
+    "SPacketECCMChange",
+    "SPacketIHaveDied",
+    "SPacketHitPowerup",
+    "SPacketGetSquadRoster",
+    "SPacketGetMOTDList",
+    "SPacketDeleteMOTD",
+    "SMyROI",
+    "SPacketResourceAck",
+    "SPacketUnlockScenario",
+    "SPacketECMEffectiveness",
+    "SPacketEWEffectiveness",
+    "SPacketMissilePredictFactor",
+    "SPacketExecuteFireMissile",
+    "SProcessingScenario",
+    "SPacketChangeMood",
+    "SPacketIDestroyedObject",
+    "SPacketMOTDPreview",
+    "SPacketBeginSerialLoad"
+   ]
+  },
+  {
+   "type": 95,
+   "type_hex": "0x5f",
+   "length": 497,
+   "va": "0x4896dd",
+   "function": "0x489640",
+   "size_matches": [
+    "SPacketAddMOTD"
+   ]
+  },
+  {
+   "type": 96,
+   "type_hex": "0x60",
+   "length": 1,
+   "va": "0x489726",
+   "function": "0x4896f0",
+   "size_matches": [
+    "SKilledBy",
+    "SRemovePlayer",
+    "SPacketYouDie",
+    "SPacketResetShip",
+    "SPacketRequestStats",
+    "SPacketImQuitting",
+    "SPacketKeepAlive",
+    "SPacketRenumberMOTD",
+    "SPacketStationInfoRequest"
+   ]
+  },
+  {
+   "type": 100,
+   "type_hex": "0x64",
+   "length": 65,
+   "va": "0x4899fa",
+   "function": "0x489970",
+   "size_matches": [
+    "SChangeGfx"
+   ]
+  },
+  {
+   "type": 110,
+   "type_hex": "0x6e",
+   "length": 352,
+   "va": "0x489e72",
+   "function": "0x489e00",
+   "size_matches": []
+  },
+  {
+   "type": 112,
+   "type_hex": "0x70",
+   "length": 236,
+   "va": "0x48926c",
+   "function": "0x4891b0",
+   "size_matches": [
+    "SPacketTurretGroupStatus"
+   ]
+  },
+  {
+   "type": 114,
+   "type_hex": "0x72",
+   "length": 5,
+   "va": "0x4892e5",
+   "function": "0x489280",
+   "size_matches": [
+    "SPacketGameserverConnectStatus",
+    "SPacketPlaySound",
+    "SPacketSetToTargetsTarget",
+    "SPacketIAmInvulnerable"
+   ]
+  },
+  {
+   "type": 116,
+   "type_hex": "0x74",
+   "length": 4,
+   "va": "0x489364",
+   "function": "0x489300",
+   "size_matches": [
+    "SPacketRequestHTTPTransfer",
+    "SPacketStationPing",
+    "SPacketMessageAck",
+    "SPacketThrustChange",
+    "SPacketECMChange",
+    "SPacketECCMChange",
+    "SPacketIHaveDied",
+    "SPacketHitPowerup",
+    "SPacketGetSquadRoster",
+    "SPacketGetMOTDList",
+    "SPacketDeleteMOTD",
+    "SMyROI",
+    "SPacketResourceAck",
+    "SPacketUnlockScenario",
+    "SPacketECMEffectiveness",
+    "SPacketEWEffectiveness",
+    "SPacketMissilePredictFactor",
+    "SPacketExecuteFireMissile",
+    "SProcessingScenario",
+    "SPacketChangeMood",
+    "SPacketIDestroyedObject",
+    "SPacketMOTDPreview",
+    "SPacketBeginSerialLoad"
+   ]
+  },
+  {
+   "type": 121,
+   "type_hex": "0x79",
+   "length": 41,
+   "va": "0x489ee2",
+   "function": "0x489e90",
+   "size_matches": [
+    "SPacketNotifyRequestDetails"
+   ]
+  },
+  {
+   "type": 122,
+   "type_hex": "0x7a",
+   "length": 466,
+   "va": "0x48769f",
+   "function": "0x487650",
+   "size_matches": [
+    "SPacketSquadCommand"
+   ]
+  },
+  {
+   "type": 122,
+   "type_hex": "0x7a",
+   "length": 466,
+   "va": "0x48776b",
+   "function": "0x487744",
+   "size_matches": [
+    "SPacketSquadCommand"
+   ]
+  },
+  {
+   "type": 122,
+   "type_hex": "0x7a",
+   "length": 466,
+   "va": "0x48782b",
+   "function": "0x487780",
+   "size_matches": [
+    "SPacketSquadCommand"
+   ]
+  },
+  {
+   "type": 122,
+   "type_hex": "0x7a",
+   "length": 466,
+   "va": "0x4878eb",
+   "function": "0x487840",
+   "size_matches": [
+    "SPacketSquadCommand"
+   ]
+  },
+  {
+   "type": 122,
+   "type_hex": "0x7a",
+   "length": 466,
+   "va": "0x4879ab",
+   "function": "0x487900",
+   "size_matches": [
+    "SPacketSquadCommand"
+   ]
+  },
+  {
+   "type": 122,
+   "type_hex": "0x7a",
+   "length": 466,
+   "va": "0x487a6b",
+   "function": "0x4879c0",
+   "size_matches": [
+    "SPacketSquadCommand"
+   ]
+  },
+  {
+   "type": 122,
+   "type_hex": "0x7a",
+   "length": 466,
+   "va": "0x487add",
+   "function": "0x487a80",
+   "size_matches": [
+    "SPacketSquadCommand"
+   ]
+  },
+  {
+   "type": 122,
+   "type_hex": "0x7a",
+   "length": 466,
+   "va": "0x487b74",
+   "function": "0x487af0",
+   "size_matches": [
+    "SPacketSquadCommand"
+   ]
+  },
+  {
+   "type": 122,
+   "type_hex": "0x7a",
+   "length": 466,
+   "va": "0x487c14",
+   "function": "0x487b90",
+   "size_matches": [
+    "SPacketSquadCommand"
+   ]
+  },
+  {
+   "type": 122,
+   "type_hex": "0x7a",
+   "length": 466,
+   "va": "0x487cdb",
+   "function": "0x487c30",
+   "size_matches": [
+    "SPacketSquadCommand"
+   ]
+  },
+  {
+   "type": 122,
+   "type_hex": "0x7a",
+   "length": 466,
+   "va": "0x487d9b",
+   "function": "0x487cf0",
+   "size_matches": [
+    "SPacketSquadCommand"
+   ]
+  },
+  {
+   "type": 122,
+   "type_hex": "0x7a",
+   "length": 466,
+   "va": "0x487e5b",
+   "function": "0x487e48",
+   "size_matches": [
+    "SPacketSquadCommand"
+   ]
+  },
+  {
+   "type": 122,
+   "type_hex": "0x7a",
+   "length": 466,
+   "va": "0x487f1b",
+   "function": "0x487e70",
+   "size_matches": [
+    "SPacketSquadCommand"
+   ]
+  },
+  {
+   "type": 122,
+   "type_hex": "0x7a",
+   "length": 466,
+   "va": "0x487fdb",
+   "function": "0x487f30",
+   "size_matches": [
+    "SPacketSquadCommand"
+   ]
+  },
+  {
+   "type": 122,
+   "type_hex": "0x7a",
+   "length": 466,
+   "va": "0x488074",
+   "function": "0x487ff0",
+   "size_matches": [
+    "SPacketSquadCommand"
+   ]
+  },
+  {
+   "type": 122,
+   "type_hex": "0x7a",
+   "length": 466,
+   "va": "0x488114",
+   "function": "0x488090",
+   "size_matches": [
+    "SPacketSquadCommand"
+   ]
+  },
+  {
+   "type": 122,
+   "type_hex": "0x7a",
+   "length": 466,
+   "va": "0x4881b4",
+   "function": "0x488130",
+   "size_matches": [
+    "SPacketSquadCommand"
+   ]
+  },
+  {
+   "type": 122,
+   "type_hex": "0x7a",
+   "length": 466,
+   "va": "0x488254",
+   "function": "0x4881d0",
+   "size_matches": [
+    "SPacketSquadCommand"
+   ]
+  },
+  {
+   "type": 122,
+   "type_hex": "0x7a",
+   "length": 466,
+   "va": "0x4882f4",
+   "function": "0x488270",
+   "size_matches": [
+    "SPacketSquadCommand"
+   ]
+  },
+  {
+   "type": 122,
+   "type_hex": "0x7a",
+   "length": 466,
+   "va": "0x488394",
+   "function": "0x488310",
+   "size_matches": [
+    "SPacketSquadCommand"
+   ]
+  },
+  {
+   "type": 122,
+   "type_hex": "0x7a",
+   "length": 466,
+   "va": "0x4884bb",
+   "function": "0x488460",
+   "size_matches": [
+    "SPacketSquadCommand"
+   ]
+  },
+  {
+   "type": 122,
+   "type_hex": "0x7a",
+   "length": 466,
+   "va": "0x4885f1",
+   "function": "0x488540",
+   "size_matches": [
+    "SPacketSquadCommand"
+   ]
+  },
+  {
+   "type": 122,
+   "type_hex": "0x7a",
+   "length": 466,
+   "va": "0x4886c1",
+   "function": "0x488610",
+   "size_matches": [
+    "SPacketSquadCommand"
+   ]
+  },
+  {
+   "type": 122,
+   "type_hex": "0x7a",
+   "length": 466,
+   "va": "0x488791",
+   "function": "0x4886e0",
+   "size_matches": [
+    "SPacketSquadCommand"
+   ]
+  },
+  {
+   "type": 122,
+   "type_hex": "0x7a",
+   "length": 466,
+   "va": "0x488861",
+   "function": "0x4887b0",
+   "size_matches": [
+    "SPacketSquadCommand"
+   ]
+  },
+  {
+   "type": 122,
+   "type_hex": "0x7a",
+   "length": 466,
+   "va": "0x48892b",
+   "function": "0x488880",
+   "size_matches": [
+    "SPacketSquadCommand"
+   ]
+  },
+  {
+   "type": 122,
+   "type_hex": "0x7a",
+   "length": 466,
+   "va": "0x4889c4",
+   "function": "0x488940",
+   "size_matches": [
+    "SPacketSquadCommand"
+   ]
+  },
+  {
+   "type": 122,
+   "type_hex": "0x7a",
+   "length": 466,
+   "va": "0x488a64",
+   "function": "0x4889e0",
+   "size_matches": [
+    "SPacketSquadCommand"
+   ]
+  },
+  {
+   "type": 128,
+   "type_hex": "0x80",
+   "length": 4,
+   "va": "0x48900a",
+   "function": "0x488fc0",
+   "size_matches": [
+    "SPacketRequestHTTPTransfer",
+    "SPacketStationPing",
+    "SPacketMessageAck",
+    "SPacketThrustChange",
+    "SPacketECMChange",
+    "SPacketECCMChange",
+    "SPacketIHaveDied",
+    "SPacketHitPowerup",
+    "SPacketGetSquadRoster",
+    "SPacketGetMOTDList",
+    "SPacketDeleteMOTD",
+    "SMyROI",
+    "SPacketResourceAck",
+    "SPacketUnlockScenario",
+    "SPacketECMEffectiveness",
+    "SPacketEWEffectiveness",
+    "SPacketMissilePredictFactor",
+    "SPacketExecuteFireMissile",
+    "SProcessingScenario",
+    "SPacketChangeMood",
+    "SPacketIDestroyedObject",
+    "SPacketMOTDPreview",
+    "SPacketBeginSerialLoad"
+   ]
+  },
+  {
+   "type": 133,
+   "type_hex": "0x85",
+   "length": 73,
+   "va": "0x489504",
+   "function": "0x489470",
+   "size_matches": []
+  },
+  {
+   "type": 134,
+   "type_hex": "0x86",
+   "length": 4,
+   "va": "0x489582",
+   "function": "0x489520",
+   "size_matches": [
+    "SPacketRequestHTTPTransfer",
+    "SPacketStationPing",
+    "SPacketMessageAck",
+    "SPacketThrustChange",
+    "SPacketECMChange",
+    "SPacketECCMChange",
+    "SPacketIHaveDied",
+    "SPacketHitPowerup",
+    "SPacketGetSquadRoster",
+    "SPacketGetMOTDList",
+    "SPacketDeleteMOTD",
+    "SMyROI",
+    "SPacketResourceAck",
+    "SPacketUnlockScenario",
+    "SPacketECMEffectiveness",
+    "SPacketEWEffectiveness",
+    "SPacketMissilePredictFactor",
+    "SPacketExecuteFireMissile",
+    "SProcessingScenario",
+    "SPacketChangeMood",
+    "SPacketIDestroyedObject",
+    "SPacketMOTDPreview",
+    "SPacketBeginSerialLoad"
+   ]
+  },
+  {
+   "type": 135,
+   "type_hex": "0x87",
+   "length": 265,
+   "va": "0x4897eb",
+   "function": "0x489740",
+   "size_matches": []
+  },
+  {
+   "type": 138,
+   "type_hex": "0x8a",
+   "length": 4,
+   "va": "0x4883f3",
+   "function": "0x4883b0",
+   "size_matches": [
+    "SPacketRequestHTTPTransfer",
+    "SPacketStationPing",
+    "SPacketMessageAck",
+    "SPacketThrustChange",
+    "SPacketECMChange",
+    "SPacketECCMChange",
+    "SPacketIHaveDied",
+    "SPacketHitPowerup",
+    "SPacketGetSquadRoster",
+    "SPacketGetMOTDList",
+    "SPacketDeleteMOTD",
+    "SMyROI",
+    "SPacketResourceAck",
+    "SPacketUnlockScenario",
+    "SPacketECMEffectiveness",
+    "SPacketEWEffectiveness",
+    "SPacketMissilePredictFactor",
+    "SPacketExecuteFireMissile",
+    "SProcessingScenario",
+    "SPacketChangeMood",
+    "SPacketIDestroyedObject",
+    "SPacketMOTDPreview",
+    "SPacketBeginSerialLoad"
+   ]
+  },
+  {
+   "type": 142,
+   "type_hex": "0x8e",
+   "length": 71,
+   "va": "0x48a81a",
+   "function": "0x48a790",
+   "size_matches": [
+    "SPacketLoadScenario"
+   ]
+  },
+  {
+   "type": 143,
+   "type_hex": "0x8f",
+   "length": null,
+   "va": "0x48a8e9",
+   "function": "0x48a830",
+   "size_matches": []
+  },
+  {
+   "type": 144,
+   "type_hex": "0x90",
+   "length": 394,
+   "va": "0x48aa22",
+   "function": "0x48a930",
+   "size_matches": []
+  },
+  {
+   "type": 146,
+   "type_hex": "0x92",
+   "length": 8,
+   "va": "0x48986c",
+   "function": "0x489844",
+   "size_matches": [
+    "SSetCommParam",
+    "SPacketObjectHasDied",
+    "SPacketMissileManuever",
+    "SPacketShiftScore",
+    "SPosUpdateHeader"
+   ]
+  },
+  {
+   "type": 147,
+   "type_hex": "0x93",
+   "length": 142,
+   "va": "0x489957",
+   "function": "0x489880",
+   "size_matches": []
+  },
+  {
+   "type": 148,
+   "type_hex": "0x94",
+   "length": 49,
+   "va": "0x48a313",
+   "function": "0x48a270",
+   "size_matches": []
+  },
+  {
+   "type": 155,
+   "type_hex": "0x9b",
+   "length": 53,
+   "va": "0x489bbb",
+   "function": "0x489ab0",
+   "size_matches": []
+  },
+  {
+   "type": 157,
+   "type_hex": "0x9d",
+   "length": 386,
+   "va": "0x435250",
+   "function": "0x4351b0",
+   "size_matches": []
+  },
+  {
+   "type": 160,
+   "type_hex": "0xa0",
+   "length": null,
+   "va": "0x48a0e5",
+   "function": "0x48a030",
+   "size_matches": []
+  },
+  {
+   "type": 161,
+   "type_hex": "0xa1",
+   "length": 33,
+   "va": "0x489c82",
+   "function": "0x489bd0",
+   "size_matches": []
+  },
+  {
+   "type": 162,
+   "type_hex": "0xa2",
+   "length": 1,
+   "va": "0x485e5c",
+   "function": "0x485e40",
+   "size_matches": [
+    "SKilledBy",
+    "SRemovePlayer",
+    "SPacketYouDie",
+    "SPacketResetShip",
+    "SPacketRequestStats",
+    "SPacketImQuitting",
+    "SPacketKeepAlive",
+    "SPacketRenumberMOTD",
+    "SPacketStationInfoRequest"
+   ]
+  },
+  {
+   "type": 162,
+   "type_hex": "0xa2",
+   "length": 1,
+   "va": "0x485e85",
+   "function": "0x485e40",
+   "size_matches": [
+    "SKilledBy",
+    "SRemovePlayer",
+    "SPacketYouDie",
+    "SPacketResetShip",
+    "SPacketRequestStats",
+    "SPacketImQuitting",
+    "SPacketKeepAlive",
+    "SPacketRenumberMOTD",
+    "SPacketStationInfoRequest"
+   ]
+  },
+  {
+   "type": 162,
+   "type_hex": "0xa2",
+   "length": 1,
+   "va": "0x485ed9",
+   "function": "0x485e40",
+   "size_matches": [
+    "SKilledBy",
+    "SRemovePlayer",
+    "SPacketYouDie",
+    "SPacketResetShip",
+    "SPacketRequestStats",
+    "SPacketImQuitting",
+    "SPacketKeepAlive",
+    "SPacketRenumberMOTD",
+    "SPacketStationInfoRequest"
+   ]
+  },
+  {
+   "type": 162,
+   "type_hex": "0xa2",
+   "length": 1,
+   "va": "0x485f30",
+   "function": "0x485e40",
+   "size_matches": [
+    "SKilledBy",
+    "SRemovePlayer",
+    "SPacketYouDie",
+    "SPacketResetShip",
+    "SPacketRequestStats",
+    "SPacketImQuitting",
+    "SPacketKeepAlive",
+    "SPacketRenumberMOTD",
+    "SPacketStationInfoRequest"
+   ]
+  },
+  {
+   "type": 162,
+   "type_hex": "0xa2",
+   "length": 1,
+   "va": "0x485f91",
+   "function": "0x485f50",
+   "size_matches": [
+    "SKilledBy",
+    "SRemovePlayer",
+    "SPacketYouDie",
+    "SPacketResetShip",
+    "SPacketRequestStats",
+    "SPacketImQuitting",
+    "SPacketKeepAlive",
+    "SPacketRenumberMOTD",
+    "SPacketStationInfoRequest"
+   ]
+  },
+  {
+   "type": 162,
+   "type_hex": "0xa2",
+   "length": 1,
+   "va": "0x485fc0",
+   "function": "0x485f50",
+   "size_matches": [
+    "SKilledBy",
+    "SRemovePlayer",
+    "SPacketYouDie",
+    "SPacketResetShip",
+    "SPacketRequestStats",
+    "SPacketImQuitting",
+    "SPacketKeepAlive",
+    "SPacketRenumberMOTD",
+    "SPacketStationInfoRequest"
+   ]
+  },
+  {
+   "type": 162,
+   "type_hex": "0xa2",
+   "length": 1,
+   "va": "0x486019",
+   "function": "0x485f50",
+   "size_matches": [
+    "SKilledBy",
+    "SRemovePlayer",
+    "SPacketYouDie",
+    "SPacketResetShip",
+    "SPacketRequestStats",
+    "SPacketImQuitting",
+    "SPacketKeepAlive",
+    "SPacketRenumberMOTD",
+    "SPacketStationInfoRequest"
+   ]
+  },
+  {
+   "type": 162,
+   "type_hex": "0xa2",
+   "length": 1,
+   "va": "0x486073",
+   "function": "0x486048",
+   "size_matches": [
+    "SKilledBy",
+    "SRemovePlayer",
+    "SPacketYouDie",
+    "SPacketResetShip",
+    "SPacketRequestStats",
+    "SPacketImQuitting",
+    "SPacketKeepAlive",
+    "SPacketRenumberMOTD",
+    "SPacketStationInfoRequest"
+   ]
+  },
+  {
+   "type": 164,
+   "type_hex": "0xa4",
+   "length": 4,
+   "va": "0x48a01c",
+   "function": "0x489f90",
+   "size_matches": [
+    "SPacketRequestHTTPTransfer",
+    "SPacketStationPing",
+    "SPacketMessageAck",
+    "SPacketThrustChange",
+    "SPacketECMChange",
+    "SPacketECCMChange",
+    "SPacketIHaveDied",
+    "SPacketHitPowerup",
+    "SPacketGetSquadRoster",
+    "SPacketGetMOTDList",
+    "SPacketDeleteMOTD",
+    "SMyROI",
+    "SPacketResourceAck",
+    "SPacketUnlockScenario",
+    "SPacketECMEffectiveness",
+    "SPacketEWEffectiveness",
+    "SPacketMissilePredictFactor",
+    "SPacketExecuteFireMissile",
+    "SProcessingScenario",
+    "SPacketChangeMood",
+    "SPacketIDestroyedObject",
+    "SPacketMOTDPreview",
+    "SPacketBeginSerialLoad"
+   ]
+  },
+  {
+   "type": 165,
+   "type_hex": "0xa5",
+   "length": 261,
+   "va": "0x48a197",
+   "function": "0x48a100",
+   "size_matches": [
+    "SPacketMyAllies"
+   ]
+  },
+  {
+   "type": 173,
+   "type_hex": "0xad",
+   "length": 4,
+   "va": "0x48a1e2",
+   "function": "0x48a1b0",
+   "size_matches": [
+    "SPacketRequestHTTPTransfer",
+    "SPacketStationPing",
+    "SPacketMessageAck",
+    "SPacketThrustChange",
+    "SPacketECMChange",
+    "SPacketECCMChange",
+    "SPacketIHaveDied",
+    "SPacketHitPowerup",
+    "SPacketGetSquadRoster",
+    "SPacketGetMOTDList",
+    "SPacketDeleteMOTD",
+    "SMyROI",
+    "SPacketResourceAck",
+    "SPacketUnlockScenario",
+    "SPacketECMEffectiveness",
+    "SPacketEWEffectiveness",
+    "SPacketMissilePredictFactor",
+    "SPacketExecuteFireMissile",
+    "SProcessingScenario",
+    "SPacketChangeMood",
+    "SPacketIDestroyedObject",
+    "SPacketMOTDPreview",
+    "SPacketBeginSerialLoad"
+   ]
+  },
+  {
+   "type": 174,
+   "type_hex": "0xae",
+   "length": 4,
+   "va": "0x488451",
+   "function": "0x488410",
+   "size_matches": [
+    "SPacketRequestHTTPTransfer",
+    "SPacketStationPing",
+    "SPacketMessageAck",
+    "SPacketThrustChange",
+    "SPacketECMChange",
+    "SPacketECCMChange",
+    "SPacketIHaveDied",
+    "SPacketHitPowerup",
+    "SPacketGetSquadRoster",
+    "SPacketGetMOTDList",
+    "SPacketDeleteMOTD",
+    "SMyROI",
+    "SPacketResourceAck",
+    "SPacketUnlockScenario",
+    "SPacketECMEffectiveness",
+    "SPacketEWEffectiveness",
+    "SPacketMissilePredictFactor",
+    "SPacketExecuteFireMissile",
+    "SProcessingScenario",
+    "SPacketChangeMood",
+    "SPacketIDestroyedObject",
+    "SPacketMOTDPreview",
+    "SPacketBeginSerialLoad"
+   ]
+  },
+  {
+   "type": 175,
+   "type_hex": "0xaf",
+   "length": 5,
+   "va": "0x488523",
+   "function": "0x4884d0",
+   "size_matches": [
+    "SPacketGameserverConnectStatus",
+    "SPacketPlaySound",
+    "SPacketSetToTargetsTarget",
+    "SPacketIAmInvulnerable"
+   ]
+  },
+  {
+   "type": 176,
+   "type_hex": "0xb0",
+   "length": null,
+   "va": "0x489a9a",
+   "function": "0x489a9a",
+   "size_matches": []
+  },
+  {
+   "type": 178,
+   "type_hex": "0xb2",
+   "length": null,
+   "va": "0x48917b",
+   "function": "0x489140",
+   "size_matches": []
+  },
+  {
+   "type": 180,
+   "type_hex": "0xb4",
+   "length": 4,
+   "va": "0x48a254",
+   "function": "0x48a1f0",
+   "size_matches": [
+    "SPacketRequestHTTPTransfer",
+    "SPacketStationPing",
+    "SPacketMessageAck",
+    "SPacketThrustChange",
+    "SPacketECMChange",
+    "SPacketECCMChange",
+    "SPacketIHaveDied",
+    "SPacketHitPowerup",
+    "SPacketGetSquadRoster",
+    "SPacketGetMOTDList",
+    "SPacketDeleteMOTD",
+    "SMyROI",
+    "SPacketResourceAck",
+    "SPacketUnlockScenario",
+    "SPacketECMEffectiveness",
+    "SPacketEWEffectiveness",
+    "SPacketMissilePredictFactor",
+    "SPacketExecuteFireMissile",
+    "SProcessingScenario",
+    "SPacketChangeMood",
+    "SPacketIDestroyedObject",
+    "SPacketMOTDPreview",
+    "SPacketBeginSerialLoad"
+   ]
+  }
+ ]
+}

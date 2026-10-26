@@ -1,0 +1,56 @@
+{
+  "scope": "CPU culling correction applied to isolated offline baseline; CRT trig substituted for tests; GPU frames and host/client parity unverified",
+  "original_executable_sha256": "4b6c35e2b3ab473bd98c0afa6538079ee78678d85c28406c07bc27a08cc78c7e",
+  "installed_sha256": "abc8ff78d8a0714e31ded0f285aa6c2c39e5d0d8b5e52aafef2e77fa677941cf",
+  "undo_sha256": "dc80dcfbe4dd19af999897f991b81fe58455e4c3b9297a18d8c59f5aa5d99abd",
+  "patch_regions": [
+    {
+      "offset": "0x18b700",
+      "bytes": 347
+    },
+    {
+      "offset": "0x143077",
+      "bytes": 6
+    },
+    {
+      "offset": "0x1431a1",
+      "bytes": 6
+    }
+  ],
+  "before": {
+    "invalid_trig_inputs": 17,
+    "visibility_mismatches_with_nan_math_stub": 10,
+    "center": {
+      "visible": false,
+      "direction_finite": false,
+      "angular_bound_finite": false,
+      "size": 200.0,
+      "math_calls": []
+    }
+  },
+  "after": {
+    "invalid_trig_inputs": 0,
+    "visibility_mismatches_with_nan_math_stub": 0,
+    "center": {
+      "visible": true,
+      "direction_finite": true,
+      "angular_bound_finite": true,
+      "size": 4000.0,
+      "math_calls": []
+    },
+    "motion_cases": 480,
+    "inside_sphere_cases": 48
+  },
+  "validation": {
+    "test_methods": 4,
+    "fpu_control_words": [
+      "0x7f",
+      "0x27f",
+      "0x37f"
+    ],
+    "ordinary_valid_motion_results_unchanged": true,
+    "small_object_cutoff_unchanged": true,
+    "exact_undo_verified": true,
+    "command": ".venv/Scripts/python.exe -I tools/test_render_culling.py"
+  }
+}

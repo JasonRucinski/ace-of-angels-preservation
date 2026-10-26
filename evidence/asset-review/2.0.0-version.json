@@ -1,0 +1,184 @@
+{
+  "file": "work/asset-review/2.0.0/members/12_AOACLIENT.EXE",
+  "call_sites": [
+    {
+      "format": "Ace of Angels v%d.%d.%d",
+      "format_off": "0x11b564",
+      "format_va": "0x51b564",
+      "xref_va": "0x43a40c",
+      "function": "0x439ba0",
+      "globals": [
+        {
+          "va": "0x520d4c",
+          "file_off": "0x120d4c",
+          "value": 2,
+          "backing": "file"
+        },
+        {
+          "va": "0x52f038",
+          "file_off": null,
+          "value": 0,
+          "backing": "virtual zero-fill"
+        },
+        {
+          "va": "0x52f03c",
+          "file_off": null,
+          "value": 0,
+          "backing": "virtual zero-fill"
+        }
+      ]
+    },
+    {
+      "format": "Ace of Angels (v%d.%d.%d Beta)",
+      "format_off": "0x11c134",
+      "format_va": "0x51c134",
+      "xref_va": "0x441bdc",
+      "function": "0x441b60",
+      "globals": [
+        {
+          "va": "0x520d4c",
+          "file_off": "0x120d4c",
+          "value": 2,
+          "backing": "file"
+        },
+        {
+          "va": "0x52f038",
+          "file_off": null,
+          "value": 0,
+          "backing": "virtual zero-fill"
+        },
+        {
+          "va": "0x52f03c",
+          "file_off": null,
+          "value": 0,
+          "backing": "virtual zero-fill"
+        }
+      ]
+    },
+    {
+      "format": "Ace of Angels (v%d.%d.%d Beta)",
+      "format_off": "0x11c134",
+      "format_va": "0x51c134",
+      "xref_va": "0x443f0a",
+      "function": "0x443d60",
+      "globals": [
+        {
+          "va": "0x520d4c",
+          "file_off": "0x120d4c",
+          "value": 2,
+          "backing": "file"
+        },
+        {
+          "va": "0x52f038",
+          "file_off": null,
+          "value": 0,
+          "backing": "virtual zero-fill"
+        },
+        {
+          "va": "0x52f03c",
+          "file_off": null,
+          "value": 0,
+          "backing": "virtual zero-fill"
+        }
+      ]
+    },
+    {
+      "format": "%s v%d.%d.%d",
+      "format_off": "0x11c79c",
+      "format_va": "0x51c79c",
+      "xref_va": "0x443e2f",
+      "function": "0x443d60",
+      "globals": [
+        {
+          "va": "0x520d4c",
+          "file_off": "0x120d4c",
+          "value": 2,
+          "backing": "file"
+        },
+        {
+          "va": "0x52f038",
+          "file_off": null,
+          "value": 0,
+          "backing": "virtual zero-fill"
+        },
+        {
+          "va": "0x52f03c",
+          "file_off": null,
+          "value": 0,
+          "backing": "virtual zero-fill"
+        }
+      ]
+    },
+    {
+      "format": "Ace of Angels v%d.%d.%d",
+      "format_off": "0x11d29c",
+      "format_va": "0x51d29c",
+      "xref_va": "0x449fc4",
+      "function": "0x449f80",
+      "globals": [
+        {
+          "va": "0x520d4c",
+          "file_off": "0x120d4c",
+          "value": 2,
+          "backing": "file"
+        },
+        {
+          "va": "0x52f038",
+          "file_off": null,
+          "value": 0,
+          "backing": "virtual zero-fill"
+        },
+        {
+          "va": "0x52f03c",
+          "file_off": null,
+          "value": 0,
+          "backing": "virtual zero-fill"
+        }
+      ]
+    },
+    {
+      "format": "Ace of Angels (v%d.%d.%d Beta) : %s",
+      "format_off": "0x11e238",
+      "format_va": "0x51e238",
+      "xref_va": "0x4533e0",
+      "function": "0x452b60",
+      "globals": [
+        {
+          "va": "0x520d4c",
+          "file_off": "0x120d4c",
+          "value": 2,
+          "backing": "file"
+        },
+        {
+          "va": "0x52f038",
+          "file_off": null,
+          "value": 0,
+          "backing": "virtual zero-fill"
+        },
+        {
+          "va": "0x52f03c",
+          "file_off": null,
+          "value": 0,
+          "backing": "virtual zero-fill"
+        }
+      ]
+    }
+  ],
+  "global_ref_stats": {
+    "0x520d4c": {
+      "refs": 9,
+      "writes": []
+    },
+    "0x52f038": {
+      "refs": 9,
+      "writes": []
+    },
+    "0x52f03c": {
+      "refs": 9,
+      "writes": []
+    }
+  },
+  "distinct_versions": [
+    "2.0.0"
+  ]
+}

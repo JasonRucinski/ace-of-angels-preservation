@@ -1,0 +1,23 @@
+{
+  "scope": "Manual client join, read-only process-memory snapshot, and user-confirmed visible arena geometry; flight and collision acceptance pending",
+  "client_sha256": "b2d47f049b2097807b331451f11fa1b4258d9e097c2b6d0d1dff17483c845824",
+  "map": "Arena1a",
+  "server_profile": "local-relay",
+  "bind_address": "127.0.0.1",
+  "terrain_count": 239,
+  "terrain_with_graphics": 239,
+  "terrain_list_complete": true,
+  "hook_site": "0x4306AF",
+  "native_loader": "0x495DF0",
+  "native_lookup": "0x4CDD30",
+  "flight_entry_marker": "AR1A",
+  "emulator_scope": "Hook instructions executed, native lookup and terrain loader stubbed; tests validate branches, arguments, stack and registers",
+  "visual_acceptance": true,
+  "collision_acceptance": false,
+  "visual_acceptance_evidence": "User confirmed: Arena geometry is visible",
+  "regression": {
+    "passed": true,
+    "tests": 73,
+    "original_code_emulators": 9
+  }
+}

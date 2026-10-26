@@ -1,0 +1,91 @@
+{
+ "file": "work/2.7.1/members/15_AOACLIENT.EXE",
+ "flags_va": "0x6a39b4",
+ "reads": 11,
+ "functions": 10,
+ "rows": [
+  {
+   "function": "0x41a4a0",
+   "reads": 1,
+   "source_files": {},
+   "strings": []
+  },
+  {
+   "function": "0x41daf0",
+   "reads": 1,
+   "source_files": {},
+   "strings": [
+    "Ace of Angels",
+    "Not Available Offline"
+   ]
+  },
+  {
+   "function": "0x41db30",
+   "reads": 1,
+   "source_files": {},
+   "strings": []
+  },
+  {
+   "function": "0x41db60",
+   "reads": 1,
+   "source_files": {},
+   "strings": []
+  },
+  {
+   "function": "0x41db90",
+   "reads": 1,
+   "source_files": {},
+   "strings": []
+  },
+  {
+   "function": "0x41dc60",
+   "reads": 1,
+   "source_files": {},
+   "strings": []
+  },
+  {
+   "function": "0x486d60",
+   "reads": 1,
+   "source_files": {},
+   "strings": [
+    "Capture Images",
+    "AoAImg.tga",
+    "You must be in a Safe Zone to enter Mentor Mode",
+    "AoA Info Win"
+   ]
+  },
+  {
+   "function": "0x48d3d0",
+   "reads": 1,
+   "source_files": {
+    "STATUS [AoA_Main.cpp]: Requesting a connection.": 1
+   },
+   "strings": [
+    "(LoginTrace) processing command to enter arena",
+    "Connecting to Server..."
+   ]
+  },
+  {
+   "function": "0x48f760",
+   "reads": 1,
+   "source_files": {},
+   "strings": [
+    "http://www.aceofangels.com/manual/manualframes.html",
+    "Arena: %s selected.",
+    "Ace of Angels (v%d.%d.%d Beta) : %s",
+    " : Tutorial Mode"
+   ]
+  },
+  {
+   "function": "0x490158",
+   "reads": 2,
+   "source_files": {},
+   "strings": [
+    "StationDlgProc: switching to [%s]",
+    "Access Restriction",
+    "Access Restriction",
+    "Please select a handle first, with the \"ADD HANDLE\" button"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,21 @@
+{
+  "source_sha256": "4b6c35e2b3ab473bd98c0afa6538079ee78678d85c28406c07bc27a08cc78c7e",
+  "cases": 5273,
+  "ordered_events": 1000,
+  "prototype_sha256": "adff91c3ffb376a8c2152cd6a4dd34c0f4b8f6536812c0e79c0b6932621f1c15",
+  "stale_context_rejected_before_handler": true,
+  "completion_after_handler_return": true,
+  "interrupted_handler_does_not_commit": true,
+  "exact_retry_does_not_reapply": true,
+  "sequence_wrap_rejected": true,
+  "scope": "emulator-injected x86 guard and original protection handler; trusted context fixture; status-text sink mocked",
+  "limitations": [
+    "no authenticated context binding or lifecycle implementation",
+    "no application ACK sent over network",
+    "no real receive-loop integration",
+    "protection only; no other legacy handler protected",
+    "no crash recovery guarantee after partial handler side effects",
+    "no real-client interaction or installable patch"
+  ],
+  "authoritative_client_gate_passed": false
+}

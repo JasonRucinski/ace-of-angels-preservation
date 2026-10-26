@@ -1,0 +1,59 @@
+{
+ "schema": 1,
+ "date": "2026-10-21",
+ "scope": "Two real prepared 2.9.2 clients (patch version 2) on one PC, local-relay with --spawn-axis z --spawn-spacing 300; firing by posted Space key; client memory read with ReadProcessMemory. Raw captures stay in ignored work/realcheck-20261021/combat2-3.",
+ "fire_replication": {
+  "status_flags": "mask 0x400 field = player +0xF4 (sender passes player+4 as kinematic base); bit 0x40 set while guns fire; already relayed by the safe prefix",
+  "gun_state_block": "mask 0x10000000 after the prefix: u8 header (low 7 bits count, high bit -> player +0x1A4), count x (u16 system index, u8 value); live: guns 2..7 at 15 while firing, 0 otherwise",
+  "relay_change": "block now kept when indexes < 128 (client counter array has 5000 entries, decoder does not bound-check); original-decoder emulation consumes it exactly with an intact guard after a 128-entry array",
+  "observer_effect": "the other client's view of the shooter's guns +0xFC = 1.5 (15 x 0.1) during the burst"
+ },
+ "damage": {
+  "authority": "victim client: it simulates the relayed shooter's fire and damages its own systems; the shooter's view of the victim is unchanged",
+  "victim_systems_index_hp": "Ym Khtat: 1 Power Plant 30, 2-7 guns 2, 8 ECM 5, 9 Scanner 5, 10 shield 107, 11 Engine 30, 12 Hull 40, 13 Internal Hull 12 (system +0x88)",
+  "after_5s_burst_at_300_units": {
+   "shield_10": 0.32,
+   "hull_12": 0.0,
+   "engine_11": 27.03,
+   "ecm_8": 3.03,
+   "scanner_9": 4.02,
+   "gun_2": 1.03,
+   "gun_4": 1.02,
+   "internal_hull_13": 12.0
+  },
+  "death": "during a further 10 s burst the victim sent 0x37 SendIHaveDied once (4 bytes: killer tag 0x80010002 = shooter) and reset its systems to full locally",
+  "collision": "shooter sent nine 0x48 collision impulses (source shooter, target victim, zero vector) during that burst; not forwarded by the stub"
+ },
+ "stability": "a client crashed on arena join as the first player (0xC0000005, ntdll+0x4E1EA): third crash of this kind today, now also seen without another client present",
+ "server_death_handling": {
+  "deaths_logged": 2,
+  "respawn_position_restored": "z=300 after each death",
+  "second_kill_after_recharge": true,
+  "observer_kept_victim_active": true
+ },
+ "arena_join_crash": {
+  "offsets": [
+   "0x4FC65",
+   "0x5019E",
+   "0x4E1EA",
+   "0x50806"
+  ],
+  "trial_series_with_station_binding": {
+   "joins": 13,
+   "crashes": 1,
+   "station_only": 1
+  },
+  "earlier_rate": "about 4 of 17 joins",
+  "status": "fixed by client patch archive-terminator-v1 (findings 9.29)",
+  "cause": "CCompress::Decompress 0x52A630 returns tgtwin2.cfg without a NUL; parser reads stale heap, new throws, unwinding frees config text (esi=0x69777467 'gtwi')",
+  "debugger_trials": {
+   "joins": 12,
+   "crashes": 3,
+   "identical_signature": true
+  },
+  "patched_trials": {
+   "joins": 25,
+   "crashes": 0
+  }
+ }
+}

@@ -1,0 +1,3098 @@
+{
+ "file": "work/2.7.1/members/15_AOACLIENT.EXE",
+ "name_len": 64,
+ "table_start_off": "0x28aa98",
+ "table_start_va": "0x68aa98",
+ "count": 384,
+ "refs_to_table_start": [
+  "0x521762",
+  "0x52177e",
+  "0x52179f"
+ ],
+ "records": [
+  {
+   "name": "MaxPerTeam",
+   "name_off": "0x28aa98",
+   "value_off": "0x28aad8",
+   "name_va": "0x68aa98",
+   "value": 5.0,
+   "code_refs": [
+    "0x521329",
+    "0x5213ed",
+    "0x52143d",
+    "0x5214ed",
+    "0x5215a2",
+    "0x521624",
+    "0x521687",
+    "0x5216e4",
+    "0x521762",
+    "0x52177e",
+    "0x52179f"
+   ]
+  },
+  {
+   "name": "TargettingAIProcessCountPerFrame",
+   "name_off": "0x28aadc",
+   "value_off": "0x28ab1c",
+   "name_va": "0x68aadc",
+   "value": 15.0,
+   "code_refs": []
+  },
+  {
+   "name": "FlagGameRadius",
+   "name_off": "0x28ab20",
+   "value_off": "0x28ab60",
+   "name_va": "0x68ab20",
+   "value": 275000.0,
+   "code_refs": []
+  },
+  {
+   "name": "FlagsCanCarryAtOnce",
+   "name_off": "0x28ab64",
+   "value_off": "0x28aba4",
+   "name_va": "0x68ab64",
+   "value": 1.0,
+   "code_refs": []
+  },
+  {
+   "name": "CarryFlagTimer",
+   "name_off": "0x28aba8",
+   "value_off": "0x28abe8",
+   "name_va": "0x68aba8",
+   "value": 120000.0,
+   "code_refs": []
+  },
+  {
+   "name": "WarningDistToDock",
+   "name_off": "0x28abec",
+   "value_off": "0x28ac2c",
+   "name_va": "0x68abec",
+   "value": 5000.0,
+   "code_refs": []
+  },
+  {
+   "name": "SHOTPROCESSMINDELTATIME",
+   "name_off": "0x28ac30",
+   "value_off": "0x28ac70",
+   "name_va": "0x68ac30",
+   "value": 125.0,
+   "code_refs": []
+  },
+  {
+   "name": "DEFAULTGUNSHOTPROJPLANE",
+   "name_off": "0x28ac74",
+   "value_off": "0x28acb4",
+   "name_va": "0x68ac74",
+   "value": 512.0,
+   "code_refs": []
+  },
+  {
+   "name": "MINTARGETBOUNTYBEFORESCOREACCUM",
+   "name_off": "0x28acb8",
+   "value_off": "0x28acf8",
+   "name_va": "0x68acb8",
+   "value": 2.0,
+   "code_refs": []
+  },
+  {
+   "name": "SCOREACCUMFACTOR",
+   "name_off": "0x28acfc",
+   "value_off": "0x28ad3c",
+   "name_va": "0x68acfc",
+   "value": 0.05000000074505806,
+   "code_refs": []
+  },
+  {
+   "name": "MINRADIUSBEFORESCOREACCUM",
+   "name_off": "0x28ad40",
+   "value_off": "0x28ad80",
+   "name_va": "0x68ad40",
+   "value": 1500.0,
+   "code_refs": []
+  },
+  {
+   "name": "ObjectAIECMBreakEvenDist",
+   "name_off": "0x28ad84",
+   "value_off": "0x28adc4",
+   "name_va": "0x68ad84",
+   "value": 100.0,
+   "code_refs": []
+  },
+  {
+   "name": "ObjectAISpeedECMIncreases",
+   "name_off": "0x28adc8",
+   "value_off": "0x28ae08",
+   "name_va": "0x68adc8",
+   "value": 3000.0,
+   "code_refs": []
+  },
+  {
+   "name": "ObjectAISpeedLockDEgredationFactor",
+   "name_off": "0x28ae0c",
+   "value_off": "0x28ae4c",
+   "name_va": "0x68ae0c",
+   "value": 0.00039999998989515007,
+   "code_refs": []
+  },
+  {
+   "name": "EWBreakEvenDistance",
+   "name_off": "0x28ae50",
+   "value_off": "0x28ae90",
+   "name_va": "0x68ae50",
+   "value": 8000.0,
+   "code_refs": []
+  },
+  {
+   "name": "EWEffectiveness",
+   "name_off": "0x28ae94",
+   "value_off": "0x28aed4",
+   "name_va": "0x68ae94",
+   "value": 7.0,
+   "code_refs": []
+  },
+  {
+   "name": "MISSILEPREDICTFACTOR",
+   "name_off": "0x28aed8",
+   "value_off": "0x28af18",
+   "name_va": "0x68aed8",
+   "value": 1.0,
+   "code_refs": []
+  },
+  {
+   "name": "ECMEFFECTIVENESS",
+   "name_off": "0x28af1c",
+   "value_off": "0x28af5c",
+   "name_va": "0x68af1c",
+   "value": 2.0,
+   "code_refs": []
+  },
+  {
+   "name": "ECMACCELFACTOR",
+   "name_off": "0x28af60",
+   "value_off": "0x28afa0",
+   "name_va": "0x68af60",
+   "value": 0.800000011920929,
+   "code_refs": []
+  },
+  {
+   "name": "MISSILESELFDESTRUCTLOCKFACTOR",
+   "name_off": "0x28afa4",
+   "value_off": "0x28afe4",
+   "name_va": "0x68afa4",
+   "value": 70.0,
+   "code_refs": []
+  },
+  {
+   "name": "ScaleECMGuessWith",
+   "name_off": "0x28afe8",
+   "value_off": "0x28b028",
+   "name_va": "0x68afe8",
+   "value": 3000.0,
+   "code_refs": []
+  },
+  {
+   "name": "AIBaseAccelFactor",
+   "name_off": "0x28b02c",
+   "value_off": "0x28b06c",
+   "name_va": "0x68b02c",
+   "value": 0.800000011920929,
+   "code_refs": []
+  },
+  {
+   "name": "EWBaseLockOnLevel",
+   "name_off": "0x28b070",
+   "value_off": "0x28b0b0",
+   "name_va": "0x68b070",
+   "value": 30.0,
+   "code_refs": []
+  },
+  {
+   "name": "MINDISTFORBOUNTYCOUNTENABLED",
+   "name_off": "0x28b0b4",
+   "value_off": "0x28b0f4",
+   "name_va": "0x68b0b4",
+   "value": 150000.0,
+   "code_refs": []
+  },
+  {
+   "name": "BASEECFALLOFF",
+   "name_off": "0x28b0f8",
+   "value_off": "0x28b138",
+   "name_va": "0x68b0f8",
+   "value": 10.0,
+   "code_refs": []
+  },
+  {
+   "name": "BASEECDFACTOR",
+   "name_off": "0x28b13c",
+   "value_off": "0x28b17c",
+   "name_va": "0x68b13c",
+   "value": 1.0,
+   "code_refs": []
+  },
+  {
+   "name": "MAXCONSECUTIVEPINGS",
+   "name_off": "0x28b180",
+   "value_off": "0x28b1c0",
+   "name_va": "0x68b180",
+   "value": 5.0,
+   "code_refs": []
+  },
+  {
+   "name": "SYNCEVERY_MS",
+   "name_off": "0x28b1c4",
+   "value_off": "0x28b204",
+   "name_va": "0x68b1c4",
+   "value": 50000.0,
+   "code_refs": []
+  },
+  {
+   "name": "MINCAREDISTANCE",
+   "name_off": "0x28b208",
+   "value_off": "0x28b248",
+   "name_va": "0x68b208",
+   "value": 10000.0,
+   "code_refs": []
+  },
+  {
+   "name": "MAXPEERTOPEER",
+   "name_off": "0x28b24c",
+   "value_off": "0x28b28c",
+   "name_va": "0x68b24c",
+   "value": 0.0,
+   "code_refs": []
+  },
+  {
+   "name": "BOUNTYACCUMPERSECOND",
+   "name_off": "0x28b290",
+   "value_off": "0x28b2d0",
+   "name_va": "0x68b290",
+   "value": 0.05000000074505806,
+   "code_refs": []
+  },
+  {
+   "name": "EVENTPINGSTATION",
+   "name_off": "0x28b2d4",
+   "value_off": "0x28b314",
+   "name_va": "0x68b2d4",
+   "value": 10000.0,
+   "code_refs": []
+  },
+  {
+   "name": "EVENTPINGPEERS",
+   "name_off": "0x28b318",
+   "value_off": "0x28b358",
+   "name_va": "0x68b318",
+   "value": 3000.0,
+   "code_refs": []
+  },
+  {
+   "name": "EVENTCHECKWATCHDOGS",
+   "name_off": "0x28b35c",
+   "value_off": "0x28b39c",
+   "name_va": "0x68b35c",
+   "value": 3000.0,
+   "code_refs": []
+  },
+  {
+   "name": "EVENTRETRYMESSAGES",
+   "name_off": "0x28b3a0",
+   "value_off": "0x28b3e0",
+   "name_va": "0x68b3a0",
+   "value": 850.0,
+   "code_refs": []
+  },
+  {
+   "name": "EVENTUPDATEPOSITIONS",
+   "name_off": "0x28b3e4",
+   "value_off": "0x28b424",
+   "name_va": "0x68b3e4",
+   "value": 55.0,
+   "code_refs": []
+  },
+  {
+   "name": "EVENTRESETCOMMSTATS",
+   "name_off": "0x28b428",
+   "value_off": "0x28b468",
+   "name_va": "0x68b428",
+   "value": 1000.0,
+   "code_refs": []
+  },
+  {
+   "name": "EVENTREFRESHWORLDINTERNALS",
+   "name_off": "0x28b46c",
+   "value_off": "0x28b4ac",
+   "name_va": "0x68b46c",
+   "value": 5000.0,
+   "code_refs": []
+  },
+  {
+   "name": "EVENTHOUSEKEEPNAMESERVERRETRIES",
+   "name_off": "0x28b4b0",
+   "value_off": "0x28b4f0",
+   "name_va": "0x68b4b0",
+   "value": 500.0,
+   "code_refs": []
+  },
+  {
+   "name": "EVENTSENDLOGINMESSAGE",
+   "name_off": "0x28b4f4",
+   "value_off": "0x28b534",
+   "name_va": "0x68b4f4",
+   "value": 60000.0,
+   "code_refs": []
+  },
+  {
+   "name": "EVENTAWARDCYCLICFLAGSCORE",
+   "name_off": "0x28b538",
+   "value_off": "0x28b578",
+   "name_va": "0x68b538",
+   "value": 60000.0,
+   "code_refs": []
+  },
+  {
+   "name": "EVENTZEROOUTOFRANGE",
+   "name_off": "0x28b57c",
+   "value_off": "0x28b5bc",
+   "name_va": "0x68b57c",
+   "value": 2000.0,
+   "code_refs": []
+  },
+  {
+   "name": "EVENTCLEARINCOMINGDAMAGE",
+   "name_off": "0x28b5c0",
+   "value_off": "0x28b600",
+   "name_va": "0x68b5c0",
+   "value": 1500.0,
+   "code_refs": []
+  },
+  {
+   "name": "EVENTCOMPUTEEW",
+   "name_off": "0x28b604",
+   "value_off": "0x28b644",
+   "name_va": "0x68b604",
+   "value": 300.0,
+   "code_refs": []
+  },
+  {
+   "name": "EVENTCHECKMISSILELOCKS",
+   "name_off": "0x28b648",
+   "value_off": "0x28b688",
+   "name_va": "0x68b648",
+   "value": 250.0,
+   "code_refs": []
+  },
+  {
+   "name": "EVENTRETRYGAMESERVERCONNECT",
+   "name_off": "0x28b68c",
+   "value_off": "0x28b6cc",
+   "name_va": "0x68b68c",
+   "value": 1500.0,
+   "code_refs": []
+  },
+  {
+   "name": "EVENTSENDSCOREINFO",
+   "name_off": "0x28b6d0",
+   "value_off": "0x28b710",
+   "name_va": "0x68b6d0",
+   "value": 1200.0,
+   "code_refs": []
+  },
+  {
+   "name": "EVENTREQUESTNOTIFYLIST",
+   "name_off": "0x28b714",
+   "value_off": "0x28b754",
+   "name_va": "0x68b714",
+   "value": 4000.0,
+   "code_refs": []
+  },
+  {
+   "name": "EVENTSPAWNFROMOBJECT",
+   "name_off": "0x28b758",
+   "value_off": "0x28b798",
+   "name_va": "0x68b758",
+   "value": 20000.0,
+   "code_refs": []
+  },
+  {
+   "name": "EVENTHEARTBEAT",
+   "name_off": "0x28b79c",
+   "value_off": "0x28b7dc",
+   "name_va": "0x68b79c",
+   "value": 60000.0,
+   "code_refs": []
+  },
+  {
+   "name": "EVENTCHECKMISSILELOCKS",
+   "name_off": "0x28b7e0",
+   "value_off": "0x28b820",
+   "name_va": "0x68b7e0",
+   "value": 200.0,
+   "code_refs": []
+  },
+  {
+   "name": "EVENTCHECKCHIMES",
+   "name_off": "0x28b824",
+   "value_off": "0x28b864",
+   "name_va": "0x68b824",
+   "value": 7500.0,
+   "code_refs": []
+  },
+  {
+   "name": "EVENTCHECKBOUNTYDIST",
+   "name_off": "0x28b868",
+   "value_off": "0x28b8a8",
+   "name_va": "0x68b868",
+   "value": 5000.0,
+   "code_refs": []
+  },
+  {
+   "name": "EventPropogateDelayedFire",
+   "name_off": "0x28b8ac",
+   "value_off": "0x28b8ec",
+   "name_va": "0x68b8ac",
+   "value": 250.0,
+   "code_refs": []
+  },
+  {
+   "name": "EventTickStatCollector",
+   "name_off": "0x28b8f0",
+   "value_off": "0x28b930",
+   "name_va": "0x68b8f0",
+   "value": 60000.0,
+   "code_refs": []
+  },
+  {
+   "name": "EventClientPingStation",
+   "name_off": "0x28b934",
+   "value_off": "0x28b974",
+   "name_va": "0x68b934",
+   "value": 5000.0,
+   "code_refs": []
+  },
+  {
+   "name": "EventSendRequestGameServerList",
+   "name_off": "0x28b978",
+   "value_off": "0x28b9b8",
+   "name_va": "0x68b978",
+   "value": 7000.0,
+   "code_refs": []
+  },
+  {
+   "name": "EventDecrementMaintenance",
+   "name_off": "0x28b9bc",
+   "value_off": "0x28b9fc",
+   "name_va": "0x68b9bc",
+   "value": 60000.0,
+   "code_refs": []
+  },
+  {
+   "name": "SPAWNAISEVERY",
+   "name_off": "0x28ba00",
+   "value_off": "0x28ba40",
+   "name_va": "0x68ba00",
+   "value": 6000.0,
+   "code_refs": []
+  },
+  {
+   "name": "TIMEBETWEENOBJLOADS",
+   "name_off": "0x28ba44",
+   "value_off": "0x28ba84",
+   "name_va": "0x68ba44",
+   "value": 4000.0,
+   "code_refs": []
+  },
+  {
+   "name": "GAMESERVERFPS",
+   "name_off": "0x28ba88",
+   "value_off": "0x28bac8",
+   "name_va": "0x68ba88",
+   "value": 20.0,
+   "code_refs": []
+  },
+  {
+   "name": "OBJECTZONEUPDATEEVERY",
+   "name_off": "0x28bacc",
+   "value_off": "0x28bb0c",
+   "name_va": "0x68bacc",
+   "value": 500.0,
+   "code_refs": []
+  },
+  {
+   "name": "OBJECTSYSTEMTICKEVERY",
+   "name_off": "0x28bb10",
+   "value_off": "0x28bb50",
+   "name_va": "0x68bb10",
+   "value": 750.0,
+   "code_refs": []
+  },
+  {
+   "name": "RATINGCONSTANT_1",
+   "name_off": "0x28bb54",
+   "value_off": "0x28bb94",
+   "name_va": "0x68bb54",
+   "value": 1.0,
+   "code_refs": []
+  },
+  {
+   "name": "RATINGCONSTANT_2",
+   "name_off": "0x28bb98",
+   "value_off": "0x28bbd8",
+   "name_va": "0x68bb98",
+   "value": 1.0,
+   "code_refs": []
+  },
+  {
+   "name": "RATINGCONSTANT_3",
+   "name_off": "0x28bbdc",
+   "value_off": "0x28bc1c",
+   "name_va": "0x68bbdc",
+   "value": 10.0,
+   "code_refs": []
+  },
+  {
+   "name": "MUSICCHUNKSIZE",
+   "name_off": "0x28bc20",
+   "value_off": "0x28bc60",
+   "name_va": "0x68bc20",
+   "value": 150000.0,
+   "code_refs": []
+  },
+  {
+   "name": "MUSICBUFFERSIZE",
+   "name_off": "0x28bc64",
+   "value_off": "0x28bca4",
+   "name_va": "0x68bc64",
+   "value": 400000.0,
+   "code_refs": []
+  },
+  {
+   "name": "MUSICWATCHTOLERANCE",
+   "name_off": "0x28bca8",
+   "value_off": "0x28bce8",
+   "name_va": "0x68bca8",
+   "value": 90000.0,
+   "code_refs": []
+  },
+  {
+   "name": "FLAGDISABLEDFOR",
+   "name_off": "0x28bcec",
+   "value_off": "0x28bd2c",
+   "name_va": "0x68bcec",
+   "value": 300.0,
+   "code_refs": []
+  },
+  {
+   "name": "FLAGPERCENTONTEAM",
+   "name_off": "0x28bd30",
+   "value_off": "0x28bd70",
+   "name_va": "0x68bd30",
+   "value": 0.6000000238418579,
+   "code_refs": []
+  },
+  {
+   "name": "SAFEZONESIZE",
+   "name_off": "0x28bd74",
+   "value_off": "0x28bdb4",
+   "name_va": "0x68bd74",
+   "value": 3000.0,
+   "code_refs": []
+  },
+  {
+   "name": "PREDICTORSITEDISTTOFIRINGAT",
+   "name_off": "0x28bdb8",
+   "value_off": "0x28bdf8",
+   "name_va": "0x68bdb8",
+   "value": 0.20000000298023224,
+   "code_refs": []
+  },
+  {
+   "name": "ARENAMODE",
+   "name_off": "0x28bdfc",
+   "value_off": "0x28be3c",
+   "name_va": "0x68bdfc",
+   "value": 1.0,
+   "code_refs": []
+  },
+  {
+   "name": "DISTANCETOWAYPOINTENGINEHAPPY",
+   "name_off": "0x28be40",
+   "value_off": "0x28be80",
+   "name_va": "0x68be40",
+   "value": 1500.0,
+   "code_refs": []
+  },
+  {
+   "name": "MAXPOWERUPSPERUNITDENSITY",
+   "name_off": "0x28be84",
+   "value_off": "0x28bec4",
+   "name_va": "0x68be84",
+   "value": 10.0,
+   "code_refs": []
+  },
+  {
+   "name": "POWERUPUNITDENSITY",
+   "name_off": "0x28bec8",
+   "value_off": "0x28bf08",
+   "name_va": "0x68bec8",
+   "value": 5000.0,
+   "code_refs": []
+  },
+  {
+   "name": "NUMBEROFTARGETINGWINDOWS",
+   "name_off": "0x28bf0c",
+   "value_off": "0x28bf4c",
+   "name_va": "0x68bf0c",
+   "value": 3.0,
+   "code_refs": []
+  },
+  {
+   "name": "ROTATIONALCORRECTIONCONSTANT",
+   "name_off": "0x28bf50",
+   "value_off": "0x28bf90",
+   "name_va": "0x68bf50",
+   "value": 0.10000000149011612,
+   "code_refs": []
+  },
+  {
+   "name": "POSITIONALCORRECTIONCONSTANT",
+   "name_off": "0x28bf94",
+   "value_off": "0x28bfd4",
+   "name_va": "0x68bf94",
+   "value": 0.029999999329447746,
+   "code_refs": []
+  },
+  {
+   "name": "MaxPositionalErrorUntilJump",
+   "name_off": "0x28bfd8",
+   "value_off": "0x28c018",
+   "name_va": "0x68bfd8",
+   "value": 5000.0,
+   "code_refs": []
+  },
+  {
+   "name": "SKEWREDUCTIONDIVISOR",
+   "name_off": "0x28c01c",
+   "value_off": "0x28c05c",
+   "name_va": "0x68c01c",
+   "value": 4.0,
+   "code_refs": []
+  },
+  {
+   "name": "MOSTBYTESTOSENDPERSECOND",
+   "name_off": "0x28c060",
+   "value_off": "0x28c0a0",
+   "name_va": "0x68c060",
+   "value": 3000.0,
+   "code_refs": []
+  },
+  {
+   "name": "MOSTPACKETSTOSENDPERSECOND",
+   "name_off": "0x28c0a4",
+   "value_off": "0x28c0e4",
+   "name_va": "0x68c0a4",
+   "value": 14.0,
+   "code_refs": []
+  },
+  {
+   "name": "WATCHDOGTIMEOUT",
+   "name_off": "0x28c0e8",
+   "value_off": "0x28c128",
+   "name_va": "0x68c0e8",
+   "value": 1000.0,
+   "code_refs": []
+  },
+  {
+   "name": "STATIONTIMEOUTWATCHDOG",
+   "name_off": "0x28c12c",
+   "value_off": "0x28c16c",
+   "name_va": "0x68c12c",
+   "value": 15000.0,
+   "code_refs": []
+  },
+  {
+   "name": "WATCHDOGGRACE",
+   "name_off": "0x28c170",
+   "value_off": "0x28c1b0",
+   "name_va": "0x68c170",
+   "value": 40000.0,
+   "code_refs": []
+  },
+  {
+   "name": "CLIENTWATCHDOG",
+   "name_off": "0x28c1b4",
+   "value_off": "0x28c1f4",
+   "name_va": "0x68c1b4",
+   "value": 1000.0,
+   "code_refs": []
+  },
+  {
+   "name": "CLIENTGRACE",
+   "name_off": "0x28c1f8",
+   "value_off": "0x28c238",
+   "name_va": "0x68c1f8",
+   "value": 16000.0,
+   "code_refs": []
+  },
+  {
+   "name": "MAXLOGINS",
+   "name_off": "0x28c23c",
+   "value_off": "0x28c27c",
+   "name_va": "0x68c23c",
+   "value": 50.0,
+   "code_refs": []
+  },
+  {
+   "name": "DAMAGEALARMPERCENTLEVEL",
+   "name_off": "0x28c280",
+   "value_off": "0x28c2c0",
+   "name_va": "0x68c280",
+   "value": 20.0,
+   "code_refs": []
+  },
+  {
+   "name": "OBJECTTEAMSTARTAT",
+   "name_off": "0x28c2c4",
+   "value_off": "0x28c304",
+   "name_va": "0x68c2c4",
+   "value": 8960.0,
+   "code_refs": []
+  },
+  {
+   "name": "FLIGHTLOOPWATCHDOGTIMEOUT",
+   "name_off": "0x28c308",
+   "value_off": "0x28c348",
+   "name_va": "0x68c308",
+   "value": 10000.0,
+   "code_refs": []
+  },
+  {
+   "name": "MILLISECONDSBETWEENPLAYERVISITS",
+   "name_off": "0x28c34c",
+   "value_off": "0x28c38c",
+   "name_va": "0x68c34c",
+   "value": 50.0,
+   "code_refs": []
+  },
+  {
+   "name": "MILLISECONDSBETWEENPLAYERVISITS",
+   "name_off": "0x28c390",
+   "value_off": "0x28c3d0",
+   "name_va": "0x68c390",
+   "value": 60.0,
+   "code_refs": []
+  },
+  {
+   "name": "GAMESERVERPORT",
+   "name_off": "0x28c3d4",
+   "value_off": "0x28c414",
+   "name_va": "0x68c3d4",
+   "value": 5031.0,
+   "code_refs": []
+  },
+  {
+   "name": "NAMESERVERPORT",
+   "name_off": "0x28c418",
+   "value_off": "0x28c458",
+   "name_va": "0x68c418",
+   "value": 5032.0,
+   "code_refs": []
+  },
+  {
+   "name": "LOCALPORT",
+   "name_off": "0x28c45c",
+   "value_off": "0x28c49c",
+   "name_va": "0x68c45c",
+   "value": 5033.0,
+   "code_refs": []
+  },
+  {
+   "name": "SERVERPORT",
+   "name_off": "0x28c4a0",
+   "value_off": "0x28c4e0",
+   "name_va": "0x68c4a0",
+   "value": 5033.0,
+   "code_refs": []
+  },
+  {
+   "name": "STATION_RUNONPORT",
+   "name_off": "0x28c4e4",
+   "value_off": "0x28c524",
+   "name_va": "0x68c4e4",
+   "value": 5033.0,
+   "code_refs": []
+  },
+  {
+   "name": "STATION_TCPJOBPORT",
+   "name_off": "0x28c528",
+   "value_off": "0x28c568",
+   "name_va": "0x68c528",
+   "value": 5034.0,
+   "code_refs": []
+  },
+  {
+   "name": "STATION_PINGCONNECTIONS",
+   "name_off": "0x28c56c",
+   "value_off": "0x28c5ac",
+   "name_va": "0x68c56c",
+   "value": 4000.0,
+   "code_refs": []
+  },
+  {
+   "name": "STATION_CHECKWATCHDOGS",
+   "name_off": "0x28c5b0",
+   "value_off": "0x28c5f0",
+   "name_va": "0x68c5b0",
+   "value": 5000.0,
+   "code_refs": []
+  },
+  {
+   "name": "STATION_HOUSEKEEPRETRIES",
+   "name_off": "0x28c5f4",
+   "value_off": "0x28c634",
+   "name_va": "0x68c5f4",
+   "value": 500.0,
+   "code_refs": []
+  },
+  {
+   "name": "STATION_PINGREGISTEREDSERVERS",
+   "name_off": "0x28c638",
+   "value_off": "0x28c678",
+   "name_va": "0x68c638",
+   "value": 3000.0,
+   "code_refs": []
+  },
+  {
+   "name": "STATION_SERVERREGISTERHOLDOFF",
+   "name_off": "0x28c67c",
+   "value_off": "0x28c6bc",
+   "name_va": "0x68c67c",
+   "value": 30000.0,
+   "code_refs": []
+  },
+  {
+   "name": "STATION_WATCHDOGTIMEOUT",
+   "name_off": "0x28c6c0",
+   "value_off": "0x28c700",
+   "name_va": "0x68c6c0",
+   "value": 19000.0,
+   "code_refs": []
+  },
+  {
+   "name": "STATION_PLAYERONTIMES",
+   "name_off": "0x28c704",
+   "value_off": "0x28c744",
+   "name_va": "0x68c704",
+   "value": 20000.0,
+   "code_refs": []
+  },
+  {
+   "name": "FULLLOCKONLEVEL",
+   "name_off": "0x28c748",
+   "value_off": "0x28c788",
+   "name_va": "0x68c748",
+   "value": 100.0,
+   "code_refs": []
+  },
+  {
+   "name": "ECMSHIFTLOCKDEGRADEFACTOR",
+   "name_off": "0x28c78c",
+   "value_off": "0x28c7cc",
+   "name_va": "0x68c78c",
+   "value": 3.0,
+   "code_refs": []
+  },
+  {
+   "name": "MISSILELOCKACCELFACTOR",
+   "name_off": "0x28c7d0",
+   "value_off": "0x28c810",
+   "name_va": "0x68c7d0",
+   "value": 4.0,
+   "code_refs": []
+  },
+  {
+   "name": "LOCKACCUMPERSECOND",
+   "name_off": "0x28c814",
+   "value_off": "0x28c854",
+   "name_va": "0x68c814",
+   "value": 8.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff0PosTargetRoll",
+   "name_off": "0x28c858",
+   "value_off": "0x28c898",
+   "name_va": "0x68c858",
+   "value": 200.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff0PosTargetPitch",
+   "name_off": "0x28c89c",
+   "value_off": "0x28c8dc",
+   "name_va": "0x68c89c",
+   "value": 150.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff0PosTargetYaw",
+   "name_off": "0x28c8e0",
+   "value_off": "0x28c920",
+   "name_va": "0x68c8e0",
+   "value": 150.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff0PosRateRoll",
+   "name_off": "0x28c924",
+   "value_off": "0x28c964",
+   "name_va": "0x68c924",
+   "value": 200.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff0PosRatePitch",
+   "name_off": "0x28c968",
+   "value_off": "0x28c9a8",
+   "name_va": "0x68c968",
+   "value": 150.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff0PosRateYaw",
+   "name_off": "0x28c9ac",
+   "value_off": "0x28c9ec",
+   "name_va": "0x68c9ac",
+   "value": 150.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff0PosAccRoll",
+   "name_off": "0x28c9f0",
+   "value_off": "0x28ca30",
+   "name_va": "0x68c9f0",
+   "value": 200.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff0PosAccPitch",
+   "name_off": "0x28ca34",
+   "value_off": "0x28ca74",
+   "name_va": "0x68ca34",
+   "value": 150.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff0PosAccYaw",
+   "name_off": "0x28ca78",
+   "value_off": "0x28cab8",
+   "name_va": "0x68ca78",
+   "value": 150.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff0PosStatusTimeout",
+   "name_off": "0x28cabc",
+   "value_off": "0x28cafc",
+   "name_va": "0x68cabc",
+   "value": 150.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff0PosStatus",
+   "name_off": "0x28cb00",
+   "value_off": "0x28cb40",
+   "name_va": "0x68cb00",
+   "value": 150.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff0PosTargetVelocity",
+   "name_off": "0x28cb44",
+   "value_off": "0x28cb84",
+   "name_va": "0x68cb44",
+   "value": 150.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff0PosVelocity",
+   "name_off": "0x28cb88",
+   "value_off": "0x28cbc8",
+   "name_va": "0x68cb88",
+   "value": 150.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff0PosAcceleration",
+   "name_off": "0x28cbcc",
+   "value_off": "0x28cc0c",
+   "name_va": "0x68cbcc",
+   "value": 150.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff0PosPosition",
+   "name_off": "0x28cc10",
+   "value_off": "0x28cc50",
+   "name_va": "0x68cc10",
+   "value": 150.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff0PosViewVector",
+   "name_off": "0x28cc54",
+   "value_off": "0x28cc94",
+   "name_va": "0x68cc54",
+   "value": 150.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff0PosRightVector",
+   "name_off": "0x28cc98",
+   "value_off": "0x28ccd8",
+   "name_va": "0x68cc98",
+   "value": 150.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff0PosPacketTimeout",
+   "name_off": "0x28ccdc",
+   "value_off": "0x28cd1c",
+   "name_va": "0x68ccdc",
+   "value": 150.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff0PosSendFullValue",
+   "name_off": "0x28cd20",
+   "value_off": "0x28cd60",
+   "name_va": "0x68cd20",
+   "value": 450.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff0PosCyclicRates",
+   "name_off": "0x28cd64",
+   "value_off": "0x28cda4",
+   "name_va": "0x68cd64",
+   "value": 150.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff0PosGunStatus",
+   "name_off": "0x28cda8",
+   "value_off": "0x28cde8",
+   "name_va": "0x68cda8",
+   "value": 150.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff0PosTargets",
+   "name_off": "0x28cdec",
+   "value_off": "0x28ce2c",
+   "name_va": "0x68cdec",
+   "value": 1000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff0PosMaxVelocity",
+   "name_off": "0x28ce30",
+   "value_off": "0x28ce70",
+   "name_va": "0x68ce30",
+   "value": 1000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff0PosPerceivedDamage",
+   "name_off": "0x28ce74",
+   "value_off": "0x28ceb4",
+   "name_va": "0x68ce74",
+   "value": 200.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff0PosPing",
+   "name_off": "0x28ceb8",
+   "value_off": "0x28cef8",
+   "name_va": "0x68ceb8",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff0PosFPS",
+   "name_off": "0x28cefc",
+   "value_off": "0x28cf3c",
+   "name_va": "0x68cefc",
+   "value": 2500.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff0PosTune",
+   "name_off": "0x28cf40",
+   "value_off": "0x28cf80",
+   "name_va": "0x68cf40",
+   "value": 2500.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff0PosDamageLevel",
+   "name_off": "0x28cf84",
+   "value_off": "0x28cfc4",
+   "name_va": "0x68cf84",
+   "value": 2500.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff0PosECMLevel",
+   "name_off": "0x28cfc8",
+   "value_off": "0x28d008",
+   "name_va": "0x68cfc8",
+   "value": 1000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff0PosStatChecksum",
+   "name_off": "0x28d00c",
+   "value_off": "0x28d04c",
+   "name_va": "0x68d00c",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff0PosStats",
+   "name_off": "0x28d050",
+   "value_off": "0x28d090",
+   "name_va": "0x68d050",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff0PosPCStats",
+   "name_off": "0x28d094",
+   "value_off": "0x28d0d4",
+   "name_va": "0x68d094",
+   "value": 4000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff0PosHostiles",
+   "name_off": "0x28d0d8",
+   "value_off": "0x28d118",
+   "name_va": "0x68d0d8",
+   "value": 3000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff0PosAllied",
+   "name_off": "0x28d11c",
+   "value_off": "0x28d15c",
+   "name_va": "0x68d11c",
+   "value": 3000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff1PosTargetRoll",
+   "name_off": "0x28d160",
+   "value_off": "0x28d1a0",
+   "name_va": "0x68d160",
+   "value": 300.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff1PosTargetPitch",
+   "name_off": "0x28d1a4",
+   "value_off": "0x28d1e4",
+   "name_va": "0x68d1a4",
+   "value": 200.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff1PosTargetYaw",
+   "name_off": "0x28d1e8",
+   "value_off": "0x28d228",
+   "name_va": "0x68d1e8",
+   "value": 200.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff1PosRateRoll",
+   "name_off": "0x28d22c",
+   "value_off": "0x28d26c",
+   "name_va": "0x68d22c",
+   "value": 300.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff1PosRatePitch",
+   "name_off": "0x28d270",
+   "value_off": "0x28d2b0",
+   "name_va": "0x68d270",
+   "value": 200.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff1PosRateYaw",
+   "name_off": "0x28d2b4",
+   "value_off": "0x28d2f4",
+   "name_va": "0x68d2b4",
+   "value": 200.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff1PosAccRoll",
+   "name_off": "0x28d2f8",
+   "value_off": "0x28d338",
+   "name_va": "0x68d2f8",
+   "value": 300.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff1PosAccPitch",
+   "name_off": "0x28d33c",
+   "value_off": "0x28d37c",
+   "name_va": "0x68d33c",
+   "value": 200.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff1PosAccYaw",
+   "name_off": "0x28d380",
+   "value_off": "0x28d3c0",
+   "name_va": "0x68d380",
+   "value": 200.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff1PosStatusTimeout",
+   "name_off": "0x28d3c4",
+   "value_off": "0x28d404",
+   "name_va": "0x68d3c4",
+   "value": 150.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff1PosStatus",
+   "name_off": "0x28d408",
+   "value_off": "0x28d448",
+   "name_va": "0x68d408",
+   "value": 150.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff1PosTargetVelocity",
+   "name_off": "0x28d44c",
+   "value_off": "0x28d48c",
+   "name_va": "0x68d44c",
+   "value": 175.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff1PosVelocity",
+   "name_off": "0x28d490",
+   "value_off": "0x28d4d0",
+   "name_va": "0x68d490",
+   "value": 275.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff1PosAcceleration",
+   "name_off": "0x28d4d4",
+   "value_off": "0x28d514",
+   "name_va": "0x68d4d4",
+   "value": 275.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff1PosPosition",
+   "name_off": "0x28d518",
+   "value_off": "0x28d558",
+   "name_va": "0x68d518",
+   "value": 175.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff1PosViewVector",
+   "name_off": "0x28d55c",
+   "value_off": "0x28d59c",
+   "name_va": "0x68d55c",
+   "value": 200.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff1PosRightVector",
+   "name_off": "0x28d5a0",
+   "value_off": "0x28d5e0",
+   "name_va": "0x68d5a0",
+   "value": 200.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff1PosPacketTimeout",
+   "name_off": "0x28d5e4",
+   "value_off": "0x28d624",
+   "name_va": "0x68d5e4",
+   "value": 160.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff1PosSendFullValue",
+   "name_off": "0x28d628",
+   "value_off": "0x28d668",
+   "name_va": "0x68d628",
+   "value": 1200.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff1PosCyclicRates",
+   "name_off": "0x28d66c",
+   "value_off": "0x28d6ac",
+   "name_va": "0x68d66c",
+   "value": 150.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff1PosGunStatus",
+   "name_off": "0x28d6b0",
+   "value_off": "0x28d6f0",
+   "name_va": "0x68d6b0",
+   "value": 400.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff1PosTargets",
+   "name_off": "0x28d6f4",
+   "value_off": "0x28d734",
+   "name_va": "0x68d6f4",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff1PosMaxVelocity",
+   "name_off": "0x28d738",
+   "value_off": "0x28d778",
+   "name_va": "0x68d738",
+   "value": 2000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff1PosPerceivedDamage",
+   "name_off": "0x28d77c",
+   "value_off": "0x28d7bc",
+   "name_va": "0x68d77c",
+   "value": 300.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff1PosPing",
+   "name_off": "0x28d7c0",
+   "value_off": "0x28d800",
+   "name_va": "0x68d7c0",
+   "value": 2500.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff1PosFPS",
+   "name_off": "0x28d804",
+   "value_off": "0x28d844",
+   "name_va": "0x68d804",
+   "value": 2500.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff1PosTune",
+   "name_off": "0x28d848",
+   "value_off": "0x28d888",
+   "name_va": "0x68d848",
+   "value": 2500.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff1PosDamageLevel",
+   "name_off": "0x28d88c",
+   "value_off": "0x28d8cc",
+   "name_va": "0x68d88c",
+   "value": 2500.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff1PosECMLevel",
+   "name_off": "0x28d8d0",
+   "value_off": "0x28d910",
+   "name_va": "0x68d8d0",
+   "value": 1000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff1PosStatChecksum",
+   "name_off": "0x28d914",
+   "value_off": "0x28d954",
+   "name_va": "0x68d914",
+   "value": 4000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff1PosStats",
+   "name_off": "0x28d958",
+   "value_off": "0x28d998",
+   "name_va": "0x68d958",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff1PosPCStats",
+   "name_off": "0x28d99c",
+   "value_off": "0x28d9dc",
+   "name_va": "0x68d99c",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff1PosHostiles",
+   "name_off": "0x28d9e0",
+   "value_off": "0x28da20",
+   "name_va": "0x68d9e0",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff1PosAllied",
+   "name_off": "0x28da24",
+   "value_off": "0x28da64",
+   "name_va": "0x68da24",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff2PosTargetRoll",
+   "name_off": "0x28da68",
+   "value_off": "0x28daa8",
+   "name_va": "0x68da68",
+   "value": 350.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff2PosTargetPitch",
+   "name_off": "0x28daac",
+   "value_off": "0x28daec",
+   "name_va": "0x68daac",
+   "value": 250.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff2PosTargetYaw",
+   "name_off": "0x28daf0",
+   "value_off": "0x28db30",
+   "name_va": "0x68daf0",
+   "value": 250.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff2PosRateRoll",
+   "name_off": "0x28db34",
+   "value_off": "0x28db74",
+   "name_va": "0x68db34",
+   "value": 350.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff2PosRatePitch",
+   "name_off": "0x28db78",
+   "value_off": "0x28dbb8",
+   "name_va": "0x68db78",
+   "value": 250.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff2PosRateYaw",
+   "name_off": "0x28dbbc",
+   "value_off": "0x28dbfc",
+   "name_va": "0x68dbbc",
+   "value": 250.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff2PosAccRoll",
+   "name_off": "0x28dc00",
+   "value_off": "0x28dc40",
+   "name_va": "0x68dc00",
+   "value": 350.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff2PosAccPitch",
+   "name_off": "0x28dc44",
+   "value_off": "0x28dc84",
+   "name_va": "0x68dc44",
+   "value": 250.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff2PosAccYaw",
+   "name_off": "0x28dc88",
+   "value_off": "0x28dcc8",
+   "name_va": "0x68dc88",
+   "value": 250.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff2PosStatusTimeout",
+   "name_off": "0x28dccc",
+   "value_off": "0x28dd0c",
+   "name_va": "0x68dccc",
+   "value": 200.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff2PosStatus",
+   "name_off": "0x28dd10",
+   "value_off": "0x28dd50",
+   "name_va": "0x68dd10",
+   "value": 200.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff2PosTargetVelocity",
+   "name_off": "0x28dd54",
+   "value_off": "0x28dd94",
+   "name_va": "0x68dd54",
+   "value": 250.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff2PosVelocity",
+   "name_off": "0x28dd98",
+   "value_off": "0x28ddd8",
+   "name_va": "0x68dd98",
+   "value": 350.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff2PosAcceleration",
+   "name_off": "0x28dddc",
+   "value_off": "0x28de1c",
+   "name_va": "0x68dddc",
+   "value": 350.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff2PosPosition",
+   "name_off": "0x28de20",
+   "value_off": "0x28de60",
+   "name_va": "0x68de20",
+   "value": 250.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff2PosViewVector",
+   "name_off": "0x28de64",
+   "value_off": "0x28dea4",
+   "name_va": "0x68de64",
+   "value": 250.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff2PosRightVector",
+   "name_off": "0x28dea8",
+   "value_off": "0x28dee8",
+   "name_va": "0x68dea8",
+   "value": 250.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff2PosPacketTimeout",
+   "name_off": "0x28deec",
+   "value_off": "0x28df2c",
+   "name_va": "0x68deec",
+   "value": 225.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff2PosSendFullValue",
+   "name_off": "0x28df30",
+   "value_off": "0x28df70",
+   "name_va": "0x68df30",
+   "value": 1300.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff2PosCyclicRates",
+   "name_off": "0x28df74",
+   "value_off": "0x28dfb4",
+   "name_va": "0x68df74",
+   "value": 150.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff2PosGunStatus",
+   "name_off": "0x28dfb8",
+   "value_off": "0x28dff8",
+   "name_va": "0x68dfb8",
+   "value": 450.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff2PosTargets",
+   "name_off": "0x28dffc",
+   "value_off": "0x28e03c",
+   "name_va": "0x68dffc",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff2PosMaxVelocity",
+   "name_off": "0x28e040",
+   "value_off": "0x28e080",
+   "name_va": "0x68e040",
+   "value": 2000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff2PosPerceivedDamage",
+   "name_off": "0x28e084",
+   "value_off": "0x28e0c4",
+   "name_va": "0x68e084",
+   "value": 500.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff2PosPing",
+   "name_off": "0x28e0c8",
+   "value_off": "0x28e108",
+   "name_va": "0x68e0c8",
+   "value": 2500.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff2PosFPS",
+   "name_off": "0x28e10c",
+   "value_off": "0x28e14c",
+   "name_va": "0x68e10c",
+   "value": 2500.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff2PosTune",
+   "name_off": "0x28e150",
+   "value_off": "0x28e190",
+   "name_va": "0x68e150",
+   "value": 2500.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff2PosDamageLevel",
+   "name_off": "0x28e194",
+   "value_off": "0x28e1d4",
+   "name_va": "0x68e194",
+   "value": 2500.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff2PosECMLevel",
+   "name_off": "0x28e1d8",
+   "value_off": "0x28e218",
+   "name_va": "0x68e1d8",
+   "value": 1500.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff2PosStatChecksum",
+   "name_off": "0x28e21c",
+   "value_off": "0x28e25c",
+   "name_va": "0x68e21c",
+   "value": 4000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff2PosStats",
+   "name_off": "0x28e260",
+   "value_off": "0x28e2a0",
+   "name_va": "0x68e260",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff2PosPCStats",
+   "name_off": "0x28e2a4",
+   "value_off": "0x28e2e4",
+   "name_va": "0x68e2a4",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff2PosHostiles",
+   "name_off": "0x28e2e8",
+   "value_off": "0x28e328",
+   "name_va": "0x68e2e8",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff2PosAllied",
+   "name_off": "0x28e32c",
+   "value_off": "0x28e36c",
+   "name_va": "0x68e32c",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff3PosTargetRoll",
+   "name_off": "0x28e370",
+   "value_off": "0x28e3b0",
+   "name_va": "0x68e370",
+   "value": 375.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff3PosTargetPitch",
+   "name_off": "0x28e3b4",
+   "value_off": "0x28e3f4",
+   "name_va": "0x68e3b4",
+   "value": 275.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff3PosTargetYaw",
+   "name_off": "0x28e3f8",
+   "value_off": "0x28e438",
+   "name_va": "0x68e3f8",
+   "value": 275.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff3PosRateRoll",
+   "name_off": "0x28e43c",
+   "value_off": "0x28e47c",
+   "name_va": "0x68e43c",
+   "value": 375.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff3PosRatePitch",
+   "name_off": "0x28e480",
+   "value_off": "0x28e4c0",
+   "name_va": "0x68e480",
+   "value": 275.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff3PosRateYaw",
+   "name_off": "0x28e4c4",
+   "value_off": "0x28e504",
+   "name_va": "0x68e4c4",
+   "value": 275.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff3PosAccRoll",
+   "name_off": "0x28e508",
+   "value_off": "0x28e548",
+   "name_va": "0x68e508",
+   "value": 375.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff3PosAccPitch",
+   "name_off": "0x28e54c",
+   "value_off": "0x28e58c",
+   "name_va": "0x68e54c",
+   "value": 275.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff3PosAccYaw",
+   "name_off": "0x28e590",
+   "value_off": "0x28e5d0",
+   "name_va": "0x68e590",
+   "value": 275.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff3PosStatusTimeout",
+   "name_off": "0x28e5d4",
+   "value_off": "0x28e614",
+   "name_va": "0x68e5d4",
+   "value": 225.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff3PosStatus",
+   "name_off": "0x28e618",
+   "value_off": "0x28e658",
+   "name_va": "0x68e618",
+   "value": 225.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff3PosTargetVelocity",
+   "name_off": "0x28e65c",
+   "value_off": "0x28e69c",
+   "name_va": "0x68e65c",
+   "value": 275.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff3PosVelocity",
+   "name_off": "0x28e6a0",
+   "value_off": "0x28e6e0",
+   "name_va": "0x68e6a0",
+   "value": 375.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff3PosAcceleration",
+   "name_off": "0x28e6e4",
+   "value_off": "0x28e724",
+   "name_va": "0x68e6e4",
+   "value": 375.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff3PosPosition",
+   "name_off": "0x28e728",
+   "value_off": "0x28e768",
+   "name_va": "0x68e728",
+   "value": 375.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff3PosViewVector",
+   "name_off": "0x28e76c",
+   "value_off": "0x28e7ac",
+   "name_va": "0x68e76c",
+   "value": 300.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff3PosRightVector",
+   "name_off": "0x28e7b0",
+   "value_off": "0x28e7f0",
+   "name_va": "0x68e7b0",
+   "value": 300.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff3PosPacketTimeout",
+   "name_off": "0x28e7f4",
+   "value_off": "0x28e834",
+   "name_va": "0x68e7f4",
+   "value": 275.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff3PosSendFullValue",
+   "name_off": "0x28e838",
+   "value_off": "0x28e878",
+   "name_va": "0x68e838",
+   "value": 1400.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff3PosCyclicRates",
+   "name_off": "0x28e87c",
+   "value_off": "0x28e8bc",
+   "name_va": "0x68e87c",
+   "value": 200.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff3PosGunStatus",
+   "name_off": "0x28e8c0",
+   "value_off": "0x28e900",
+   "name_va": "0x68e8c0",
+   "value": 500.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff3PosTargets",
+   "name_off": "0x28e904",
+   "value_off": "0x28e944",
+   "name_va": "0x68e904",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff3PosMaxVelocity",
+   "name_off": "0x28e948",
+   "value_off": "0x28e988",
+   "name_va": "0x68e948",
+   "value": 2000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff3PosPerceivedDamage",
+   "name_off": "0x28e98c",
+   "value_off": "0x28e9cc",
+   "name_va": "0x68e98c",
+   "value": 500.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff3PosPing",
+   "name_off": "0x28e9d0",
+   "value_off": "0x28ea10",
+   "name_va": "0x68e9d0",
+   "value": 2500.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff3PosFPS",
+   "name_off": "0x28ea14",
+   "value_off": "0x28ea54",
+   "name_va": "0x68ea14",
+   "value": 2500.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff3PosTune",
+   "name_off": "0x28ea58",
+   "value_off": "0x28ea98",
+   "name_va": "0x68ea58",
+   "value": 2500.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff3PosDamageLevel",
+   "name_off": "0x28ea9c",
+   "value_off": "0x28eadc",
+   "name_va": "0x68ea9c",
+   "value": 2500.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff3PosECMLevel",
+   "name_off": "0x28eae0",
+   "value_off": "0x28eb20",
+   "name_va": "0x68eae0",
+   "value": 3000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff3PosStatChecksum",
+   "name_off": "0x28eb24",
+   "value_off": "0x28eb64",
+   "name_va": "0x68eb24",
+   "value": 4000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff3PosStats",
+   "name_off": "0x28eb68",
+   "value_off": "0x28eba8",
+   "name_va": "0x68eb68",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff3PosPCStats",
+   "name_off": "0x28ebac",
+   "value_off": "0x28ebec",
+   "name_va": "0x68ebac",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff3PosHostiles",
+   "name_off": "0x28ebf0",
+   "value_off": "0x28ec30",
+   "name_va": "0x68ebf0",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff3PosAllied",
+   "name_off": "0x28ec34",
+   "value_off": "0x28ec74",
+   "name_va": "0x68ec34",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff4PosTargetRoll",
+   "name_off": "0x28ec78",
+   "value_off": "0x28ecb8",
+   "name_va": "0x68ec78",
+   "value": 600.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff4PosTargetPitch",
+   "name_off": "0x28ecbc",
+   "value_off": "0x28ecfc",
+   "name_va": "0x68ecbc",
+   "value": 400.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff4PosTargetYaw",
+   "name_off": "0x28ed00",
+   "value_off": "0x28ed40",
+   "name_va": "0x68ed00",
+   "value": 400.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff4PosRateRoll",
+   "name_off": "0x28ed44",
+   "value_off": "0x28ed84",
+   "name_va": "0x68ed44",
+   "value": 600.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff4PosRatePitch",
+   "name_off": "0x28ed88",
+   "value_off": "0x28edc8",
+   "name_va": "0x68ed88",
+   "value": 400.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff4PosRateYaw",
+   "name_off": "0x28edcc",
+   "value_off": "0x28ee0c",
+   "name_va": "0x68edcc",
+   "value": 400.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff4PosAccRoll",
+   "name_off": "0x28ee10",
+   "value_off": "0x28ee50",
+   "name_va": "0x68ee10",
+   "value": 600.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff4PosAccPitch",
+   "name_off": "0x28ee54",
+   "value_off": "0x28ee94",
+   "name_va": "0x68ee54",
+   "value": 400.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff4PosAccYaw",
+   "name_off": "0x28ee98",
+   "value_off": "0x28eed8",
+   "name_va": "0x68ee98",
+   "value": 400.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff4PosStatusTimeout",
+   "name_off": "0x28eedc",
+   "value_off": "0x28ef1c",
+   "name_va": "0x68eedc",
+   "value": 350.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff4PosStatus",
+   "name_off": "0x28ef20",
+   "value_off": "0x28ef60",
+   "name_va": "0x68ef20",
+   "value": 350.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff4PosTargetVelocity",
+   "name_off": "0x28ef64",
+   "value_off": "0x28efa4",
+   "name_va": "0x68ef64",
+   "value": 400.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff4PosVelocity",
+   "name_off": "0x28efa8",
+   "value_off": "0x28efe8",
+   "name_va": "0x68efa8",
+   "value": 500.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff4PosAcceleration",
+   "name_off": "0x28efec",
+   "value_off": "0x28f02c",
+   "name_va": "0x68efec",
+   "value": 500.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff4PosPosition",
+   "name_off": "0x28f030",
+   "value_off": "0x28f070",
+   "name_va": "0x68f030",
+   "value": 400.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff4PosViewVector",
+   "name_off": "0x28f074",
+   "value_off": "0x28f0b4",
+   "name_va": "0x68f074",
+   "value": 400.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff4PosRightVector",
+   "name_off": "0x28f0b8",
+   "value_off": "0x28f0f8",
+   "name_va": "0x68f0b8",
+   "value": 400.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff4PosPacketTimeout",
+   "name_off": "0x28f0fc",
+   "value_off": "0x28f13c",
+   "name_va": "0x68f0fc",
+   "value": 375.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff4PosSendFullValue",
+   "name_off": "0x28f140",
+   "value_off": "0x28f180",
+   "name_va": "0x68f140",
+   "value": 1500.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff4PosCyclicRates",
+   "name_off": "0x28f184",
+   "value_off": "0x28f1c4",
+   "name_va": "0x68f184",
+   "value": 300.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff4PosGunStatus",
+   "name_off": "0x28f1c8",
+   "value_off": "0x28f208",
+   "name_va": "0x68f1c8",
+   "value": 600.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff4PosTargets",
+   "name_off": "0x28f20c",
+   "value_off": "0x28f24c",
+   "name_va": "0x68f20c",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff4PosMaxVelocity",
+   "name_off": "0x28f250",
+   "value_off": "0x28f290",
+   "name_va": "0x68f250",
+   "value": 2000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff4PosPerceivedDamage",
+   "name_off": "0x28f294",
+   "value_off": "0x28f2d4",
+   "name_va": "0x68f294",
+   "value": 1000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff4PosPing",
+   "name_off": "0x28f2d8",
+   "value_off": "0x28f318",
+   "name_va": "0x68f2d8",
+   "value": 3000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff4PosFPS",
+   "name_off": "0x28f31c",
+   "value_off": "0x28f35c",
+   "name_va": "0x68f31c",
+   "value": 3000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff4PosTune",
+   "name_off": "0x28f360",
+   "value_off": "0x28f3a0",
+   "name_va": "0x68f360",
+   "value": 3000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff4PosDamageLevel",
+   "name_off": "0x28f3a4",
+   "value_off": "0x28f3e4",
+   "name_va": "0x68f3a4",
+   "value": 3000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff4PosECMLevel",
+   "name_off": "0x28f3e8",
+   "value_off": "0x28f428",
+   "name_va": "0x68f3e8",
+   "value": 3000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff4PosStatChecksum",
+   "name_off": "0x28f42c",
+   "value_off": "0x28f46c",
+   "name_va": "0x68f42c",
+   "value": 5000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff4PosStats",
+   "name_off": "0x28f470",
+   "value_off": "0x28f4b0",
+   "name_va": "0x68f470",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff4PosPCStats",
+   "name_off": "0x28f4b4",
+   "value_off": "0x28f4f4",
+   "name_va": "0x68f4b4",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff4PosHostiles",
+   "name_off": "0x28f4f8",
+   "value_off": "0x28f538",
+   "name_va": "0x68f4f8",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff4PosAllied",
+   "name_off": "0x28f53c",
+   "value_off": "0x28f57c",
+   "name_va": "0x68f53c",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff5PosTargetRoll",
+   "name_off": "0x28f580",
+   "value_off": "0x28f5c0",
+   "name_va": "0x68f580",
+   "value": 800.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff5PosTargetPitch",
+   "name_off": "0x28f5c4",
+   "value_off": "0x28f604",
+   "name_va": "0x68f5c4",
+   "value": 600.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff5PosTargetYaw",
+   "name_off": "0x28f608",
+   "value_off": "0x28f648",
+   "name_va": "0x68f608",
+   "value": 600.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff5PosRateRoll",
+   "name_off": "0x28f64c",
+   "value_off": "0x28f68c",
+   "name_va": "0x68f64c",
+   "value": 1200.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff5PosRatePitch",
+   "name_off": "0x28f690",
+   "value_off": "0x28f6d0",
+   "name_va": "0x68f690",
+   "value": 1000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff5PosRateYaw",
+   "name_off": "0x28f6d4",
+   "value_off": "0x28f714",
+   "name_va": "0x68f6d4",
+   "value": 1000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff5PosAccRoll",
+   "name_off": "0x28f718",
+   "value_off": "0x28f758",
+   "name_va": "0x68f718",
+   "value": 1200.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff5PosAccPitch",
+   "name_off": "0x28f75c",
+   "value_off": "0x28f79c",
+   "name_va": "0x68f75c",
+   "value": 1000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff5PosAccYaw",
+   "name_off": "0x28f7a0",
+   "value_off": "0x28f7e0",
+   "name_va": "0x68f7a0",
+   "value": 1000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff5PosStatusTimeout",
+   "name_off": "0x28f7e4",
+   "value_off": "0x28f824",
+   "name_va": "0x68f7e4",
+   "value": 500.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff5PosStatus",
+   "name_off": "0x28f828",
+   "value_off": "0x28f868",
+   "name_va": "0x68f828",
+   "value": 200.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff5PosTargetVelocity",
+   "name_off": "0x28f86c",
+   "value_off": "0x28f8ac",
+   "name_va": "0x68f86c",
+   "value": 500.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff5PosVelocity",
+   "name_off": "0x28f8b0",
+   "value_off": "0x28f8f0",
+   "name_va": "0x68f8b0",
+   "value": 700.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff5PosAcceleration",
+   "name_off": "0x28f8f4",
+   "value_off": "0x28f934",
+   "name_va": "0x68f8f4",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff5PosPosition",
+   "name_off": "0x28f938",
+   "value_off": "0x28f978",
+   "name_va": "0x68f938",
+   "value": 500.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff5PosViewVector",
+   "name_off": "0x28f97c",
+   "value_off": "0x28f9bc",
+   "name_va": "0x68f97c",
+   "value": 500.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff5PosRightVector",
+   "name_off": "0x28f9c0",
+   "value_off": "0x28fa00",
+   "name_va": "0x68f9c0",
+   "value": 500.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff5PosPacketTimeout",
+   "name_off": "0x28fa04",
+   "value_off": "0x28fa44",
+   "name_va": "0x68fa04",
+   "value": 300.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff5PosSendFullValue",
+   "name_off": "0x28fa48",
+   "value_off": "0x28fa88",
+   "name_va": "0x68fa48",
+   "value": 3000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff5PosCyclicRates",
+   "name_off": "0x28fa8c",
+   "value_off": "0x28facc",
+   "name_va": "0x68fa8c",
+   "value": 300.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff5PosGunStatus",
+   "name_off": "0x28fad0",
+   "value_off": "0x28fb10",
+   "name_va": "0x68fad0",
+   "value": 500.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff5PosTargets",
+   "name_off": "0x28fb14",
+   "value_off": "0x28fb54",
+   "name_va": "0x68fb14",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff5PosMaxVelocity",
+   "name_off": "0x28fb58",
+   "value_off": "0x28fb98",
+   "name_va": "0x68fb58",
+   "value": 5000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff5PosPerceivedDamage",
+   "name_off": "0x28fb9c",
+   "value_off": "0x28fbdc",
+   "name_va": "0x68fb9c",
+   "value": 3000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff5PosPing",
+   "name_off": "0x28fbe0",
+   "value_off": "0x28fc20",
+   "name_va": "0x68fbe0",
+   "value": 3000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff5PosFPS",
+   "name_off": "0x28fc24",
+   "value_off": "0x28fc64",
+   "name_va": "0x68fc24",
+   "value": 3000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff5PosTune",
+   "name_off": "0x28fc68",
+   "value_off": "0x28fca8",
+   "name_va": "0x68fc68",
+   "value": 3000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff5PosDamageLevel",
+   "name_off": "0x28fcac",
+   "value_off": "0x28fcec",
+   "name_va": "0x68fcac",
+   "value": 3000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff5PosECMLevel",
+   "name_off": "0x28fcf0",
+   "value_off": "0x28fd30",
+   "name_va": "0x68fcf0",
+   "value": 4500.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff5PosStatChecksum",
+   "name_off": "0x28fd34",
+   "value_off": "0x28fd74",
+   "name_va": "0x68fd34",
+   "value": 6000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff5PosStats",
+   "name_off": "0x28fd78",
+   "value_off": "0x28fdb8",
+   "name_va": "0x68fd78",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff5PosPCStats",
+   "name_off": "0x28fdbc",
+   "value_off": "0x28fdfc",
+   "name_va": "0x68fdbc",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff5PosHostiles",
+   "name_off": "0x28fe00",
+   "value_off": "0x28fe40",
+   "name_va": "0x68fe00",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff5PosAllied",
+   "name_off": "0x28fe44",
+   "value_off": "0x28fe84",
+   "name_va": "0x68fe44",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff6PosTargetRoll",
+   "name_off": "0x28fe88",
+   "value_off": "0x28fec8",
+   "name_va": "0x68fe88",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff6PosTargetPitch",
+   "name_off": "0x28fecc",
+   "value_off": "0x28ff0c",
+   "name_va": "0x68fecc",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff6PosTargetYaw",
+   "name_off": "0x28ff10",
+   "value_off": "0x28ff50",
+   "name_va": "0x68ff10",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff6PosRateRoll",
+   "name_off": "0x28ff54",
+   "value_off": "0x28ff94",
+   "name_va": "0x68ff54",
+   "value": 6000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff6PosRatePitch",
+   "name_off": "0x28ff98",
+   "value_off": "0x28ffd8",
+   "name_va": "0x68ff98",
+   "value": 4000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff6PosRateYaw",
+   "name_off": "0x28ffdc",
+   "value_off": "0x29001c",
+   "name_va": "0x68ffdc",
+   "value": 4000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff6PosAccRoll",
+   "name_off": "0x290020",
+   "value_off": "0x290060",
+   "name_va": "0x690020",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff6PosAccPitch",
+   "name_off": "0x290064",
+   "value_off": "0x2900a4",
+   "name_va": "0x690064",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff6PosAccYaw",
+   "name_off": "0x2900a8",
+   "value_off": "0x2900e8",
+   "name_va": "0x6900a8",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff6PosStatusTimeout",
+   "name_off": "0x2900ec",
+   "value_off": "0x29012c",
+   "name_va": "0x6900ec",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff6PosStatus",
+   "name_off": "0x290130",
+   "value_off": "0x290170",
+   "name_va": "0x690130",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff6PosTargetVelocity",
+   "name_off": "0x290174",
+   "value_off": "0x2901b4",
+   "name_va": "0x690174",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff6PosVelocity",
+   "name_off": "0x2901b8",
+   "value_off": "0x2901f8",
+   "name_va": "0x6901b8",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff6PosAcceleration",
+   "name_off": "0x2901fc",
+   "value_off": "0x29023c",
+   "name_va": "0x6901fc",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff6PosPosition",
+   "name_off": "0x290240",
+   "value_off": "0x290280",
+   "name_va": "0x690240",
+   "value": 2000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff6PosViewVector",
+   "name_off": "0x290284",
+   "value_off": "0x2902c4",
+   "name_va": "0x690284",
+   "value": 6000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff6PosRightVector",
+   "name_off": "0x2902c8",
+   "value_off": "0x290308",
+   "name_va": "0x6902c8",
+   "value": 6000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff6PosPacketTimeout",
+   "name_off": "0x29030c",
+   "value_off": "0x29034c",
+   "name_va": "0x69030c",
+   "value": 2000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff6PosSendFullValue",
+   "name_off": "0x290350",
+   "value_off": "0x290390",
+   "name_va": "0x690350",
+   "value": 10000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff6PosCyclicRates",
+   "name_off": "0x290394",
+   "value_off": "0x2903d4",
+   "name_va": "0x690394",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff6PosGunStatus",
+   "name_off": "0x2903d8",
+   "value_off": "0x290418",
+   "name_va": "0x6903d8",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff6PosTargets",
+   "name_off": "0x29041c",
+   "value_off": "0x29045c",
+   "name_va": "0x69041c",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff6PosMaxVelocity",
+   "name_off": "0x290460",
+   "value_off": "0x2904a0",
+   "name_va": "0x690460",
+   "value": 6000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff6PosPerceivedDamage",
+   "name_off": "0x2904a4",
+   "value_off": "0x2904e4",
+   "name_va": "0x6904a4",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff6PosPing",
+   "name_off": "0x2904e8",
+   "value_off": "0x290528",
+   "name_va": "0x6904e8",
+   "value": 4000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff6PosFPS",
+   "name_off": "0x29052c",
+   "value_off": "0x29056c",
+   "name_va": "0x69052c",
+   "value": 4000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff6PosTune",
+   "name_off": "0x290570",
+   "value_off": "0x2905b0",
+   "name_va": "0x690570",
+   "value": 4000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff6PosDamageLevel",
+   "name_off": "0x2905b4",
+   "value_off": "0x2905f4",
+   "name_va": "0x6905b4",
+   "value": 4000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff6PosECMLevel",
+   "name_off": "0x2905f8",
+   "value_off": "0x290638",
+   "name_va": "0x6905f8",
+   "value": 4500.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff6PosStatChecksum",
+   "name_off": "0x29063c",
+   "value_off": "0x29067c",
+   "name_va": "0x69063c",
+   "value": 10000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff6PosStats",
+   "name_off": "0x290680",
+   "value_off": "0x2906c0",
+   "name_va": "0x690680",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff6PosPCStats",
+   "name_off": "0x2906c4",
+   "value_off": "0x290704",
+   "name_va": "0x6906c4",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff6PosHostiles",
+   "name_off": "0x290708",
+   "value_off": "0x290748",
+   "name_va": "0x690708",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff6PosAllied",
+   "name_off": "0x29074c",
+   "value_off": "0x29078c",
+   "name_va": "0x69074c",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff7PosTargetRoll",
+   "name_off": "0x290790",
+   "value_off": "0x2907d0",
+   "name_va": "0x690790",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff7PosTargetPitch",
+   "name_off": "0x2907d4",
+   "value_off": "0x290814",
+   "name_va": "0x6907d4",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff7PosTargetYaw",
+   "name_off": "0x290818",
+   "value_off": "0x290858",
+   "name_va": "0x690818",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff7PosRateRoll",
+   "name_off": "0x29085c",
+   "value_off": "0x29089c",
+   "name_va": "0x69085c",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff7PosRatePitch",
+   "name_off": "0x2908a0",
+   "value_off": "0x2908e0",
+   "name_va": "0x6908a0",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff7PosRateYaw",
+   "name_off": "0x2908e4",
+   "value_off": "0x290924",
+   "name_va": "0x6908e4",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff7PosAccRoll",
+   "name_off": "0x290928",
+   "value_off": "0x290968",
+   "name_va": "0x690928",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff7PosAccPitch",
+   "name_off": "0x29096c",
+   "value_off": "0x2909ac",
+   "name_va": "0x69096c",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff7PosAccYaw",
+   "name_off": "0x2909b0",
+   "value_off": "0x2909f0",
+   "name_va": "0x6909b0",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff7PosStatusTimeout",
+   "name_off": "0x2909f4",
+   "value_off": "0x290a34",
+   "name_va": "0x6909f4",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff7PosStatus",
+   "name_off": "0x290a38",
+   "value_off": "0x290a78",
+   "name_va": "0x690a38",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff7PosTargetVelocity",
+   "name_off": "0x290a7c",
+   "value_off": "0x290abc",
+   "name_va": "0x690a7c",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff7PosVelocity",
+   "name_off": "0x290ac0",
+   "value_off": "0x290b00",
+   "name_va": "0x690ac0",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff7PosAcceleration",
+   "name_off": "0x290b04",
+   "value_off": "0x290b44",
+   "name_va": "0x690b04",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff7PosPosition",
+   "name_off": "0x290b48",
+   "value_off": "0x290b88",
+   "name_va": "0x690b48",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff7PosViewVector",
+   "name_off": "0x290b8c",
+   "value_off": "0x290bcc",
+   "name_va": "0x690b8c",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff7PosRightVector",
+   "name_off": "0x290bd0",
+   "value_off": "0x290c10",
+   "name_va": "0x690bd0",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff7PosPacketTimeout",
+   "name_off": "0x290c14",
+   "value_off": "0x290c54",
+   "name_va": "0x690c14",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff7PosSendFullValue",
+   "name_off": "0x290c58",
+   "value_off": "0x290c98",
+   "name_va": "0x690c58",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff7PosCyclicRates",
+   "name_off": "0x290c9c",
+   "value_off": "0x290cdc",
+   "name_va": "0x690c9c",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff7PosGunStatus",
+   "name_off": "0x290ce0",
+   "value_off": "0x290d20",
+   "name_va": "0x690ce0",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff7PosTargets",
+   "name_off": "0x290d24",
+   "value_off": "0x290d64",
+   "name_va": "0x690d24",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff7PosMaxVelocity",
+   "name_off": "0x290d68",
+   "value_off": "0x290da8",
+   "name_va": "0x690d68",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff7PosPerceivedDamage",
+   "name_off": "0x290dac",
+   "value_off": "0x290dec",
+   "name_va": "0x690dac",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff7PosPing",
+   "name_off": "0x290df0",
+   "value_off": "0x290e30",
+   "name_va": "0x690df0",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff7PosFPS",
+   "name_off": "0x290e34",
+   "value_off": "0x290e74",
+   "name_va": "0x690e34",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff7PosTune",
+   "name_off": "0x290e78",
+   "value_off": "0x290eb8",
+   "name_va": "0x690e78",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff7PosDamageLevel",
+   "name_off": "0x290ebc",
+   "value_off": "0x290efc",
+   "name_va": "0x690ebc",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff7PosECMLevel",
+   "name_off": "0x290f00",
+   "value_off": "0x290f40",
+   "name_va": "0x690f00",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff7PosStatChecksum",
+   "name_off": "0x290f44",
+   "value_off": "0x290f84",
+   "name_va": "0x690f44",
+   "value": 20000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff7PosStats",
+   "name_off": "0x290f88",
+   "value_off": "0x290fc8",
+   "name_va": "0x690f88",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff7PosPCStats",
+   "name_off": "0x290fcc",
+   "value_off": "0x29100c",
+   "name_va": "0x690fcc",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff7PosHostiles",
+   "name_off": "0x291010",
+   "value_off": "0x291050",
+   "name_va": "0x691010",
+   "value": 99990000.0,
+   "code_refs": []
+  },
+  {
+   "name": "Holdoff7PosAllied",
+   "name_off": "0x291054",
+   "value_off": "0x291094",
+   "name_va": "0x691054",
+   "value": 99990000.0,
+   "code_refs": []
+  }
+ ]
+}

@@ -1,0 +1,139 @@
+{
+  "source_sha256": "4b6c35e2b3ab473bd98c0afa6538079ee78678d85c28406c07bc27a08cc78c7e",
+  "patched_sha256": "83a3b0beec7470294d5765ccf6d991c636502d0a54468e67981dc4e66a9af77f",
+  "patch": "explicit-protection-v1",
+  "original_protection": {
+    "duplicate_enable_inverts_state": true
+  },
+  "patched_protection": {
+    "cases": 529,
+    "idempotent": true,
+    "malformed_values_ignored": true,
+    "stack_callee_saved_and_adjacent_memory_preserved": true,
+    "scope": "receive case and original ToggleNodam; status text sink mocked; no damage/rendering"
+  },
+  "position": {
+    "cases": 103,
+    "entry": "0x4BE970",
+    "actual_and_target_updated": true,
+    "scope": "original position setter only; excludes orientation, velocity, prediction and rendering"
+  },
+  "input_commands": {
+    "entry": "0x442140",
+    "cases": 13,
+    "commands": [
+      {
+        "command": 4,
+        "mask": "0x8",
+        "field": "0xdc",
+        "fixture_value": -110.0
+      },
+      {
+        "command": 5,
+        "mask": "0x8",
+        "field": "0xdc",
+        "fixture_value": 110.0
+      },
+      {
+        "command": 6,
+        "mask": "0x4",
+        "field": "0xd8",
+        "fixture_value": -114.0
+      },
+      {
+        "command": 7,
+        "mask": "0x4",
+        "field": "0xd8",
+        "fixture_value": 114.0
+      },
+      {
+        "command": 8,
+        "mask": "0x10",
+        "field": "0xe0",
+        "fixture_value": -108.0
+      },
+      {
+        "command": 9,
+        "mask": "0x10",
+        "field": "0xe0",
+        "fixture_value": 108.0
+      },
+      {
+        "command": 11,
+        "mask": "0x1",
+        "field": null,
+        "fixture_value": null
+      },
+      {
+        "command": 12,
+        "mask": "0x20",
+        "field": null,
+        "fixture_value": null
+      },
+      {
+        "command": 15,
+        "mask": "0x40000",
+        "field": null,
+        "fixture_value": null
+      },
+      {
+        "command": 16,
+        "mask": "0x400",
+        "field": null,
+        "fixture_value": null
+      },
+      {
+        "command": 17,
+        "mask": "0x800",
+        "field": null,
+        "fixture_value": null
+      },
+      {
+        "command": 18,
+        "mask": "0x100",
+        "field": null,
+        "fixture_value": null
+      },
+      {
+        "command": 19,
+        "mask": "0x200",
+        "field": null,
+        "fixture_value": null
+      }
+    ],
+    "scope": "decoded command object to kinematic controls; UI-mode query mocked; no keyboard, joystick, transport or physics",
+    "unresolved": "command names, physical units, input sampling, release behavior and sequenced transport"
+  },
+  "ammunition": {
+    "entry": "0x4DD280",
+    "cases": 8,
+    "negative_clamped_to_zero": true,
+    "capacity_enforced_by_setter": false,
+    "scope": "isolated rack count setter called by original death reset; no inventory selection or network handler"
+  },
+  "protection_consumers": {
+    "cases": 6,
+    "damage_branch_skipped_when_protected": true,
+    "missile_ammo_decrement_skipped_when_protected_and_override_zero": true,
+    "scope": "isolated original branch execution; not full damage, missile or gun simulation",
+    "blocker": "legacy invulnerability also changes ammo consumption; it is not a complete spawn-protection policy"
+  },
+  "health_reset": {
+    "entry": "0x49BB60",
+    "cases": 2,
+    "configured_health_restored": true,
+    "scope": "nonlocal player reset with synthetic ship and one system; lookups and kind query mocked; inventory-profile loop excluded",
+    "remaining": "local death callback, arbitrary health correction and server-owned respawn state"
+  },
+  "authoritative_client_gate_passed": false,
+  "remaining": [
+    "real-client protection and position checks",
+    "control input capture",
+    "orientation and prediction correction",
+    "health and ammunition setters",
+    "hold-dead and respawn release",
+    "world readiness",
+    "session/entity generations before dispatch",
+    "ordered application acknowledgments"
+  ]
+}

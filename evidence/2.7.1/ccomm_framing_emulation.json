@@ -1,0 +1,8 @@
+{
+  "cases": 33,
+  "client_wire_eq_python": 33,
+  "python_decodes_client": 33,
+  "client_recv_accepts_python": 66,
+  "client_recv_payload_type_ok": 66,
+  "failures": []
+}

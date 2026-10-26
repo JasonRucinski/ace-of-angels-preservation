@@ -1,0 +1,28 @@
+{
+  "scope": "localhost synthetic peer; normal heap; physics breakpoint absent in patched run",
+  "patched_client_sha256": "f082a0f0d9d419919e61787d78146d0564ff23cbce0aae845105aafe640cf04b",
+  "samples": {
+    "spawn-order": {
+      "count": 100,
+      "nonfinite": 38,
+      "duration_seconds": 9.965
+    },
+    "physics-fixed": {
+      "count": 300,
+      "nonfinite": 0,
+      "duration_seconds": 30.1
+    },
+    "physics-fixed-later": {
+      "count": 200,
+      "nonfinite": 0,
+      "duration_seconds": 20.035
+    },
+    "physics-fixed-stopped": {
+      "count": 100,
+      "nonfinite": 0,
+      "duration_seconds": 9.973
+    }
+  },
+  "live_zero_dt_observed": true,
+  "patched_second_chance_exception_observed": false
+}

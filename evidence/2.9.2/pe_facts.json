@@ -1,0 +1,1814 @@
+{
+  "file": "work/2.9.2/members/15_AOACLIENT.EXE",
+  "bytes": 2916352,
+  "sha256": "4b6c35e2b3ab473bd98c0afa6538079ee78678d85c28406c07bc27a08cc78c7e",
+  "machine": "0x14c",
+  "timedatestamp": 1064551628,
+  "timedatestamp_utc": "2003-09-26T04:47:08Z",
+  "linker": "6.0",
+  "image_base": "0x400000",
+  "entry_va": "0x57d5aa",
+  "size_of_image": "0x2f2000",
+  "subsystem": 2,
+  "sections": [
+    {
+      "name": ".text",
+      "va": "0x401000",
+      "vsize": "0x18a1e0",
+      "raw_off": "0x1000",
+      "raw_size": "0x18b000",
+      "chars": "0x60000020"
+    },
+    {
+      "name": ".rdata",
+      "va": "0x58c000",
+      "vsize": "0x3423a",
+      "raw_off": "0x18c000",
+      "raw_size": "0x35000",
+      "chars": "0x40000040"
+    },
+    {
+      "name": ".data",
+      "va": "0x5c1000",
+      "vsize": "0x4c10c",
+      "raw_off": "0x1c1000",
+      "raw_size": "0x23000",
+      "chars": "0xc0000040"
+    },
+    {
+      "name": ".rsrc",
+      "va": "0x60e000",
+      "vsize": "0xe3478",
+      "raw_off": "0x1e4000",
+      "raw_size": "0xe4000",
+      "chars": "0x40000040"
+    }
+  ],
+  "rich_header": [
+    {
+      "comp_id": "001d23da",
+      "prod_id": 29,
+      "build": 9178,
+      "count": 1
+    },
+    {
+      "comp_id": "00132359",
+      "prod_id": 19,
+      "build": 9049,
+      "count": 6
+    },
+    {
+      "comp_id": "00041fe8",
+      "prod_id": 4,
+      "build": 8168,
+      "count": 2
+    },
+    {
+      "comp_id": "000b225e",
+      "prod_id": 11,
+      "build": 8798,
+      "count": 2
+    },
+    {
+      "comp_id": "00131f56",
+      "prod_id": 19,
+      "build": 8022,
+      "count": 9
+    },
+    {
+      "comp_id": "000e1c83",
+      "prod_id": 14,
+      "build": 7299,
+      "count": 4
+    },
+    {
+      "comp_id": "000b1f6f",
+      "prod_id": 11,
+      "build": 8047,
+      "count": 3
+    },
+    {
+      "comp_id": "000c1c7b",
+      "prod_id": 12,
+      "build": 7291,
+      "count": 11
+    },
+    {
+      "comp_id": "000a1f6f",
+      "prod_id": 10,
+      "build": 8047,
+      "count": 11
+    },
+    {
+      "comp_id": "00041f6f",
+      "prod_id": 4,
+      "build": 8047,
+      "count": 4
+    },
+    {
+      "comp_id": "000b2179",
+      "prod_id": 11,
+      "build": 8569,
+      "count": 3
+    },
+    {
+      "comp_id": "00042179",
+      "prod_id": 4,
+      "build": 8569,
+      "count": 2
+    },
+    {
+      "comp_id": "000b225f",
+      "prod_id": 11,
+      "build": 8799,
+      "count": 18
+    },
+    {
+      "comp_id": "000a225f",
+      "prod_id": 10,
+      "build": 8799,
+      "count": 36
+    },
+    {
+      "comp_id": "00131f62",
+      "prod_id": 19,
+      "build": 8034,
+      "count": 10
+    },
+    {
+      "comp_id": "00010000",
+      "prod_id": 1,
+      "build": 0,
+      "count": 393
+    },
+    {
+      "comp_id": "00000000",
+      "prod_id": 0,
+      "build": 0,
+      "count": 37
+    },
+    {
+      "comp_id": "000a2306",
+      "prod_id": 10,
+      "build": 8966,
+      "count": 1
+    },
+    {
+      "comp_id": "000b2306",
+      "prod_id": 11,
+      "build": 8966,
+      "count": 242
+    },
+    {
+      "comp_id": "000606c7",
+      "prod_id": 6,
+      "build": 1735,
+      "count": 1
+    }
+  ],
+  "imports": {
+    "DINPUT.dll": [
+      {
+        "iat_va": "0x0058c000",
+        "name": "DirectInputCreateEx"
+      }
+    ],
+    "DSOUND.dll": [
+      {
+        "iat_va": "0x0058c008",
+        "name": "ord1"
+      }
+    ],
+    "GDI32.dll": [
+      {
+        "iat_va": "0x0058c010",
+        "name": "CreateCompatibleDC"
+      },
+      {
+        "iat_va": "0x0058c014",
+        "name": "CreateFontA"
+      },
+      {
+        "iat_va": "0x0058c018",
+        "name": "GetCurrentObject"
+      },
+      {
+        "iat_va": "0x0058c01c",
+        "name": "BitBlt"
+      },
+      {
+        "iat_va": "0x0058c020",
+        "name": "DeleteObject"
+      },
+      {
+        "iat_va": "0x0058c024",
+        "name": "CreateSolidBrush"
+      },
+      {
+        "iat_va": "0x0058c028",
+        "name": "DeleteDC"
+      },
+      {
+        "iat_va": "0x0058c02c",
+        "name": "SelectObject"
+      },
+      {
+        "iat_va": "0x0058c030",
+        "name": "SetTextColor"
+      },
+      {
+        "iat_va": "0x0058c034",
+        "name": "SetTextCharacterExtra"
+      },
+      {
+        "iat_va": "0x0058c038",
+        "name": "TextOutA"
+      },
+      {
+        "iat_va": "0x0058c03c",
+        "name": "SetBkMode"
+      },
+      {
+        "iat_va": "0x0058c040",
+        "name": "GetObjectA"
+      },
+      {
+        "iat_va": "0x0058c044",
+        "name": "GetTextMetricsA"
+      },
+      {
+        "iat_va": "0x0058c048",
+        "name": "GetDeviceCaps"
+      },
+      {
+        "iat_va": "0x0058c04c",
+        "name": "CreateFontIndirectA"
+      }
+    ],
+    "KERNEL32.dll": [
+      {
+        "iat_va": "0x0058c054",
+        "name": "LoadLibraryA"
+      },
+      {
+        "iat_va": "0x0058c058",
+        "name": "SetThreadPriority"
+      },
+      {
+        "iat_va": "0x0058c05c",
+        "name": "QueryPerformanceCounter"
+      },
+      {
+        "iat_va": "0x0058c060",
+        "name": "QueryPerformanceFrequency"
+      },
+      {
+        "iat_va": "0x0058c064",
+        "name": "MulDiv"
+      },
+      {
+        "iat_va": "0x0058c068",
+        "name": "Sleep"
+      },
+      {
+        "iat_va": "0x0058c06c",
+        "name": "GetVersionExA"
+      },
+      {
+        "iat_va": "0x0058c070",
+        "name": "CloseHandle"
+      },
+      {
+        "iat_va": "0x0058c074",
+        "name": "CreateDirectoryA"
+      },
+      {
+        "iat_va": "0x0058c078",
+        "name": "MultiByteToWideChar"
+      },
+      {
+        "iat_va": "0x0058c07c",
+        "name": "Beep"
+      },
+      {
+        "iat_va": "0x0058c080",
+        "name": "FreeLibrary"
+      },
+      {
+        "iat_va": "0x0058c084",
+        "name": "MoveFileA"
+      },
+      {
+        "iat_va": "0x0058c088",
+        "name": "DeleteFileA"
+      },
+      {
+        "iat_va": "0x0058c08c",
+        "name": "GetCurrentThreadId"
+      },
+      {
+        "iat_va": "0x0058c090",
+        "name": "FindNextFileA"
+      },
+      {
+        "iat_va": "0x0058c094",
+        "name": "FindFirstFileA"
+      },
+      {
+        "iat_va": "0x0058c098",
+        "name": "FindClose"
+      },
+      {
+        "iat_va": "0x0058c09c",
+        "name": "CreateMutexA"
+      },
+      {
+        "iat_va": "0x0058c0a0",
+        "name": "WaitForSingleObject"
+      },
+      {
+        "iat_va": "0x0058c0a4",
+        "name": "GetTickCount"
+      },
+      {
+        "iat_va": "0x0058c0a8",
+        "name": "GetCurrentThread"
+      },
+      {
+        "iat_va": "0x0058c0ac",
+        "name": "CreateEventA"
+      },
+      {
+        "iat_va": "0x0058c0b0",
+        "name": "ReleaseMutex"
+      },
+      {
+        "iat_va": "0x0058c0b4",
+        "name": "GetModuleHandleA"
+      },
+      {
+        "iat_va": "0x0058c0b8",
+        "name": "GetThreadPriority"
+      },
+      {
+        "iat_va": "0x0058c0bc",
+        "name": "SetEvent"
+      },
+      {
+        "iat_va": "0x0058c0c0",
+        "name": "GetExitCodeThread"
+      },
+      {
+        "iat_va": "0x0058c0c4",
+        "name": "CreateThread"
+      },
+      {
+        "iat_va": "0x0058c0c8",
+        "name": "GetProcAddress"
+      },
+      {
+        "iat_va": "0x0058c0cc",
+        "name": "LocalFree"
+      },
+      {
+        "iat_va": "0x0058c0d0",
+        "name": "GetSystemDirectoryA"
+      },
+      {
+        "iat_va": "0x0058c0d4",
+        "name": "GetStartupInfoA"
+      },
+      {
+        "iat_va": "0x0058c0d8",
+        "name": "FileTimeToSystemTime"
+      }
+    ],
+    "MFC42.DLL": [
+      {
+        "iat_va": "0x0058c0e0",
+        "name": "ord3136"
+      },
+      {
+        "iat_va": "0x0058c0e4",
+        "name": "ord1168"
+      },
+      {
+        "iat_va": "0x0058c0e8",
+        "name": "ord858"
+      },
+      {
+        "iat_va": "0x0058c0ec",
+        "name": "ord2645"
+      },
+      {
+        "iat_va": "0x0058c0f0",
+        "name": "ord5802"
+      },
+      {
+        "iat_va": "0x0058c0f4",
+        "name": "ord537"
+      },
+      {
+        "iat_va": "0x0058c0f8",
+        "name": "ord535"
+      },
+      {
+        "iat_va": "0x0058c0fc",
+        "name": "ord4224"
+      },
+      {
+        "iat_va": "0x0058c100",
+        "name": "ord3098"
+      },
+      {
+        "iat_va": "0x0058c104",
+        "name": "ord2859"
+      },
+      {
+        "iat_va": "0x0058c108",
+        "name": "ord3870"
+      },
+      {
+        "iat_va": "0x0058c10c",
+        "name": "ord2864"
+      },
+      {
+        "iat_va": "0x0058c110",
+        "name": "ord815"
+      },
+      {
+        "iat_va": "0x0058c114",
+        "name": "ord4274"
+      },
+      {
+        "iat_va": "0x0058c118",
+        "name": "ord6375"
+      },
+      {
+        "iat_va": "0x0058c11c",
+        "name": "ord4486"
+      },
+      {
+        "iat_va": "0x0058c120",
+        "name": "ord3317"
+      },
+      {
+        "iat_va": "0x0058c124",
+        "name": "ord2554"
+      },
+      {
+        "iat_va": "0x0058c128",
+        "name": "ord5731"
+      },
+      {
+        "iat_va": "0x0058c12c",
+        "name": "ord3922"
+      },
+      {
+        "iat_va": "0x0058c130",
+        "name": "ord1089"
+      },
+      {
+        "iat_va": "0x0058c134",
+        "name": "ord5199"
+      },
+      {
+        "iat_va": "0x0058c138",
+        "name": "ord2396"
+      },
+      {
+        "iat_va": "0x0058c13c",
+        "name": "ord3346"
+      },
+      {
+        "iat_va": "0x0058c140",
+        "name": "ord5300"
+      },
+      {
+        "iat_va": "0x0058c144",
+        "name": "ord5302"
+      },
+      {
+        "iat_va": "0x0058c148",
+        "name": "ord2725"
+      },
+      {
+        "iat_va": "0x0058c14c",
+        "name": "ord4079"
+      },
+      {
+        "iat_va": "0x0058c150",
+        "name": "ord4698"
+      },
+      {
+        "iat_va": "0x0058c154",
+        "name": "ord5307"
+      },
+      {
+        "iat_va": "0x0058c158",
+        "name": "ord5289"
+      },
+      {
+        "iat_va": "0x0058c15c",
+        "name": "ord4622"
+      },
+      {
+        "iat_va": "0x0058c160",
+        "name": "ord4424"
+      },
+      {
+        "iat_va": "0x0058c164",
+        "name": "ord3738"
+      },
+      {
+        "iat_va": "0x0058c168",
+        "name": "ord561"
+      },
+      {
+        "iat_va": "0x0058c16c",
+        "name": "ord2512"
+      },
+      {
+        "iat_va": "0x0058c170",
+        "name": "ord4710"
+      },
+      {
+        "iat_va": "0x0058c174",
+        "name": "ord1146"
+      },
+      {
+        "iat_va": "0x0058c178",
+        "name": "ord6442"
+      },
+      {
+        "iat_va": "0x0058c17c",
+        "name": "ord1233"
+      },
+      {
+        "iat_va": "0x0058c180",
+        "name": "ord6117"
+      },
+      {
+        "iat_va": "0x0058c184",
+        "name": "ord1134"
+      },
+      {
+        "iat_va": "0x0058c188",
+        "name": "ord1199"
+      },
+      {
+        "iat_va": "0x0058c18c",
+        "name": "ord1247"
+      },
+      {
+        "iat_va": "0x0058c190",
+        "name": "ord2642"
+      },
+      {
+        "iat_va": "0x0058c194",
+        "name": "ord2614"
+      },
+      {
+        "iat_va": "0x0058c198",
+        "name": "ord6648"
+      },
+      {
+        "iat_va": "0x0058c19c",
+        "name": "ord4129"
+      },
+      {
+        "iat_va": "0x0058c1a0",
+        "name": "ord2919"
+      },
+      {
+        "iat_va": "0x0058c1a4",
+        "name": "ord2915"
+      },
+      {
+        "iat_va": "0x0058c1a8",
+        "name": "ord3874"
+      },
+      {
+        "iat_va": "0x0058c1ac",
+        "name": "ord4476"
+      },
+      {
+        "iat_va": "0x0058c1b0",
+        "name": "ord5953"
+      },
+      {
+        "iat_va": "0x0058c1b4",
+        "name": "ord6055"
+      },
+      {
+        "iat_va": "0x0058c1b8",
+        "name": "ord1776"
+      },
+      {
+        "iat_va": "0x0058c1bc",
+        "name": "ord5290"
+      },
+      {
+        "iat_va": "0x0058c1c0",
+        "name": "ord567"
+      },
+      {
+        "iat_va": "0x0058c1c4",
+        "name": "ord818"
+      },
+      {
+        "iat_va": "0x0058c1c8",
+        "name": "ord4275"
+      },
+      {
+        "iat_va": "0x0058c1cc",
+        "name": "ord755"
+      },
+      {
+        "iat_va": "0x0058c1d0",
+        "name": "ord470"
+      },
+      {
+        "iat_va": "0x0058c1d4",
+        "name": "ord1949"
+      },
+      {
+        "iat_va": "0x0058c1d8",
+        "name": "ord6605"
+      },
+      {
+        "iat_va": "0x0058c1dc",
+        "name": "ord326"
+      },
+      {
+        "iat_va": "0x0058c1e0",
+        "name": "ord4047"
+      },
+      {
+        "iat_va": "0x0058c1e4",
+        "name": "ord3097"
+      },
+      {
+        "iat_va": "0x0058c1e8",
+        "name": "ord4055"
+      },
+      {
+        "iat_va": "0x0058c1ec",
+        "name": "ord3093"
+      },
+      {
+        "iat_va": "0x0058c1f0",
+        "name": "ord3286"
+      },
+      {
+        "iat_va": "0x0058c1f4",
+        "name": "ord4538"
+      },
+      {
+        "iat_va": "0x0058c1f8",
+        "name": "ord800"
+      },
+      {
+        "iat_va": "0x0058c1fc",
+        "name": "ord540"
+      },
+      {
+        "iat_va": "0x0058c200",
+        "name": "ord2086"
+      },
+      {
+        "iat_va": "0x0058c204",
+        "name": "ord3092"
+      },
+      {
+        "iat_va": "0x0058c208",
+        "name": "ord3005"
+      },
+      {
+        "iat_va": "0x0058c20c",
+        "name": "ord6215"
+      },
+      {
+        "iat_va": "0x0058c210",
+        "name": "ord6880"
+      },
+      {
+        "iat_va": "0x0058c214",
+        "name": "ord6197"
+      },
+      {
+        "iat_va": "0x0058c218",
+        "name": "ord4234"
+      },
+      {
+        "iat_va": "0x0058c21c",
+        "name": "ord2379"
+      },
+      {
+        "iat_va": "0x0058c220",
+        "name": "ord2688"
+      },
+      {
+        "iat_va": "0x0058c224",
+        "name": "ord823"
+      },
+      {
+        "iat_va": "0x0058c228",
+        "name": "ord825"
+      },
+      {
+        "iat_va": "0x0058c22c",
+        "name": "ord324"
+      },
+      {
+        "iat_va": "0x0058c230",
+        "name": "ord4425"
+      },
+      {
+        "iat_va": "0x0058c234",
+        "name": "ord641"
+      },
+      {
+        "iat_va": "0x0058c238",
+        "name": "ord3597"
+      },
+      {
+        "iat_va": "0x0058c23c",
+        "name": "ord3079"
+      },
+      {
+        "iat_va": "0x0058c240",
+        "name": "ord4627"
+      },
+      {
+        "iat_va": "0x0058c244",
+        "name": "ord4080"
+      },
+      {
+        "iat_va": "0x0058c248",
+        "name": "ord3830"
+      },
+      {
+        "iat_va": "0x0058c24c",
+        "name": "ord3825"
+      },
+      {
+        "iat_va": "0x0058c250",
+        "name": "ord3831"
+      },
+      {
+        "iat_va": "0x0058c254",
+        "name": "ord2985"
+      },
+      {
+        "iat_va": "0x0058c258",
+        "name": "ord2976"
+      },
+      {
+        "iat_va": "0x0058c25c",
+        "name": "ord3081"
+      },
+      {
+        "iat_va": "0x0058c260",
+        "name": "ord3259"
+      },
+      {
+        "iat_va": "0x0058c264",
+        "name": "ord3262"
+      },
+      {
+        "iat_va": "0x0058c268",
+        "name": "ord4465"
+      },
+      {
+        "iat_va": "0x0058c26c",
+        "name": "ord5277"
+      },
+      {
+        "iat_va": "0x0058c270",
+        "name": "ord3147"
+      },
+      {
+        "iat_va": "0x0058c274",
+        "name": "ord2982"
+      },
+      {
+        "iat_va": "0x0058c278",
+        "name": "ord5261"
+      },
+      {
+        "iat_va": "0x0058c27c",
+        "name": "ord2124"
+      },
+      {
+        "iat_va": "0x0058c280",
+        "name": "ord2446"
+      },
+      {
+        "iat_va": "0x0058c284",
+        "name": "ord5981"
+      },
+      {
+        "iat_va": "0x0058c288",
+        "name": "ord6199"
+      },
+      {
+        "iat_va": "0x0058c28c",
+        "name": "ord5065"
+      },
+      {
+        "iat_va": "0x0058c290",
+        "name": "ord6052"
+      },
+      {
+        "iat_va": "0x0058c294",
+        "name": "ord4078"
+      },
+      {
+        "iat_va": "0x0058c298",
+        "name": "ord1576"
+      },
+      {
+        "iat_va": "0x0058c29c",
+        "name": "ord1727"
+      },
+      {
+        "iat_va": "0x0058c2a0",
+        "name": "ord3749"
+      },
+      {
+        "iat_va": "0x0058c2a4",
+        "name": "ord6376"
+      },
+      {
+        "iat_va": "0x0058c2a8",
+        "name": "ord2055"
+      },
+      {
+        "iat_va": "0x0058c2ac",
+        "name": "ord2648"
+      },
+      {
+        "iat_va": "0x0058c2b0",
+        "name": "ord4441"
+      },
+      {
+        "iat_va": "0x0058c2b4",
+        "name": "ord4837"
+      },
+      {
+        "iat_va": "0x0058c2b8",
+        "name": "ord3798"
+      },
+      {
+        "iat_va": "0x0058c2bc",
+        "name": "ord5280"
+      },
+      {
+        "iat_va": "0x0058c2c0",
+        "name": "ord5265"
+      },
+      {
+        "iat_va": "0x0058c2c4",
+        "name": "ord4376"
+      },
+      {
+        "iat_va": "0x0058c2c8",
+        "name": "ord4853"
+      },
+      {
+        "iat_va": "0x0058c2cc",
+        "name": "ord4998"
+      },
+      {
+        "iat_va": "0x0058c2d0",
+        "name": "ord2514"
+      },
+      {
+        "iat_va": "0x0058c2d4",
+        "name": "ord4353"
+      },
+      {
+        "iat_va": "0x0058c2d8",
+        "name": "ord1775"
+      },
+      {
+        "iat_va": "0x0058c2dc",
+        "name": "ord4407"
+      },
+      {
+        "iat_va": "0x0058c2e0",
+        "name": "ord5241"
+      },
+      {
+        "iat_va": "0x0058c2e4",
+        "name": "ord2385"
+      },
+      {
+        "iat_va": "0x0058c2e8",
+        "name": "ord5163"
+      },
+      {
+        "iat_va": "0x0058c2ec",
+        "name": "ord6374"
+      }
+    ],
+    "MSVCIRT.dll": [
+      {
+        "iat_va": "0x0058c2f4",
+        "name": "?openprot@filebuf@@2HB"
+      },
+      {
+        "iat_va": "0x0058c2f8",
+        "name": "??0fstream@@QAE@PBDHH@Z"
+      },
+      {
+        "iat_va": "0x0058c2fc",
+        "name": "??1fstream@@UAE@XZ"
+      },
+      {
+        "iat_va": "0x0058c300",
+        "name": "??1ios@@UAE@XZ"
+      },
+      {
+        "iat_va": "0x0058c304",
+        "name": "?lock@ios@@QAAXXZ"
+      },
+      {
+        "iat_va": "0x0058c308",
+        "name": "?unlock@ios@@QAAXXZ"
+      },
+      {
+        "iat_va": "0x0058c30c",
+        "name": "?write@ostream@@QAEAAV1@PBDH@Z"
+      },
+      {
+        "iat_va": "0x0058c310",
+        "name": "?flush@ostream@@QAEAAV1@XZ"
+      },
+      {
+        "iat_va": "0x0058c314",
+        "name": "?close@fstream@@QAEXXZ"
+      },
+      {
+        "iat_va": "0x0058c318",
+        "name": "??_Dfstream@@QAEXXZ"
+      }
+    ],
+    "MSVCP60.dll": [
+      {
+        "iat_va": "0x0058c320",
+        "name": "??1_Lockit@std@@QAE@XZ"
+      },
+      {
+        "iat_va": "0x0058c324",
+        "name": "??0_Lockit@std@@QAE@XZ"
+      }
+    ],
+    "MSVCRT.dll": [
+      {
+        "iat_va": "0x0058c32c",
+        "name": "strchr"
+      },
+      {
+        "iat_va": "0x0058c330",
+        "name": "strcspn"
+      },
+      {
+        "iat_va": "0x0058c334",
+        "name": "remove"
+      },
+      {
+        "iat_va": "0x0058c338",
+        "name": "tolower"
+      },
+      {
+        "iat_va": "0x0058c33c",
+        "name": "strncmp"
+      },
+      {
+        "iat_va": "0x0058c340",
+        "name": "toupper"
+      },
+      {
+        "iat_va": "0x0058c344",
+        "name": "memmove"
+      },
+      {
+        "iat_va": "0x0058c348",
+        "name": "atof"
+      },
+      {
+        "iat_va": "0x0058c34c",
+        "name": "_CxxThrowException"
+      },
+      {
+        "iat_va": "0x0058c350",
+        "name": "atoi"
+      },
+      {
+        "iat_va": "0x0058c354",
+        "name": "fseek"
+      },
+      {
+        "iat_va": "0x0058c358",
+        "name": "time"
+      },
+      {
+        "iat_va": "0x0058c35c",
+        "name": "_mkdir"
+      },
+      {
+        "iat_va": "0x0058c360",
+        "name": "exit"
+      },
+      {
+        "iat_va": "0x0058c364",
+        "name": "_CIacos"
+      },
+      {
+        "iat_va": "0x0058c368",
+        "name": "_CIasin"
+      },
+      {
+        "iat_va": "0x0058c36c",
+        "name": "strstr"
+      },
+      {
+        "iat_va": "0x0058c370",
+        "name": "sscanf"
+      },
+      {
+        "iat_va": "0x0058c374",
+        "name": "fread"
+      },
+      {
+        "iat_va": "0x0058c378",
+        "name": "fwrite"
+      },
+      {
+        "iat_va": "0x0058c37c",
+        "name": "fprintf"
+      },
+      {
+        "iat_va": "0x0058c380",
+        "name": "_iob"
+      },
+      {
+        "iat_va": "0x0058c384",
+        "name": "_chmod"
+      },
+      {
+        "iat_va": "0x0058c388",
+        "name": "_beginthread"
+      },
+      {
+        "iat_va": "0x0058c38c",
+        "name": "fopen"
+      },
+      {
+        "iat_va": "0x0058c390",
+        "name": "fscanf"
+      },
+      {
+        "iat_va": "0x0058c394",
+        "name": "fclose"
+      },
+      {
+        "iat_va": "0x0058c398",
+        "name": "_unlink"
+      },
+      {
+        "iat_va": "0x0058c39c",
+        "name": "_endthread"
+      },
+      {
+        "iat_va": "0x0058c3a0",
+        "name": "_purecall"
+      },
+      {
+        "iat_va": "0x0058c3a4",
+        "name": "vsprintf"
+      },
+      {
+        "iat_va": "0x0058c3a8",
+        "name": "isspace"
+      },
+      {
+        "iat_va": "0x0058c3ac",
+        "name": "strncpy"
+      },
+      {
+        "iat_va": "0x0058c3b0",
+        "name": "_execl"
+      },
+      {
+        "iat_va": "0x0058c3b4",
+        "name": "_ftol"
+      },
+      {
+        "iat_va": "0x0058c3b8",
+        "name": "sprintf"
+      },
+      {
+        "iat_va": "0x0058c3bc",
+        "name": "_exit"
+      },
+      {
+        "iat_va": "0x0058c3c0",
+        "name": "strrchr"
+      },
+      {
+        "iat_va": "0x0058c3c4",
+        "name": "fsetpos"
+      },
+      {
+        "iat_va": "0x0058c3c8",
+        "name": "ftell"
+      },
+      {
+        "iat_va": "0x0058c3cc",
+        "name": "strpbrk"
+      },
+      {
+        "iat_va": "0x0058c3d0",
+        "name": "_getpid"
+      },
+      {
+        "iat_va": "0x0058c3d4",
+        "name": "free"
+      },
+      {
+        "iat_va": "0x0058c3d8",
+        "name": "fgetpos"
+      },
+      {
+        "iat_va": "0x0058c3dc",
+        "name": "_beginthreadex"
+      },
+      {
+        "iat_va": "0x0058c3e0",
+        "name": "malloc"
+      },
+      {
+        "iat_va": "0x0058c3e4",
+        "name": "calloc"
+      },
+      {
+        "iat_va": "0x0058c3e8",
+        "name": "_setjmp3"
+      },
+      {
+        "iat_va": "0x0058c3ec",
+        "name": "_stricmp"
+      },
+      {
+        "iat_va": "0x0058c3f0",
+        "name": "longjmp"
+      },
+      {
+        "iat_va": "0x0058c3f4",
+        "name": "_strlwr"
+      },
+      {
+        "iat_va": "0x0058c3f8",
+        "name": "_strupr"
+      },
+      {
+        "iat_va": "0x0058c3fc",
+        "name": "_itoa"
+      },
+      {
+        "iat_va": "0x0058c400",
+        "name": "_strdup"
+      },
+      {
+        "iat_va": "0x0058c404",
+        "name": "_fstat"
+      },
+      {
+        "iat_va": "0x0058c408",
+        "name": "_strcmpi"
+      },
+      {
+        "iat_va": "0x0058c40c",
+        "name": "_setmbcp"
+      },
+      {
+        "iat_va": "0x0058c410",
+        "name": "__CxxFrameHandler"
+      },
+      {
+        "iat_va": "0x0058c414",
+        "name": "_fileno"
+      },
+      {
+        "iat_va": "0x0058c418",
+        "name": "??1type_info@@UAE@XZ"
+      },
+      {
+        "iat_va": "0x0058c41c",
+        "name": "_ftime"
+      },
+      {
+        "iat_va": "0x0058c420",
+        "name": "strtoul"
+      },
+      {
+        "iat_va": "0x0058c424",
+        "name": "_strnicmp"
+      },
+      {
+        "iat_va": "0x0058c428",
+        "name": "strerror"
+      },
+      {
+        "iat_va": "0x0058c42c",
+        "name": "_errno"
+      },
+      {
+        "iat_va": "0x0058c430",
+        "name": "srand"
+      },
+      {
+        "iat_va": "0x0058c434",
+        "name": "_except_handler3"
+      },
+      {
+        "iat_va": "0x0058c438",
+        "name": "?terminate@@YAXXZ"
+      },
+      {
+        "iat_va": "0x0058c43c",
+        "name": "__dllonexit"
+      },
+      {
+        "iat_va": "0x0058c440",
+        "name": "_onexit"
+      },
+      {
+        "iat_va": "0x0058c444",
+        "name": "fflush"
+      },
+      {
+        "iat_va": "0x0058c448",
+        "name": "_XcptFilter"
+      },
+      {
+        "iat_va": "0x0058c44c",
+        "name": "_acmdln"
+      },
+      {
+        "iat_va": "0x0058c450",
+        "name": "__getmainargs"
+      },
+      {
+        "iat_va": "0x0058c454",
+        "name": "_initterm"
+      },
+      {
+        "iat_va": "0x0058c458",
+        "name": "__setusermatherr"
+      },
+      {
+        "iat_va": "0x0058c45c",
+        "name": "_adjust_fdiv"
+      },
+      {
+        "iat_va": "0x0058c460",
+        "name": "__p__commode"
+      },
+      {
+        "iat_va": "0x0058c464",
+        "name": "__p__fmode"
+      },
+      {
+        "iat_va": "0x0058c468",
+        "name": "__set_app_type"
+      },
+      {
+        "iat_va": "0x0058c46c",
+        "name": "localtime"
+      },
+      {
+        "iat_va": "0x0058c470",
+        "name": "_controlfp"
+      }
+    ],
+    "USER32.dll": [
+      {
+        "iat_va": "0x0058c478",
+        "name": "GetWindowLongA"
+      },
+      {
+        "iat_va": "0x0058c47c",
+        "name": "LoadBitmapA"
+      },
+      {
+        "iat_va": "0x0058c480",
+        "name": "ScreenToClient"
+      },
+      {
+        "iat_va": "0x0058c484",
+        "name": "CreateDialogParamA"
+      },
+      {
+        "iat_va": "0x0058c488",
+        "name": "DestroyWindow"
+      },
+      {
+        "iat_va": "0x0058c48c",
+        "name": "SendDlgItemMessageA"
+      },
+      {
+        "iat_va": "0x0058c490",
+        "name": "SetDlgItemInt"
+      },
+      {
+        "iat_va": "0x0058c494",
+        "name": "IsWindowEnabled"
+      },
+      {
+        "iat_va": "0x0058c498",
+        "name": "MoveWindow"
+      },
+      {
+        "iat_va": "0x0058c49c",
+        "name": "SetCursor"
+      },
+      {
+        "iat_va": "0x0058c4a0",
+        "name": "GetKeyState"
+      },
+      {
+        "iat_va": "0x0058c4a4",
+        "name": "GetDlgItemInt"
+      },
+      {
+        "iat_va": "0x0058c4a8",
+        "name": "RedrawWindow"
+      },
+      {
+        "iat_va": "0x0058c4ac",
+        "name": "CopyIcon"
+      },
+      {
+        "iat_va": "0x0058c4b0",
+        "name": "DefWindowProcA"
+      },
+      {
+        "iat_va": "0x0058c4b4",
+        "name": "SetWindowLongA"
+      },
+      {
+        "iat_va": "0x0058c4b8",
+        "name": "UnregisterClassA"
+      },
+      {
+        "iat_va": "0x0058c4bc",
+        "name": "MapVirtualKeyA"
+      },
+      {
+        "iat_va": "0x0058c4c0",
+        "name": "SetRect"
+      },
+      {
+        "iat_va": "0x0058c4c4",
+        "name": "IsChild"
+      },
+      {
+        "iat_va": "0x0058c4c8",
+        "name": "IsWindow"
+      },
+      {
+        "iat_va": "0x0058c4cc",
+        "name": "GetWindowTextA"
+      },
+      {
+        "iat_va": "0x0058c4d0",
+        "name": "SetCapture"
+      },
+      {
+        "iat_va": "0x0058c4d4",
+        "name": "PostMessageA"
+      },
+      {
+        "iat_va": "0x0058c4d8",
+        "name": "GetMessageA"
+      },
+      {
+        "iat_va": "0x0058c4dc",
+        "name": "MsgWaitForMultipleObjects"
+      },
+      {
+        "iat_va": "0x0058c4e0",
+        "name": "RegisterClassA"
+      },
+      {
+        "iat_va": "0x0058c4e4",
+        "name": "CreateWindowExA"
+      },
+      {
+        "iat_va": "0x0058c4e8",
+        "name": "EndDialog"
+      },
+      {
+        "iat_va": "0x0058c4ec",
+        "name": "GetParent"
+      },
+      {
+        "iat_va": "0x0058c4f0",
+        "name": "IsDlgButtonChecked"
+      },
+      {
+        "iat_va": "0x0058c4f4",
+        "name": "GetDlgItemTextA"
+      },
+      {
+        "iat_va": "0x0058c4f8",
+        "name": "ReleaseDC"
+      },
+      {
+        "iat_va": "0x0058c4fc",
+        "name": "GetDlgItem"
+      },
+      {
+        "iat_va": "0x0058c500",
+        "name": "SetWindowTextA"
+      },
+      {
+        "iat_va": "0x0058c504",
+        "name": "CheckDlgButton"
+      },
+      {
+        "iat_va": "0x0058c508",
+        "name": "SetDlgItemTextA"
+      },
+      {
+        "iat_va": "0x0058c50c",
+        "name": "GetWindowRect"
+      },
+      {
+        "iat_va": "0x0058c510",
+        "name": "DialogBoxParamA"
+      },
+      {
+        "iat_va": "0x0058c514",
+        "name": "SetCursorPos"
+      },
+      {
+        "iat_va": "0x0058c518",
+        "name": "DrawTextA"
+      },
+      {
+        "iat_va": "0x0058c51c",
+        "name": "GetClientRect"
+      },
+      {
+        "iat_va": "0x0058c520",
+        "name": "GetSystemMetrics"
+      },
+      {
+        "iat_va": "0x0058c524",
+        "name": "LoadCursorA"
+      },
+      {
+        "iat_va": "0x0058c528",
+        "name": "ClipCursor"
+      },
+      {
+        "iat_va": "0x0058c52c",
+        "name": "ReleaseCapture"
+      },
+      {
+        "iat_va": "0x0058c530",
+        "name": "GetClassNameA"
+      },
+      {
+        "iat_va": "0x0058c534",
+        "name": "PostThreadMessageA"
+      },
+      {
+        "iat_va": "0x0058c538",
+        "name": "SetFocus"
+      },
+      {
+        "iat_va": "0x0058c53c",
+        "name": "KillTimer"
+      },
+      {
+        "iat_va": "0x0058c540",
+        "name": "SetTimer"
+      },
+      {
+        "iat_va": "0x0058c544",
+        "name": "TranslateMessage"
+      },
+      {
+        "iat_va": "0x0058c548",
+        "name": "PeekMessageA"
+      },
+      {
+        "iat_va": "0x0058c54c",
+        "name": "IsDialogMessageA"
+      },
+      {
+        "iat_va": "0x0058c550",
+        "name": "InvalidateRect"
+      },
+      {
+        "iat_va": "0x0058c554",
+        "name": "DispatchMessageA"
+      },
+      {
+        "iat_va": "0x0058c558",
+        "name": "ShowWindow"
+      },
+      {
+        "iat_va": "0x0058c55c",
+        "name": "UpdateWindow"
+      },
+      {
+        "iat_va": "0x0058c560",
+        "name": "DestroyIcon"
+      },
+      {
+        "iat_va": "0x0058c564",
+        "name": "LoadIconA"
+      },
+      {
+        "iat_va": "0x0058c568",
+        "name": "GetDC"
+      },
+      {
+        "iat_va": "0x0058c56c",
+        "name": "SetActiveWindow"
+      },
+      {
+        "iat_va": "0x0058c570",
+        "name": "GetWindow"
+      },
+      {
+        "iat_va": "0x0058c574",
+        "name": "GetSubMenu"
+      },
+      {
+        "iat_va": "0x0058c578",
+        "name": "LoadMenuA"
+      },
+      {
+        "iat_va": "0x0058c57c",
+        "name": "GetCursorPos"
+      },
+      {
+        "iat_va": "0x0058c580",
+        "name": "SendMessageA"
+      },
+      {
+        "iat_va": "0x0058c584",
+        "name": "TrackPopupMenu"
+      },
+      {
+        "iat_va": "0x0058c588",
+        "name": "DestroyMenu"
+      },
+      {
+        "iat_va": "0x0058c58c",
+        "name": "LoadImageA"
+      },
+      {
+        "iat_va": "0x0058c590",
+        "name": "EnableWindow"
+      },
+      {
+        "iat_va": "0x0058c594",
+        "name": "CloseWindow"
+      },
+      {
+        "iat_va": "0x0058c598",
+        "name": "MessageBoxA"
+      },
+      {
+        "iat_va": "0x0058c59c",
+        "name": "SetWindowPos"
+      }
+    ],
+    "WINMM.dll": [
+      {
+        "iat_va": "0x0058c5a4",
+        "name": "mixerClose"
+      },
+      {
+        "iat_va": "0x0058c5a8",
+        "name": "waveOutGetNumDevs"
+      },
+      {
+        "iat_va": "0x0058c5ac",
+        "name": "waveOutPrepareHeader"
+      },
+      {
+        "iat_va": "0x0058c5b0",
+        "name": "waveOutSetPlaybackRate"
+      },
+      {
+        "iat_va": "0x0058c5b4",
+        "name": "mixerGetControlDetailsA"
+      },
+      {
+        "iat_va": "0x0058c5b8",
+        "name": "waveOutPause"
+      },
+      {
+        "iat_va": "0x0058c5bc",
+        "name": "waveOutWrite"
+      },
+      {
+        "iat_va": "0x0058c5c0",
+        "name": "mixerSetControlDetails"
+      },
+      {
+        "iat_va": "0x0058c5c4",
+        "name": "mixerOpen"
+      },
+      {
+        "iat_va": "0x0058c5c8",
+        "name": "waveOutSetVolume"
+      },
+      {
+        "iat_va": "0x0058c5cc",
+        "name": "waveOutGetDevCapsA"
+      },
+      {
+        "iat_va": "0x0058c5d0",
+        "name": "mixerGetLineInfoA"
+      },
+      {
+        "iat_va": "0x0058c5d4",
+        "name": "mixerGetLineControlsA"
+      },
+      {
+        "iat_va": "0x0058c5d8",
+        "name": "waveOutRestart"
+      },
+      {
+        "iat_va": "0x0058c5dc",
+        "name": "waveOutReset"
+      },
+      {
+        "iat_va": "0x0058c5e0",
+        "name": "PlaySoundA"
+      },
+      {
+        "iat_va": "0x0058c5e4",
+        "name": "waveOutGetPosition"
+      },
+      {
+        "iat_va": "0x0058c5e8",
+        "name": "waveOutClose"
+      },
+      {
+        "iat_va": "0x0058c5ec",
+        "name": "waveOutUnprepareHeader"
+      },
+      {
+        "iat_va": "0x0058c5f0",
+        "name": "mixerGetDevCapsA"
+      },
+      {
+        "iat_va": "0x0058c5f4",
+        "name": "waveOutGetVolume"
+      },
+      {
+        "iat_va": "0x0058c5f8",
+        "name": "waveOutOpen"
+      }
+    ],
+    "WSOCK32.dll": [
+      {
+        "iat_va": "0x0058c600",
+        "name": "WSAStartup"
+      },
+      {
+        "iat_va": "0x0058c604",
+        "name": "WSACleanup"
+      },
+      {
+        "iat_va": "0x0058c608",
+        "name": "sendto"
+      },
+      {
+        "iat_va": "0x0058c60c",
+        "name": "recvfrom"
+      },
+      {
+        "iat_va": "0x0058c610",
+        "name": "ntohl"
+      },
+      {
+        "iat_va": "0x0058c614",
+        "name": "WSAGetLastError"
+      },
+      {
+        "iat_va": "0x0058c618",
+        "name": "getsockname"
+      },
+      {
+        "iat_va": "0x0058c61c",
+        "name": "listen"
+      },
+      {
+        "iat_va": "0x0058c620",
+        "name": "accept"
+      },
+      {
+        "iat_va": "0x0058c624",
+        "name": "bind"
+      },
+      {
+        "iat_va": "0x0058c628",
+        "name": "select"
+      },
+      {
+        "iat_va": "0x0058c62c",
+        "name": "ioctlsocket"
+      },
+      {
+        "iat_va": "0x0058c630",
+        "name": "socket"
+      },
+      {
+        "iat_va": "0x0058c634",
+        "name": "htonl"
+      },
+      {
+        "iat_va": "0x0058c638",
+        "name": "WSAAsyncGetHostByName"
+      },
+      {
+        "iat_va": "0x0058c63c",
+        "name": "recv"
+      },
+      {
+        "iat_va": "0x0058c640",
+        "name": "send"
+      },
+      {
+        "iat_va": "0x0058c644",
+        "name": "ntohs"
+      },
+      {
+        "iat_va": "0x0058c648",
+        "name": "inet_ntoa"
+      },
+      {
+        "iat_va": "0x0058c64c",
+        "name": "inet_addr"
+      },
+      {
+        "iat_va": "0x0058c650",
+        "name": "closesocket"
+      },
+      {
+        "iat_va": "0x0058c654",
+        "name": "gethostbyname"
+      },
+      {
+        "iat_va": "0x0058c658",
+        "name": "WSAAsyncSelect"
+      },
+      {
+        "iat_va": "0x0058c65c",
+        "name": "htons"
+      },
+      {
+        "iat_va": "0x0058c660",
+        "name": "connect"
+      }
+    ],
+    "ole32.dll": [
+      {
+        "iat_va": "0x0058c668",
+        "name": "CoInitialize"
+      },
+      {
+        "iat_va": "0x0058c66c",
+        "name": "CoCreateInstance"
+      },
+      {
+        "iat_va": "0x0058c670",
+        "name": "CoUninitialize"
+      },
+      {
+        "iat_va": "0x0058c674",
+        "name": "CreateBindCtx"
+      }
+    ],
+    "urlmon.dll": [
+      {
+        "iat_va": "0x0058c67c",
+        "name": "HlinkSimpleNavigateToString"
+      }
+    ]
+  },
+  "import_count": 404
+}

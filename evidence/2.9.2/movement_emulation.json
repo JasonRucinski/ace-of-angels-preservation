@@ -1,0 +1,23 @@
+{
+  "client_sha256": "4b6c35e2b3ab473bd98c0afa6538079ee78678d85c28406c07bc27a08cc78c7e",
+  "decoder": "0x495330",
+  "mask_cases_passed": 229,
+  "unsafe_mask_fault": "0x49598c",
+  "absolute_target_position_verified": true,
+  "late_join_delta_seed_cases_passed": 2,
+  "gun_state_block_cases_passed": 1,
+  "stats_block_cases_passed": 1,
+  "local_position_setter_verified": true,
+  "physics_acceleration_cases": [
+    {
+      "dt": 0.016,
+      "all_nan": false
+    },
+    {
+      "dt": 0.0,
+      "all_nan": true
+    }
+  ],
+  "zero_time_guard_cases_passed": 4,
+  "scope": "isolated decoder and physics snippets; not live multiplayer verification"
+}

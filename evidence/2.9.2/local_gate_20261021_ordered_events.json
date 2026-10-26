@@ -1,0 +1,110 @@
+{
+  "schema": 1,
+  "started_utc": "2026-10-21T20:10:08.747534+00:00",
+  "scope": "synthetic loopback and isolated original-code emulation; excludes real-client UI, combat, collision, internet, clean-machine install and performance release gates",
+  "python": "3.12.6",
+  "checks": [
+    {
+      "name": "test_network_bounds.py",
+      "passed": true,
+      "seconds": 2.25,
+      "tests": 6
+    },
+    {
+      "name": "test_relay_motion.py",
+      "passed": true,
+      "seconds": 0.125,
+      "tests": 7
+    },
+    {
+      "name": "test_prepare_client.py",
+      "passed": true,
+      "seconds": 32.454,
+      "tests": 8
+    },
+    {
+      "name": "test_station_runtime.py",
+      "passed": true,
+      "seconds": 6.921,
+      "tests": 7
+    },
+    {
+      "name": "test_station_sessions.py",
+      "passed": true,
+      "seconds": 9.844,
+      "tests": 5
+    },
+    {
+      "name": "test_guest_admission.py",
+      "passed": true,
+      "seconds": 7.531,
+      "tests": 1
+    },
+    {
+      "name": "test_relay_recovery.py",
+      "passed": true,
+      "seconds": 5.391,
+      "tests": 1
+    },
+    {
+      "name": "test_station_stub.py",
+      "passed": true,
+      "seconds": 48.297,
+      "tests": 25
+    },
+    {
+      "name": "test_combat_delivery.py",
+      "passed": true,
+      "seconds": 10.094,
+      "tests": 1
+    },
+    {
+      "name": "test_client_extensions.py",
+      "passed": true,
+      "seconds": 15.578,
+      "tests": 1
+    },
+    {
+      "name": "emulate_station_request.py",
+      "passed": true,
+      "seconds": 0.375
+    },
+    {
+      "name": "emulate_station_aliases.py",
+      "passed": true,
+      "seconds": 0.375
+    },
+    {
+      "name": "emulate_reliable_history.py",
+      "passed": true,
+      "seconds": 0.437
+    },
+    {
+      "name": "emulate_movement.py",
+      "passed": true,
+      "seconds": 0.375
+    },
+    {
+      "name": "emulate_motion_state.py",
+      "passed": true,
+      "seconds": 0.407
+    },
+    {
+      "name": "emulate_archive_terminator.py",
+      "passed": true,
+      "seconds": 2.14
+    },
+    {
+      "name": "emulate_client_extensions.py",
+      "passed": true,
+      "seconds": 1.735
+    },
+    {
+      "name": "emulate_ordered_events.py",
+      "passed": true,
+      "seconds": 0.656
+    }
+  ],
+  "passed": true,
+  "tests": 62
+}

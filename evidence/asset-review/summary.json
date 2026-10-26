@@ -1,0 +1,51 @@
+{
+  "2.0.0": {
+    "installer_members": 17,
+    "decoded_assets": 244,
+    "comparison": {
+      "identical": 66,
+      "renamed_identical": 3,
+      "changed": 86,
+      "absent_name_and_content": 89
+    }
+  },
+  "2.3.1": {
+    "installer_members": 0,
+    "decoded_assets": 0,
+    "comparison": {}
+  },
+  "2.7.1": {
+    "installer_members": 38,
+    "decoded_assets": 430,
+    "comparison": {
+      "identical": 282,
+      "changed": 147,
+      "absent_name_and_content": 1
+    }
+  },
+  "2.8.0": {
+    "installer_members": 40,
+    "decoded_assets": 592,
+    "comparison": {
+      "identical": 507,
+      "changed": 84,
+      "absent_name_and_content": 1
+    }
+  },
+  "2.8.2": {
+    "installer_members": 40,
+    "decoded_assets": 595,
+    "comparison": {
+      "identical": 482,
+      "changed": 112,
+      "absent_name_and_content": 1
+    }
+  },
+  "2.9.2": {
+    "installer_members": 41,
+    "decoded_assets": 748,
+    "comparison": {
+      "identical": 748
+    }
+  }
+}

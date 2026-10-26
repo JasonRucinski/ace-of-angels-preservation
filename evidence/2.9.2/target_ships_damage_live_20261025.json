@@ -1,0 +1,73 @@
+{
+ "date": "2026-10-25",
+ "scope": "One real 2.9.2 client against the relay with --target-ships 1, the ship 1500 units ahead (test-only launcher), guns fired by a posted Space key; findings 9.46",
+ "client": {
+  "copy_of": "work/powerup-client (patch version 19, Station 127.0.0.2)",
+  "sha256": "f2f0c457e3dab8ee3dfb4c5bd9ce2a40a684e675ac92f6e0dbf5fef58fa131da"
+ },
+ "host": "local-relay bound to 127.0.0.2; Arena1a with terrain; spawn (0, 0, -30000), outside every safe zone; the user's host on 127.0.0.1 was left alone",
+ "memory_writes": "none",
+ "target_before_fire": {
+  "tag": "0x40010002",
+  "vessel": "Ym Khtat",
+  "+0x1D4": 1,
+  "+0x1F0": 1,
+  "+0x200": 4,
+  "+0x1DC": -1,
+  "simple_hp_+0x1E8/+0x1EC": [
+   107.0,
+   107.0
+  ]
+ },
+ "run_1_old_server": {
+  "perceived_damage_uploads": "10 of the client's 0x1F uploads in 3 s carried submask 2 entries, all for 0x40010002, gun system indexes 2-7, 1 hit each",
+  "example_upload_hex": "008001000408008000000040000200000003020001400301020001400401020001400201",
+  "client_own_copy": "simple HP 107 -> 95.8 with last hitter +0x2E8 = 0x80010001; category 4 resets the HP at 0 instead of killing"
+ },
+ "run_2_0x38": {
+  "server_event": "target_destroyed after about 1 s of fire",
+  "client": "no change: still alive, drawn and at (0, 0, -28500); +0x1DC = -1 so the kill routine only reset its shields"
+ },
+ "run_3_0x45": {
+  "client_simple_hp_steps": [
+   107.0,
+   98.6,
+   90.2,
+   81.8,
+   73.4,
+   62.2,
+   51.0,
+   42.6,
+   25.8,
+   17.4,
+   6.2
+  ],
+  "step_sizes": "8.4 (Gun310, 21 x 0.4) and 11.2 (Gun-360, 28 x 0.4)",
+  "destroyed_at_s": 4.44,
+  "after_0x45": {
+   "+0x243": 0,
+   "tag": "0x0",
+   "+0x2F7": 0,
+   "target_window": "0x0"
+  },
+  "respawned_at_s": 19.53,
+  "after_respawn": {
+   "+0x243": 1,
+   "tag": "0x40010002",
+   "position": [
+    0,
+    0,
+    -28500
+   ],
+   "simple_hp": 107.0,
+   "target_window": "0x40010002"
+  }
+ },
+ "not_verified": [
+  "missile damage values on a target ship (server-side constants from 9.32)",
+  "a second client",
+  "the explosion on screen (in-flight captures are black)",
+  "maps other than Arena1a",
+  "the user's own copy of the client"
+ ]
+}

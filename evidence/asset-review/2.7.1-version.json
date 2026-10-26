@@ -1,0 +1,211 @@
+{
+  "file": "work/asset-review/2.7.1/members/15_AOACLIENT.EXE",
+  "call_sites": [
+    {
+      "format": "Ace of Angels (v%d.%d.%d Beta)",
+      "format_off": "0x26faf8",
+      "format_va": "0x66faf8",
+      "xref_va": "0x419d20",
+      "function": "0x419ab0",
+      "globals": [
+        {
+          "va": "0x6838b8",
+          "file_off": "0x2838b8",
+          "value": 2,
+          "backing": "file"
+        },
+        {
+          "va": "0x6838bc",
+          "file_off": "0x2838bc",
+          "value": 7,
+          "backing": "file"
+        },
+        {
+          "va": "0x6838c0",
+          "file_off": "0x2838c0",
+          "value": 1,
+          "backing": "file"
+        }
+      ]
+    },
+    {
+      "format": "Ace of Angels (v%d.%d.%d Beta)",
+      "format_off": "0x26faf8",
+      "format_va": "0x66faf8",
+      "xref_va": "0x4731c0",
+      "function": "0x473130",
+      "globals": [
+        {
+          "va": "0x6838b8",
+          "file_off": "0x2838b8",
+          "value": 2,
+          "backing": "file"
+        },
+        {
+          "va": "0x6838bc",
+          "file_off": "0x2838bc",
+          "value": 7,
+          "backing": "file"
+        },
+        {
+          "va": "0x6838c0",
+          "file_off": "0x2838c0",
+          "value": 1,
+          "backing": "file"
+        }
+      ]
+    },
+    {
+      "format": "%s v%d.%d.%d",
+      "format_off": "0x26fb2c",
+      "format_va": "0x66fb2c",
+      "xref_va": "0x419c24",
+      "function": "0x419ab0",
+      "globals": [
+        {
+          "va": "0x6838b8",
+          "file_off": "0x2838b8",
+          "value": 2,
+          "backing": "file"
+        },
+        {
+          "va": "0x6838bc",
+          "file_off": "0x2838bc",
+          "value": 7,
+          "backing": "file"
+        },
+        {
+          "va": "0x6838c0",
+          "file_off": "0x2838c0",
+          "value": 1,
+          "backing": "file"
+        }
+      ]
+    },
+    {
+      "format": "Entering Ace of Angels runtime client ver(%d.%d.%d).",
+      "format_off": "0x26fb50",
+      "format_va": "0x66fb50",
+      "xref_va": "0x419b5a",
+      "function": "0x419ab0",
+      "globals": [
+        {
+          "va": "0x6838b8",
+          "file_off": "0x2838b8",
+          "value": 2,
+          "backing": "file"
+        },
+        {
+          "va": "0x6838bc",
+          "file_off": "0x2838bc",
+          "value": 7,
+          "backing": "file"
+        },
+        {
+          "va": "0x6838c0",
+          "file_off": "0x2838c0",
+          "value": 1,
+          "backing": "file"
+        }
+      ]
+    },
+    {
+      "format": "v%d.%d.%d Beta",
+      "format_off": "0x26fd5c",
+      "format_va": "0x66fd5c",
+      "xref_va": "0x41c453",
+      "function": "0x41b180",
+      "globals": [
+        {
+          "va": "0x6838b8",
+          "file_off": "0x2838b8",
+          "value": 2,
+          "backing": "file"
+        },
+        {
+          "va": "0x6838bc",
+          "file_off": "0x2838bc",
+          "value": 7,
+          "backing": "file"
+        },
+        {
+          "va": "0x6838c0",
+          "file_off": "0x2838c0",
+          "value": 1,
+          "backing": "file"
+        }
+      ]
+    },
+    {
+      "format": "Ace of Angels v%d.%d.%d",
+      "format_off": "0x277144",
+      "format_va": "0x677144",
+      "xref_va": "0x482074",
+      "function": "0x482030",
+      "globals": [
+        {
+          "va": "0x6838b8",
+          "file_off": "0x2838b8",
+          "value": 2,
+          "backing": "file"
+        },
+        {
+          "va": "0x6838bc",
+          "file_off": "0x2838bc",
+          "value": 7,
+          "backing": "file"
+        },
+        {
+          "va": "0x6838c0",
+          "file_off": "0x2838c0",
+          "value": 1,
+          "backing": "file"
+        }
+      ]
+    },
+    {
+      "format": "Ace of Angels (v%d.%d.%d Beta) : %s",
+      "format_off": "0x278ef8",
+      "format_va": "0x678ef8",
+      "xref_va": "0x48faed",
+      "function": "0x48f760",
+      "globals": [
+        {
+          "va": "0x6838b8",
+          "file_off": "0x2838b8",
+          "value": 2,
+          "backing": "file"
+        },
+        {
+          "va": "0x6838bc",
+          "file_off": "0x2838bc",
+          "value": 7,
+          "backing": "file"
+        },
+        {
+          "va": "0x6838c0",
+          "file_off": "0x2838c0",
+          "value": 1,
+          "backing": "file"
+        }
+      ]
+    }
+  ],
+  "global_ref_stats": {
+    "0x6838b8": {
+      "refs": 13,
+      "writes": []
+    },
+    "0x6838bc": {
+      "refs": 13,
+      "writes": []
+    },
+    "0x6838c0": {
+      "refs": 13,
+      "writes": []
+    }
+  },
+  "distinct_versions": [
+    "2.7.1"
+  ]
+}

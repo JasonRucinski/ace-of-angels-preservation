@@ -1,0 +1,55 @@
+{
+  "active_players": [
+    {
+      "slot": 0,
+      "tag": "0x80010001",
+      "position": [
+        0.0,
+        0.0,
+        296.32061767578125
+      ],
+      "target_position": [
+        0.0,
+        0.0,
+        296.32061767578125
+      ],
+      "velocity": [
+        0.0,
+        0.0,
+        0.6500024795532227
+      ],
+      "acceleration": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "max_velocity": 3250,
+      "max_acceleration": 650,
+      "name": "LocalPilot1"
+    }
+  ],
+  "active_objects": [
+    {
+      "slot": 0,
+      "tag": "0x40030000",
+      "kind": 0,
+      "position": [
+        0.0,
+        0.0,
+        300.0
+      ]
+    },
+    {
+      "slot": 1,
+      "tag": "0x40010001",
+      "kind": 17,
+      "position": [
+        0.0,
+        0.0,
+        1500.0
+      ]
+    }
+  ],
+  "scope": "one real patched client on localhost; object creation and visible rendering, not AI/combat/scenario rules",
+  "visible_name": "Local mission ship"
+}

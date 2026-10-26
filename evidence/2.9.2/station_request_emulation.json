@@ -1,0 +1,30 @@
+{
+  "source_sha256": "4b6c35e2b3ab473bd98c0afa6538079ee78678d85c28406c07bc27a08cc78c7e",
+  "record_copy": "0x49DB20",
+  "request_packing": "0x4302A6..0x43044B",
+  "cases": [
+    {
+      "station_id": 16909060,
+      "request_id": 16909060,
+      "job": 5,
+      "flag": 167,
+      "header_length": 142,
+      "arena_connect_id": 16909060,
+      "arena_player_block_preserved": true
+    },
+    {
+      "station_id": 4041265344,
+      "request_id": 4041265344,
+      "job": 5,
+      "flag": 167,
+      "header_length": 142,
+      "arena_connect_id": 4041265344,
+      "arena_player_block_preserved": true
+    }
+  ],
+  "mocked": [
+    "allocation/free",
+    "name/UI propagation after record copy"
+  ],
+  "scope": "isolated original record copy, TCP header packing and arena request construction; no full ACK dispatch, OS socket, UI or complete arena transition"
+}

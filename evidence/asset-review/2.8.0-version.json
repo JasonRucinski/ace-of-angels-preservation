@@ -1,0 +1,211 @@
+{
+  "file": "work/asset-review/2.8.0/members/15_AOACLIENT.EXE",
+  "call_sites": [
+    {
+      "format": "Ace of Angels (v%d.%d.%d Beta)",
+      "format_off": "0x1c2464",
+      "format_va": "0x5c2464",
+      "xref_va": "0x407d10",
+      "function": "0x407aa0",
+      "globals": [
+        {
+          "va": "0x5d16dc",
+          "file_off": "0x1d16dc",
+          "value": 2,
+          "backing": "file"
+        },
+        {
+          "va": "0x5d16e0",
+          "file_off": "0x1d16e0",
+          "value": 8,
+          "backing": "file"
+        },
+        {
+          "va": "0x5e3b40",
+          "file_off": null,
+          "value": 0,
+          "backing": "virtual zero-fill"
+        }
+      ]
+    },
+    {
+      "format": "Ace of Angels (v%d.%d.%d Beta)",
+      "format_off": "0x1c2464",
+      "format_va": "0x5c2464",
+      "xref_va": "0x445b60",
+      "function": "0x445ad0",
+      "globals": [
+        {
+          "va": "0x5d16dc",
+          "file_off": "0x1d16dc",
+          "value": 2,
+          "backing": "file"
+        },
+        {
+          "va": "0x5d16e0",
+          "file_off": "0x1d16e0",
+          "value": 8,
+          "backing": "file"
+        },
+        {
+          "va": "0x5e3b40",
+          "file_off": null,
+          "value": 0,
+          "backing": "virtual zero-fill"
+        }
+      ]
+    },
+    {
+      "format": "%s v%d.%d.%d",
+      "format_off": "0x1c2490",
+      "format_va": "0x5c2490",
+      "xref_va": "0x407c14",
+      "function": "0x407aa0",
+      "globals": [
+        {
+          "va": "0x5d16dc",
+          "file_off": "0x1d16dc",
+          "value": 2,
+          "backing": "file"
+        },
+        {
+          "va": "0x5d16e0",
+          "file_off": "0x1d16e0",
+          "value": 8,
+          "backing": "file"
+        },
+        {
+          "va": "0x5e3b40",
+          "file_off": null,
+          "value": 0,
+          "backing": "virtual zero-fill"
+        }
+      ]
+    },
+    {
+      "format": "Entering Ace of Angels runtime client ver(%d.%d.%d).",
+      "format_off": "0x1c24b4",
+      "format_va": "0x5c24b4",
+      "xref_va": "0x407b4a",
+      "function": "0x407aa0",
+      "globals": [
+        {
+          "va": "0x5d16dc",
+          "file_off": "0x1d16dc",
+          "value": 2,
+          "backing": "file"
+        },
+        {
+          "va": "0x5d16e0",
+          "file_off": "0x1d16e0",
+          "value": 8,
+          "backing": "file"
+        },
+        {
+          "va": "0x5e3b40",
+          "file_off": null,
+          "value": 0,
+          "backing": "virtual zero-fill"
+        }
+      ]
+    },
+    {
+      "format": "v%d.%d.%d Beta",
+      "format_off": "0x1c2660",
+      "format_va": "0x5c2660",
+      "xref_va": "0x409f5a",
+      "function": "0x408c80",
+      "globals": [
+        {
+          "va": "0x5d16dc",
+          "file_off": "0x1d16dc",
+          "value": 2,
+          "backing": "file"
+        },
+        {
+          "va": "0x5d16e0",
+          "file_off": "0x1d16e0",
+          "value": 8,
+          "backing": "file"
+        },
+        {
+          "va": "0x5e3b40",
+          "file_off": null,
+          "value": 0,
+          "backing": "virtual zero-fill"
+        }
+      ]
+    },
+    {
+      "format": "Ace of Angels v%d.%d.%d",
+      "format_off": "0x1c7934",
+      "format_va": "0x5c7934",
+      "xref_va": "0x44fdf7",
+      "function": "0x44fdb0",
+      "globals": [
+        {
+          "va": "0x5d16dc",
+          "file_off": "0x1d16dc",
+          "value": 2,
+          "backing": "file"
+        },
+        {
+          "va": "0x5d16e0",
+          "file_off": "0x1d16e0",
+          "value": 8,
+          "backing": "file"
+        },
+        {
+          "va": "0x5e3b40",
+          "file_off": null,
+          "value": 0,
+          "backing": "virtual zero-fill"
+        }
+      ]
+    },
+    {
+      "format": "Ace of Angels (v%d.%d.%d Beta) : %s",
+      "format_off": "0x1c91b4",
+      "format_va": "0x5c91b4",
+      "xref_va": "0x459eb6",
+      "function": "0x459a50",
+      "globals": [
+        {
+          "va": "0x5d16dc",
+          "file_off": "0x1d16dc",
+          "value": 2,
+          "backing": "file"
+        },
+        {
+          "va": "0x5d16e0",
+          "file_off": "0x1d16e0",
+          "value": 8,
+          "backing": "file"
+        },
+        {
+          "va": "0x5e3b40",
+          "file_off": null,
+          "value": 0,
+          "backing": "virtual zero-fill"
+        }
+      ]
+    }
+  ],
+  "global_ref_stats": {
+    "0x5d16dc": {
+      "refs": 12,
+      "writes": []
+    },
+    "0x5d16e0": {
+      "refs": 12,
+      "writes": []
+    },
+    "0x5e3b40": {
+      "refs": 12,
+      "writes": []
+    }
+  },
+  "distinct_versions": [
+    "2.8.0"
+  ]
+}

@@ -1,0 +1,63 @@
+{
+ "schema": 1,
+ "date": "2026-10-21",
+ "scope": "Real 2.9.2 clients on one Windows 11 PC against the localhost stub (local-relay profile). Raw captures stay in ignored work/realcheck-20261021; this file holds derived facts only.",
+ "client_exe_sha256": "f082a0f0d9d419919e61787d78146d0564ff23cbce0aae845105aafe640cf04b",
+ "client_setup": "prepare_client.py prepare on fresh copies of game/2.9.2 (patches logger-size-v1, logger-lock-v1, zero-time-physics-v1, host localhost); dgVoodoo windowed, DirectX Resolution 640x480, CaptureMouse false",
+ "drivers": "Login, Station Play (WM_COMMAND 1012) and Alt+Q (posted WM_SYSKEYDOWN) sent as window messages; rounds 2-3 flown by the user",
+ "findings": {
+  "tcp_close_deadlock": {
+   "symptom": "Client UI thread spins on 'waiting for xfer lock' forever after login; Station never appears; process Not Responding",
+   "cause": "Bounded server closed the TCP data connection after each reply. The client reuses the connection ('already connected'); on server close it runs ShutdownTCPBySocket 0x4366F0, which sets queue mutex 0x5E6700=1 and never clears it. The next job queued during a transfer (0x4300F0) spins on that mutex on the UI thread, so the in-flight job's connect is never serviced.",
+   "fix": "StationTCPServer keeps a connection open across jobs while its resolved Station session lives",
+   "verified": "After the fix one connection served jobs 14, 5, 18, 6, 11 in sequence and every client reached Station (4 logins)"
+  },
+  "shared_udp_socket": {
+   "observation": "Each client uses one UDP source port for Station 5033 and arena 5031",
+   "consequence": "After arena entry, Station heartbeat replies carry the arena slot (e.g. byte 2) instead of 1; the old tag check expired live Station sessions",
+   "fix": "Station heartbeat validates the single-use issued tick only"
+  },
+  "background_window_stall": {
+   "observation": "With the user switching between two clients, the inactive client stopped servicing UDP and later drained its queue: heartbeat replies arrived 9-37 s late (client A, ~38 s inactive) and 35-63 s late (client B, ~64 s inactive)",
+   "not_observed": "Clients driven only by posted messages kept servicing UDP while not foreground (removal ACK in 39 ms, grace timer on schedule); the triggering condition is unresolved",
+   "server_change": "Reliable removal retries back off 0.5 s to 4 s until the peer timeout, instead of five copies in 2.5 s",
+   "cause": "Inactive-window wakeup timer callback 0x446E70 skips the frame (the only UDP reader in flight) when graphics exclusive-mode byte +0x24C5 is set; the client always initializes exclusive mode (findings 9.24)",
+   "reproduction": "WM_ACTIVATE(WA_INACTIVE)+WM_ACTIVATEAPP(FALSE) for 15 s: unpatched heartbeat gap 16.06 s, lag 15.1 s; other client 1.08 s",
+   "patch": "background-network-v1: 0x446EAF 75 34 -> 90 90; same test gap 1.3 s, lag 0.33 s",
+   "patched_client_sha256": "506a5c47cf67b2b8f09100c319776b5f6d3fbadc350cd544c85df4fb7fbb8e0e",
+   "untested": [
+    "real user focus change",
+    "minimized window",
+    "native exclusive fullscreen",
+    "inactivity longer than 15 s"
+   ]
+  },
+  "reliable_inbound": {
+   "client_sequence_start": 1,
+   "inner_types_seen": [
+    "0x80",
+    "0xAD",
+    "0x6E",
+    "0x1D",
+    "0x6E",
+    "0x3C"
+   ],
+   "duplicate_copies_seen": 0
+  },
+  "quit_and_despawn": {
+   "alt_q": "Key command 91 ('Quit Game (no prompt)'); sends 0x4E three times to each of Station and arena within 41 ms of the key",
+   "server": "arena_departure and station_departure 'client quit'",
+   "observer": "Observer acknowledged removal 0x0F seq 4 39 ms later; its active player table no longer held the departed slot",
+   "window_close": "Closing from the taskbar sends no 0x4E; the server only notices through the inactivity timeout"
+  },
+  "return_to_station": "After Alt+Q from flight the client started 'AoAClient.exe autologin' (helper parent exited; quit path references renexe.exe and AoAClient.ex_) and logged back into Station by itself",
+  "client_grace_timer": {
+   "method": "Server killed; client server-alive byte global+0xD3628 sampled every 0.1 s",
+   "default_seconds": 16.16,
+   "params_aoa_CLIENTGRACE_4000_seconds": 5.78,
+   "interpretation": "CLIENTGRACE is milliseconds; params.aoa in the client folder overrides it. Remainder is time since the last 1 s ping plus the 1 s CLIENTWATCHDOG tick"
+  },
+  "unexplained_crash": "A user-launched client sharing game/2.9.2 with a hung second client crashed 0xC0000005 at ntdll+0x4FC65 about 0.2 s after the arena ACK, before any further server message; clients in separate folders did not reproduce it in the later rounds",
+  "window_size": "dgVoodoo DirectX Resolution 640x480 gives a 640x480 window; a DPI-unaware query at 125% scaling reports 512x384"
+ }
+}

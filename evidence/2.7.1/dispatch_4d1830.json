@@ -1,0 +1,1830 @@
+{
+ "file": "work/2.7.1/members/15_AOACLIENT.EXE",
+ "switch_insn": "0x4d19b3",
+ "base": 8,
+ "max_index": 154,
+ "index_table": "0x4d1c38",
+ "jump_table": "0x4d1bd4",
+ "default": "0x4d1b9a",
+ "distinct_targets": 25,
+ "cases": [
+  {
+   "type": 8,
+   "type_hex": "0x08",
+   "target": "0x4d19f4",
+   "is_default": false,
+   "calls": [
+    "dword ptr [edx + 0x3c]"
+   ],
+   "strings": []
+  },
+  {
+   "type": 9,
+   "type_hex": "0x09",
+   "target": "0x4d19e8",
+   "is_default": false,
+   "calls": [
+    "0x4d22f0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 10,
+   "type_hex": "0x0a",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 11,
+   "type_hex": "0x0b",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 12,
+   "type_hex": "0x0c",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 13,
+   "type_hex": "0x0d",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 14,
+   "type_hex": "0x0e",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 15,
+   "type_hex": "0x0f",
+   "target": "0x4d19ba",
+   "is_default": false,
+   "calls": [
+    "0x60e780",
+    "0x4d0f30",
+    "0x60e7b0",
+    "dword ptr [eax + 0x24]"
+   ],
+   "strings": []
+  },
+  {
+   "type": 16,
+   "type_hex": "0x10",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 17,
+   "type_hex": "0x11",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 18,
+   "type_hex": "0x12",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 19,
+   "type_hex": "0x13",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 20,
+   "type_hex": "0x14",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 21,
+   "type_hex": "0x15",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 22,
+   "type_hex": "0x16",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 23,
+   "type_hex": "0x17",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 24,
+   "type_hex": "0x18",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 25,
+   "type_hex": "0x19",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 26,
+   "type_hex": "0x1a",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 27,
+   "type_hex": "0x1b",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 28,
+   "type_hex": "0x1c",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 29,
+   "type_hex": "0x1d",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 30,
+   "type_hex": "0x1e",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 31,
+   "type_hex": "0x1f",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 32,
+   "type_hex": "0x20",
+   "target": "0x4d1a84",
+   "is_default": false,
+   "calls": [
+    "0x60b0c0",
+    "dword ptr [edx]"
+   ],
+   "strings": [
+    "cePacketRemoteXmit data[%d] Enum[%d] [%s]"
+   ]
+  },
+  {
+   "type": 33,
+   "type_hex": "0x21",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 34,
+   "type_hex": "0x22",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 35,
+   "type_hex": "0x23",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 36,
+   "type_hex": "0x24",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 37,
+   "type_hex": "0x25",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 38,
+   "type_hex": "0x26",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 39,
+   "type_hex": "0x27",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 40,
+   "type_hex": "0x28",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 41,
+   "type_hex": "0x29",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 42,
+   "type_hex": "0x2a",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 43,
+   "type_hex": "0x2b",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 44,
+   "type_hex": "0x2c",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 45,
+   "type_hex": "0x2d",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 46,
+   "type_hex": "0x2e",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 47,
+   "type_hex": "0x2f",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 48,
+   "type_hex": "0x30",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 49,
+   "type_hex": "0x31",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 50,
+   "type_hex": "0x32",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 51,
+   "type_hex": "0x33",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 52,
+   "type_hex": "0x34",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 53,
+   "type_hex": "0x35",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 54,
+   "type_hex": "0x36",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 55,
+   "type_hex": "0x37",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 56,
+   "type_hex": "0x38",
+   "target": "0x4d1a18",
+   "is_default": false,
+   "calls": [
+    "0x4d7b40"
+   ],
+   "strings": []
+  },
+  {
+   "type": 57,
+   "type_hex": "0x39",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 58,
+   "type_hex": "0x3a",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 59,
+   "type_hex": "0x3b",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 60,
+   "type_hex": "0x3c",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 61,
+   "type_hex": "0x3d",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 62,
+   "type_hex": "0x3e",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 63,
+   "type_hex": "0x3f",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 64,
+   "type_hex": "0x40",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 65,
+   "type_hex": "0x41",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 66,
+   "type_hex": "0x42",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 67,
+   "type_hex": "0x43",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 68,
+   "type_hex": "0x44",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 69,
+   "type_hex": "0x45",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 70,
+   "type_hex": "0x46",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 71,
+   "type_hex": "0x47",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 72,
+   "type_hex": "0x48",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 73,
+   "type_hex": "0x49",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 74,
+   "type_hex": "0x4a",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 75,
+   "type_hex": "0x4b",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 76,
+   "type_hex": "0x4c",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 77,
+   "type_hex": "0x4d",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 78,
+   "type_hex": "0x4e",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 79,
+   "type_hex": "0x4f",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 80,
+   "type_hex": "0x50",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 81,
+   "type_hex": "0x51",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 82,
+   "type_hex": "0x52",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 83,
+   "type_hex": "0x53",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 84,
+   "type_hex": "0x54",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 85,
+   "type_hex": "0x55",
+   "target": "0x4d1a00",
+   "is_default": false,
+   "calls": [
+    "0x4d7950"
+   ],
+   "strings": []
+  },
+  {
+   "type": 86,
+   "type_hex": "0x56",
+   "target": "0x4d1a0c",
+   "is_default": false,
+   "calls": [
+    "0x4d7990"
+   ],
+   "strings": []
+  },
+  {
+   "type": 87,
+   "type_hex": "0x57",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 88,
+   "type_hex": "0x58",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 89,
+   "type_hex": "0x59",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 90,
+   "type_hex": "0x5a",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 91,
+   "type_hex": "0x5b",
+   "target": "0x4d1a60",
+   "is_default": false,
+   "calls": [
+    "0x4d7bd0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 92,
+   "type_hex": "0x5c",
+   "target": "0x4d1a6c",
+   "is_default": false,
+   "calls": [
+    "0x4d7ba0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 93,
+   "type_hex": "0x5d",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 94,
+   "type_hex": "0x5e",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 95,
+   "type_hex": "0x5f",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 96,
+   "type_hex": "0x60",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 97,
+   "type_hex": "0x61",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 98,
+   "type_hex": "0x62",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 99,
+   "type_hex": "0x63",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 100,
+   "type_hex": "0x64",
+   "target": "0x4d1b25",
+   "is_default": false,
+   "calls": [
+    "0x4d7df0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 101,
+   "type_hex": "0x65",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 102,
+   "type_hex": "0x66",
+   "target": "0x4d1a3c",
+   "is_default": false,
+   "calls": [
+    "0x4d7a60"
+   ],
+   "strings": []
+  },
+  {
+   "type": 103,
+   "type_hex": "0x67",
+   "target": "0x4d1a24",
+   "is_default": false,
+   "calls": [
+    "0x4d79c0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 104,
+   "type_hex": "0x68",
+   "target": "0x4d1a30",
+   "is_default": false,
+   "calls": [
+    "0x4d7a10"
+   ],
+   "strings": []
+  },
+  {
+   "type": 105,
+   "type_hex": "0x69",
+   "target": "0x4d1a48",
+   "is_default": false,
+   "calls": [
+    "0x4d7ab0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 106,
+   "type_hex": "0x6a",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 107,
+   "type_hex": "0x6b",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 108,
+   "type_hex": "0x6c",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 109,
+   "type_hex": "0x6d",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 110,
+   "type_hex": "0x6e",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 111,
+   "type_hex": "0x6f",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 112,
+   "type_hex": "0x70",
+   "target": "0x4d1a54",
+   "is_default": false,
+   "calls": [
+    "0x4d7b70"
+   ],
+   "strings": []
+  },
+  {
+   "type": 113,
+   "type_hex": "0x71",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 114,
+   "type_hex": "0x72",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 115,
+   "type_hex": "0x73",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 116,
+   "type_hex": "0x74",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 117,
+   "type_hex": "0x75",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 118,
+   "type_hex": "0x76",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 119,
+   "type_hex": "0x77",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 120,
+   "type_hex": "0x78",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 121,
+   "type_hex": "0x79",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 122,
+   "type_hex": "0x7a",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 123,
+   "type_hex": "0x7b",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 124,
+   "type_hex": "0x7c",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 125,
+   "type_hex": "0x7d",
+   "target": "0x4d1a78",
+   "is_default": false,
+   "calls": [
+    "0x4d7920"
+   ],
+   "strings": []
+  },
+  {
+   "type": 126,
+   "type_hex": "0x7e",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 127,
+   "type_hex": "0x7f",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 128,
+   "type_hex": "0x80",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 129,
+   "type_hex": "0x81",
+   "target": "0x4d1aec",
+   "is_default": false,
+   "calls": [
+    "0x4d7c00"
+   ],
+   "strings": []
+  },
+  {
+   "type": 130,
+   "type_hex": "0x82",
+   "target": "0x4d1af8",
+   "is_default": false,
+   "calls": [
+    "0x4d7c20"
+   ],
+   "strings": []
+  },
+  {
+   "type": 131,
+   "type_hex": "0x83",
+   "target": "0x4d1b04",
+   "is_default": false,
+   "calls": [
+    "0x4d7c50"
+   ],
+   "strings": []
+  },
+  {
+   "type": 132,
+   "type_hex": "0x84",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 133,
+   "type_hex": "0x85",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 134,
+   "type_hex": "0x86",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 135,
+   "type_hex": "0x87",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 136,
+   "type_hex": "0x88",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 137,
+   "type_hex": "0x89",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 138,
+   "type_hex": "0x8a",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 139,
+   "type_hex": "0x8b",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 140,
+   "type_hex": "0x8c",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 141,
+   "type_hex": "0x8d",
+   "target": "0x4d1b10",
+   "is_default": false,
+   "calls": [
+    "0x4d7c80"
+   ],
+   "strings": []
+  },
+  {
+   "type": 142,
+   "type_hex": "0x8e",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 143,
+   "type_hex": "0x8f",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 144,
+   "type_hex": "0x90",
+   "target": "0x4d1b1c",
+   "is_default": false,
+   "calls": [
+    "0x4d7cb0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 145,
+   "type_hex": "0x91",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 146,
+   "type_hex": "0x92",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 147,
+   "type_hex": "0x93",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 148,
+   "type_hex": "0x94",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 149,
+   "type_hex": "0x95",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 150,
+   "type_hex": "0x96",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 151,
+   "type_hex": "0x97",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 152,
+   "type_hex": "0x98",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 153,
+   "type_hex": "0x99",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 154,
+   "type_hex": "0x9a",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 155,
+   "type_hex": "0x9b",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 156,
+   "type_hex": "0x9c",
+   "target": "0x4d1b2e",
+   "is_default": false,
+   "calls": [
+    "dword ptr [edx + 0x10]"
+   ],
+   "strings": []
+  },
+  {
+   "type": 157,
+   "type_hex": "0x9d",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 158,
+   "type_hex": "0x9e",
+   "target": "0x4d1b5c",
+   "is_default": false,
+   "calls": [
+    "dword ptr [edx + 0x14]"
+   ],
+   "strings": []
+  },
+  {
+   "type": 159,
+   "type_hex": "0x9f",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 160,
+   "type_hex": "0xa0",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 161,
+   "type_hex": "0xa1",
+   "target": "0x4d1b9a",
+   "is_default": true,
+   "calls": [
+    "dword ptr [eax + 0x38]",
+    "dword ptr [edx + 0x20]",
+    "0x60def0"
+   ],
+   "strings": []
+  },
+  {
+   "type": 162,
+   "type_hex": "0xa2",
+   "target": "0x4d1b91",
+   "is_default": false,
+   "calls": [
+    "0x4d6050"
+   ],
+   "strings": []
+  }
+ ]
+}

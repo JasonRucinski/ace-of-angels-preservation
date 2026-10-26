@@ -1,0 +1,82 @@
+{
+  "map": "CTF_arena",
+  "scope": "static heuristic export only; not original scene loading or collision",
+  "geometry": {
+    "sha256": "6a50d4983ff094313c5c0ddcb241d28526e377cca654f66101ed85502bae1a56",
+    "vertices": 37449,
+    "triangles": 35134,
+    "objects": 113,
+    "degenerate_triangles": 0,
+    "bounds_obj": {
+      "min": [
+        -152361.627,
+        -66379.849,
+        -228107.302
+      ],
+      "max": [
+        144933.924,
+        31560.15,
+        227257.723
+      ]
+    }
+  },
+  "nodes_sha256": "eff6df293e339ba39e560be2c4e42721614e800c8524da597761b71a181397a7",
+  "unresolved_nodes": [
+    {
+      "name": "NavFar2",
+      "position": [
+        -984481.125,
+        846948.375,
+        -1174525.5
+      ]
+    },
+    {
+      "name": "ZAMissile",
+      "position": [
+        -11883.6,
+        -26726.223,
+        -69682.836
+      ]
+    },
+    {
+      "name": "ZAMissile0",
+      "position": [
+        110274.656,
+        -29925.129,
+        64416.738
+      ]
+    },
+    {
+      "name": "ZARepair0",
+      "position": [
+        153902.594,
+        -28863.926,
+        -39397.398
+      ]
+    },
+    {
+      "name": "CTF_base01",
+      "position": [
+        5736.531,
+        0.0,
+        -198169.781
+      ]
+    },
+    {
+      "name": "CTF_base02",
+      "position": [
+        3242.531,
+        0.0,
+        199019.359
+      ]
+    }
+  ],
+  "missing_models": [],
+  "release_map_validated": false,
+  "remaining": [
+    "resolve node semantics and heuristic model matching",
+    "verify original-client world loading and transforms",
+    "establish collision geometry and continuous high-speed collision",
+    "validate eight spawn points, boundaries and recovery in game"
+  ]
+}

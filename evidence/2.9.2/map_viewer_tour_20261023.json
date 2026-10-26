@@ -1,0 +1,149 @@
+{
+ "scope": "Real 2.9.2 client (scratch copy, prepared patch version 11) driven to flight per map on the loopback relay; read-only memory snapshot of the native terrain list. No visual, collision or gameplay acceptance.",
+ "date": "2026-10-23",
+ "client_patch": "online-terrain-v2",
+ "client_sha256": "e66745b77d5e27f69fb8155ed201fdfcbd63d42146a61901e9b7b61f2edb3f57",
+ "jrmap292_sha256": "dfd79860e5444f766dd78d99e52aec178bcab672a93cf04006d7543dd5047de5",
+ "maps": {
+  "Arena1a": {
+   "terrain_objects": 239,
+   "with_graphics": 239,
+   "list_complete": true,
+   "spawn": "origin",
+   "error": null
+  },
+  "CTF_arena": {
+   "terrain_objects": 55,
+   "with_graphics": 55,
+   "list_complete": true,
+   "spawn": "origin",
+   "error": null
+  },
+  "CTF_arena_b": {
+   "terrain_objects": 60,
+   "with_graphics": 60,
+   "list_complete": true,
+   "spawn": "viewing spawn",
+   "error": null
+  },
+  "newterrain": {
+   "terrain_objects": 234,
+   "with_graphics": 234,
+   "list_complete": true,
+   "spawn": "origin",
+   "error": null
+  },
+  "outerchange": {
+   "terrain_objects": 616,
+   "with_graphics": 616,
+   "list_complete": true,
+   "spawn": "origin",
+   "error": null
+  },
+  "ast_fld_a": {
+   "terrain_objects": 27,
+   "with_graphics": 27,
+   "list_complete": true,
+   "spawn": "origin",
+   "error": null
+  },
+  "ast_fld_b": {
+   "terrain_objects": 49,
+   "with_graphics": 49,
+   "list_complete": true,
+   "spawn": "origin",
+   "error": null
+  },
+  "ast_fld_c": {
+   "terrain_objects": 15,
+   "with_graphics": 15,
+   "list_complete": true,
+   "spawn": "origin",
+   "error": null
+  },
+  "ast_fld_d": {
+   "terrain_objects": 10,
+   "with_graphics": 10,
+   "list_complete": true,
+   "spawn": "origin",
+   "error": null
+  },
+  "CTF_base": {
+   "terrain_objects": 1,
+   "with_graphics": 1,
+   "list_complete": true,
+   "spawn": "viewing spawn",
+   "error": null
+  },
+  "hu_base_a": {
+   "terrain_objects": 4,
+   "with_graphics": 4,
+   "list_complete": true,
+   "spawn": "origin",
+   "error": null
+  },
+  "hu_base_b": {
+   "terrain_objects": 2,
+   "with_graphics": 2,
+   "list_complete": true,
+   "spawn": "origin",
+   "error": null
+  },
+  "hy_base_test": {
+   "terrain_objects": 2,
+   "with_graphics": 2,
+   "list_complete": true,
+   "spawn": "origin",
+   "error": null
+  },
+  "hy_winga": {
+   "terrain_objects": 0,
+   "with_graphics": 0,
+   "list_complete": true,
+   "spawn": "viewing spawn",
+   "error": null
+  },
+  "HyBase2Lay": {
+   "terrain_objects": 10,
+   "with_graphics": 10,
+   "list_complete": true,
+   "spawn": "origin",
+   "error": null
+  },
+  "irrosa01": {
+   "terrain_objects": 457,
+   "with_graphics": 457,
+   "list_complete": true,
+   "spawn": "origin",
+   "error": null
+  },
+  "ze_winga": {
+   "terrain_objects": 0,
+   "with_graphics": 0,
+   "list_complete": true,
+   "spawn": "viewing spawn",
+   "error": null
+  },
+  "ze_wingb": {
+   "terrain_objects": 0,
+   "with_graphics": 0,
+   "list_complete": true,
+   "spawn": "viewing spawn",
+   "error": null
+  },
+  "Hittest": {
+   "terrain_objects": 0,
+   "with_graphics": 0,
+   "list_complete": true,
+   "spawn": "viewing spawn",
+   "error": null
+  },
+  "JRMAP": {
+   "terrain_objects": 18,
+   "with_graphics": 18,
+   "list_complete": true,
+   "spawn": "viewing spawn",
+   "error": null
+  }
+ }
+}

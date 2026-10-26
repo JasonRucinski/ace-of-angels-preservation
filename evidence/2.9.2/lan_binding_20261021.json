@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "scope": "Synthetic clients on the host PC using its assigned LAN IPv4; no bind mocks",
+  "ports": "ephemeral; does not verify firewall access to the normal ports from another PC",
+  "station_udp": true,
+  "arena_udp": true,
+  "station_tcp": true,
+  "advertised_address_matches_listener": true,
+  "distinct_guests_admitted": 2,
+  "real_client_gameplay_verified": false,
+  "separate_pc_network_path_verified": false,
+  "firewall_or_hosts_files_changed": false
+}

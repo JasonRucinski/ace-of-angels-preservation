@@ -1,0 +1,1214 @@
+{
+  "file": "work/2.7.1/members/15_AOACLIENT.EXE",
+  "routine_first_insn": "0x476996",
+  "routine_last_insn": "0x47729c",
+  "log_functions": [
+    "0x60b0c0"
+  ],
+  "log_objects": [
+    "0x6a58b8"
+  ],
+  "count": 120,
+  "rows": [
+    {
+      "name": "SPing",
+      "value": 12,
+      "value_hex": "0xc",
+      "push_va": "0x476a20",
+      "format_va": "0x675f6c",
+      "format_off": "0x275f6c",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SConnectReq",
+      "value": 445,
+      "value_hex": "0x1bd",
+      "push_va": "0x476a31",
+      "format_va": "0x675f58",
+      "format_off": "0x275f58",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SAckConnect",
+      "value": 427,
+      "value_hex": "0x1ab",
+      "push_va": "0x476a45",
+      "format_va": "0x675f44",
+      "format_off": "0x275f44",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPremapNames",
+      "value": 20,
+      "value_hex": "0x14",
+      "push_va": "0x476a59",
+      "format_va": "0x675f2c",
+      "format_off": "0x275f2c",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketPreMappedResourceFiles",
+      "value": 401,
+      "value_hex": "0x191",
+      "push_va": "0x476a6a",
+      "format_va": "0x675f00",
+      "format_off": "0x275f00",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketRestart",
+      "value": 192,
+      "value_hex": "0xc0",
+      "push_va": "0x476a7e",
+      "format_va": "0x675ee8",
+      "format_off": "0x275ee8",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketRequestServerConnect",
+      "value": 35,
+      "value_hex": "0x23",
+      "push_va": "0x476a95",
+      "format_va": "0x675ec0",
+      "format_off": "0x275ec0",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketServerRequestConnectAck",
+      "value": 10,
+      "value_hex": "0xa",
+      "push_va": "0x476aa6",
+      "format_va": "0x675e94",
+      "format_off": "0x275e94",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketRequestHTTPResourceList",
+      "value": 2,
+      "value_hex": "0x2",
+      "push_va": "0x476ab7",
+      "format_va": "0x675e68",
+      "format_off": "0x275e68",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketHTTPResourceList",
+      "value": 7,
+      "value_hex": "0x7",
+      "push_va": "0x476ac8",
+      "format_va": "0x675e44",
+      "format_off": "0x275e44",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketRequestHTTPTransfer",
+      "value": 4,
+      "value_hex": "0x4",
+      "push_va": "0x476ad9",
+      "format_va": "0x675e1c",
+      "format_off": "0x275e1c",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketStartHTTPTransfer",
+      "value": 102,
+      "value_hex": "0x66",
+      "push_va": "0x476aea",
+      "format_va": "0x675df8",
+      "format_off": "0x275df8",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketServerRegister",
+      "value": 61,
+      "value_hex": "0x3d",
+      "push_va": "0x476afe",
+      "format_va": "0x675dd8",
+      "format_off": "0x275dd8",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketRetry",
+      "value": 32,
+      "value_hex": "0x20",
+      "push_va": "0x476b0f",
+      "format_va": "0x675dc0",
+      "format_off": "0x275dc0",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketRemoteXmit",
+      "value": 7,
+      "value_hex": "0x7",
+      "push_va": "0x476b20",
+      "format_va": "0x675da4",
+      "format_off": "0x275da4",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketStationPing",
+      "value": 4,
+      "value_hex": "0x4",
+      "push_va": "0x476b31",
+      "format_va": "0x675d88",
+      "format_off": "0x275d88",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketGameserverConnectStatus",
+      "value": 5,
+      "value_hex": "0x5",
+      "push_va": "0x476b42",
+      "format_va": "0x675d5c",
+      "format_off": "0x275d5c",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketMessage",
+      "value": 294,
+      "value_hex": "0x126",
+      "push_va": "0x476b53",
+      "format_va": "0x675d44",
+      "format_off": "0x275d44",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketMessageAck",
+      "value": 4,
+      "value_hex": "0x4",
+      "push_va": "0x476b6a",
+      "format_va": "0x675d28",
+      "format_off": "0x275d28",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SSetPosition",
+      "value": 12,
+      "value_hex": "0xc",
+      "push_va": "0x476b7b",
+      "format_va": "0x675d10",
+      "format_off": "0x275d10",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SLoadObject",
+      "value": 187,
+      "value_hex": "0xbb",
+      "push_va": "0x476b8c",
+      "format_va": "0x675cfc",
+      "format_off": "0x275cfc",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SLoadPlayer",
+      "value": 498,
+      "value_hex": "0x1f2",
+      "push_va": "0x476ba0",
+      "format_va": "0x675ce8",
+      "format_off": "0x275ce8",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SLoadShip",
+      "value": 129,
+      "value_hex": "0x81",
+      "push_va": "0x476bb4",
+      "format_va": "0x675cd4",
+      "format_off": "0x275cd4",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SKilledBy",
+      "value": 1,
+      "value_hex": "0x1",
+      "push_va": "0x476bc8",
+      "format_va": "0x675cc0",
+      "format_off": "0x275cc0",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SFireMissile",
+      "value": 144,
+      "value_hex": "0x90",
+      "push_va": "0x476bdc",
+      "format_va": "0x675ca8",
+      "format_off": "0x275ca8",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketDataResourceAck",
+      "value": 70,
+      "value_hex": "0x46",
+      "push_va": "0x476bf0",
+      "format_va": "0x675c84",
+      "format_off": "0x275c84",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SRemovePlayer",
+      "value": 1,
+      "value_hex": "0x1",
+      "push_va": "0x476c01",
+      "format_va": "0x675c6c",
+      "format_off": "0x275c6c",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SSetCommParam",
+      "value": 8,
+      "value_hex": "0x8",
+      "push_va": "0x476c12",
+      "format_va": "0x675c54",
+      "format_off": "0x275c54",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SChangeGfx",
+      "value": 65,
+      "value_hex": "0x41",
+      "push_va": "0x476c23",
+      "format_va": "0x675c40",
+      "format_off": "0x275c40",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SChangeGfxRequest",
+      "value": 64,
+      "value_hex": "0x40",
+      "push_va": "0x476c34",
+      "format_va": "0x675c24",
+      "format_off": "0x275c24",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketImpactMissile",
+      "value": 20,
+      "value_hex": "0x14",
+      "push_va": "0x476c48",
+      "format_va": "0x675c04",
+      "format_off": "0x275c04",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketManueverChange",
+      "value": 12,
+      "value_hex": "0xc",
+      "push_va": "0x476c59",
+      "format_va": "0x675be4",
+      "format_off": "0x275be4",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketThrustChange",
+      "value": 4,
+      "value_hex": "0x4",
+      "push_va": "0x476c6a",
+      "format_va": "0x675bc4",
+      "format_off": "0x275bc4",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketRequestSendObject",
+      "value": 3,
+      "value_hex": "0x3",
+      "push_va": "0x476c7b",
+      "format_va": "0x675ba0",
+      "format_off": "0x275ba0",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketECMChange",
+      "value": 4,
+      "value_hex": "0x4",
+      "push_va": "0x476c8c",
+      "format_va": "0x675b84",
+      "format_off": "0x275b84",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketECCMChange",
+      "value": 4,
+      "value_hex": "0x4",
+      "push_va": "0x476c9d",
+      "format_va": "0x675b68",
+      "format_off": "0x275b68",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketIHaveDied",
+      "value": 4,
+      "value_hex": "0x4",
+      "push_va": "0x476cb1",
+      "format_va": "0x675b4c",
+      "format_off": "0x275b4c",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketObjectHasDied",
+      "value": 8,
+      "value_hex": "0x8",
+      "push_va": "0x476cc2",
+      "format_va": "0x675b2c",
+      "format_off": "0x275b2c",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketYouDie",
+      "value": 1,
+      "value_hex": "0x1",
+      "push_va": "0x476cd3",
+      "format_va": "0x675b14",
+      "format_off": "0x275b14",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketObjectCollision",
+      "value": 16,
+      "value_hex": "0x10",
+      "push_va": "0x476ce4",
+      "format_va": "0x675af0",
+      "format_off": "0x275af0",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketResetShip",
+      "value": 1,
+      "value_hex": "0x1",
+      "push_va": "0x476cf5",
+      "format_va": "0x675ad4",
+      "format_off": "0x275ad4",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketWYSIWIGDamage",
+      "value": 3,
+      "value_hex": "0x3",
+      "push_va": "0x476d06",
+      "format_va": "0x675ab4",
+      "format_off": "0x275ab4",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketMissileManuever",
+      "value": 8,
+      "value_hex": "0x8",
+      "push_va": "0x476d1a",
+      "format_va": "0x675a90",
+      "format_off": "0x275a90",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketPlaySound",
+      "value": 5,
+      "value_hex": "0x5",
+      "push_va": "0x476d2b",
+      "format_va": "0x675a74",
+      "format_off": "0x275a74",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketSetGunDamage",
+      "value": 10,
+      "value_hex": "0xa",
+      "push_va": "0x476d3c",
+      "format_va": "0x675a54",
+      "format_off": "0x275a54",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SYouHaveMadeAKill",
+      "value": 418,
+      "value_hex": "0x1a2",
+      "push_va": "0x476d4d",
+      "format_va": "0x675a38",
+      "format_off": "0x275a38",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketSpawnPowerUp",
+      "value": 17,
+      "value_hex": "0x11",
+      "push_va": "0x476d61",
+      "format_va": "0x675a18",
+      "format_off": "0x275a18",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketHitPowerup",
+      "value": 4,
+      "value_hex": "0x4",
+      "push_va": "0x476d72",
+      "format_va": "0x6759fc",
+      "format_off": "0x2759fc",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SRemoveObject",
+      "value": 2,
+      "value_hex": "0x2",
+      "push_va": "0x476d86",
+      "format_va": "0x6759e4",
+      "format_off": "0x2759e4",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketCollisionKtx",
+      "value": 20,
+      "value_hex": "0x14",
+      "push_va": "0x476d97",
+      "format_va": "0x6759c4",
+      "format_off": "0x2759c4",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketDisableObject",
+      "value": 6,
+      "value_hex": "0x6",
+      "push_va": "0x476da8",
+      "format_va": "0x6759a4",
+      "format_off": "0x2759a4",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketFileCRCCheck",
+      "value": 74,
+      "value_hex": "0x4a",
+      "push_va": "0x476db9",
+      "format_va": "0x675984",
+      "format_off": "0x275984",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketSendFile",
+      "value": 64,
+      "value_hex": "0x40",
+      "push_va": "0x476dca",
+      "format_va": "0x675968",
+      "format_off": "0x275968",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketRequestStats",
+      "value": 1,
+      "value_hex": "0x1",
+      "push_va": "0x476ddb",
+      "format_va": "0x675948",
+      "format_off": "0x275948",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketImQuitting",
+      "value": 1,
+      "value_hex": "0x1",
+      "push_va": "0x476def",
+      "format_va": "0x67592c",
+      "format_off": "0x27592c",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketKeepAlive",
+      "value": 1,
+      "value_hex": "0x1",
+      "push_va": "0x476e00",
+      "format_va": "0x675910",
+      "format_off": "0x275910",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketObjectToTeam",
+      "value": 46,
+      "value_hex": "0x2e",
+      "push_va": "0x476e11",
+      "format_va": "0x6758f0",
+      "format_off": "0x2758f0",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketEmitSound",
+      "value": 6,
+      "value_hex": "0x6",
+      "push_va": "0x476e22",
+      "format_va": "0x6758d4",
+      "format_off": "0x2758d4",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketHitFlag",
+      "value": 9,
+      "value_hex": "0x9",
+      "push_va": "0x476e33",
+      "format_va": "0x6758bc",
+      "format_off": "0x2758bc",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketMovePowerupTo",
+      "value": 14,
+      "value_hex": "0xe",
+      "push_va": "0x476e44",
+      "format_va": "0x67589c",
+      "format_off": "0x27589c",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketPlayerSpecMode",
+      "value": 9,
+      "value_hex": "0x9",
+      "push_va": "0x476e58",
+      "format_va": "0x67587c",
+      "format_off": "0x27587c",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketRatingConstants",
+      "value": 12,
+      "value_hex": "0xc",
+      "push_va": "0x476e69",
+      "format_va": "0x675858",
+      "format_off": "0x275858",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketShiftScore",
+      "value": 8,
+      "value_hex": "0x8",
+      "push_va": "0x476e7a",
+      "format_va": "0x67583c",
+      "format_off": "0x27583c",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketGetSquadRoster",
+      "value": 4,
+      "value_hex": "0x4",
+      "push_va": "0x476e8b",
+      "format_va": "0x67581c",
+      "format_off": "0x27581c",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketMyAllies",
+      "value": 261,
+      "value_hex": "0x105",
+      "push_va": "0x476e9c",
+      "format_va": "0x675800",
+      "format_off": "0x275800",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketGetMOTDList",
+      "value": 4,
+      "value_hex": "0x4",
+      "push_va": "0x476eb0",
+      "format_va": "0x6757e4",
+      "format_off": "0x2757e4",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketDeleteMOTD",
+      "value": 4,
+      "value_hex": "0x4",
+      "push_va": "0x476ec4",
+      "format_va": "0x6757c8",
+      "format_off": "0x2757c8",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketAddMOTD",
+      "value": 497,
+      "value_hex": "0x1f1",
+      "push_va": "0x476ed5",
+      "format_va": "0x6757b0",
+      "format_off": "0x2757b0",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketRenumberMOTD",
+      "value": 1,
+      "value_hex": "0x1",
+      "push_va": "0x476ee9",
+      "format_va": "0x675790",
+      "format_off": "0x275790",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketLoadScenario",
+      "value": 71,
+      "value_hex": "0x47",
+      "push_va": "0x476efa",
+      "format_va": "0x675770",
+      "format_off": "0x275770",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SNameserverRetry",
+      "value": 7,
+      "value_hex": "0x7",
+      "push_va": "0x476f0b",
+      "format_va": "0x675754",
+      "format_off": "0x275754",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketSquadCommand",
+      "value": 466,
+      "value_hex": "0x1d2",
+      "push_va": "0x476f1c",
+      "format_va": "0x675734",
+      "format_off": "0x275734",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SMyROI",
+      "value": 4,
+      "value_hex": "0x4",
+      "push_va": "0x476f33",
+      "format_va": "0x675724",
+      "format_off": "0x275724",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPosUpdateHeader",
+      "value": 8,
+      "value_hex": "0x8",
+      "push_va": "0x476f44",
+      "format_va": "0x675708",
+      "format_off": "0x275708",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPosUpdate",
+      "value": 12,
+      "value_hex": "0xc",
+      "push_va": "0x476f55",
+      "format_va": "0x6756f4",
+      "format_off": "0x2756f4",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketDataResource",
+      "value": 504,
+      "value_hex": "0x1f8",
+      "push_va": "0x476f66",
+      "format_va": "0x6756d4",
+      "format_off": "0x2756d4",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketRequestData",
+      "value": 9,
+      "value_hex": "0x9",
+      "push_va": "0x476f7a",
+      "format_va": "0x6756b8",
+      "format_off": "0x2756b8",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SDBEntry",
+      "value": 192,
+      "value_hex": "0xc0",
+      "push_va": "0x476f8b",
+      "format_va": "0x6756a8",
+      "format_off": "0x2756a8",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SUpdatePlayerRecord",
+      "value": 418,
+      "value_hex": "0x1a2",
+      "push_va": "0x476fa2",
+      "format_va": "0x675688",
+      "format_off": "0x275688",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketChangePCShip",
+      "value": 40,
+      "value_hex": "0x28",
+      "push_va": "0x476fb6",
+      "format_va": "0x675668",
+      "format_off": "0x275668",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketResourceAck",
+      "value": 4,
+      "value_hex": "0x4",
+      "push_va": "0x476fc7",
+      "format_va": "0x67564c",
+      "format_off": "0x27564c",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPlayersOnlineInner",
+      "value": 12,
+      "value_hex": "0xc",
+      "push_va": "0x476fd8",
+      "format_va": "0x67562c",
+      "format_off": "0x27562c",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketPlayersOnline",
+      "value": 500,
+      "value_hex": "0x1f4",
+      "push_va": "0x476fe9",
+      "format_va": "0x67560c",
+      "format_off": "0x27560c",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketStationInfoRequest",
+      "value": 1,
+      "value_hex": "0x1",
+      "push_va": "0x476ffd",
+      "format_va": "0x6755e4",
+      "format_off": "0x2755e4",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketPlayersOnlineDetails",
+      "value": 72,
+      "value_hex": "0x48",
+      "push_va": "0x477011",
+      "format_va": "0x6755bc",
+      "format_off": "0x2755bc",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketNotifyRequestDetails",
+      "value": 41,
+      "value_hex": "0x29",
+      "push_va": "0x477022",
+      "format_va": "0x675594",
+      "format_off": "0x275594",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketSquadDeleteSquad",
+      "value": 32,
+      "value_hex": "0x20",
+      "push_va": "0x477033",
+      "format_va": "0x675570",
+      "format_off": "0x275570",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketSquadInviteMember",
+      "value": 64,
+      "value_hex": "0x40",
+      "push_va": "0x477044",
+      "format_va": "0x67554c",
+      "format_off": "0x27554c",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketSquadUnInviteMember",
+      "value": 64,
+      "value_hex": "0x40",
+      "push_va": "0x477055",
+      "format_va": "0x675524",
+      "format_off": "0x275524",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketRemovePlayer",
+      "value": 32,
+      "value_hex": "0x20",
+      "push_va": "0x477066",
+      "format_va": "0x675504",
+      "format_off": "0x275504",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SGameserverList",
+      "value": 46,
+      "value_hex": "0x2e",
+      "push_va": "0x47707a",
+      "format_va": "0x6754e8",
+      "format_off": "0x2754e8",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketGameserverList",
+      "value": 461,
+      "value_hex": "0x1cd",
+      "push_va": "0x47708b",
+      "format_va": "0x6754c8",
+      "format_off": "0x2754c8",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketUnlockScenario",
+      "value": 4,
+      "value_hex": "0x4",
+      "push_va": "0x47709f",
+      "format_va": "0x6754a8",
+      "format_off": "0x2754a8",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketECMEffectiveness",
+      "value": 4,
+      "value_hex": "0x4",
+      "push_va": "0x4770b0",
+      "format_va": "0x675484",
+      "format_off": "0x275484",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketEWEffectiveness",
+      "value": 4,
+      "value_hex": "0x4",
+      "push_va": "0x4770c1",
+      "format_va": "0x675460",
+      "format_off": "0x275460",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketMissilePredictFactor",
+      "value": 4,
+      "value_hex": "0x4",
+      "push_va": "0x4770d2",
+      "format_va": "0x675438",
+      "format_off": "0x275438",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketSetECM",
+      "value": 12,
+      "value_hex": "0xc",
+      "push_va": "0x4770e6",
+      "format_va": "0x675420",
+      "format_off": "0x275420",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketExecuteFireMissile",
+      "value": 4,
+      "value_hex": "0x4",
+      "push_va": "0x4770f7",
+      "format_va": "0x6753f8",
+      "format_off": "0x2753f8",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketJoinScenario",
+      "value": 42,
+      "value_hex": "0x2a",
+      "push_va": "0x477108",
+      "format_va": "0x6753d8",
+      "format_off": "0x2753d8",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SProcessingScenario",
+      "value": 4,
+      "value_hex": "0x4",
+      "push_va": "0x477119",
+      "format_va": "0x6753b8",
+      "format_off": "0x2753b8",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketSetParam",
+      "value": 68,
+      "value_hex": "0x44",
+      "push_va": "0x47712a",
+      "format_va": "0x67539c",
+      "format_off": "0x27539c",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketUpdateStoredPlayer",
+      "value": 416,
+      "value_hex": "0x1a0",
+      "push_va": "0x47713b",
+      "format_va": "0x675374",
+      "format_off": "0x275374",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketPlayerToScenario",
+      "value": 6,
+      "value_hex": "0x6",
+      "push_va": "0x477152",
+      "format_va": "0x675350",
+      "format_off": "0x275350",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketTurretGroupStatus",
+      "value": 236,
+      "value_hex": "0xec",
+      "push_va": "0x477163",
+      "format_va": "0x67532c",
+      "format_off": "0x27532c",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketChangeMood",
+      "value": 4,
+      "value_hex": "0x4",
+      "push_va": "0x477177",
+      "format_va": "0x675310",
+      "format_off": "0x275310",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketSetToTargetsTarget",
+      "value": 5,
+      "value_hex": "0x5",
+      "push_va": "0x477188",
+      "format_va": "0x6752e8",
+      "format_off": "0x2752e8",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketSetTarget",
+      "value": 11,
+      "value_hex": "0xb",
+      "push_va": "0x477199",
+      "format_va": "0x6752cc",
+      "format_off": "0x2752cc",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketIDestroyedObject",
+      "value": 4,
+      "value_hex": "0x4",
+      "push_va": "0x4771aa",
+      "format_va": "0x6752a8",
+      "format_off": "0x2752a8",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketIAmInvulnerable",
+      "value": 5,
+      "value_hex": "0x5",
+      "push_va": "0x4771be",
+      "format_va": "0x675284",
+      "format_off": "0x275284",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketPreQualifiedLogin",
+      "value": 420,
+      "value_hex": "0x1a4",
+      "push_va": "0x4771cf",
+      "format_va": "0x675260",
+      "format_off": "0x275260",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketPreQualifiedLoginAck",
+      "value": 9,
+      "value_hex": "0x9",
+      "push_va": "0x4771e3",
+      "format_va": "0x675238",
+      "format_off": "0x275238",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPlayerOnlineSubInfo",
+      "value": 11,
+      "value_hex": "0xb",
+      "push_va": "0x4771f4",
+      "format_va": "0x675218",
+      "format_off": "0x275218",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketPlayersOnlineGameInfo",
+      "value": 475,
+      "value_hex": "0x1db",
+      "push_va": "0x477205",
+      "format_va": "0x6751f0",
+      "format_off": "0x2751f0",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketSquadRoster",
+      "value": 425,
+      "value_hex": "0x1a9",
+      "push_va": "0x477219",
+      "format_va": "0x6751d4",
+      "format_off": "0x2751d4",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketMOTDPreview",
+      "value": 4,
+      "value_hex": "0x4",
+      "push_va": "0x477230",
+      "format_va": "0x6751b8",
+      "format_off": "0x2751b8",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketMOTD",
+      "value": 136,
+      "value_hex": "0x88",
+      "push_va": "0x477241",
+      "format_va": "0x6751a4",
+      "format_off": "0x2751a4",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketBeginSerialLoad",
+      "value": 4,
+      "value_hex": "0x4",
+      "push_va": "0x477255",
+      "format_va": "0x675180",
+      "format_off": "0x275180",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketPendingInvite",
+      "value": 77,
+      "value_hex": "0x4d",
+      "push_va": "0x477266",
+      "format_va": "0x675160",
+      "format_off": "0x275160",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketPendingSolicitation",
+      "value": 77,
+      "value_hex": "0x4d",
+      "push_va": "0x477277",
+      "format_va": "0x675138",
+      "format_off": "0x275138",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    },
+    {
+      "name": "SPacketToggleNodam",
+      "value": 2,
+      "value_hex": "0x2",
+      "push_va": "0x477288",
+      "format_va": "0x67511c",
+      "format_off": "0x27511c",
+      "log_obj": "0x6a58b8",
+      "log_fn": "0x60b0c0"
+    }
+  ]
+}

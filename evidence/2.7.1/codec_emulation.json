@@ -1,0 +1,8 @@
+{
+  "cases": 36,
+  "compress_match": 36,
+  "py_decompress_of_client": 36,
+  "client_decompress_of_py": 36,
+  "raw_trailer_0x10_accepted": 36,
+  "failures": []
+}

@@ -1,0 +1,41 @@
+{
+  "date": "2026-10-22",
+  "patch": "world-full-detail-v1",
+  "sites": ["0x546be4", "0x546b46"],
+  "child_selection_projected_size": 4000,
+  "group_visibility_range": [5, 4096],
+  "scope": "Closest authored mesh and texture variants for solid world model groups; independent effect renderer and texture filtering unchanged",
+  "live_dock_snapshot": {
+    "model": "newdock",
+    "authored_minimum_projected_size": 200,
+    "user_observation": "two near sections bright; two far sections dark",
+    "sections": [
+      {"name": "NewDock09", "projected_size": 213.9752, "mesh_visible": true, "cached_image_active": false},
+      {"name": "NewDock08", "projected_size": 223.1556, "mesh_visible": true, "cached_image_active": false},
+      {"name": "NewDock10", "projected_size": 190.8768, "mesh_visible": false, "cached_image_active": true},
+      {"name": "NewDock07", "projected_size": 197.3381, "mesh_visible": false, "cached_image_active": true}
+    ],
+    "limitations": "Read-only samples are non-atomic; brightness itself was reported by the user"
+  },
+  "automated_validation": {
+    "parsed_mesh_models": 154,
+    "all_have_valid_closest_selection": true,
+    "full_gate": "work/world-detail-verification/gate.json",
+    "full_gate_passed": true,
+    "full_gate_tests": 93,
+    "full_gate_emulators": 9,
+    "world_detail_tests": 5,
+    "object_lod_tests": 4,
+    "installed_client_check": "ready"
+  },
+  "installed": {
+    "sha256": "e33fc5790c2236374d7bc93182bb31cd63967c41cbd01f956bc3ed00b9d8a03b",
+    "undo_sha256": "08c8bc1537663ed5152788d995ba6b95b63e30442221b5d598e27d8d8991f653",
+    "visual_acceptance": "pending"
+  },
+  "limitations": [
+    "CPU selection tests and live pre-patch state do not establish post-patch brightness consistency",
+    "Real-flight brightness acceptance and performance measurement remain pending",
+    "This bypasses authored detail variants, not hardware texture mip filtering"
+  ]
+}

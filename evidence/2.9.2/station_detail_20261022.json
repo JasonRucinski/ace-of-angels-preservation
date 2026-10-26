@@ -1,0 +1,29 @@
+{
+  "date": "2026-10-22",
+  "patch": "station-full-detail-v1",
+  "model": "Hy_base1",
+  "site": "0x546be4",
+  "cave": "0x58bb00",
+  "child_selection_projected_size": 4000,
+  "selected_mesh_indices": [0, 1, 2],
+  "excluded_alternative_indices": [3, 4, 5],
+  "scope": "Station child mesh selection only; actual root visibility and other models unchanged",
+  "automated_validation": {
+    "full_gate": "work/station-detail-verification/gate.json",
+    "full_gate_passed": true,
+    "full_gate_tests": 88,
+    "full_gate_emulators": 9,
+    "station_detail_tests": 5,
+    "object_lod_tests": 4,
+    "installed_client_check": "ready"
+  },
+  "installed": {
+    "sha256": "08c8bc1537663ed5152788d995ba6b95b63e30442221b5d598e27d8d8991f653",
+    "undo_sha256": "0077d59f1762efcaf7fdb42e250e59259f4614771f0df6b12e7187c05f93e2df",
+    "visual_acceptance": "user reports brightness jump persists; live snapshot identified affected model as newdock rather than Hy_base1"
+  },
+  "limitations": [
+    "CPU selection tests do not establish that the reported brightness jump is fixed",
+    "Real-flight brightness acceptance and performance measurement remain pending"
+  ]
+}

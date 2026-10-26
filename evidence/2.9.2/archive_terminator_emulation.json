@@ -1,0 +1,16 @@
+{
+  "client_sha256": "4b6c35e2b3ab473bd98c0afa6538079ee78678d85c28406c07bc27a08cc78c7e",
+  "decompressor": "0x52a630",
+  "body_bytes": 670,
+  "packed_bytes": 282,
+  "original": {
+    "data_matches": true,
+    "byte_after_data": "0xaa",
+    "image_sha256": "4b6c35e2b3ab473bd98c0afa6538079ee78678d85c28406c07bc27a08cc78c7e"
+  },
+  "patched": {
+    "data_matches": true,
+    "byte_after_data": "0x0",
+    "image_sha256": "782d1825e944d564e55034e34d52968ae5fc1e2ee22148a54c17c8d4cf2c1b95"
+  }
+}

@@ -1,0 +1,55 @@
+{
+ "date": "2026-10-25",
+ "scope": "One real 2.9.2 client on loopback against the relay with --target-ships; findings 9.45",
+ "client": {
+  "copy_of": "work/powerup-client (patch version 19, Station 127.0.0.2)",
+  "sha256": "f2f0c457e3dab8ee3dfb4c5bd9ce2a40a684e675ac92f6e0dbf5fef58fa131da"
+ },
+ "host": "local-relay bound to 127.0.0.2 by a test-only launcher; Arena1a with --experimental-terrain; the user's host on 127.0.0.1 was left alone",
+ "memory_writes": "none",
+ "runs": [
+  {
+   "ships": 4,
+   "distance": 6000,
+   "arc_degrees": 110,
+   "spawn": "origin",
+   "loaded": "world-object slots 2-5, tags 0x40010002-0x40010005, type +0x1F4 = 0x11, terrain +0x20C = 0, shown +0x2F7 = 1, relation +0x1CC = 4 (Hostile)",
+   "target_windows_auto_filled": [
+    "0x40010002",
+    "0x40010003",
+    "0x40010004"
+   ],
+   "T_presses": "window 1 went 0x40010003 -> 5 -> 2 -> 3 -> 4 -> 5 -> 2: every ship reachable",
+   "J": "selected 0x40010002",
+   "outer_ships_on_screen": "no (render +0x151/+0x153 = 0 at +-55 degrees); arc narrowed to 60",
+   "M": "no 0x2A sent: lock stayed 0 because the ship was in Arena1a's spawn safe zone (world+0xD35A4 = player +0x2F8 = 1)"
+  },
+  {
+   "ships": 5,
+   "distance": 6000,
+   "arc_degrees": 60,
+   "spawn": "origin",
+   "all_on_screen": true,
+   "M": "no 0x2A sent; same safe-zone gate"
+  },
+  {
+   "ships": 5,
+   "distance": 12000,
+   "arc_degrees": 60,
+   "spawn": "(0, 0, -30000), outside every safe zone",
+   "target": "0x40010004 (Target 3, Shrike, straight ahead at (0, 0, -18000))",
+   "relay_log": [
+    "missile_launch slot 1",
+    "missile_impact slot 1, 4.7 s later"
+   ],
+   "target_after_impact": "orientation and spin changed; shield 92 / hull 34 unchanged (the ship file's full values)"
+  }
+ ],
+ "not_damaged_reason": "DoMissileImpact 0x49B9F0 applies damage (0x49BCE0) only when the hit object is the local player (0x49BADC); world objects get only the effect and sound",
+ "not_verified": [
+  "gunfire at a target ship",
+  "a second client watching the same ships",
+  "maps other than Arena1a",
+  "the user's own copy of the client"
+ ]
+}

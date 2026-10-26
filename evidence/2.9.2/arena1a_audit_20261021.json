@@ -1,0 +1,70 @@
+{
+  "scope": "Static node/asset inventory and original-code branch evidence; not online loading or gameplay",
+  "source_sha256": "5d652eaca4972d958eb1dc54b8ef277fdb8ea475be4912f01a5fd8d02afa7886",
+  "root_categories": {
+    "7": 4,
+    "9": 262,
+    "4": 10,
+    "5": 18,
+    "1": 80,
+    "6": 9
+  },
+  "root_groups": {
+    "safe_zone": 4,
+    "named_object": 226,
+    "navigation": 10,
+    "flag_marker": 18,
+    "turret_marker": 80,
+    "service_marker": 18,
+    "group_marker": 8,
+    "nested_layout": 1,
+    "warp_rail": 9,
+    "link_target": 9
+  },
+  "all_nodes_working": false,
+  "root_node_count": 383,
+  "expanded_node_count": 394,
+  "previously_omitted_turret_records": 80,
+  "geometry": {
+    "sha256": "cdab89202437cd26236987f2645b9ac038176f9b029ff8633905c70c95e4c379",
+    "vertices": 68897,
+    "triangles": 62272,
+    "objects": 254,
+    "degenerate_triangles": 0,
+    "bounds_obj": {
+      "min": [
+        -160588.404,
+        -255619.567,
+        -1095852.818
+      ],
+      "max": [
+        919971.602,
+        231939.469,
+        694845.529
+      ]
+    }
+  },
+  "native_dispatch": {
+    "1": "0x4964f8",
+    "2": "0x496423",
+    "3": "0x4964f8",
+    "4": "0x496280",
+    "5": "0x4964f8",
+    "6": "0x4962f7",
+    "7": "0x4963e4",
+    "8": "0x4964f8",
+    "9": "0x496141",
+    "10": "0x4964f8"
+  },
+  "original_client_sha256": "4b6c35e2b3ab473bd98c0afa6538079ee78678d85c28406c07bc27a08cc78c7e",
+  "remaining": [
+    "original-client Arena1a loading and collision",
+    "online creation of terrain, navigation and safe zones",
+    "turret attachment transforms, ownership and AI",
+    "warp links and destinations",
+    "repair/shield/missile marker definitions and behavior",
+    "group/dummy semantics",
+    "map-specific spawn acceptance"
+  ],
+  "preview_coordinates": "OBJ negates game Z; nested matrices compose child * parent; root marker hierarchy is not fully decoded"
+}

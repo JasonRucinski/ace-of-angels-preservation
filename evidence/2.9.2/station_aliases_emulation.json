@@ -1,0 +1,40 @@
+{
+  "client_sha256": "4b6c35e2b3ab473bd98c0afa6538079ee78678d85c28406c07bc27a08cc78c7e",
+  "handler": "0x45dbe0",
+  "cases": [
+    {
+      "pilot": "testpilot",
+      "current": "",
+      "items": [
+        "testpilot"
+      ],
+      "selected": "testpilot"
+    },
+    {
+      "pilot": "testpilot",
+      "current": "Offline",
+      "items": [
+        "testpilot"
+      ],
+      "selected": "testpilot"
+    },
+    {
+      "pilot": "testpilot",
+      "current": "testpilot",
+      "items": [
+        "testpilot"
+      ],
+      "selected": "testpilot"
+    },
+    {
+      "pilot": "abcdefghijklmnopqrs",
+      "current": "",
+      "items": [
+        "abcdefghijklmnopqrs"
+      ],
+      "selected": "abcdefghijklmnopqrs"
+    }
+  ],
+  "passed": 4,
+  "scope": "isolated client handler; UI imports mocked; not live gameplay"
+}

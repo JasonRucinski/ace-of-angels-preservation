@@ -1,0 +1,112 @@
+{
+  "schema": 1,
+  "started_utc": "2026-10-21T17:41:24.264254+00:00",
+  "scope": "synthetic loopback and isolated original-code emulation; excludes real-client UI, combat, collision, internet, clean-machine install and performance release gates",
+  "python": "3.12.6",
+  "checks": [
+    {
+      "name": "test_network_bounds.py",
+      "passed": true,
+      "seconds": 3.766,
+      "tests": 6
+    },
+    {
+      "name": "test_relay_motion.py",
+      "passed": true,
+      "seconds": 0.265,
+      "tests": 7
+    },
+    {
+      "name": "test_prepare_client.py",
+      "passed": true,
+      "seconds": 33.563,
+      "tests": 7
+    },
+    {
+      "name": "test_station_runtime.py",
+      "passed": true,
+      "seconds": 7.344,
+      "tests": 7
+    },
+    {
+      "name": "test_station_sessions.py",
+      "passed": true,
+      "seconds": 10.375,
+      "tests": 5
+    },
+    {
+      "name": "test_guest_admission.py",
+      "passed": true,
+      "seconds": 7.937,
+      "tests": 1
+    },
+    {
+      "name": "test_relay_recovery.py",
+      "passed": true,
+      "seconds": 5.703,
+      "tests": 1
+    },
+    {
+      "name": "test_station_stub.py",
+      "passed": true,
+      "seconds": 48.485,
+      "tests": 20
+    },
+    {
+      "name": "emulate_station_request.py",
+      "passed": true,
+      "seconds": 0.718
+    },
+    {
+      "name": "emulate_station_aliases.py",
+      "passed": true,
+      "seconds": 0.703
+    },
+    {
+      "name": "emulate_reliable_history.py",
+      "passed": true,
+      "seconds": 0.688
+    },
+    {
+      "name": "emulate_movement.py",
+      "passed": true,
+      "seconds": 0.687
+    },
+    {
+      "name": "emulate_motion_state.py",
+      "passed": true,
+      "seconds": 0.704
+    },
+    {
+      "name": "emulate_archive_terminator.py",
+      "passed": true,
+      "seconds": 3.156
+    }
+  ],
+  "passed": true,
+  "tests": 54,
+  "source_sha256": {
+    "tools/aoanet.py": "912cb8d2038e343c7d37f245a862a239d1d2aec356aebc27599260110be40088",
+    "tools/aoapack.py": "251cc8095e3928d2280e9cf854f01e8fce53a89a2cddf0c6101a3bacac182d95",
+    "tools/station_stub.py": "477150519a4212acb7aac18a9b2535cdf9de974c13960a9ea8a3675b5b33d6ed",
+    "tools/station_runtime.py": "64f48e635466ab3736483a710cbdbb5e38ba5eb973a5c0f95fefdc1e02b604ea",
+    "tools/relay_motion.py": "b7211c07d7d5022713be0137b173650fb503ab2d29495210513956203bcedadb",
+    "tools/prepare_client.py": "f5cc1c05d25e99c2be837965857c0ff31af8eb3b284add97c28645c46af7c613",
+    "tools/patch_client.py": "17af0c62658f5d739fcfb9d542a128e212f16f4fead87d9e2390796d96cf09c7",
+    "tools/install_wrapper.py": "befaf963374bc3e8ba1c9a667a1494555a8a960e11d75b040947800d93012155",
+    "tools/setup_game.ps1": "0b4812fd73d76af6091eb5c3ddd15fcfe90375121e456efaa1cc46194c75a0cf",
+    "tools/verify_local.py": "85b0d5748430935606c820a0b6899b39bea95f30f542364c4280c3f63e4534d2",
+    "config/client-2.9.2.json": "fd74f805f467fd30c9b898b3f5f2ddcf658eeb38595b70d55bb258356c5ff437",
+    "tools/test_station_stub.py": "a0efac1823657b57190433f0ca927ffe8abef7eb230dd7143b4dda3d745e6476",
+    "tools/test_station_runtime.py": "3a3351c301defa80d925d4680163ed1f1a5b293fed210922f821515abc344350",
+    "tools/test_station_sessions.py": "a0091ddbd126b352cb3369011b252c5ba549c9e4ba6589d17ea73ecae612f166",
+    "tools/test_prepare_client.py": "506ee9d111abbbf50863a6c3c8bd2474ed4fec0d5baafbd21deb81a4fbb068fd",
+    "tools/test_relay_motion.py": "36855e11696a9be5700a764225377c3980c97bc61f2fba4d9bd74ed4d80c4b06",
+    "tools/emulate_movement.py": "88ceeffef9bd0394ffe0e37b9449c80e92c8c993ee42d3857e7673c28dcfbb8a",
+    "tools/gun_table.py": "0b17ac8950fe96c05d2f5ba67c71a39c15cd867e2220a896163ff509edbd681c",
+    "tools/archive_terminator.py": "17a852360d2584c759d4c0c89eac65307511cf858e625de71b668981a18eeab2",
+    "tools/emulate_archive_terminator.py": "ef8c7355f364371b183a11f7107d2dffe1a82383553558524de891f78de7b44f",
+    "tools/test_relay_recovery.py": "23382ff683be457b856882dd8c736e41dd3befabea5a073c2d419b58e35d1b3f"
+  },
+  "note": "After scoreboard, match limits and opt-in teams (findings 9.30-9.31)"
+}

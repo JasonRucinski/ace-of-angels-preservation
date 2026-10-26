@@ -1,0 +1,50 @@
+{
+  "summary": "visibility-math-v1 (findings 9.36): emulated original visibility routine with and without the patch, plus live reads of the player's own ship node in flight.",
+  "patch": {
+    "name": "visibility-math-v1",
+    "site": "0x5431a1",
+    "cave": "0x58b700",
+    "cave_sha256": "c5601b16ca397a02f3e27d711ff2db7993272ecbc45dd03703bfab5197cdff27"
+  },
+  "emulation_original": {
+    "angular_domain_cases": 17,
+    "nan_made_visibility_mismatches": 10,
+    "motion_samples": 480,
+    "inside_sphere_cases": 0,
+    "distance_0": {
+      "visible": false,
+      "direction_finite": false
+    },
+    "small_object_cutoff_visible": {
+      "383": true,
+      "384": false,
+      "385": false
+    }
+  },
+  "emulation_patched": {
+    "angular_domain_cases": 0,
+    "nan_made_visibility_mismatches": 0,
+    "motion_samples": 480,
+    "inside_sphere_cases": 48,
+    "distance_0": {
+      "visible": false,
+      "direction_finite": false
+    },
+    "small_object_cutoff_visible": {
+      "383": true,
+      "384": false,
+      "385": false
+    }
+  },
+  "live_prepared_client": {
+    "sha256": "26ba4fdd39d32b8f154ae4372fcf7ab8f12634192ab86fb43230e5bc833113de",
+    "patch_version": 14,
+    "own_ship_node": "distance 0.0000, visible 0, size 232.1 (2 x radius 116), dot NaN; at spawn and while coasting/turning, with and without the patch",
+    "other_player_node": "visible 1 at 88-93k units, finite dot 0.96",
+    "fps_with_vs_without_patch": [
+      23.75,
+      25.16
+    ],
+    "note": "all builds 23-26 fps during this check (battery, display 1024 px); earlier the same day 60 fps"
+  }
+}

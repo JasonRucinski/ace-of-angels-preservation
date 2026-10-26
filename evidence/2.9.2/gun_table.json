@@ -1,0 +1,206 @@
+{
+ "exe_sha256": "4b6c35e2b3ab473bd98c0afa6538079ee78678d85c28406c07bc27a08cc78c7e",
+ "reader": "0x4DA990",
+ "guns": [
+  {
+   "level": 1,
+   "id": 250,
+   "object_kind": 12,
+   "record_va": "0x5d62f0",
+   "fields": {
+    "obj+0x120": 5000,
+    "obj+0x122": 2000,
+    "obj+0x118": 15,
+    "damage (obj+0x11A)": 7,
+    "obj+0x11C (set with damage by 0x41)": 1.5,
+    "obj+0x74": 150.0,
+    "obj+0x70 and obj+0x7C": 30.0,
+    "obj+0x102": 110,
+    "obj+0x104": 130,
+    "obj+0x106": 800,
+    "obj+0x108": 1000,
+    "argument to 0x4C3D00": 14
+   }
+  },
+  {
+   "level": 2,
+   "id": 280,
+   "object_kind": 12,
+   "record_va": "0x5d6314",
+   "fields": {
+    "obj+0x120": 5000,
+    "obj+0x122": 2200,
+    "obj+0x118": 30,
+    "damage (obj+0x11A)": 14,
+    "obj+0x11C (set with damage by 0x41)": 2.7,
+    "obj+0x74": 150.0,
+    "obj+0x70 and obj+0x7C": 32.0,
+    "obj+0x102": 120,
+    "obj+0x104": 130,
+    "obj+0x106": 800,
+    "obj+0x108": 1000,
+    "argument to 0x4C3D00": 12
+   }
+  },
+  {
+   "level": 3,
+   "id": 310,
+   "object_kind": 12,
+   "record_va": "0x5d6338",
+   "fields": {
+    "obj+0x120": 4900,
+    "obj+0x122": 2400,
+    "obj+0x118": 35,
+    "damage (obj+0x11A)": 21,
+    "obj+0x11C (set with damage by 0x41)": 3.9,
+    "obj+0x74": 150.0,
+    "obj+0x70 and obj+0x7C": 34.0,
+    "obj+0x102": 135,
+    "obj+0x104": 130,
+    "obj+0x106": 800,
+    "obj+0x108": 1000,
+    "argument to 0x4C3D00": 13
+   }
+  },
+  {
+   "level": 4,
+   "id": 360,
+   "object_kind": 12,
+   "record_va": "0x5d635c",
+   "fields": {
+    "obj+0x120": 4800,
+    "obj+0x122": 2600,
+    "obj+0x118": 50,
+    "damage (obj+0x11A)": 28,
+    "obj+0x11C (set with damage by 0x41)": 5.1,
+    "obj+0x74": 150.0,
+    "obj+0x70 and obj+0x7C": 36.0,
+    "obj+0x102": 145,
+    "obj+0x104": 130,
+    "obj+0x106": 800,
+    "obj+0x108": 1000,
+    "argument to 0x4C3D00": 13
+   }
+  },
+  {
+   "level": 5,
+   "id": 410,
+   "object_kind": 12,
+   "record_va": "0x5d6380",
+   "fields": {
+    "obj+0x120": 4500,
+    "obj+0x122": 2800,
+    "obj+0x118": 65,
+    "damage (obj+0x11A)": 35,
+    "obj+0x11C (set with damage by 0x41)": 6.4,
+    "obj+0x74": 150.0,
+    "obj+0x70 and obj+0x7C": 38.0,
+    "obj+0x102": 165,
+    "obj+0x104": 130,
+    "obj+0x106": 800,
+    "obj+0x108": 1000,
+    "argument to 0x4C3D00": 15
+   }
+  },
+  {
+   "level": 6,
+   "id": 460,
+   "object_kind": 12,
+   "record_va": "0x5d63a4",
+   "fields": {
+    "obj+0x120": 4500,
+    "obj+0x122": 3000,
+    "obj+0x118": 80,
+    "damage (obj+0x11A)": 42,
+    "obj+0x11C (set with damage by 0x41)": 7.7,
+    "obj+0x74": 150.0,
+    "obj+0x70 and obj+0x7C": 40.0,
+    "obj+0x102": 175,
+    "obj+0x104": 130,
+    "obj+0x106": 800,
+    "obj+0x108": 1000,
+    "argument to 0x4C3D00": 15
+   }
+  },
+  {
+   "level": 7,
+   "id": 550,
+   "object_kind": 13,
+   "record_va": "0x5d63c8",
+   "fields": {
+    "obj+0x120": 3000,
+    "obj+0x122": 8500,
+    "obj+0x118": 100,
+    "damage (obj+0x11A)": 70,
+    "obj+0x11C (set with damage by 0x41)": 10.0,
+    "obj+0x74": 300.0,
+    "obj+0x70 and obj+0x7C": 150.0,
+    "obj+0x102": 256,
+    "obj+0x104": 150,
+    "obj+0x106": 1500,
+    "obj+0x108": 2000,
+    "argument to 0x4C3D00": 16
+   }
+  },
+  {
+   "level": 8,
+   "id": 650,
+   "object_kind": 13,
+   "record_va": "0x5d63ec",
+   "fields": {
+    "obj+0x120": 2800,
+    "obj+0x122": 8500,
+    "obj+0x118": 120,
+    "damage (obj+0x11A)": 90,
+    "obj+0x11C (set with damage by 0x41)": 15.0,
+    "obj+0x74": 300.0,
+    "obj+0x70 and obj+0x7C": 200.0,
+    "obj+0x102": 306,
+    "obj+0x104": 150,
+    "obj+0x106": 1500,
+    "obj+0x108": 2000,
+    "argument to 0x4C3D00": 16
+   }
+  },
+  {
+   "level": 9,
+   "id": 750,
+   "object_kind": 13,
+   "record_va": "0x5d6410",
+   "fields": {
+    "obj+0x120": 2400,
+    "obj+0x122": 8500,
+    "obj+0x118": 140,
+    "damage (obj+0x11A)": 110,
+    "obj+0x11C (set with damage by 0x41)": 20.0,
+    "obj+0x74": 300.0,
+    "obj+0x70 and obj+0x7C": 250.0,
+    "obj+0x102": 356,
+    "obj+0x104": 150,
+    "obj+0x106": 1500,
+    "obj+0x108": 2000,
+    "argument to 0x4C3D00": 16
+   }
+  },
+  {
+   "level": 10,
+   "id": 850,
+   "object_kind": 13,
+   "record_va": "0x5d6434",
+   "fields": {
+    "obj+0x120": 2200,
+    "obj+0x122": 8500,
+    "obj+0x118": 160,
+    "damage (obj+0x11A)": 130,
+    "obj+0x11C (set with damage by 0x41)": 25.0,
+    "obj+0x74": 300.0,
+    "obj+0x70 and obj+0x7C": 300.0,
+    "obj+0x102": 406,
+    "obj+0x104": 150,
+    "obj+0x106": 1500,
+    "obj+0x108": 2000,
+    "argument to 0x4C3D00": 16
+   }
+  }
+ ]
+}

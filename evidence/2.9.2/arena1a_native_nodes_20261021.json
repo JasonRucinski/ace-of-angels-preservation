@@ -1,0 +1,22 @@
+{
+  "source_sha256": "4b6c35e2b3ab473bd98c0afa6538079ee78678d85c28406c07bc27a08cc78c7e",
+  "category_cases": 12,
+  "category_destinations": {
+    "0": "0x496423",
+    "1": "0x4964f8",
+    "2": "0x496423",
+    "3": "0x4964f8",
+    "4": "0x496280",
+    "5": "0x4964f8",
+    "6": "0x4962f7",
+    "7": "0x4963e4",
+    "8": "0x4964f8",
+    "9": "0x496141",
+    "10": "0x4964f8",
+    "11": "0x496423"
+  },
+  "parent_position_cases": 32,
+  "parent_transform_matches_row_vector_math": true,
+  "scope": "isolated original category switch and nested position arithmetic; no allocation, rendering, online loading, collision or gameplay",
+  "all_arena1a_nodes_working": false
+}

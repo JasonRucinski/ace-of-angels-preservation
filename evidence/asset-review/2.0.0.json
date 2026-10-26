@@ -1,0 +1,2329 @@
+{
+  "version": "2.0.0",
+  "source": "builds/asset-review/2.0.0/aoa_2.0.0_full.exe",
+  "sha256": "7775e7ac7f4a30a5fb4c712061c704694926923de60004a5ae6f67b4f976f0d7",
+  "bytes": 16708608,
+  "source_url": "https://web.archive.org/web/20020420000855id_/http://ftp.sunet.se:80/pub/pc/games/gamesdomain/demos/aoa2-0-0.exe",
+  "kind": "full_installer",
+  "members": [
+    {
+      "name": "SCRIPTS.AOA",
+      "bytes": 3638,
+      "sha256": "7d38de577de8f0cc719144cff4b0fae7a6b4a9fbd7f583cb264428f8b2ad812c",
+      "path": "work/asset-review/2.0.0/members/00_SCRIPTS.AOA"
+    },
+    {
+      "name": "AOACONTACT.TXT",
+      "bytes": 236,
+      "sha256": "8d021a50a0fa47de48610011f2188ead80e021747000808c34d2fe932dde7f73",
+      "path": "work/asset-review/2.0.0/members/01_AOACONTACT.TXT"
+    },
+    {
+      "name": "AOALOGO.BMP",
+      "bytes": 145256,
+      "sha256": "f9d889d98ac0be9111a3c0cf6b20af40babc202f7ac99666ca21dad09f16ef08",
+      "path": "work/asset-review/2.0.0/members/02_AOALOGO.BMP"
+    },
+    {
+      "name": "AOANOTES.TXT",
+      "bytes": 2085,
+      "sha256": "92ed726b72dc295e09f5d00433b1d561e6e69efa9a9a5ffe703c7c6aa0ce8506",
+      "path": "work/asset-review/2.0.0/members/03_AOANOTES.TXT"
+    },
+    {
+      "name": "AOAOBJECTS.ODB",
+      "bytes": 1023050,
+      "sha256": "3dce421fd6c574580c517d32fe064884b4d757ce430bd41c9acc4341827b26b1",
+      "path": "work/asset-review/2.0.0/members/04_AOAOBJECTS.ODB"
+    },
+    {
+      "name": "AOATUTORIAL.TXT",
+      "bytes": 5636,
+      "sha256": "a501e05c2e71e625690b71d816babc2500708d1eb194fe6ef289b2b02c291384",
+      "path": "work/asset-review/2.0.0/members/05_AOATUTORIAL.TXT"
+    },
+    {
+      "name": "DATA.AOA",
+      "bytes": 3813150,
+      "sha256": "11fc9d0724b039b8bc122f98eec06c526b599ea7e1907afe04587bc7d90e9af9",
+      "path": "work/asset-review/2.0.0/members/06_DATA.AOA"
+    },
+    {
+      "name": "HUD.AOA",
+      "bytes": 1556290,
+      "sha256": "96ccfacac1e95f014942c82d13e399049114ff854a3065b0bc1238fc5abf7a61",
+      "path": "work/asset-review/2.0.0/members/07_HUD.AOA"
+    },
+    {
+      "name": "JRMAP.TRN",
+      "bytes": 38516,
+      "sha256": "e3da8fbbdfb84ac7c830314e62bd8ceb7dfbdf9d90cd5fef614601133f23c5c4",
+      "path": "work/asset-review/2.0.0/members/08_JRMAP.TRN"
+    },
+    {
+      "name": "MUSIC.WAV",
+      "bytes": 7676574,
+      "sha256": "5bee804588f98f93ab10023a76d9c4b986c4e49dfb557930340327858d53859c",
+      "path": "work/asset-review/2.0.0/members/09_MUSIC.WAV"
+    },
+    {
+      "name": "NOTIFYSOUND.WAV",
+      "bytes": 2876,
+      "sha256": "b671abb7d150d8016ad5d146e42ae8cf37cd3c1da7a58e5a74701855b1ae905c",
+      "path": "work/asset-review/2.0.0/members/10_NOTIFYSOUND.WAV"
+    },
+    {
+      "name": "RENEXE.EXE",
+      "bytes": 32768,
+      "sha256": "8a09b094566db59925c983c4838034129bdfd4efca06ed57ccb996fd4fb04e95",
+      "path": "work/asset-review/2.0.0/members/11_RENEXE.EXE"
+    },
+    {
+      "name": "AOACLIENT.EXE",
+      "bytes": 1253376,
+      "sha256": "2faa8ab2161c2ef83a76627171692e95516b626590f1606b10d9192dace122bd",
+      "path": "work/asset-review/2.0.0/members/12_AOACLIENT.EXE"
+    },
+    {
+      "name": "SCRTY.BIN",
+      "bytes": 256,
+      "sha256": "a2ed2a58a8ca138319696f2853abc2d3d3add8b0e13ed5300642ca16395e97ff",
+      "path": "work/asset-review/2.0.0/members/13_SCRTY.BIN"
+    },
+    {
+      "name": "SOUNDS.AOA",
+      "bytes": 1859928,
+      "sha256": "a0d6c513f47baea005e2cfb9649d89ca0c57a5f3ceaf370f07030059d9e12884",
+      "path": "work/asset-review/2.0.0/members/14_SOUNDS.AOA"
+    },
+    {
+      "name": "TERRAIN.AOA",
+      "bytes": 24813,
+      "sha256": "60b92db478fcd28d1d3a73cd3448c3524da7ad0c55eec8204b8e9a5208875eb4",
+      "path": "work/asset-review/2.0.0/members/15_TERRAIN.AOA"
+    },
+    {
+      "name": "TEXTURES.AOA",
+      "bytes": 2082986,
+      "sha256": "540b519496fdf434851afbb3f57a0fba98e4493f2c17a30505436b848c77e482",
+      "path": "work/asset-review/2.0.0/members/16_TEXTURES.AOA"
+    }
+  ],
+  "archives": [
+    {
+      "archive": "work/asset-review/2.0.0/members/00_SCRIPTS.AOA",
+      "version": "0x402",
+      "count": 7,
+      "crc_checked": 7,
+      "crc_ok": 7
+    },
+    {
+      "archive": "work/asset-review/2.0.0/members/04_AOAOBJECTS.ODB",
+      "version": "0x402",
+      "count": 98,
+      "crc_checked": 98,
+      "crc_ok": 98
+    },
+    {
+      "archive": "work/asset-review/2.0.0/members/06_DATA.AOA",
+      "version": "0x402",
+      "count": 34,
+      "crc_checked": 34,
+      "crc_ok": 34
+    },
+    {
+      "archive": "work/asset-review/2.0.0/members/07_HUD.AOA",
+      "version": "0x402",
+      "count": 41,
+      "crc_checked": 41,
+      "crc_ok": 41
+    },
+    {
+      "archive": "work/asset-review/2.0.0/members/14_SOUNDS.AOA",
+      "version": "0x402",
+      "count": 47,
+      "crc_checked": 47,
+      "crc_ok": 47
+    },
+    {
+      "archive": "work/asset-review/2.0.0/members/15_TERRAIN.AOA",
+      "version": "0x402",
+      "count": 1,
+      "crc_checked": 1,
+      "crc_ok": 1
+    },
+    {
+      "archive": "work/asset-review/2.0.0/members/16_TEXTURES.AOA",
+      "version": "0x402",
+      "count": 16,
+      "crc_checked": 16,
+      "crc_ok": 16
+    }
+  ],
+  "assets": [
+    {
+      "archive": "SCRIPTS",
+      "name": "jrscen.scr",
+      "bytes": 304,
+      "sha256": "d77faa88ae0d695b8fcf308006385d8f9345e4faf6c1f46c9964aadf2ab11e75",
+      "path": "work/asset-review/2.0.0/assets/SCRIPTS/0000_jrscen.scr",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SCRIPTS/jrscen.scr"
+      ]
+    },
+    {
+      "archive": "SCRIPTS",
+      "name": "capship1.scr",
+      "bytes": 304,
+      "sha256": "d77faa88ae0d695b8fcf308006385d8f9345e4faf6c1f46c9964aadf2ab11e75",
+      "path": "work/asset-review/2.0.0/assets/SCRIPTS/0001_capship1.scr",
+      "comparison": "renamed_identical",
+      "baseline_content_matches": [
+        "SCRIPTS/jrscen.scr"
+      ]
+    },
+    {
+      "archive": "SCRIPTS",
+      "name": "gen_missile.scr",
+      "bytes": 143,
+      "sha256": "709bf8adfa06e7dee9f8493f920e8a01a39d979e9efc6c057ef5ae7e35f73340",
+      "path": "work/asset-review/2.0.0/assets/SCRIPTS/0002_gen_missile.scr",
+      "comparison": "changed"
+    },
+    {
+      "archive": "SCRIPTS",
+      "name": "gen_turret.scr",
+      "bytes": 87,
+      "sha256": "f9e72ae3c0d5be50bce4a2c7536fd59098a291932e53e8b6eae6ebeafd11659e",
+      "path": "work/asset-review/2.0.0/assets/SCRIPTS/0003_gen_turret.scr",
+      "comparison": "changed"
+    },
+    {
+      "archive": "SCRIPTS",
+      "name": "ssmajestic.scr",
+      "bytes": 71,
+      "sha256": "af2b319d45e4635b70f4df0e993a75a9f7e0590540f4246c77bd33771a60ad78",
+      "path": "work/asset-review/2.0.0/assets/SCRIPTS/0004_ssmajestic.scr",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SCRIPTS/ssmajestic.scr"
+      ]
+    },
+    {
+      "archive": "SCRIPTS",
+      "name": "MCVA_Scenario1.scr",
+      "bytes": 306,
+      "sha256": "c02bd33803be4af6d81abb9e3e05164f32b8851a87838c0c50be6299063415d7",
+      "path": "work/asset-review/2.0.0/assets/SCRIPTS/0005_MCVA_Scenario1.scr",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SCRIPTS/MCVA_Scenario1.scr"
+      ]
+    },
+    {
+      "archive": "SCRIPTS",
+      "name": "robot_ai.scr",
+      "bytes": 481,
+      "sha256": "ad01052f39c627b001d18505593e88cd3a8d3986d00163b2e5b67774bd918ed6",
+      "path": "work/asset-review/2.0.0/assets/SCRIPTS/0006_robot_ai.scr",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "DataBaseHeader",
+      "bytes": 4,
+      "sha256": "ece74751d4d3c24d19636bd39727908aea4b8f1ab477d55a5074f452108d21ef",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0000_DataBaseHeader",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "AOAOBJECTS/DataBaseHeader"
+      ]
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "AlphaFighter.Sco",
+      "bytes": 5130,
+      "sha256": "b1affccc9fd9809c15e54e145e4b18f2ce82c56ff3566cb1b146ab7e4937d68c",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0001_AlphaFighter.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Buoy.Sco",
+      "bytes": 1573,
+      "sha256": "2e1cffe2cbb420ddff34e833ef6ebc1aa6cbd8d79e1b81ecbfbaea9da4bb025d",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0002_Buoy.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "CCVB.Sco",
+      "bytes": 1957,
+      "sha256": "a2cba2b325c39fc404f29666dc5bf36ce426b9030bac4bdab7efc6a774174d66",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0003_CCVB.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Eagle.Sco",
+      "bytes": 5098,
+      "sha256": "b7a0dace4247bfb7f94dab25d170886d043bb6182b61268d88d79967d1943729",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0004_Eagle.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Etat'Illraku.Sco",
+      "bytes": 5499,
+      "sha256": "94c2341390a6e608a4c8763e5baca8e85a04764bb0ee04251f1f7714fcb323e5",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0005_Etat_Illraku.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Grathven.Sco",
+      "bytes": 5195,
+      "sha256": "71a8ec3b10a4ccf38d75aa93f57d02dc5a422066da0e4e645f3b2fda1f158eab",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0006_Grathven.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "IBCH.Sco",
+      "bytes": 1941,
+      "sha256": "0dd38f056bcc14fdd416e9622199f031dd8f13ad4cb04da99b485ea85307ebf3",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0007_IBCH.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Janha Vari.Sco",
+      "bytes": 4742,
+      "sha256": "fb4d807ba3b1c81aed6b1a70693ea77c0f77f5a6bdc63f032d4db97e510528d7",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0008_Janha Vari.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Kafic.Sco",
+      "bytes": 4726,
+      "sha256": "3e2bd4d603566a27aa63c29c68f87a58dc7f5a8e8e7ba091894c475676c45632",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0009_Kafic.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "MBB.Sco",
+      "bytes": 1944,
+      "sha256": "11cf1798102f9dea140c865d6d84b7536fc8cb2b3331d1105cd04f987ed0843c",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0010_MBB.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "MCVA.Sco",
+      "bytes": 5907,
+      "sha256": "c8e1eed2f40cbb62e33a7b626a968461b7265d1ba53825af847b6d3259412447",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0011_MCVA.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Meskvak Su.Sco",
+      "bytes": 5101,
+      "sha256": "e4e66a03ea904fa8580bff7bd67ebd64e66dc07b68ec281a5d6a6ec7a6369597",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0012_Meskvak Su.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Mkulat.Sco",
+      "bytes": 4294,
+      "sha256": "a7a9f88ade2d17c8022bad19171fef20810b2efe2058acb842640c4d891c6833",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0013_Mkulat.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "ModFighter1.Sco",
+      "bytes": 5201,
+      "sha256": "8f26b7a1c441503a2366669f9f9173b8af578a23b41228db97a412258211ab4a",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0014_ModFighter1.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Natak'Illraku.Sco",
+      "bytes": 5491,
+      "sha256": "6eb1f6a3ae02d2c6f6bb1ed10041fedbfaa1f4cbce4fe17377d5966a8eb0b0e8",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0015_Natak_Illraku.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "N'Goc.Sco",
+      "bytes": 5436,
+      "sha256": "6c8aab377580da9f25bbf11eb95d62f53f3f0475d2220ac546fd1cfcea2712d6",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0016_N_Goc.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "PowerUp1.Sco",
+      "bytes": 1243,
+      "sha256": "7e6f821aec763d170b5583b656674d0227c0018ceccfeb069bc3f071e29c5f25",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0017_PowerUp1.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Rhino.Sco",
+      "bytes": 5572,
+      "sha256": "c8ed4009aa35c0b8c83af243483e57c4299eda3f849660ea7a408c2e1d93e941",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0018_Rhino.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Saksatar.Sco",
+      "bytes": 5131,
+      "sha256": "50b7029f1ee18fceb42bdc710dba067c179e8e62f3e3785c576267c7b2dd4690",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0019_Saksatar.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Tholfus.Sco",
+      "bytes": 5921,
+      "sha256": "6b4f03586620d1d068e20c1b1f1d3eb0a664183753e68505c7f79439ccf763c6",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0020_Tholfus.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "TurretA.Sco",
+      "bytes": 2015,
+      "sha256": "7a45e6019b86df0a8ca3322c72b73d09c16418726d0e37fcdff0e3ba91ebf605",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0021_TurretA.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Vasa Chovo.Sco",
+      "bytes": 5934,
+      "sha256": "79a69bdfe2891dce6d694fca7d99138b23042f0e3258ff30093f22f0de1c010d",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0022_Vasa Chovo.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Vermok.Sco",
+      "bytes": 4717,
+      "sha256": "6c958bced29f1421ac4a3b319a7f49aa072b0aa2ded3b455dc9cde81c959bf02",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0023_Vermok.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "WarpGate.Sco",
+      "bytes": 3895,
+      "sha256": "ac716b4b23b2732b18556dff89c854f151b2dc9fe9c490e4f463087e33bc7d04",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0024_WarpGate.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Ym Khtat.Sco",
+      "bytes": 5524,
+      "sha256": "1ba8bb4b1ef5460fcbc9c350b5131762335b210de9acb762f47bda8980377a6c",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0025_Ym Khtat.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "ZCVA.Sco",
+      "bytes": 1951,
+      "sha256": "a326674e1049ff246892212bda46cad5ee080e095dc73d744366bf16b3545050",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0026_ZCVA.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Zkole.Sco",
+      "bytes": 5124,
+      "sha256": "e0ee7a18ea6f39130ded06ecf55585ae5d4d240c86611a07172a0655527d5389",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0027_Zkole.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Cube.Sco",
+      "bytes": 3531,
+      "sha256": "3b0772da3acb8a895bec4166dc0aa66eb2397230d80d1fb4f1cb259d52c8845a",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0028_Cube.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Station.Sco",
+      "bytes": 1571,
+      "sha256": "803b66281e3e8a3fd8b4ce7755243c68085c388b64f3daf1253fd81e0e0a64d7",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0029_Station.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Wall.Sco",
+      "bytes": 3531,
+      "sha256": "88ab36e20984efbb0ac1507dae07fbc42f220ae85d63236fae0ad43831dc4fc5",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0030_Wall.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Naroch.Sco",
+      "bytes": 5505,
+      "sha256": "1e0916f474423dc7366ca138fc4f3c9366d4b14213b76801e555ac589ae122f7",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0031_Naroch.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "DGun-250.Shs",
+      "bytes": 401,
+      "sha256": "cc18ff8b756c981644e07a206b4bccf93d0881d964dc135d2d08e8fc0cacaa41",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0032_DGun-250.Shs",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "DGun-280.Shs",
+      "bytes": 401,
+      "sha256": "ca2fdd2c87368eb3d913457df2883e2c7ce6937e00431f28b2d45cd4f1a8ebdb",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0033_DGun-280.Shs",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "DGun-310.Shs",
+      "bytes": 401,
+      "sha256": "e64e564886eece353f7574e4961625e818f277c0fde3fdd56d64c8f9ca0ef0ce",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0034_DGun-310.Shs",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "DGun-360.Shs",
+      "bytes": 401,
+      "sha256": "e16b075e5ebd8103b1cadd09a11ca0b11a4c794905c67974788c591b05009fe4",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0035_DGun-360.Shs",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "DGun-410.Shs",
+      "bytes": 401,
+      "sha256": "30e095cdd8d4b3493336e03936c810b2a86bea83424b2e43f77d688f66388ee2",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0036_DGun-410.Shs",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "DGun-460.Shs",
+      "bytes": 401,
+      "sha256": "e5a7b807511505fd79c0608302a00c6f97b997064fc35d1d924f0df368b15c92",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0037_DGun-460.Shs",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "DGun-550.Shs",
+      "bytes": 401,
+      "sha256": "7f820d49c8545176976f2424c35f5cdd8659bd714a0a1e513464420b723de36c",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0038_DGun-550.Shs",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "DGun-650.Shs",
+      "bytes": 401,
+      "sha256": "d82c618fe6a9adec35056f16485d60f8c330fb8e8ce4ec11cde5339aff467652",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0039_DGun-650.Shs",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "DGun-750.Shs",
+      "bytes": 401,
+      "sha256": "03d74747a76d0f15a595cc00b23e7fc3d3fa09c79b18ecb57fd03e58e025cf5c",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0040_DGun-750.Shs",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "DGun-850.Shs",
+      "bytes": 401,
+      "sha256": "b29b78b1a8b7c63b8b16c4e2e95a26b8c6e94ee60df331737cd9dec65b90cbac",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0041_DGun-850.Shs",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "DRack-MQ4T1.Shs",
+      "bytes": 434,
+      "sha256": "918762e8267624e3aa41f73591e04b1b947cd5b21d6c8bcd75c95819d722cd02",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0042_DRack-MQ4T1.Shs",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Type II 1.1.Sco",
+      "bytes": 917,
+      "sha256": "e0add02ba02d2e5e7e9976ac5e4a7c95eac4016093a74e69aa38457aa281fd77",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0043_Type II 1.1.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Missle1.Shs",
+      "bytes": 406,
+      "sha256": "c8b9cbfa06ce5175a23580a263a82d37ec77a63cf659e1ad94ca7ceeb6febc37",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0044_Missle1.Shs",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Missle2.Shs",
+      "bytes": 406,
+      "sha256": "9a60ccc0c4100747c67d11f0bd622c0b657f28e90c23de7efeaaa1d3506df6e1",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0045_Missle2.Shs",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Missle3.Shs",
+      "bytes": 406,
+      "sha256": "53958ae5e370a97971dbffdc150bfa9db10d47b6e67ad20aef16fefd5cd96d6e",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0046_Missle3.Shs",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "TempRack.Shs",
+      "bytes": 383,
+      "sha256": "278b9456e5017b891aed2f4d3a1b2fcde4d1fea80751e3cfdea1a4c28ef60dab",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0047_TempRack.Shs",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Section4.Gob",
+      "bytes": 20825,
+      "sha256": "0395c3708afd6ae841c81f0407967f4bc2382c746c36741ce4a400dca3cbb113",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0048_Section4.Gob",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Type III 1.1.Sco",
+      "bytes": 919,
+      "sha256": "74591e3e050d029b499e6cda430718f4f0bf278b232eb7ad434d96561934f80d",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0049_Type III 1.1.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "TypeII-1-0.Shs",
+      "bytes": 409,
+      "sha256": "4e6321500e854c5056465ff6696091d1cf8a63e0cb300fa616661eb407dbbe79",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0050_TypeII-1-0.Shs",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "TypeIII-1-0.Shs",
+      "bytes": 410,
+      "sha256": "6b3ad18fbd97c36985be40371c02438debbe63d9319b0e745eeef1012a327e8b",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0051_TypeIII-1-0.Shs",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "TypeI-1-0.Shs",
+      "bytes": 408,
+      "sha256": "e0960faa028e006884c4e1b513c18e8caff1774b5491dc6fdf4a10a2c1fcaaf0",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0052_TypeI-1-0.Shs",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Type I 1.0.Sco",
+      "bytes": 911,
+      "sha256": "d8c385cc61171c9cb1fd7c5a5a7136538707b594b9eca1ccf85c12906d1336dd",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0053_Type I 1.0.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "AlphaFighter.Gob",
+      "bytes": 30532,
+      "sha256": "15bed50cd10f8172de84ce6b8b6ca3a1ef359f292d55ecc5858537ca26108476",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0054_AlphaFighter.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "CapShip1.Gob",
+      "bytes": 37799,
+      "sha256": "24c5e82764e758a81a3d5eced1ea64ff2083d415e60d3b50afbfcf8d537718aa",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0055_CapShip1.Gob",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "CapShipTurret.Gob",
+      "bytes": 7630,
+      "sha256": "3a2d7bdeaa0920dfd134806f4a3492c78679b113812df89543aadcbefb3b6b7e",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0056_CapShipTurret.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "CapShip.Sco",
+      "bytes": 1959,
+      "sha256": "560eb8eb9d22ca983cb5f98a42f6a91d3dfa139b5f82c9f9ddaec8b7af6b6275",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0057_CapShip.Sco",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Ccvb.Gob",
+      "bytes": 32649,
+      "sha256": "29f3439f9a35b18e52d78997ab50498f94e6d22abc2e23200c8af2ec10be54c6",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0058_Ccvb.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Cube1.Gob",
+      "bytes": 2342,
+      "sha256": "e61f9d88b7ae16e4375e6f2970600cab2fcfd228caf2a4639b71e98440362360",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0059_Cube1.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Dish1.Gob",
+      "bytes": 5062,
+      "sha256": "deeaf5700ab13330afc45d59a8067f16c22628fca66c9ccd9f5f4b6236088508",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0060_Dish1.Gob",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "DishWall.Gob",
+      "bytes": 114314,
+      "sha256": "61b007863aef07f4ef2de56e88ee43989763e6c20168f04c66df25240d0245de",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0061_DishWall.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "DishWall.Sco",
+      "bytes": 1216,
+      "sha256": "3f44386e4d8508b69658953b362de77e138bf40e9a04ba15a926c15259e3da3f",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0062_DishWall.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "DockSeg.Gob",
+      "bytes": 24414,
+      "sha256": "64289aadf11966f4454d61e3dd7e724e920e0bf2f76ee208ad230152ad5020b4",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0063_DockSeg.Gob",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "DockSeg.Sco",
+      "bytes": 856,
+      "sha256": "da6079d045b59c2861bb9eb391705451b135353e3868b892ca284e31a7b2daf2",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0064_DockSeg.Sco",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Dzhesra.Gob",
+      "bytes": 75307,
+      "sha256": "60b6197ad79c33eace23c98083d253330779fd836a51ca81707327b53d1faacd",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0065_Dzhesra.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Eagle.Gob",
+      "bytes": 8387,
+      "sha256": "9d14268d35bab1dc9baf088baa1591c2aa5dd267e0bff0e536183868b287b85d",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0066_Eagle.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Flag.Gob",
+      "bytes": 16540,
+      "sha256": "37507456385890ed72067ace872c5c1a22f50cf712cc4aee56b04ce567cbc3fa",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0067_Flag.Gob",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Grathven.Gob",
+      "bytes": 29047,
+      "sha256": "6b1055ea4225aec981b91459e05222b275800621e0c1328888eb79eec1fee478",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0068_Grathven.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Harbinger.Gob",
+      "bytes": 56122,
+      "sha256": "23a3c625d8099865b5c2d48b744698e7ece2dd816b3adda1269edb9f75a7b57d",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0069_Harbinger.Gob",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Ibch.Gob",
+      "bytes": 36841,
+      "sha256": "044adaf9a6c12d972f9eefc5baf44102ef4e40a5ea6f146e0e983fecdde37339",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0070_Ibch.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Janha Vari.Gob",
+      "bytes": 51421,
+      "sha256": "f5c9807dac71f3a95a3e8c820dbb928c45e695feb918e7168144af435178e108",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0071_Janha Vari.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Kafic.Gob",
+      "bytes": 55459,
+      "sha256": "ca9dc1981e7822eb6d6c3659a3346a0ea6350af0a9c212bdf8a2149ee283c320",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0072_Kafic.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Mbb.Gob",
+      "bytes": 55023,
+      "sha256": "69271bada47b6e36da171a12ac02a3da6d44e73c0fc1c11edfb1cc9f965ce4a1",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0073_Mbb.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Mcva.Gob",
+      "bytes": 85855,
+      "sha256": "a4d5ab9da1af9ed4b1a67e2456a827d05ce15b62aa1961decfc60cc85f44c5d1",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0074_Mcva.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "MissileA.Gob",
+      "bytes": 19624,
+      "sha256": "ff192da434a03aa4d48aa55573d50bb99dfde1c0f7aaf98fc6af11aec04ede50",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0075_MissileA.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Mkulat.Gob",
+      "bytes": 47212,
+      "sha256": "20aa81e0bc7e22ffe0a62f5e72f9615493bfb96b8051a77078beec2a11f9d914",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0076_Mkulat.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Natak'Illraku.Gob",
+      "bytes": 36743,
+      "sha256": "871dd063575636bbb7a834b93cbb05acb0b3e84f462251268d2247d3143ac211",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0077_Natak_Illraku.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "NavC.Gob",
+      "bytes": 30353,
+      "sha256": "a632faca2fd51aabd87ea27e89aea8f4a5b6f8a682dc108228c2b302401b3059",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0078_NavC.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "pwrup1.Gob",
+      "bytes": 1751,
+      "sha256": "7728897fcc0227ddb584b905c9c06dc786edee7fb6fdcbb39ae8bdb831fe27ea",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0079_pwrup1.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Rhino.Gob",
+      "bytes": 66803,
+      "sha256": "039c86f447e0602ead59c648695555d282041b65ef2d0c92c0863daa1858a27f",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0080_Rhino.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Section1.Gob",
+      "bytes": 3297,
+      "sha256": "37716497245409f3535f8d6d4e983893837e1f271bb29e34449c3fd288331376",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0081_Section1.Gob",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "spacebkgd.Gob",
+      "bytes": 5652,
+      "sha256": "a2ac3f9359d28ea61eb41fbee6abc13af3ad2aef81e55c9391f823aa2fa3f263",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0082_spacebkgd.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "TMTestBox.Gob",
+      "bytes": 4265,
+      "sha256": "638e244648bce98c1b3b316973fdfdd4c513630c06988314539fcdeb8ffcdf6f",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0083_TMTestBox.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Turret.Gob",
+      "bytes": 74214,
+      "sha256": "df089e01257a9355ed04ef2835822ac44b98300db67fc760fdc5dee492cda8e2",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0084_Turret.Gob",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Vasa Chovo.Gob",
+      "bytes": 55744,
+      "sha256": "c50d00932aa1f5e09e8d422dd8656745612b71d170a8b65acf9e0d468bf3eeb7",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0085_Vasa Chovo.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Vermok.Gob",
+      "bytes": 49564,
+      "sha256": "32844327c7ec3b03b53a487bcbf2a9e3324457c10d5baff9bdee4ebdff636188",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0086_Vermok.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Wall1.Gob",
+      "bytes": 1879,
+      "sha256": "83381e718a1ebecd6e57ce38aecf35e6e61df1f9c074dc6d8c403fdd24bb7eba",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0087_Wall1.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "WarpA.Gob",
+      "bytes": 39562,
+      "sha256": "b68ce3b87337c7ab5ffa1e3829021f39e66e681ebd42c8585a9ef83844ddbc6c",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0088_WarpA.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Ym Khtat.Gob",
+      "bytes": 57595,
+      "sha256": "92162734c4e41c60bb2444a4dca48c6b478c86cefe98a47944e949b2ebb076d8",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0089_Ym Khtat.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Zcva.Gob",
+      "bytes": 30887,
+      "sha256": "fe32fdb0f5c47abe30221b54abeae8c6de3f6184cbe5eeb9cbef4371522a7726",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0090_Zcva.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Zkole.Gob",
+      "bytes": 53115,
+      "sha256": "55f65d2f6aba1c824efad5f603ff08c67de98b847a132049a059aa380c6d9d5f",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0091_Zkole.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Flag.Sco",
+      "bytes": 1573,
+      "sha256": "cfff21222e4f2f81f7a3e608051940ca6f11eda91852e5400ddb1e2ec96233f2",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0092_Flag.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Naroch.Gob",
+      "bytes": 58649,
+      "sha256": "5aa12d134125a491bb65a6bded7d344e3997e764cfe223a51bdb9edb767a68cd",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0093_Naroch.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "TestScene.Gob",
+      "bytes": 61162,
+      "sha256": "5213d58631e6165e33421e51e99a916dfe1dbb1f488ebc3618469cfbf30cad6f",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0094_TestScene.Gob",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "RingPanel.Gob",
+      "bytes": 5424,
+      "sha256": "7e50e3659a85e9756690062eacf69e9344b76ba358d6f3f9f50de0025a947ef7",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0095_RingPanel.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "RingPan.Sco",
+      "bytes": 505,
+      "sha256": "e3abe8680bd96a024fec0bacf59510b9978cf2ec7ae9cf3f1f6bf72ac9a93f82",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0096_RingPan.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "optionsdisplay.Gob",
+      "bytes": 5686,
+      "sha256": "8063f5cc32355687b8c5bebad3629fb72b08f586fbb531fa94f8c66c046eaa34",
+      "path": "work/asset-review/2.0.0/assets/AOAOBJECTS/0097_optionsdisplay.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "DATA",
+      "name": "radar_gridicle",
+      "bytes": 13500,
+      "sha256": "b86d31fc620d46095a71a381129a3bd4bd153ac5d5147163442e6b7d19a8c8d9",
+      "path": "work/asset-review/2.0.0/assets/DATA/0000_radar_gridicle",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "DATA/radar_gridicle"
+      ]
+    },
+    {
+      "archive": "DATA",
+      "name": "radar_profile",
+      "bytes": 14,
+      "sha256": "19502f85aa85bf54d447cbafc0fec503f70b7f9ad71881b08ae0fcc6dcb6b00d",
+      "path": "work/asset-review/2.0.0/assets/DATA/0001_radar_profile",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "DATA/radar_profile"
+      ]
+    },
+    {
+      "archive": "DATA",
+      "name": "gunshots",
+      "bytes": 220,
+      "sha256": "b769209a936544962e18d5333f27bbee8cf7c9dbb3a6173a075eefeeef280a9f",
+      "path": "work/asset-review/2.0.0/assets/DATA/0002_gunshots",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "DATA/gunshots"
+      ]
+    },
+    {
+      "archive": "DATA",
+      "name": "missiles",
+      "bytes": 60,
+      "sha256": "c16e136b4a1ac15ccf3c2350ecc13dcd57bec02dedf018c26869225baf70244f",
+      "path": "work/asset-review/2.0.0/assets/DATA/0003_missiles",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "DATA/missiles"
+      ]
+    },
+    {
+      "archive": "DATA",
+      "name": "update_interval_0",
+      "bytes": 128,
+      "sha256": "18b0363c126d86a476b778f1476ec32df700e2baac468d5d6c8dd402996aca9c",
+      "path": "work/asset-review/2.0.0/assets/DATA/0004_update_interval_0",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "DATA/update_interval_0"
+      ]
+    },
+    {
+      "archive": "DATA",
+      "name": "update_interval_1",
+      "bytes": 128,
+      "sha256": "096fbd49dcaf12c16f112eb87ca8389ae31aa6459aa901f7b1b956dfb1d5d67d",
+      "path": "work/asset-review/2.0.0/assets/DATA/0005_update_interval_1",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "DATA/update_interval_1"
+      ]
+    },
+    {
+      "archive": "DATA",
+      "name": "update_interval_2",
+      "bytes": 128,
+      "sha256": "67e3206ed5a22b3ec7c9685a5a921356384fb866c4ed8e5b657159f584368704",
+      "path": "work/asset-review/2.0.0/assets/DATA/0006_update_interval_2",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "DATA/update_interval_2"
+      ]
+    },
+    {
+      "archive": "DATA",
+      "name": "update_interval_3",
+      "bytes": 128,
+      "sha256": "95bcd1b1b1e128435f099ef7abdbdfeb40566abae05f0b923c20d28f0488839a",
+      "path": "work/asset-review/2.0.0/assets/DATA/0007_update_interval_3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "DATA/update_interval_3"
+      ]
+    },
+    {
+      "archive": "DATA",
+      "name": "update_interval_4",
+      "bytes": 128,
+      "sha256": "a798f2eeb82d2ab6264e2abdd8d965bb7c4914b33f2903825c7420fd00a0cd3f",
+      "path": "work/asset-review/2.0.0/assets/DATA/0008_update_interval_4",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "DATA/update_interval_4"
+      ]
+    },
+    {
+      "archive": "DATA",
+      "name": "space4.tga",
+      "bytes": 786476,
+      "sha256": "b634e5e7a8fa06dcaa68447afce91f6aba8de461a74b429de15c9418cb633508",
+      "path": "work/asset-review/2.0.0/assets/DATA/0009_space4.tga",
+      "comparison": "changed"
+    },
+    {
+      "archive": "DATA",
+      "name": "event_times",
+      "bytes": 40,
+      "sha256": "b4e98b0a6655c1ce62b74e587adec42b04ca5d03513fc3b7f4f58824667d8f83",
+      "path": "work/asset-review/2.0.0/assets/DATA/0010_event_times",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "DATA/event_times"
+      ]
+    },
+    {
+      "archive": "DATA",
+      "name": "reticle4.tga",
+      "bytes": 66075,
+      "sha256": "faa1c89f95bf92af7fb97f319e0489778dfd949a1439f7a2e85527504a4175fa",
+      "path": "work/asset-review/2.0.0/assets/DATA/0011_reticle4.tga",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "DATA",
+      "name": "space4-2.tga",
+      "bytes": 196652,
+      "sha256": "541115d8c151c080d7d7b02eb35bdc1fc403ac443d2a99a4801f1747a175206e",
+      "path": "work/asset-review/2.0.0/assets/DATA/0012_space4-2.tga",
+      "comparison": "changed"
+    },
+    {
+      "archive": "DATA",
+      "name": "grid2.tga",
+      "bytes": 196652,
+      "sha256": "dfa2e24496418d6e2099b80d2cb0bfd03b10ef75ecff705a1e037559b2a33cfd",
+      "path": "work/asset-review/2.0.0/assets/DATA/0013_grid2.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "DATA/grid2.tga"
+      ]
+    },
+    {
+      "archive": "DATA",
+      "name": "grid.tga",
+      "bytes": 196652,
+      "sha256": "ad3f5e679f5899b0db034f5c3221c8aa0fc0184c64099d2745f4e2f09effde6e",
+      "path": "work/asset-review/2.0.0/assets/DATA/0014_grid.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "DATA/grid.tga"
+      ]
+    },
+    {
+      "archive": "DATA",
+      "name": "hvnswrd.tga",
+      "bytes": 196652,
+      "sha256": "875bae65a20401c190c084fd1f0728495cf83a8f5e2c17905b920b40734244f1",
+      "path": "work/asset-review/2.0.0/assets/DATA/0015_hvnswrd.tga",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "DATA",
+      "name": "salamtex.tga",
+      "bytes": 196652,
+      "sha256": "f95393b9cb06cfbf0a4ed4b2eaaf943d4559b3b5b47b9e874ea7e132607a9985",
+      "path": "work/asset-review/2.0.0/assets/DATA/0016_salamtex.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "DATA/salamtex.tga"
+      ]
+    },
+    {
+      "archive": "DATA",
+      "name": "bstrdtex.tga",
+      "bytes": 196652,
+      "sha256": "3553ae0a2688b36302a034d401e3219f7607aea393a537ab3125abd5066af47e",
+      "path": "work/asset-review/2.0.0/assets/DATA/0017_bstrdtex.tga",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "DATA",
+      "name": "grath_t1.tga",
+      "bytes": 196652,
+      "sha256": "749193282dd6fa4d116df6eb114ccdd3ba2171b271c35db20f78a12edb425360",
+      "path": "work/asset-review/2.0.0/assets/DATA/0018_grath_t1.tga",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "DATA",
+      "name": "carr2_t1.tga",
+      "bytes": 196652,
+      "sha256": "d0e656e1b9a862a7b25f36d4f814219ec7e978b8141b8985751240fb4dc64a57",
+      "path": "work/asset-review/2.0.0/assets/DATA/0019_carr2_t1.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "DATA/carr2_t1.tga"
+      ]
+    },
+    {
+      "archive": "DATA",
+      "name": "kngsm_t1.tga",
+      "bytes": 196652,
+      "sha256": "c85ee38d113cb2ffd5eb54e6364e7feaf1138781cd72ea606e06a7ba92a4c72b",
+      "path": "work/asset-review/2.0.0/assets/DATA/0020_kngsm_t1.tga",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "DATA",
+      "name": "reapr_t1.tga",
+      "bytes": 196652,
+      "sha256": "1d358c75619787cbdad00bfdf086ad9dca98ed978dc7c3b1d8c199d168e37f1d",
+      "path": "work/asset-review/2.0.0/assets/DATA/0021_reapr_t1.tga",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "DATA",
+      "name": "sntry_t1.tga",
+      "bytes": 196652,
+      "sha256": "e1022ac8ea03b77a5c35ea3ceefa2b5ce73c366eca275e7e37aecf26cfc5de44",
+      "path": "work/asset-review/2.0.0/assets/DATA/0022_sntry_t1.tga",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "DATA",
+      "name": "strsk_t1.tga",
+      "bytes": 196652,
+      "sha256": "ec6203c34e31442acc7d24f5150c312964b437de71f0f1a9e1f369f8a94cd201",
+      "path": "work/asset-review/2.0.0/assets/DATA/0023_strsk_t1.tga",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "DATA",
+      "name": "zcarr_t1.tga",
+      "bytes": 196652,
+      "sha256": "9ee4be7e61e2455e0330e43783c95f3e6c44d01c88230539770acc4ed0595895",
+      "path": "work/asset-review/2.0.0/assets/DATA/0024_zcarr_t1.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "DATA/zcarr_t1.tga"
+      ]
+    },
+    {
+      "archive": "DATA",
+      "name": "zwngr_t1.tga",
+      "bytes": 196652,
+      "sha256": "f1fa07fa7caffeccfd8931d04707f8c95e15044ccafe6ece69dec4bca497fdec",
+      "path": "work/asset-review/2.0.0/assets/DATA/0025_zwngr_t1.tga",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "DATA",
+      "name": "hvnsw_t1.tga",
+      "bytes": 196652,
+      "sha256": "7d83182f79e6852bbf0d0423ef836522b60293bdff5c1adf0a307d972d49acd6",
+      "path": "work/asset-review/2.0.0/assets/DATA/0026_hvnsw_t1.tga",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "DATA",
+      "name": "mndst_t1.tga",
+      "bytes": 196652,
+      "sha256": "0a1dd362a6652cf809f67671aba74237746cce7b5a9b0753fadba602abebaf26",
+      "path": "work/asset-review/2.0.0/assets/DATA/0027_mndst_t1.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "DATA/mndst_t1.tga"
+      ]
+    },
+    {
+      "archive": "DATA",
+      "name": "obdgr_t1.tga",
+      "bytes": 196652,
+      "sha256": "b6862ce1a2650e941a3612e90f10aad04f4a4b618c3a98894d5b216d842e1796",
+      "path": "work/asset-review/2.0.0/assets/DATA/0028_obdgr_t1.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "DATA/obdgr_t1.tga"
+      ]
+    },
+    {
+      "archive": "DATA",
+      "name": "vcarr_t1.tga",
+      "bytes": 196652,
+      "sha256": "74253819e52914f2d5a0349798f30eb37d849b12a0c8d417c014f22cd686bd57",
+      "path": "work/asset-review/2.0.0/assets/DATA/0029_vcarr_t1.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "DATA/vcarr_t1.tga"
+      ]
+    },
+    {
+      "archive": "DATA",
+      "name": "thndr_t1.tga",
+      "bytes": 196652,
+      "sha256": "742e997a3b44f4bb4204b398dab4cb7a812d31e1394851947ffdb2e32145e0e2",
+      "path": "work/asset-review/2.0.0/assets/DATA/0030_thndr_t1.tga",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "DATA",
+      "name": "pwrup1.tga",
+      "bytes": 49196,
+      "sha256": "b39e8cfb034adde9afe07a8467f69b57af7160e5588ffa500b2875d89dec605a",
+      "path": "work/asset-review/2.0.0/assets/DATA/0031_pwrup1.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "DATA/pwrup1.tga"
+      ]
+    },
+    {
+      "archive": "DATA",
+      "name": "aoaindev.tga",
+      "bytes": 49196,
+      "sha256": "cdbb9d2f6243ddba7c85420658ba734c56304a8f90a0f53589fc3f47ec0468f7",
+      "path": "work/asset-review/2.0.0/assets/DATA/0032_aoaindev.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "DATA/aoaindev.tga",
+        "TEXTURES/aoaindev.tga"
+      ]
+    },
+    {
+      "archive": "DATA",
+      "name": "natak-t1.tga",
+      "bytes": 196652,
+      "sha256": "dee9a9eaa982292d65dfab5e924592560c258b111a42629e5c934d609845e61c",
+      "path": "work/asset-review/2.0.0/assets/DATA/0033_natak-t1.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "DATA/natak-t1.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "twinfrme.tga",
+      "bytes": 60044,
+      "sha256": "bdd5dad9e3adf6e711b56db83361121265e72be56d67dafa614f5539b25726ba",
+      "path": "work/asset-review/2.0.0/assets/HUD/0000_twinfrme.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/twinfrme.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "aoa.tga",
+      "bytes": 307739,
+      "sha256": "1614eb97ef5a7ae93a6aaa3ac9a726820d51293d8806b69bba7119e545c0316d",
+      "path": "work/asset-review/2.0.0/assets/HUD/0001_aoa.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/aoa.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "rtcl1_32.tga",
+      "bytes": 65580,
+      "sha256": "3a58ce77cefa96e2d490fa884d849f0aa518a9ce3cf6ba13642587c386946a51",
+      "path": "work/asset-review/2.0.0/assets/HUD/0002_rtcl1_32.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/rtcl1_32.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "dist1_24.tga",
+      "bytes": 9404,
+      "sha256": "916613c62e0e0683ce8426a6eed619f3ab4049dc2fbd84048744f94d124928ae",
+      "path": "work/asset-review/2.0.0/assets/HUD/0003_dist1_24.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/dist1_24.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "rdr1_24.tga",
+      "bytes": 43595,
+      "sha256": "43f1d634f4363a4c1af0cf4be1542c0ebb71a177a664a670c5119a10b3ef9bff",
+      "path": "work/asset-review/2.0.0/assets/HUD/0004_rdr1_24.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/rdr1_24.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "comm0000.tga",
+      "bytes": 78044,
+      "sha256": "795a4a1de05e8c1b7d56498dcf97f3dba1e2704cb6f045d749100df5ee7a8307",
+      "path": "work/asset-review/2.0.0/assets/HUD/0005_comm0000.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/comm0000.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "kwin0000.tga",
+      "bytes": 45044,
+      "sha256": "a681e97452a7609b5339155b018dee841fa3961b926848f4cbe8dd39fe6bb7c8",
+      "path": "work/asset-review/2.0.0/assets/HUD/0006_kwin0000.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/kwin0000.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "kwinanm1.tga",
+      "bytes": 187218,
+      "sha256": "c7106f5a31e2bb8e8d064adc2ea7e280dfb8865765828756df501e54b77c1846",
+      "path": "work/asset-review/2.0.0/assets/HUD/0007_kwinanm1.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/kwinanm1.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "kwinhilt.tga",
+      "bytes": 45044,
+      "sha256": "9e36b3217eb722ad54483983fa8a09741700c266afdaa8635fda8f40da8302b3",
+      "path": "work/asset-review/2.0.0/assets/HUD/0008_kwinhilt.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/kwinhilt.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "dist2_24.tga",
+      "bytes": 9404,
+      "sha256": "2cb700554afca431a93680f5b638ebdfe75d8e68efb355cd7025911630e07dc3",
+      "path": "work/asset-review/2.0.0/assets/HUD/0009_dist2_24.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/dist2_24.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "pred1.tga",
+      "bytes": 3116,
+      "sha256": "181ea25a6c990be747190e00549cee6242068b5f69af039fdfbc5c053c1538f8",
+      "path": "work/asset-review/2.0.0/assets/HUD/0010_pred1.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/pred1.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "mlock1.tga",
+      "bytes": 12827,
+      "sha256": "6bd3ccdef985a6165e0af8526c1c409d0267f8f1f20b92c24dbd44b084d2f450",
+      "path": "work/asset-review/2.0.0/assets/HUD/0011_mlock1.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/mlock1.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "mlock2.tga",
+      "bytes": 49691,
+      "sha256": "6ee867d43ac8d57d795b093d6d656052c7b59c645b1910f9c0068ff19bae1f39",
+      "path": "work/asset-review/2.0.0/assets/HUD/0012_mlock2.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/mlock2.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "tgttst.tga",
+      "bytes": 49196,
+      "sha256": "fa1b8b1bec6515be9b809de4dc31aa8f0a436c68cdbb74e636f23913d9f4e0cd",
+      "path": "work/asset-review/2.0.0/assets/HUD/0013_tgttst.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/tgttst.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "tdisp1.tga",
+      "bytes": 60044,
+      "sha256": "d6859d819baa262b05682bf252e5bb073b3c5f7a8757f8de513788e3f6a974e5",
+      "path": "work/asset-review/2.0.0/assets/HUD/0014_tdisp1.tga",
+      "comparison": "changed"
+    },
+    {
+      "archive": "HUD",
+      "name": "tdisp2.tga",
+      "bytes": 60044,
+      "sha256": "6bdb64ec573e4efdff012ef022803525d422e357e44032cdd339bf594819910e",
+      "path": "work/asset-review/2.0.0/assets/HUD/0015_tdisp2.tga",
+      "comparison": "changed"
+    },
+    {
+      "archive": "HUD",
+      "name": "mlok0000.tga",
+      "bytes": 49196,
+      "sha256": "118c3d58a0d91489c2300b359b3f5e460604d3d72c84e976bdd07b39b8b10cd7",
+      "path": "work/asset-review/2.0.0/assets/HUD/0016_mlok0000.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/mlok0000.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "gunicon1.tga",
+      "bytes": 5504,
+      "sha256": "6054f1fda3c553de5418ef1b86de95ea7735512221117b1821d435b0d52a5035",
+      "path": "work/asset-review/2.0.0/assets/HUD/0017_gunicon1.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/gunicon1.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "ginfowin.tga",
+      "bytes": 34739,
+      "sha256": "27ed28166ed947d120963601a024329133806ef95d103339e2a93a187bc23add",
+      "path": "work/asset-review/2.0.0/assets/HUD/0018_ginfowin.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/ginfowin.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "userlist.tga",
+      "bytes": 33959,
+      "sha256": "c13bca4d0def99021b97543c4f1ece345db586cfc6c821f414c2aaafbd92edd8",
+      "path": "work/asset-review/2.0.0/assets/HUD/0019_userlist.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/userlist.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "commanm1.tga",
+      "bytes": 178244,
+      "sha256": "924d968aa28148fd00b911caf2a3f1e670986465500b1c29f88dc6ff833277a3",
+      "path": "work/asset-review/2.0.0/assets/HUD/0020_commanm1.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/commanm1.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "dmgdisp.tga",
+      "bytes": 56219,
+      "sha256": "677135b528da52f953736dc99d9c2576d55c450a482da99f71a05420877bc346",
+      "path": "work/asset-review/2.0.0/assets/HUD/0021_dmgdisp.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/dmgdisp.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "weapdisp.tga",
+      "bytes": 25916,
+      "sha256": "f23c3e33838b98d3c2646218db01f28c847a145fbc8d5f833514dbb6336609f5",
+      "path": "work/asset-review/2.0.0/assets/HUD/0022_weapdisp.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/weapdisp.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "brickruf.tga",
+      "bytes": 49196,
+      "sha256": "c50431afa6bbda9257f89b4a5bb7346a586a0d63cd269461ce3760fe26655d4f",
+      "path": "work/asset-review/2.0.0/assets/HUD/0023_brickruf.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/brickruf.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "natak-co.tga",
+      "bytes": 196652,
+      "sha256": "c05d8f0557dd8d9a5e05dcff4ca89497465c353bcbc96b817c28277667dda04c",
+      "path": "work/asset-review/2.0.0/assets/HUD/0024_natak-co.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/natak-co.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "squadlist.tga",
+      "bytes": 45305,
+      "sha256": "38f54fb0ea879f0d2d007c633c8354189371fe4c5b34cdb4dfaf0c4d3d231dbe",
+      "path": "work/asset-review/2.0.0/assets/HUD/0025_squadlist.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/squadlist.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "groupcomm.tga",
+      "bytes": 32849,
+      "sha256": "46021e105a690e5131777e0bb72c1b63054d85f61b78ef4af2e9a7ea0ff0b253",
+      "path": "work/asset-review/2.0.0/assets/HUD/0026_groupcomm.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/groupcomm.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "TgtIcons.tga",
+      "bytes": 262188,
+      "sha256": "d3099c85f50331a7c8968183f25dd9239bb833a7ec6b3dc596f84088a7cff6db",
+      "path": "work/asset-review/2.0.0/assets/HUD/0027_TgtIcons.tga",
+      "comparison": "changed"
+    },
+    {
+      "archive": "HUD",
+      "name": "gs1.tga",
+      "bytes": 262188,
+      "sha256": "8fe7b46d06bc7145ce230443159ec0d87415aa905021941d1a9e7eab5ffab21c",
+      "path": "work/asset-review/2.0.0/assets/HUD/0028_gs1.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/gs1.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "gs2.tga",
+      "bytes": 262188,
+      "sha256": "7a9868d2e50c786cd26ed04aa770f6c2f1be1c63bb2c080a631cfc2a779b21a0",
+      "path": "work/asset-review/2.0.0/assets/HUD/0029_gs2.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/gs2.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "gs3.tga",
+      "bytes": 262188,
+      "sha256": "08cb6140bd3448eb03467fb3087f437fbfbf57d8a37d0a45d974c10612dba6f8",
+      "path": "work/asset-review/2.0.0/assets/HUD/0030_gs3.tga",
+      "comparison": "changed"
+    },
+    {
+      "archive": "HUD",
+      "name": "hitfx1.tga",
+      "bytes": 262188,
+      "sha256": "18c70fd66cedc8173a7a62e0873e2033bbde177c650edc6a0ceff02e5bdea838",
+      "path": "work/asset-review/2.0.0/assets/HUD/0031_hitfx1.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/hitfx1.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "hitfx2.tga",
+      "bytes": 262188,
+      "sha256": "f7a33c50ec4e57be75399cf61f95b4da647adbb18ae50c183bc3cb4637828f27",
+      "path": "work/asset-review/2.0.0/assets/HUD/0032_hitfx2.tga",
+      "comparison": "changed"
+    },
+    {
+      "archive": "HUD",
+      "name": "cursor3.tga",
+      "bytes": 812,
+      "sha256": "482d08f3e895c2a99862742f5cf98f186980b589b562bcb917ad216f218e8ceb",
+      "path": "work/asset-review/2.0.0/assets/HUD/0033_cursor3.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/cursor3.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "aoatext2.tga",
+      "bytes": 262188,
+      "sha256": "dc0c532175baefa69fdd7bb856e65f4d1c89552027cd89fe846ab66c45cf37c8",
+      "path": "work/asset-review/2.0.0/assets/HUD/0034_aoatext2.tga",
+      "comparison": "changed"
+    },
+    {
+      "archive": "HUD",
+      "name": "centeraim.tga",
+      "bytes": 262188,
+      "sha256": "1597a50a14f7425306210734c7c0558d1da88eedb58411db609a8f44f6209008",
+      "path": "work/asset-review/2.0.0/assets/HUD/0035_centeraim.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/centeraim.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "aoatext1.tga",
+      "bytes": 262188,
+      "sha256": "f3cd19d4ae76a54bea67db0afbc2494598ba5bc321cc616348ce705e7fc3afc4",
+      "path": "work/asset-review/2.0.0/assets/HUD/0036_aoatext1.tga",
+      "comparison": "changed"
+    },
+    {
+      "archive": "HUD",
+      "name": "cursor1.tga",
+      "bytes": 1068,
+      "sha256": "b4913e612c9c27b564d56ecde012326cc6f08f0d317b3837ca3b3cfd1d736f34",
+      "path": "work/asset-review/2.0.0/assets/HUD/0037_cursor1.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/cursor1.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "opttext.tga",
+      "bytes": 262188,
+      "sha256": "3325ef25c51a041eddb888dd56c907601339ab99d2a3b21d4f8dcfc48b1fe502",
+      "path": "work/asset-review/2.0.0/assets/HUD/0038_opttext.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/opttext.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "newuserlist.tga",
+      "bytes": 262188,
+      "sha256": "e937352824469539888ce805b05a7b0241d664f69873849109eb6e2bf571390d",
+      "path": "work/asset-review/2.0.0/assets/HUD/0039_newuserlist.tga",
+      "comparison": "changed"
+    },
+    {
+      "archive": "HUD",
+      "name": "aoaalpha.tga",
+      "bytes": 66075,
+      "sha256": "7593e8ef0884e0a915a979dc549d3da3cca13f195aab2ecae998d6b6c7f4c029",
+      "path": "work/asset-review/2.0.0/assets/HUD/0040_aoaalpha.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/aoaalpha.tga"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "switch1.wav",
+      "bytes": 33516,
+      "sha256": "3d45fa9f8274dbb75e3e51f197afc5d005520c3db237ac7136e9ccdbd886e1a2",
+      "path": "work/asset-review/2.0.0/assets/SOUNDS/0000_switch1.wav",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "msg1.wav",
+      "bytes": 2704,
+      "sha256": "15c12d2e366d9f4a7c673e854d168b0f19c9c72cddf0e0ff0082ffec58a6b58b",
+      "path": "work/asset-review/2.0.0/assets/SOUNDS/0001_msg1.wav",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "off1.wav",
+      "bytes": 21744,
+      "sha256": "7b01d0a5ed9b3941a89548a98b83ecb256d429d3c6cb16fc9c92b7805112ea69",
+      "path": "work/asset-review/2.0.0/assets/SOUNDS/0002_off1.wav",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "impact1.wav",
+      "bytes": 26924,
+      "sha256": "23075f9d78b5d6e45ab094b7f134a1af3d266d5d5da7a68d224e0b1f0cbd89db",
+      "path": "work/asset-review/2.0.0/assets/SOUNDS/0003_impact1.wav",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "gun1.wav",
+      "bytes": 9854,
+      "sha256": "685721e2fbf23fd415153f8fe7a96668719a9c1b899e77fa5f89e131c05d56bc",
+      "path": "work/asset-review/2.0.0/assets/SOUNDS/0004_gun1.wav",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "gun2.wav",
+      "bytes": 21134,
+      "sha256": "8431429078153e5918bf654879cff4e88498c838c41c0f36eae3254e523505e4",
+      "path": "work/asset-review/2.0.0/assets/SOUNDS/0005_gun2.wav",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "gun3.wav",
+      "bytes": 11790,
+      "sha256": "1dc462c8f339a7c0941938287af459bc3d302d899998b3e32dc89da9a91bd1b4",
+      "path": "work/asset-review/2.0.0/assets/SOUNDS/0006_gun3.wav",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "gun4.wav",
+      "bytes": 4352,
+      "sha256": "856026bc014d1104245788d9e233e508ee27c33db9d1d9760453ac70ca416f2f",
+      "path": "work/asset-review/2.0.0/assets/SOUNDS/0007_gun4.wav",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "gun5.wav",
+      "bytes": 5946,
+      "sha256": "7295d5ec00481687ca948aa7364922a72dd797244a3d48fbc04324a07d644dc7",
+      "path": "work/asset-review/2.0.0/assets/SOUNDS/0008_gun5.wav",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "gun6.wav",
+      "bytes": 3838,
+      "sha256": "a873064f1da5fd5ce6cf43f9f60da4787c65c091340de967ce2cc8c17d8b544e",
+      "path": "work/asset-review/2.0.0/assets/SOUNDS/0009_gun6.wav",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "gun7.wav",
+      "bytes": 15936,
+      "sha256": "6dcda03a0510bf89a601a66c082ff1f6ebc2dd7b23a1971ead6854ad3581ff9e",
+      "path": "work/asset-review/2.0.0/assets/SOUNDS/0010_gun7.wav",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "collide2.wav",
+      "bytes": 165250,
+      "sha256": "2a5822bab13e83a08bde54d788d9eecf5db953da6d447fd351cc642b55446ed8",
+      "path": "work/asset-review/2.0.0/assets/SOUNDS/0011_collide2.wav",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "missilefire1.wav",
+      "bytes": 184034,
+      "sha256": "1bb6549435415faf69f34e911fbe9db6419430d9623ecaf6460b8b79e5c4eb6c",
+      "path": "work/asset-review/2.0.0/assets/SOUNDS/0012_missilefire1.wav",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "laugh1.wav",
+      "bytes": 18156,
+      "sha256": "89a324f865aff634e13beb08e57765a50cc32bfeb05499d06e650c757a6373d7",
+      "path": "work/asset-review/2.0.0/assets/SOUNDS/0013_laugh1.wav",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "beep1.wav",
+      "bytes": 1790,
+      "sha256": "3fa00779e199c326ca292f8c279a09bf1fae5ea7ceff9c2119317edd73812730",
+      "path": "work/asset-review/2.0.0/assets/SOUNDS/0014_beep1.wav",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "missilealarm1.wav",
+      "bytes": 1788,
+      "sha256": "3ebd59ee0d2ce03403d871553b14428b01b57566e33bf6d01a9967a29a022bb7",
+      "path": "work/asset-review/2.0.0/assets/SOUNDS/0015_missilealarm1.wav",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "cannon1.wav",
+      "bytes": 26690,
+      "sha256": "b721a413160c95ed01b71aac779cb96bedebf99d4990798101b164ef9c317126",
+      "path": "work/asset-review/2.0.0/assets/SOUNDS/0016_cannon1.wav",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "alarm1.wav",
+      "bytes": 11784,
+      "sha256": "6e4a174385585d561f191990a30bed1d77f067f9718d441df64220cbce318e95",
+      "path": "work/asset-review/2.0.0/assets/SOUNDS/0017_alarm1.wav",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "back1.wav",
+      "bytes": 18066,
+      "sha256": "b254a5e27dc6fd45a5ff6357b4720b2ff67f23a50d844529c54bdebe0cc82b6b",
+      "path": "work/asset-review/2.0.0/assets/SOUNDS/0018_back1.wav",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "warning1.wav",
+      "bytes": 4226,
+      "sha256": "c0d115ba94e7133e46602fcc69aff71875962d97f04e1e3eaa26d9aff2da9175",
+      "path": "work/asset-review/2.0.0/assets/SOUNDS/0019_warning1.wav",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "pikaspeech.wav",
+      "bytes": 71666,
+      "sha256": "043c809554a7f97b7cc00aff2288e392113ca83bd7db029b20d3b394773a4b41",
+      "path": "work/asset-review/2.0.0/assets/SOUNDS/0020_pikaspeech.wav",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "gameoverman.wav",
+      "bytes": 12868,
+      "sha256": "6673bf32c37c0ce029c2d2f628bec08de5e5f59e35ce2e5f59380a3b9b0769d5",
+      "path": "work/asset-review/2.0.0/assets/SOUNDS/0021_gameoverman.wav",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "knockeddown.wav",
+      "bytes": 30018,
+      "sha256": "ead551f91b2d8bd716423589950b90912bdd003759a7fe21ee0d5fb1dd077e2a",
+      "path": "work/asset-review/2.0.0/assets/SOUNDS/0022_knockeddown.wav",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "closeencounter.wav",
+      "bytes": 52086,
+      "sha256": "53718d908cbdcc9d01f9547e455878f66b300ce9872d7b1b0867c5d6e157752e",
+      "path": "work/asset-review/2.0.0/assets/SOUNDS/0023_closeencounter.wav",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "abandonship.wav",
+      "bytes": 37196,
+      "sha256": "724615e175bb3b57802122ae6c75e16cdb88ee586fea3f95c7034b72bee6b517",
+      "path": "work/asset-review/2.0.0/assets/SOUNDS/0024_abandonship.wav",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "armwarheads.wav",
+      "bytes": 37618,
+      "sha256": "ad72950dc4e2229633bbcef60f6f48a28f5554a1a34bdb4c642b7650d75f54ea",
+      "path": "work/asset-review/2.0.0/assets/SOUNDS/0025_armwarheads.wav",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "homerhell.wav",
+      "bytes": 11642,
+      "sha256": "26dfe949a48c8fc93738fe3ef3ad8ac305e632f6abb5084d6e7c789653ac9692",
+      "path": "work/asset-review/2.0.0/assets/SOUNDS/0026_homerhell.wav",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "hell.wav",
+      "bytes": 42152,
+      "sha256": "9852bb3119b75636400592f6ba29453ef946c173f8ce1f6cf51cfe1bef5c97ed",
+      "path": "work/asset-review/2.0.0/assets/SOUNDS/0027_hell.wav",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "getout.wav",
+      "bytes": 16550,
+      "sha256": "d349bb3b8c1d5f212f08d53c3ed3bf5f01bf14226a75cb6e705fe5ab690ccd2d",
+      "path": "work/asset-review/2.0.0/assets/SOUNDS/0028_getout.wav",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "ahhell.wav",
+      "bytes": 8380,
+      "sha256": "44e3eba2508c85947fb9cae2619ebb2978aed63d49cd1888191a466346af75a6",
+      "path": "work/asset-review/2.0.0/assets/SOUNDS/0029_ahhell.wav",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "online.wav",
+      "bytes": 11996,
+      "sha256": "1ef057c455053ed06999c9980f800c99bec8f7c46310da8dba250a04b61a8880",
+      "path": "work/asset-review/2.0.0/assets/SOUNDS/0030_online.wav",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "collision.wav",
+      "bytes": 13036,
+      "sha256": "e5a1a0d76893582be6aa55aca8118f1de167773db9ac5b1161862398c97249bb",
+      "path": "work/asset-review/2.0.0/assets/SOUNDS/0031_collision.wav",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "covrfire.wav",
+      "bytes": 40696,
+      "sha256": "1a8005732cb4696c21dfab5829ee3e5189435d55efdaaa55f07cec36b5381624",
+      "path": "work/asset-review/2.0.0/assets/SOUNDS/0032_covrfire.wav",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "firing.wav",
+      "bytes": 15368,
+      "sha256": "98f33764aa0a0ddbad45e058eb9a41be0cdb409503123eafe7922c08d94b42a3",
+      "path": "work/asset-review/2.0.0/assets/SOUNDS/0033_firing.wav",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "lights.wav",
+      "bytes": 20314,
+      "sha256": "de17c41c2356a45809edbfa28c730483cc8df59496877ec3ae39f30111cfbcf4",
+      "path": "work/asset-review/2.0.0/assets/SOUNDS/0034_lights.wav",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "skull.wav",
+      "bytes": 26342,
+      "sha256": "b242b609063c959dfa1cd3f522d5870eb6999e8d1015b9125349af5eb32b5bf4",
+      "path": "work/asset-review/2.0.0/assets/SOUNDS/0035_skull.wav",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "mistake.wav",
+      "bytes": 30236,
+      "sha256": "25e1282329d5ca322af97f65a21afae2118c1fea2bf6d50ce1496ee6b20e4ea6",
+      "path": "work/asset-review/2.0.0/assets/SOUNDS/0036_mistake.wav",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "gamegame.wav",
+      "bytes": 11546,
+      "sha256": "ea49ac0c602edf7fafb093afedc8e4e2b9615f79f588d3c12de66e265eaa67a2",
+      "path": "work/asset-review/2.0.0/assets/SOUNDS/0037_gamegame.wav",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "warp1.wav",
+      "bytes": 32642,
+      "sha256": "7890b3b8f37ab6949473e30ef25dff8f9a8d8ffc4ed6830aff43d1d8ebe1a401",
+      "path": "work/asset-review/2.0.0/assets/SOUNDS/0038_warp1.wav",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "hitflag.wav",
+      "bytes": 16684,
+      "sha256": "47b1207e93ad3874da6ddd7a1691a108d6ffbd373cb9a34796fb7148da6906a7",
+      "path": "work/asset-review/2.0.0/assets/SOUNDS/0039_hitflag.wav",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "shipexplode.wav",
+      "bytes": 179062,
+      "sha256": "c863cce9d473b0334406792f9ba5de9a0f6f14a2dea114a5b47a40920169df25",
+      "path": "work/asset-review/2.0.0/assets/SOUNDS/0040_shipexplode.wav",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "chime.wav",
+      "bytes": 117290,
+      "sha256": "e215a4205e5b4d8cca7a7bf343792033cd7c0477997d7d655f266f4ba3519dc1",
+      "path": "work/asset-review/2.0.0/assets/SOUNDS/0041_chime.wav",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "cscheck.wav",
+      "bytes": 39724,
+      "sha256": "1055d71d2256dc7dcaf52fc0d8f4b494e9cbf8c2b1c5d937154e7eb6e44e887c",
+      "path": "work/asset-review/2.0.0/assets/SOUNDS/0042_cscheck.wav",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "primal1.wav",
+      "bytes": 33116,
+      "sha256": "f2876dc0790f62a46c3c1bf7d3f590d84b239cc4a5b7883e96bbac3c62a2e64c",
+      "path": "work/asset-review/2.0.0/assets/SOUNDS/0043_primal1.wav",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "Tylenol.wav",
+      "bytes": 278606,
+      "sha256": "4fe3a36aca0188a82f4150d66509bf1c610eeecc6f68909201b82d8ddae6667b",
+      "path": "work/asset-review/2.0.0/assets/SOUNDS/0044_Tylenol.wav",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "alshorn.wav",
+      "bytes": 45682,
+      "sha256": "3a0f1bf3bd496bcc9049ec7c8fc16c81756afc385fa581f890a7b84bc29c4a9d",
+      "path": "work/asset-review/2.0.0/assets/SOUNDS/0045_alshorn.wav",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "enginehit1.wav",
+      "bytes": 69328,
+      "sha256": "11bfb570e645d85d238566c212cf66becc7ea5f74564b0b46eafc45a346d4361",
+      "path": "work/asset-review/2.0.0/assets/SOUNDS/0046_enginehit1.wav",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "TERRAIN",
+      "name": "begin.tga",
+      "bytes": 49170,
+      "sha256": "8991ef9b29ad89b43e510ea5b052c9ad3388c92c40f7e79c934ad05ea3cc1a34",
+      "path": "work/asset-review/2.0.0/assets/TERRAIN/0000_begin.tga",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "smokefx2.tga",
+      "bytes": 524332,
+      "sha256": "cbe0212aaa33f4b442cfa97a0d2365f89c7ddb6bad4074e9b7783be09b94157c",
+      "path": "work/asset-review/2.0.0/assets/TEXTURES/0000_smokefx2.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/smokefx2.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "smokefx3.tga",
+      "bytes": 524332,
+      "sha256": "231a91f6b8f02682b76a4dc49a3d51b67e7e7fcf7ab8397d7dfc7f0ffd649fb2",
+      "path": "work/asset-review/2.0.0/assets/TEXTURES/0001_smokefx3.tga",
+      "comparison": "changed"
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "natak-b1.tga",
+      "bytes": 196652,
+      "sha256": "4f52e5f2b1844ce41af844eb4246b156eda0cf4d1d5e8aa789a028b343610d28",
+      "path": "work/asset-review/2.0.0/assets/TEXTURES/0002_natak-b1.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/natak-b1.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "EnvMap.tga",
+      "bytes": 196652,
+      "sha256": "d12b8ad8dd8cd5c9dadd0e63a1f2a09ad0d7dca278e0822e6f1909954bd9c0cf",
+      "path": "work/asset-review/2.0.0/assets/TEXTURES/0003_EnvMap.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/EnvMap.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "EnvMap2.tga",
+      "bytes": 196652,
+      "sha256": "f60f3f392414b371ef82fcaa1a369f8bfd464cb336a74d85cc11becfc688ec4e",
+      "path": "work/asset-review/2.0.0/assets/TEXTURES/0004_EnvMap2.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/EnvMap2.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "strsk_t1 bump.tga",
+      "bytes": 786476,
+      "sha256": "d4f246ee05e15364d2b262cd923be92b0c395989a0a2ebfcabf5219ac1875a30",
+      "path": "work/asset-review/2.0.0/assets/TEXTURES/0005_strsk_t1 bump.tga",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "zwngr_t1 bump.tga",
+      "bytes": 196652,
+      "sha256": "cd48e6493d6a2f682b5672ef340d5e4444dc9298e0ff6796b8c0186baf579b5a",
+      "path": "work/asset-review/2.0.0/assets/TEXTURES/0006_zwngr_t1 bump.tga",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "grath_t1 bump.tga",
+      "bytes": 786476,
+      "sha256": "e04f159b9d7037641d531d5758c0361cec3823a042fc242571bfedc4a8f26874",
+      "path": "work/asset-review/2.0.0/assets/TEXTURES/0007_grath_t1 bump.tga",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "vcarr_t1 bump.tga",
+      "bytes": 196652,
+      "sha256": "d0ed3bc022a8189c3d6c6f76cb1a7a34ef5671f1a4fded3c313b43cd1a7f6d27",
+      "path": "work/asset-review/2.0.0/assets/TEXTURES/0008_vcarr_t1 bump.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/vcarr_t1 bump.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "twinfrme.tga",
+      "bytes": 60044,
+      "sha256": "bdd5dad9e3adf6e711b56db83361121265e72be56d67dafa614f5539b25726ba",
+      "path": "work/asset-review/2.0.0/assets/TEXTURES/0009_twinfrme.tga",
+      "comparison": "renamed_identical",
+      "baseline_content_matches": [
+        "HUD/twinfrme.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "pred1.tga",
+      "bytes": 3116,
+      "sha256": "181ea25a6c990be747190e00549cee6242068b5f69af039fdfbc5c053c1538f8",
+      "path": "work/asset-review/2.0.0/assets/TEXTURES/0010_pred1.tga",
+      "comparison": "renamed_identical",
+      "baseline_content_matches": [
+        "HUD/pred1.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "begin.tga",
+      "bytes": 49170,
+      "sha256": "8991ef9b29ad89b43e510ea5b052c9ad3388c92c40f7e79c934ad05ea3cc1a34",
+      "path": "work/asset-review/2.0.0/assets/TEXTURES/0011_begin.tga",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "aoaindev bump.tga",
+      "bytes": 49196,
+      "sha256": "6e8ea9499bfbe17dbf50bac7618020fd415b0851441de2fb50dcf937ef9b29a9",
+      "path": "work/asset-review/2.0.0/assets/TEXTURES/0012_aoaindev bump.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/aoaindev bump.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "aoaindev.tga",
+      "bytes": 49196,
+      "sha256": "cdbb9d2f6243ddba7c85420658ba734c56304a8f90a0f53589fc3f47ec0468f7",
+      "path": "work/asset-review/2.0.0/assets/TEXTURES/0013_aoaindev.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "DATA/aoaindev.tga",
+        "TEXTURES/aoaindev.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "technotexture.tga",
+      "bytes": 49196,
+      "sha256": "f4ecc48de64f7865dfa289d2009aab9476bc162ed6d6c3ecf1c48595d76a0f20",
+      "path": "work/asset-review/2.0.0/assets/TEXTURES/0014_technotexture.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/technotexture.tga",
+        "TEXTURES/technobump.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "narocht1.tga",
+      "bytes": 786476,
+      "sha256": "ba5e837ec051c362744b79bfa05a419d1d1453d04b79baed3c64d6a413bf23a3",
+      "path": "work/asset-review/2.0.0/assets/TEXTURES/0015_narocht1.tga",
+      "comparison": "changed"
+    }
+  ],
+  "client": "work/asset-review/2.0.0/members/12_AOACLIENT.EXE",
+  "client_sha256": "2faa8ab2161c2ef83a76627171692e95516b626590f1606b10d9192dace122bd"
+}

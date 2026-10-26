@@ -1,0 +1,87 @@
+[
+  {
+    "name": "Arena1a",
+    "nodes": 383,
+    "geometry_nodes": 244
+  },
+  {
+    "name": "ast_fld_a",
+    "nodes": 30,
+    "geometry_nodes": 27
+  },
+  {
+    "name": "ast_fld_b",
+    "nodes": 55,
+    "geometry_nodes": 49
+  },
+  {
+    "name": "ast_fld_c",
+    "nodes": 17,
+    "geometry_nodes": 15
+  },
+  {
+    "name": "ast_fld_d",
+    "nodes": 10,
+    "geometry_nodes": 10
+  },
+  {
+    "name": "CTF_arena",
+    "nodes": 119,
+    "geometry_nodes": 113
+  },
+  {
+    "name": "CTF_base",
+    "nodes": 32,
+    "geometry_nodes": 31
+  },
+  {
+    "name": "hu_base_a",
+    "nodes": 59,
+    "geometry_nodes": 12
+  },
+  {
+    "name": "hu_base_b",
+    "nodes": 33,
+    "geometry_nodes": 6
+  },
+  {
+    "name": "hy_base_test",
+    "nodes": 4,
+    "geometry_nodes": 2
+  },
+  {
+    "name": "hy_winga",
+    "nodes": 15,
+    "geometry_nodes": 15
+  },
+  {
+    "name": "HyBase2Lay",
+    "nodes": 11,
+    "geometry_nodes": 10
+  },
+  {
+    "name": "irrosa01",
+    "nodes": 44,
+    "geometry_nodes": 2
+  },
+  {
+    "name": "newterrain",
+    "nodes": 368,
+    "geometry_nodes": 248
+  },
+  {
+    "name": "outerchange",
+    "nodes": 89,
+    "geometry_nodes": 7
+  },
+  {
+    "name": "ze_winga",
+    "nodes": 19,
+    "geometry_nodes": 15
+  },
+  {
+    "name": "ze_wingb",
+    "nodes": 6,
+    "geometry_nodes": 6
+  }
+]

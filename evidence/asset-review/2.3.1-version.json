@@ -1,0 +1,184 @@
+{
+  "file": "builds/asset-review/2.3.1/aoaclient_2.3.1.exe",
+  "call_sites": [
+    {
+      "format": "Ace of Angels (v%d.%d.%d Beta)",
+      "format_off": "0x1917b0",
+      "format_va": "0x5917b0",
+      "xref_va": "0x440440",
+      "function": "0x4403b0",
+      "globals": [
+        {
+          "va": "0x59a370",
+          "file_off": "0x19a370",
+          "value": 2,
+          "backing": "file"
+        },
+        {
+          "va": "0x59a374",
+          "file_off": "0x19a374",
+          "value": 3,
+          "backing": "file"
+        },
+        {
+          "va": "0x59a378",
+          "file_off": "0x19a378",
+          "value": 1,
+          "backing": "file"
+        }
+      ]
+    },
+    {
+      "format": "Ace of Angels (v%d.%d.%d Beta)",
+      "format_off": "0x1917b0",
+      "format_va": "0x5917b0",
+      "xref_va": "0x4431b4",
+      "function": "0x442fd0",
+      "globals": [
+        {
+          "va": "0x59a370",
+          "file_off": "0x19a370",
+          "value": 2,
+          "backing": "file"
+        },
+        {
+          "va": "0x59a374",
+          "file_off": "0x19a374",
+          "value": 3,
+          "backing": "file"
+        },
+        {
+          "va": "0x59a378",
+          "file_off": "0x19a378",
+          "value": 1,
+          "backing": "file"
+        }
+      ]
+    },
+    {
+      "format": "%s v%d.%d.%d",
+      "format_off": "0x191f78",
+      "format_va": "0x591f78",
+      "xref_va": "0x4430e7",
+      "function": "0x442fd0",
+      "globals": [
+        {
+          "va": "0x59a370",
+          "file_off": "0x19a370",
+          "value": 2,
+          "backing": "file"
+        },
+        {
+          "va": "0x59a374",
+          "file_off": "0x19a374",
+          "value": 3,
+          "backing": "file"
+        },
+        {
+          "va": "0x59a378",
+          "file_off": "0x19a378",
+          "value": 1,
+          "backing": "file"
+        }
+      ]
+    },
+    {
+      "format": "Entering Ace of Angels runtime client ver(%d.%d.%d).",
+      "format_off": "0x191fac",
+      "format_va": "0x591fac",
+      "xref_va": "0x443023",
+      "function": "0x442fd0",
+      "globals": [
+        {
+          "va": "0x59a370",
+          "file_off": "0x19a370",
+          "value": 2,
+          "backing": "file"
+        },
+        {
+          "va": "0x59a374",
+          "file_off": "0x19a374",
+          "value": 3,
+          "backing": "file"
+        },
+        {
+          "va": "0x59a378",
+          "file_off": "0x19a378",
+          "value": 1,
+          "backing": "file"
+        }
+      ]
+    },
+    {
+      "format": "Ace of Angels v%d.%d.%d",
+      "format_off": "0x192cc8",
+      "format_va": "0x592cc8",
+      "xref_va": "0x44ab74",
+      "function": "0x44ab30",
+      "globals": [
+        {
+          "va": "0x59a370",
+          "file_off": "0x19a370",
+          "value": 2,
+          "backing": "file"
+        },
+        {
+          "va": "0x59a374",
+          "file_off": "0x19a374",
+          "value": 3,
+          "backing": "file"
+        },
+        {
+          "va": "0x59a378",
+          "file_off": "0x19a378",
+          "value": 1,
+          "backing": "file"
+        }
+      ]
+    },
+    {
+      "format": "Ace of Angels (v%d.%d.%d Beta) : %s",
+      "format_off": "0x194308",
+      "format_va": "0x594308",
+      "xref_va": "0x454916",
+      "function": "0x4545a0",
+      "globals": [
+        {
+          "va": "0x59a370",
+          "file_off": "0x19a370",
+          "value": 2,
+          "backing": "file"
+        },
+        {
+          "va": "0x59a374",
+          "file_off": "0x19a374",
+          "value": 3,
+          "backing": "file"
+        },
+        {
+          "va": "0x59a378",
+          "file_off": "0x19a378",
+          "value": 1,
+          "backing": "file"
+        }
+      ]
+    }
+  ],
+  "global_ref_stats": {
+    "0x59a370": {
+      "refs": 11,
+      "writes": []
+    },
+    "0x59a374": {
+      "refs": 11,
+      "writes": []
+    },
+    "0x59a378": {
+      "refs": 11,
+      "writes": []
+    }
+  },
+  "distinct_versions": [
+    "2.3.1"
+  ]
+}

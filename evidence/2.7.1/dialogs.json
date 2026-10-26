@@ -1,0 +1,7146 @@
+[
+ {
+  "title": "New Account",
+  "class": "",
+  "controls": [
+   {
+    "id": 65535,
+    "id_hex": "0xffff",
+    "class": "Static",
+    "text": "The handle you entered does not yet have a valid email account.",
+    "rect": [
+     19,
+     18,
+     152,
+     23
+    ],
+    "style": "0x50020000"
+   },
+   {
+    "id": 1191,
+    "id_hex": "0x4a7",
+    "class": "Button",
+    "text": "Submit",
+    "rect": [
+     12,
+     120,
+     54,
+     12
+    ],
+    "style": "0x50010001"
+   },
+   {
+    "id": 1091,
+    "id_hex": "0x443",
+    "class": "Button",
+    "text": "Cancel",
+    "rect": [
+     120,
+     120,
+     54,
+     12
+    ],
+    "style": "0x50010000"
+   },
+   {
+    "id": 65535,
+    "id_hex": "0xffff",
+    "class": "Static",
+    "text": "Please enter a valid email and password below, if you do not have an account with Ace of Angels, simply enter the email address and one will be created for you.",
+    "rect": [
+     19,
+     42,
+     152,
+     36
+    ],
+    "style": "0x50020000"
+   },
+   {
+    "id": 65535,
+    "id_hex": "0xffff",
+    "class": "Button",
+    "text": "Email Account",
+    "rect": [
+     7,
+     7,
+     173,
+     130
+    ],
+    "style": "0x50000007"
+   },
+   {
+    "id": 65535,
+    "id_hex": "0xffff",
+    "class": "Static",
+    "text": "Email :",
+    "rect": [
+     18,
+     83,
+     24,
+     10
+    ],
+    "style": "0x50020000"
+   },
+   {
+    "id": 1011,
+    "id_hex": "0x3f3",
+    "class": "Edit",
+    "text": "",
+    "rect": [
+     56,
+     81,
+     118,
+     13
+    ],
+    "style": "0x50810080"
+   },
+   {
+    "id": 65535,
+    "id_hex": "0xffff",
+    "class": "Static",
+    "text": "Password :",
+    "rect": [
+     18,
+     100,
+     35,
+     10
+    ],
+    "style": "0x50020000"
+   },
+   {
+    "id": 1017,
+    "id_hex": "0x3f9",
+    "class": "Edit",
+    "text": "",
+    "rect": [
+     56,
+     98,
+     118,
+     13
+    ],
+    "style": "0x508100a0"
+   }
+  ],
+  "resource_id": 101
+ },
+ {
+  "title": "Account Info",
+  "class": "",
+  "controls": [
+   {
+    "id": 65535,
+    "id_hex": "0xffff",
+    "class": "Static",
+    "text": "First Name",
+    "rect": [
+     15,
+     81,
+     38,
+     12
+    ],
+    "style": "0x50020000"
+   },
+   {
+    "id": 65535,
+    "id_hex": "0xffff",
+    "class": "Static",
+    "text": "Last Name",
+    "rect": [
+     15,
+     95,
+     36,
+     12
+    ],
+    "style": "0x50020000"
+   },
+   {
+    "id": 65535,
+    "id_hex": "0xffff",
+    "class": "Static",
+    "text": "Email",
+    "rect": [
+     15,
+     110,
+     31,
+     12
+    ],
+    "style": "0x50020000"
+   },
+   {
+    "id": 65535,
+    "id_hex": "0xffff",
+    "class": "Static",
+    "text": "Your password will be emailed to you. (please verify that the email shown is correct)",
+    "rect": [
+     18,
+     51,
+     158,
+     21
+    ],
+    "style": "0x50020000"
+   },
+   {
+    "id": 65535,
+    "id_hex": "0xffff",
+    "class": "Button",
+    "text": "Account Information",
+    "rect": [
+     7,
+     7,
+     179,
+     222
+    ],
+    "style": "0x50000007"
+   },
+   {
+    "id": 1191,
+    "id_hex": "0x4a7",
+    "class": "Button",
+    "text": "Submit",
+    "rect": [
+     14,
+     207,
+     50,
+     14
+    ],
+    "style": "0x50010001"
+   },
+   {
+    "id": 1091,
+    "id_hex": "0x443",
+    "class": "Button",
+    "text": "Cancel",
+    "rect": [
+     128,
+     208,
+     50,
+     14
+    ],
+    "style": "0x50010000"
+   },
+   {
+    "id": 1139,
+    "id_hex": "0x473",
+    "class": "Edit",
+    "text": "",
+    "rect": [
+     67,
+     80,
+     108,
+     12
+    ],
+    "style": "0x50810080"
+   },
+   {
+    "id": 1140,
+    "id_hex": "0x474",
+    "class": "Edit",
+    "text": "",
+    "rect": [
+     67,
+     95,
+     108,
+     12
+    ],
+    "style": "0x50810080"
+   },
+   {
+    "id": 1141,
+    "id_hex": "0x475",
+    "class": "Edit",
+    "text": "",
+    "rect": [
+     67,
+     110,
+     108,
+     12
+    ],
+    "style": "0x50810080"
+   },
+   {
+    "id": 1271,
+    "id_hex": "0x4f7",
+    "class": "ComboBox",
+    "text": "",
+    "rect": [
+     67,
+     154,
+     85,
+     85
+    ],
+    "style": "0x50210102"
+   },
+   {
+    "id": 65535,
+    "id_hex": "0xffff",
+    "class": "Static",
+    "text": "System Type",
+    "rect": [
+     15,
+     157,
+     46,
+     11
+    ],
+    "style": "0x50020000"
+   },
+   {
+    "id": 1272,
+    "id_hex": "0x4f8",
+    "class": "Button",
+    "text": "Notify me of Updates",
+    "rect": [
+     67,
+     127,
+     78,
+     10
+    ],
+    "style": "0x50010003"
+   },
+   {
+    "id": 1273,
+    "id_hex": "0x4f9",
+    "class": "Button",
+    "text": "Notify me of game events",
+    "rect": [
+     67,
+     140,
+     90,
+     10
+    ],
+    "style": "0x50010003"
+   },
+   {
+    "id": 65535,
+    "id_hex": "0xffff",
+    "class": "Static",
+    "text": "Please fill out the following information to be considered for the Outerchange",
+    "rect": [
+     17,
+     22,
+     158,
+     21
+    ],
+    "style": "0x50020000"
+   },
+   {
+    "id": 65535,
+    "id_hex": "0xffff",
+    "class": "Static",
+    "text": "GFX Card",
+    "rect": [
+     16,
+     171,
+     46,
+     11
+    ],
+    "style": "0x50020000"
+   },
+   {
+    "id": 1277,
+    "id_hex": "0x4fd",
+    "class": "ComboBox",
+    "text": "",
+    "rect": [
+     67,
+     169,
+     85,
+     85
+    ],
+    "style": "0x50210102"
+   }
+  ],
+  "resource_id": 103
+ },
+ {
+  "title": "AoA Login Dialog",
+  "class": "",
+  "controls": [
+   {
+    "id": 65535,
+    "id_hex": "0xffff",
+    "class": "Static",
+    "text": "Handle",
+    "rect": [
+     10,
+     90,
+     30,
+     10
+    ],
+    "style": "0x40020200"
+   },
+   {
+    "id": 65535,
+    "id_hex": "0xffff",
+    "class": "Static",
+    "text": "Password:",
+    "rect": [
+     10,
+     104,
+     35,
+     10
+    ],
+    "style": "0x40020200"
+   },
+   {
+    "id": 1009,
+    "id_hex": "0x3f1",
+    "class": "Edit",
+    "text": "",
+    "rect": [
+     45,
+     2,
+     70,
+     12
+    ],
+    "style": "0x50810080"
+   },
+   {
+    "id": 1017,
+    "id_hex": "0x3f9",
+    "class": "Edit",
+    "text": "",
+    "rect": [
+     45,
+     20,
+     70,
+     12
+    ],
+    "style": "0x508100a0"
+   },
+   {
+    "id": 1010,
+    "id_hex": "0x3f2",
+    "class": "Button",
+    "text": "",
+    "rect": [
+     120,
+     22,
+     8,
+     8
+    ],
+    "style": "0x50008003"
+   },
+   {
+    "id": 1011,
+    "id_hex": "0x3f3",
+    "class": "Button",
+    "text": "",
+    "rect": [
+     120,
+     4,
+     8,
+     8
+    ],
+    "style": "0x50008003"
+   },
+   {
+    "id": 1013,
+    "id_hex": "0x3f5",
+    "class": "ComboBox",
+    "text": "",
+    "rect": [
+     45,
+     37,
+     88,
+     35
+    ],
+    "style": "0x50210002"
+   },
+   {
+    "id": 65535,
+    "id_hex": "0xffff",
+    "class": "Static",
+    "text": "Station IP:",
+    "rect": [
+     10,
+     137,
+     35,
+     10
+    ],
+    "style": "0x40020200"
+   },
+   {
+    "id": 1012,
+    "id_hex": "0x3f4",
+    "class": "Button",
+    "text": "Play Online",
+    "rect": [
+     5,
+     180,
+     53,
+     17
+    ],
+    "style": "0x40000001"
+   },
+   {
+    "id": 1014,
+    "id_hex": "0x3f6",
+    "class": "Button",
+    "text": "Offline",
+    "rect": [
+     60,
+     180,
+     50,
+     17
+    ],
+    "style": "0x40000000"
+   },
+   {
+    "id": 1074,
+    "id_hex": "0x432",
+    "class": "Button",
+    "text": "Quit",
+    "rect": [
+     5,
+     200,
+     160,
+     16
+    ],
+    "style": "0x40000000"
+   },
+   {
+    "id": 1076,
+    "id_hex": "0x434",
+    "class": "Static",
+    "text": "",
+    "rect": [
+     5,
+     155,
+     160,
+     15
+    ],
+    "style": "0x40021201"
+   },
+   {
+    "id": 1015,
+    "id_hex": "0x3f7",
+    "class": "Button",
+    "text": "Tutorial Mode",
+    "rect": [
+     112,
+     180,
+     53,
+     17
+    ],
+    "style": "0x40000000"
+   },
+   {
+    "id": 1086,
+    "id_hex": "0x43e",
+    "class": "Button",
+    "text": "Create New Account",
+    "rect": [
+     7,
+     122,
+     76,
+     11
+    ],
+    "style": "0x40000000"
+   },
+   {
+    "id": 1016,
+    "id_hex": "0x3f8",
+    "class": "Button",
+    "text": "Send Password",
+    "rect": [
+     83,
+     122,
+     80,
+     11
+    ],
+    "style": "0x40000000"
+   },
+   {
+    "id": 1284,
+    "id_hex": "0x504",
+    "class": "{972DE6C2-8B09-11D2-B652-A1FD6CC34260}",
+    "text": "",
+    "rect": [
+     6,
+     7,
+     20,
+     20
+    ],
+    "style": "0x50000000"
+   }
+  ],
+  "resource_id": 127
+ },
+ {
+  "title": "Ace of Angels: Station",
+  "class": "",
+  "controls": [
+   {
+    "id": 1284,
+    "id_hex": "0x504",
+    "class": "{972DE6C2-8B09-11D2-B652-A1FD6CC34260}",
+    "text": "",
+    "rect": [
+     0,
+     210,
+     16,
+     16
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1016,
+    "id_hex": "0x3f8",
+    "class": "Static",
+    "text": "",
+    "rect": [
+     295,
+     10,
+     140,
+     15
+    ],
+    "style": "0x50021201"
+   },
+   {
+    "id": 4294967295,
+    "id_hex": "0xffffffff",
+    "class": "Static",
+    "text": "AoA Notify",
+    "rect": [
+     290,
+     130,
+     102,
+     9
+    ],
+    "style": "0x40021201"
+   },
+   {
+    "id": 1142,
+    "id_hex": "0x476",
+    "class": "Edit",
+    "text": "",
+    "rect": [
+     307,
+     142,
+     85,
+     12
+    ],
+    "style": "0x40800080"
+   },
+   {
+    "id": 1143,
+    "id_hex": "0x477",
+    "class": "ComboBox",
+    "text": "",
+    "rect": [
+     352,
+     155,
+     41,
+     35
+    ],
+    "style": "0x40200102"
+   },
+   {
+    "id": 4294967295,
+    "id_hex": "0xffffffff",
+    "class": "Static",
+    "text": "Find:",
+    "rect": [
+     371,
+     170,
+     20,
+     10
+    ],
+    "style": "0x40020000"
+   },
+   {
+    "id": 1078,
+    "id_hex": "0x436",
+    "class": "Static",
+    "text": "",
+    "rect": [
+     280,
+     195,
+     166,
+     25
+    ],
+    "style": "0x40000005"
+   },
+   {
+    "id": 1012,
+    "id_hex": "0x3f4",
+    "class": "Button",
+    "text": "Play",
+    "rect": [
+     295,
+     60,
+     46,
+     14
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1013,
+    "id_hex": "0x3f5",
+    "class": "Button",
+    "text": "Bug Report",
+    "rect": [
+     295,
+     75,
+     46,
+     14
+    ],
+    "style": "0x58000000"
+   },
+   {
+    "id": 1074,
+    "id_hex": "0x432",
+    "class": "Button",
+    "text": "Quit",
+    "rect": [
+     295,
+     90,
+     46,
+     14
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1064,
+    "id_hex": "0x428",
+    "class": "Button",
+    "text": "Show All (online/offline)",
+    "rect": [
+     302,
+     120,
+     90,
+     10
+    ],
+    "style": "0x40000009"
+   },
+   {
+    "id": 1124,
+    "id_hex": "0x464",
+    "class": "Button",
+    "text": "Squad Manager",
+    "rect": [
+     390,
+     175,
+     61,
+     14
+    ],
+    "style": "0x58000000"
+   },
+   {
+    "id": 1125,
+    "id_hex": "0x465",
+    "class": "Button",
+    "text": "Player Info",
+    "rect": [
+     405,
+     120,
+     46,
+     14
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1178,
+    "id_hex": "0x49a",
+    "class": "Button",
+    "text": "Outerchange",
+    "rect": [
+     400,
+     105,
+     51,
+     14
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1014,
+    "id_hex": "0x3f6",
+    "class": "Button",
+    "text": "Add Handle",
+    "rect": [
+     405,
+     135,
+     46,
+     12
+    ],
+    "style": "0x50000001"
+   },
+   {
+    "id": 1091,
+    "id_hex": "0x443",
+    "class": "Button",
+    "text": "View Messages",
+    "rect": [
+     275,
+     30,
+     166,
+     14
+    ],
+    "style": "0x40000000"
+   },
+   {
+    "id": 4294967295,
+    "id_hex": "0xffffffff",
+    "class": "Button",
+    "text": "Defunct",
+    "rect": [
+     260,
+     0,
+     195,
+     225
+    ],
+    "style": "0x40000007"
+   },
+   {
+    "id": 1150,
+    "id_hex": "0x47e",
+    "class": "Button",
+    "text": "Commit",
+    "rect": [
+     285,
+     160,
+     44,
+     11
+    ],
+    "style": "0x48020000"
+   },
+   {
+    "id": 1153,
+    "id_hex": "0x481",
+    "class": "Button",
+    "text": "Change Password",
+    "rect": [
+     275,
+     180,
+     70,
+     11
+    ],
+    "style": "0x40000001"
+   },
+   {
+    "id": 1089,
+    "id_hex": "0x441",
+    "class": "ComboBox",
+    "text": "",
+    "rect": [
+     43,
+     32,
+     118,
+     77
+    ],
+    "style": "0x40210103"
+   },
+   {
+    "id": 1090,
+    "id_hex": "0x442",
+    "class": "ComboBox",
+    "text": "",
+    "rect": [
+     43,
+     16,
+     68,
+     77
+    ],
+    "style": "0x40210103"
+   },
+   {
+    "id": 1161,
+    "id_hex": "0x489",
+    "class": "Edit",
+    "text": "",
+    "rect": [
+     93,
+     88,
+     99,
+     14
+    ],
+    "style": "0x488300a0"
+   },
+   {
+    "id": 1140,
+    "id_hex": "0x474",
+    "class": "Edit",
+    "text": "",
+    "rect": [
+     93,
+     106,
+     99,
+     14
+    ],
+    "style": "0x488300a0"
+   },
+   {
+    "id": 1141,
+    "id_hex": "0x475",
+    "class": "Edit",
+    "text": "",
+    "rect": [
+     93,
+     124,
+     99,
+     14
+    ],
+    "style": "0x488300a0"
+   },
+   {
+    "id": 1328,
+    "id_hex": "0x530",
+    "class": "{53FA8D41-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     115,
+     15,
+     45,
+     14
+    ],
+    "style": "0x40000000"
+   },
+   {
+    "id": 1334,
+    "id_hex": "0x536",
+    "class": "{53FA8D4A-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     16,
+     17,
+     25,
+     10
+    ],
+    "style": "0x48000000"
+   },
+   {
+    "id": 1335,
+    "id_hex": "0x537",
+    "class": "{53FA8D4A-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     16,
+     34,
+     25,
+     10
+    ],
+    "style": "0x48000000"
+   },
+   {
+    "id": 1336,
+    "id_hex": "0x538",
+    "class": "{53FA8D41-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     15,
+     50,
+     165,
+     25
+    ],
+    "style": "0x40000000"
+   },
+   {
+    "id": 1327,
+    "id_hex": "0x52f",
+    "class": "{53FA8D41-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     20,
+     90,
+     10,
+     10
+    ],
+    "style": "0x40000000"
+   },
+   {
+    "id": 1329,
+    "id_hex": "0x531",
+    "class": "{53FA8D41-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     148,
+     143,
+     44,
+     11
+    ],
+    "style": "0x48000000"
+   },
+   {
+    "id": 1330,
+    "id_hex": "0x532",
+    "class": "{53FA8D4A-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     43,
+     90,
+     45,
+     8
+    ],
+    "style": "0x48000000"
+   },
+   {
+    "id": 1331,
+    "id_hex": "0x533",
+    "class": "{53FA8D4A-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     43,
+     109,
+     45,
+     8
+    ],
+    "style": "0x48000000"
+   },
+   {
+    "id": 1332,
+    "id_hex": "0x534",
+    "class": "{53FA8D4A-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     43,
+     128,
+     45,
+     8
+    ],
+    "style": "0x48000000"
+   },
+   {
+    "id": 1333,
+    "id_hex": "0x535",
+    "class": "{53FA8D47-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     15,
+     85,
+     180,
+     73
+    ],
+    "style": "0x40000000"
+   },
+   {
+    "id": 1025,
+    "id_hex": "0x401",
+    "class": "ComboBox",
+    "text": "",
+    "rect": [
+     47,
+     22,
+     93,
+     40
+    ],
+    "style": "0x48210003"
+   },
+   {
+    "id": 1026,
+    "id_hex": "0x402",
+    "class": "ComboBox",
+    "text": "",
+    "rect": [
+     47,
+     38,
+     93,
+     75
+    ],
+    "style": "0x48200003"
+   },
+   {
+    "id": 1018,
+    "id_hex": "0x3fa",
+    "class": "Button",
+    "text": "",
+    "rect": [
+     94,
+     62,
+     8,
+     8
+    ],
+    "style": "0x40018f03"
+   },
+   {
+    "id": 1020,
+    "id_hex": "0x3fc",
+    "class": "Button",
+    "text": "",
+    "rect": [
+     24,
+     62,
+     8,
+     8
+    ],
+    "style": "0x40018f03"
+   },
+   {
+    "id": 1023,
+    "id_hex": "0x3ff",
+    "class": "Button",
+    "text": "",
+    "rect": [
+     162,
+     148,
+     8,
+     8
+    ],
+    "style": "0x40018f03"
+   },
+   {
+    "id": 1024,
+    "id_hex": "0x400",
+    "class": "Button",
+    "text": "",
+    "rect": [
+     162,
+     161,
+     8,
+     8
+    ],
+    "style": "0x40018f03"
+   },
+   {
+    "id": 1163,
+    "id_hex": "0x48b",
+    "class": "ComboBox",
+    "text": "",
+    "rect": [
+     23,
+     137,
+     129,
+     45
+    ],
+    "style": "0x40210003"
+   },
+   {
+    "id": 1030,
+    "id_hex": "0x406",
+    "class": "Button",
+    "text": "<-\n\n<-",
+    "rect": [
+     142,
+     22,
+     15,
+     30
+    ],
+    "style": "0x40002000"
+   },
+   {
+    "id": 1162,
+    "id_hex": "0x48a",
+    "class": "Button",
+    "text": "",
+    "rect": [
+     24,
+     155,
+     8,
+     8
+    ],
+    "style": "0x40018f03"
+   },
+   {
+    "id": 1164,
+    "id_hex": "0x48c",
+    "class": "ComboBox",
+    "text": "",
+    "rect": [
+     23,
+     180,
+     129,
+     45
+    ],
+    "style": "0x40210003"
+   },
+   {
+    "id": 1019,
+    "id_hex": "0x3fb",
+    "class": "Button",
+    "text": "",
+    "rect": [
+     94,
+     76,
+     8,
+     8
+    ],
+    "style": "0x40018f03"
+   },
+   {
+    "id": 1059,
+    "id_hex": "0x423",
+    "class": "Button",
+    "text": "-2",
+    "rect": [
+     22,
+     102,
+     20,
+     10
+    ],
+    "style": "0x40010009"
+   },
+   {
+    "id": 1058,
+    "id_hex": "0x422",
+    "class": "Button",
+    "text": "-1",
+    "rect": [
+     44,
+     102,
+     20,
+     10
+    ],
+    "style": "0x40010009"
+   },
+   {
+    "id": 1055,
+    "id_hex": "0x41f",
+    "class": "Button",
+    "text": "Normal",
+    "rect": [
+     68,
+     102,
+     35,
+     10
+    ],
+    "style": "0x40010009"
+   },
+   {
+    "id": 1056,
+    "id_hex": "0x420",
+    "class": "Button",
+    "text": "+1",
+    "rect": [
+     104,
+     102,
+     20,
+     10
+    ],
+    "style": "0x40010009"
+   },
+   {
+    "id": 1057,
+    "id_hex": "0x421",
+    "class": "Button",
+    "text": "+2",
+    "rect": [
+     128,
+     102,
+     20,
+     10
+    ],
+    "style": "0x40010009"
+   },
+   {
+    "id": 1315,
+    "id_hex": "0x523",
+    "class": "{53FA8D47-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     20,
+     100,
+     135,
+     13
+    ],
+    "style": "0x40000000"
+   },
+   {
+    "id": 1311,
+    "id_hex": "0x51f",
+    "class": "{53FA8D4A-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     172,
+     147,
+     45,
+     10
+    ],
+    "style": "0x40000000"
+   },
+   {
+    "id": 1312,
+    "id_hex": "0x520",
+    "class": "{53FA8D4A-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     172,
+     161,
+     45,
+     10
+    ],
+    "style": "0x40000000"
+   },
+   {
+    "id": 1313,
+    "id_hex": "0x521",
+    "class": "{53FA8D47-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     159,
+     142,
+     62,
+     34
+    ],
+    "style": "0x40000000"
+   },
+   {
+    "id": 1319,
+    "id_hex": "0x527",
+    "class": "{53FA8D4A-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     24,
+     25,
+     20,
+     10
+    ],
+    "style": "0x40000000"
+   },
+   {
+    "id": 1320,
+    "id_hex": "0x528",
+    "class": "{53FA8D4A-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     24,
+     41,
+     20,
+     10
+    ],
+    "style": "0x40000000"
+   },
+   {
+    "id": 1321,
+    "id_hex": "0x529",
+    "class": "{53FA8D4A-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     35,
+     60,
+     52,
+     10
+    ],
+    "style": "0x40000000"
+   },
+   {
+    "id": 1323,
+    "id_hex": "0x52b",
+    "class": "{53FA8D4A-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     105,
+     60,
+     45,
+     10
+    ],
+    "style": "0x40000000"
+   },
+   {
+    "id": 1324,
+    "id_hex": "0x52c",
+    "class": "{53FA8D4A-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     105,
+     76,
+     45,
+     10
+    ],
+    "style": "0x40000000"
+   },
+   {
+    "id": 1310,
+    "id_hex": "0x51e",
+    "class": "{53FA8D47-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     20,
+     20,
+     139,
+     70
+    ],
+    "style": "0x40000000"
+   },
+   {
+    "id": 1325,
+    "id_hex": "0x52d",
+    "class": "{53FA8D41-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     160,
+     121,
+     50,
+     13
+    ],
+    "style": "0x40000000"
+   },
+   {
+    "id": 1326,
+    "id_hex": "0x52e",
+    "class": "{53FA8D4A-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     160,
+     100,
+     52,
+     10
+    ],
+    "style": "0x40000000"
+   },
+   {
+    "id": 1316,
+    "id_hex": "0x524",
+    "class": "{53FA8D4A-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     24,
+     126,
+     100,
+     10
+    ],
+    "style": "0x40000000"
+   },
+   {
+    "id": 1317,
+    "id_hex": "0x525",
+    "class": "{53FA8D4A-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     24,
+     169,
+     100,
+     10
+    ],
+    "style": "0x40000000"
+   },
+   {
+    "id": 1318,
+    "id_hex": "0x526",
+    "class": "{53FA8D4A-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     34,
+     155,
+     100,
+     9
+    ],
+    "style": "0x40000000"
+   },
+   {
+    "id": 1314,
+    "id_hex": "0x522",
+    "class": "{53FA8D47-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     20,
+     118,
+     135,
+     80
+    ],
+    "style": "0x40000000"
+   },
+   {
+    "id": 1000,
+    "id_hex": "0x3e8",
+    "class": "SysListView32",
+    "text": "List1",
+    "rect": [
+     23,
+     134,
+     187,
+     71
+    ],
+    "style": "0x50010009"
+   },
+   {
+    "id": 1067,
+    "id_hex": "0x42b",
+    "class": "SysListView32",
+    "text": "List2",
+    "rect": [
+     22,
+     18,
+     133,
+     55
+    ],
+    "style": "0x5001800d"
+   },
+   {
+    "id": 1065,
+    "id_hex": "0x429",
+    "class": "Static",
+    "text": "",
+    "rect": [
+     175,
+     116,
+     30,
+     9
+    ],
+    "style": "0x50021001"
+   },
+   {
+    "id": 1069,
+    "id_hex": "0x42d",
+    "class": "Static",
+    "text": "",
+    "rect": [
+     175,
+     106,
+     30,
+     9
+    ],
+    "style": "0x50021001"
+   },
+   {
+    "id": 1070,
+    "id_hex": "0x42e",
+    "class": "Static",
+    "text": "",
+    "rect": [
+     175,
+     96,
+     30,
+     9
+    ],
+    "style": "0x50021001"
+   },
+   {
+    "id": 1288,
+    "id_hex": "0x508",
+    "class": "{53FA8D4A-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     176,
+     81,
+     28,
+     12
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1289,
+    "id_hex": "0x509",
+    "class": "{53FA8D41-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     20,
+     82,
+     50,
+     15
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1290,
+    "id_hex": "0x50a",
+    "class": "{53FA8D41-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     20,
+     112,
+     50,
+     15
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1291,
+    "id_hex": "0x50b",
+    "class": "{53FA8D41-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     20,
+     97,
+     50,
+     15
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1292,
+    "id_hex": "0x50c",
+    "class": "{53FA8D41-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     210,
+     0,
+     11,
+     10
+    ],
+    "style": "0x40000000"
+   },
+   {
+    "id": 1293,
+    "id_hex": "0x50d",
+    "class": "{53FA8D41-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     210,
+     10,
+     11,
+     10
+    ],
+    "style": "0x40000000"
+   },
+   {
+    "id": 1294,
+    "id_hex": "0x50e",
+    "class": "{53FA8D41-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     210,
+     20,
+     11,
+     10
+    ],
+    "style": "0x40000000"
+   },
+   {
+    "id": 1295,
+    "id_hex": "0x50f",
+    "class": "{53FA8D4A-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     88,
+     95,
+     85,
+     10
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1296,
+    "id_hex": "0x510",
+    "class": "{53FA8D4A-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     88,
+     105,
+     85,
+     10
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1297,
+    "id_hex": "0x511",
+    "class": "{53FA8D4A-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     88,
+     115,
+     85,
+     10
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1300,
+    "id_hex": "0x514",
+    "class": "{53FA8D47-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     20,
+     131,
+     195,
+     78
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1301,
+    "id_hex": "0x515",
+    "class": "{53FA8D47-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     20,
+     15,
+     140,
+     62
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1063,
+    "id_hex": "0x427",
+    "class": "Button",
+    "text": "Show Online (selected)",
+    "rect": [
+     75,
+     95,
+     8,
+     10
+    ],
+    "style": "0x50000009"
+   },
+   {
+    "id": 1066,
+    "id_hex": "0x42a",
+    "class": "Button",
+    "text": "Show Online (all servers)",
+    "rect": [
+     75,
+     105,
+     8,
+     10
+    ],
+    "style": "0x50000009"
+   },
+   {
+    "id": 1068,
+    "id_hex": "0x42c",
+    "class": "Button",
+    "text": "Show Online (station)",
+    "rect": [
+     75,
+     115,
+     8,
+     10
+    ],
+    "style": "0x50000009"
+   }
+  ],
+  "resource_id": 128
+ },
+ {
+  "title": "AoA Disclaimer",
+  "class": "",
+  "controls": [
+   {
+    "id": 1071,
+    "id_hex": "0x42f",
+    "class": "Button",
+    "text": "Continue",
+    "rect": [
+     55,
+     195,
+     50,
+     14
+    ],
+    "style": "0x50010001"
+   },
+   {
+    "id": 1074,
+    "id_hex": "0x432",
+    "class": "Button",
+    "text": "Quit",
+    "rect": [
+     135,
+     195,
+     50,
+     14
+    ],
+    "style": "0x50010000"
+   },
+   {
+    "id": 1075,
+    "id_hex": "0x433",
+    "class": "Static",
+    "text": "Ace of Angels Legal Disclaimer",
+    "rect": [
+     5,
+     5,
+     234,
+     20
+    ],
+    "style": "0x50020201"
+   },
+   {
+    "id": 1073,
+    "id_hex": "0x431",
+    "class": "Button",
+    "text": "I have read the disclaimer and agree to it's conditions",
+    "rect": [
+     10,
+     180,
+     190,
+     10
+    ],
+    "style": "0x50010003"
+   },
+   {
+    "id": 1084,
+    "id_hex": "0x43c",
+    "class": "Static",
+    "text": "",
+    "rect": [
+     5,
+     25,
+     235,
+     150
+    ],
+    "style": "0x50000007"
+   }
+  ],
+  "resource_id": 130
+ },
+ {
+  "title": "AoA Bug Reporting Tool",
+  "class": "",
+  "controls": [
+   {
+    "id": 1038,
+    "id_hex": "0x40e",
+    "class": "Button",
+    "text": "Submit",
+    "rect": [
+     55,
+     160,
+     50,
+     14
+    ],
+    "style": "0x50010000"
+   },
+   {
+    "id": 1039,
+    "id_hex": "0x40f",
+    "class": "Button",
+    "text": "Cancel",
+    "rect": [
+     135,
+     160,
+     50,
+     14
+    ],
+    "style": "0x50010000"
+   },
+   {
+    "id": 4294967295,
+    "id_hex": "0xffffffff",
+    "class": "Static",
+    "text": "Please use this dialog to submit a bug report to the Ace of Angels Development team. Briefly describe the problem you are experiencing and how is it produced.",
+    "rect": [
+     5,
+     5,
+     235,
+     30
+    ],
+    "style": "0x50021000"
+   },
+   {
+    "id": 1081,
+    "id_hex": "0x439",
+    "class": "Edit",
+    "text": "",
+    "rect": [
+     5,
+     55,
+     235,
+     95
+    ],
+    "style": "0x50a11044"
+   },
+   {
+    "id": 4294967295,
+    "id_hex": "0xffffffff",
+    "class": "Static",
+    "text": "Message Length:",
+    "rect": [
+     10,
+     40,
+     55,
+     10
+    ],
+    "style": "0x50020000"
+   },
+   {
+    "id": 1082,
+    "id_hex": "0x43a",
+    "class": "Static",
+    "text": "",
+    "rect": [
+     70,
+     40,
+     20,
+     10
+    ],
+    "style": "0x50021000"
+   },
+   {
+    "id": 4294967295,
+    "id_hex": "0xffffffff",
+    "class": "Static",
+    "text": "/",
+    "rect": [
+     95,
+     40,
+     8,
+     10
+    ],
+    "style": "0x50020000"
+   },
+   {
+    "id": 1083,
+    "id_hex": "0x43b",
+    "class": "Static",
+    "text": "",
+    "rect": [
+     105,
+     40,
+     20,
+     10
+    ],
+    "style": "0x50021000"
+   }
+  ],
+  "resource_id": 131
+ },
+ {
+  "title": "Squad Manager",
+  "class": "",
+  "controls": [
+   {
+    "id": 1125,
+    "id_hex": "0x465",
+    "class": "ComboBox",
+    "text": "",
+    "rect": [
+     2,
+     2,
+     125,
+     77
+    ],
+    "style": "0x50210103"
+   },
+   {
+    "id": 1353,
+    "id_hex": "0x549",
+    "class": "Button",
+    "text": "",
+    "rect": [
+     1,
+     35,
+     300,
+     220
+    ],
+    "style": "0x40008307"
+   },
+   {
+    "id": 1350,
+    "id_hex": "0x546",
+    "class": "{53FA8D41-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     130,
+     2,
+     57,
+     14
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1351,
+    "id_hex": "0x547",
+    "class": "{53FA8D41-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     188,
+     2,
+     57,
+     14
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1352,
+    "id_hex": "0x548",
+    "class": "{53FA8D41-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     246,
+     2,
+     57,
+     14
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1354,
+    "id_hex": "0x54a",
+    "class": "{53FA8D41-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     205,
+     20,
+     94,
+     16
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1355,
+    "id_hex": "0x54b",
+    "class": "{53FA8D41-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     105,
+     20,
+     94,
+     16
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1356,
+    "id_hex": "0x54c",
+    "class": "{53FA8D41-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     5,
+     20,
+     94,
+     16
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1284,
+    "id_hex": "0x504",
+    "class": "{972DE6C2-8B09-11D2-B652-A1FD6CC34260}",
+    "text": "",
+    "rect": [
+     0,
+     235,
+     21,
+     20
+    ],
+    "style": "0x50000000"
+   }
+  ],
+  "resource_id": 132
+ },
+ {
+  "title": "",
+  "class": "",
+  "controls": [
+   {
+    "id": 1107,
+    "id_hex": "0x453",
+    "class": "Button",
+    "text": "Deny Solicitations",
+    "rect": [
+     4,
+     154,
+     159,
+     13
+    ],
+    "style": "0x50011003"
+   },
+   {
+    "id": 1116,
+    "id_hex": "0x45c",
+    "class": "SysListView32",
+    "text": "List7",
+    "rect": [
+     4,
+     9,
+     159,
+     144
+    ],
+    "style": "0x50810009"
+   },
+   {
+    "id": 1136,
+    "id_hex": "0x470",
+    "class": "Button",
+    "text": "Roster",
+    "rect": [
+     0,
+     0,
+     167,
+     170
+    ],
+    "style": "0x50008307"
+   }
+  ],
+  "resource_id": 133
+ },
+ {
+  "title": "",
+  "class": "",
+  "controls": [
+   {
+    "id": 1109,
+    "id_hex": "0x455",
+    "class": "Button",
+    "text": "A",
+    "rect": [
+     9,
+     142,
+     18,
+     14
+    ],
+    "style": "0x50010000"
+   },
+   {
+    "id": 1110,
+    "id_hex": "0x456",
+    "class": "Button",
+    "text": "F",
+    "rect": [
+     42,
+     142,
+     18,
+     14
+    ],
+    "style": "0x50010000"
+   },
+   {
+    "id": 1111,
+    "id_hex": "0x457",
+    "class": "Button",
+    "text": "U",
+    "rect": [
+     109,
+     142,
+     18,
+     14
+    ],
+    "style": "0x50010000"
+   },
+   {
+    "id": 1112,
+    "id_hex": "0x458",
+    "class": "Button",
+    "text": "H",
+    "rect": [
+     143,
+     142,
+     18,
+     14
+    ],
+    "style": "0x50010000"
+   },
+   {
+    "id": 1113,
+    "id_hex": "0x459",
+    "class": "Button",
+    "text": "N",
+    "rect": [
+     75,
+     142,
+     18,
+     14
+    ],
+    "style": "0x50010000"
+   },
+   {
+    "id": 1117,
+    "id_hex": "0x45d",
+    "class": "SysListView32",
+    "text": "List8",
+    "rect": [
+     7,
+     11,
+     157,
+     130
+    ],
+    "style": "0x50810001"
+   },
+   {
+    "id": 1090,
+    "id_hex": "0x442",
+    "class": "Button",
+    "text": "Clear All",
+    "rect": [
+     58,
+     162,
+     50,
+     14
+    ],
+    "style": "0x50010000"
+   },
+   {
+    "id": 1138,
+    "id_hex": "0x472",
+    "class": "Button",
+    "text": "Disposition",
+    "rect": [
+     0,
+     0,
+     171,
+     187
+    ],
+    "style": "0x50000007"
+   }
+  ],
+  "resource_id": 134
+ },
+ {
+  "title": "",
+  "class": "",
+  "controls": [
+   {
+    "id": 1129,
+    "id_hex": "0x469",
+    "class": "Button",
+    "text": "Invite",
+    "rect": [
+     4,
+     196,
+     39,
+     14
+    ],
+    "style": "0x58010000"
+   },
+   {
+    "id": 1130,
+    "id_hex": "0x46a",
+    "class": "Button",
+    "text": "Solicit",
+    "rect": [
+     44,
+     196,
+     40,
+     14
+    ],
+    "style": "0x58010000"
+   },
+   {
+    "id": 1131,
+    "id_hex": "0x46b",
+    "class": "Button",
+    "text": "Info",
+    "rect": [
+     85,
+     196,
+     39,
+     14
+    ],
+    "style": "0x58010000"
+   },
+   {
+    "id": 1142,
+    "id_hex": "0x476",
+    "class": "Edit",
+    "text": "",
+    "rect": [
+     4,
+     21,
+     100,
+     14
+    ],
+    "style": "0x508110c4"
+   },
+   {
+    "id": 1133,
+    "id_hex": "0x46d",
+    "class": "Button",
+    "text": "Go",
+    "rect": [
+     106,
+     21,
+     18,
+     14
+    ],
+    "style": "0x50010f01"
+   },
+   {
+    "id": 1134,
+    "id_hex": "0x46e",
+    "class": "Button",
+    "text": "Players",
+    "rect": [
+     4,
+     9,
+     39,
+     10
+    ],
+    "style": "0x50000009"
+   },
+   {
+    "id": 1135,
+    "id_hex": "0x46f",
+    "class": "Button",
+    "text": "Squads",
+    "rect": [
+     48,
+     9,
+     40,
+     10
+    ],
+    "style": "0x50000009"
+   },
+   {
+    "id": 1128,
+    "id_hex": "0x468",
+    "class": "SysListView32",
+    "text": "List6",
+    "rect": [
+     4,
+     37,
+     119,
+     158
+    ],
+    "style": "0x50810009"
+   },
+   {
+    "id": 1137,
+    "id_hex": "0x471",
+    "class": "Button",
+    "text": "Search",
+    "rect": [
+     0,
+     0,
+     130,
+     214
+    ],
+    "style": "0x50008307"
+   }
+  ],
+  "resource_id": 135
+ },
+ {
+  "title": "Create New Squad",
+  "class": "",
+  "controls": [
+   {
+    "id": 1,
+    "id_hex": "0x1",
+    "class": "Button",
+    "text": "OK",
+    "rect": [
+     81,
+     78,
+     50,
+     14
+    ],
+    "style": "0x50010001"
+   },
+   {
+    "id": 2,
+    "id_hex": "0x2",
+    "class": "Button",
+    "text": "Cancel",
+    "rect": [
+     134,
+     78,
+     50,
+     14
+    ],
+    "style": "0x50010000"
+   },
+   {
+    "id": 1139,
+    "id_hex": "0x473",
+    "class": "Edit",
+    "text": "",
+    "rect": [
+     57,
+     39,
+     123,
+     15
+    ],
+    "style": "0x508110c4"
+   },
+   {
+    "id": 1141,
+    "id_hex": "0x475",
+    "class": "Static",
+    "text": "Leader",
+    "rect": [
+     58,
+     62,
+     122,
+     11
+    ],
+    "style": "0x50020000"
+   },
+   {
+    "id": 65535,
+    "id_hex": "0xffff",
+    "class": "Static",
+    "text": "Squad Name:",
+    "rect": [
+     6,
+     41,
+     44,
+     8
+    ],
+    "style": "0x50020000"
+   },
+   {
+    "id": 65535,
+    "id_hex": "0xffff",
+    "class": "Static",
+    "text": "Squad Leader:",
+    "rect": [
+     6,
+     62,
+     48,
+     8
+    ],
+    "style": "0x50020000"
+   },
+   {
+    "id": 65535,
+    "id_hex": "0xffff",
+    "class": "Static",
+    "text": "This will create a new squad and you will be the leader of this squad.  Type the name of the squad below.  If you don't want to create this squad press Cancel.",
+    "rect": [
+     8,
+     6,
+     172,
+     27
+    ],
+    "style": "0x50000000"
+   }
+  ],
+  "resource_id": 136
+ },
+ {
+  "title": "New AoA Player Account:",
+  "class": "",
+  "controls": [
+   {
+    "id": 1,
+    "id_hex": "0x1",
+    "class": "Button",
+    "text": "OK",
+    "rect": [
+     18,
+     91,
+     50,
+     14
+    ],
+    "style": "0x50010001"
+   },
+   {
+    "id": 2,
+    "id_hex": "0x2",
+    "class": "Button",
+    "text": "Cancel",
+    "rect": [
+     116,
+     92,
+     50,
+     14
+    ],
+    "style": "0x50010000"
+   },
+   {
+    "id": 1087,
+    "id_hex": "0x43f",
+    "class": "Edit",
+    "text": "",
+    "rect": [
+     51,
+     51,
+     115,
+     12
+    ],
+    "style": "0x50810080"
+   },
+   {
+    "id": 65535,
+    "id_hex": "0xffff",
+    "class": "Static",
+    "text": "Handle",
+    "rect": [
+     14,
+     52,
+     22,
+     10
+    ],
+    "style": "0x50020000"
+   },
+   {
+    "id": 65535,
+    "id_hex": "0xffff",
+    "class": "Button",
+    "text": "New Account",
+    "rect": [
+     5,
+     7,
+     170,
+     107
+    ],
+    "style": "0x50000007"
+   },
+   {
+    "id": 65535,
+    "id_hex": "0xffff",
+    "class": "Static",
+    "text": "Please enter the handle and password you wish to use, if it is already taken you will be prompted for a different one.",
+    "rect": [
+     12,
+     20,
+     158,
+     27
+    ],
+    "style": "0x50020000"
+   },
+   {
+    "id": 1017,
+    "id_hex": "0x3f9",
+    "class": "Edit",
+    "text": "",
+    "rect": [
+     51,
+     67,
+     115,
+     12
+    ],
+    "style": "0x508100a0"
+   },
+   {
+    "id": 65535,
+    "id_hex": "0xffff",
+    "class": "Static",
+    "text": "Password",
+    "rect": [
+     14,
+     68,
+     33,
+     10
+    ],
+    "style": "0x50020000"
+   }
+  ],
+  "resource_id": 137
+ },
+ {
+  "title": "Player Information",
+  "class": "",
+  "controls": [
+   {
+    "id": 65535,
+    "id_hex": "0xffff",
+    "class": "Button",
+    "text": "",
+    "rect": [
+     4,
+     128,
+     220,
+     81
+    ],
+    "style": "0x50020007"
+   },
+   {
+    "id": 1161,
+    "id_hex": "0x489",
+    "class": "Edit",
+    "text": "",
+    "rect": [
+     100,
+     135,
+     115,
+     14
+    ],
+    "style": "0x588300a0"
+   },
+   {
+    "id": 1140,
+    "id_hex": "0x474",
+    "class": "Edit",
+    "text": "",
+    "rect": [
+     100,
+     153,
+     115,
+     14
+    ],
+    "style": "0x588300a0"
+   },
+   {
+    "id": 1141,
+    "id_hex": "0x475",
+    "class": "Edit",
+    "text": "",
+    "rect": [
+     100,
+     171,
+     115,
+     14
+    ],
+    "style": "0x588300a0"
+   },
+   {
+    "id": 1158,
+    "id_hex": "0x486",
+    "class": "Static",
+    "text": "Old Password:",
+    "rect": [
+     12,
+     138,
+     46,
+     8
+    ],
+    "style": "0x58020000"
+   },
+   {
+    "id": 1159,
+    "id_hex": "0x487",
+    "class": "Static",
+    "text": "New Password :",
+    "rect": [
+     12,
+     156,
+     52,
+     8
+    ],
+    "style": "0x58020000"
+   },
+   {
+    "id": 1160,
+    "id_hex": "0x488",
+    "class": "Static",
+    "text": "Re-Type New Password :",
+    "rect": [
+     12,
+     174,
+     82,
+     8
+    ],
+    "style": "0x58020000"
+   },
+   {
+    "id": 1150,
+    "id_hex": "0x47e",
+    "class": "Button",
+    "text": "Commit",
+    "rect": [
+     164,
+     190,
+     51,
+     11
+    ],
+    "style": "0x58030000"
+   },
+   {
+    "id": 1151,
+    "id_hex": "0x47f",
+    "class": "SysListView32",
+    "text": "List1",
+    "rect": [
+     10,
+     25,
+     208,
+     84
+    ],
+    "style": "0x50800001"
+   },
+   {
+    "id": 65535,
+    "id_hex": "0xffff",
+    "class": "Static",
+    "text": "Handle:",
+    "rect": [
+     12,
+     7,
+     26,
+     8
+    ],
+    "style": "0x50020000"
+   },
+   {
+    "id": 1154,
+    "id_hex": "0x482",
+    "class": "Static",
+    "text": "Static",
+    "rect": [
+     57,
+     6,
+     158,
+     10
+    ],
+    "style": "0x50021201"
+   },
+   {
+    "id": 1153,
+    "id_hex": "0x481",
+    "class": "Button",
+    "text": "Change Password",
+    "rect": [
+     73,
+     114,
+     80,
+     11
+    ],
+    "style": "0x50010001"
+   }
+  ],
+  "resource_id": 138
+ },
+ {
+  "title": "AoA Options",
+  "class": "",
+  "controls": [
+   {
+    "id": 1,
+    "id_hex": "0x1",
+    "class": "Button",
+    "text": "OK",
+    "rect": [
+     60,
+     160,
+     50,
+     14
+    ],
+    "style": "0x50010001"
+   },
+   {
+    "id": 1162,
+    "id_hex": "0x48a",
+    "class": "Button",
+    "text": "Invert Y-Axis (pitch)",
+    "rect": [
+     10,
+     20,
+     80,
+     12
+    ],
+    "style": "0x50010003"
+   },
+   {
+    "id": 1164,
+    "id_hex": "0x48c",
+    "class": "ComboBox",
+    "text": "",
+    "rect": [
+     10,
+     60,
+     110,
+     45
+    ],
+    "style": "0x50210003"
+   },
+   {
+    "id": 65535,
+    "id_hex": "0xffff",
+    "class": "Static",
+    "text": "Joystick throttle acts as:",
+    "rect": [
+     10,
+     50,
+     100,
+     10
+    ],
+    "style": "0x50020000"
+   },
+   {
+    "id": 1165,
+    "id_hex": "0x48d",
+    "class": "Button",
+    "text": "Reset HUD displays",
+    "rect": [
+     10,
+     80,
+     110,
+     13
+    ],
+    "style": "0x50010000"
+   },
+   {
+    "id": 1014,
+    "id_hex": "0x3f6",
+    "class": "Button",
+    "text": "Enable Graphics",
+    "rect": [
+     10,
+     10,
+     73,
+     8
+    ],
+    "style": "0x50010003"
+   },
+   {
+    "id": 1019,
+    "id_hex": "0x3fb",
+    "class": "Button",
+    "text": "Space Nebulae",
+    "rect": [
+     10,
+     35,
+     62,
+     8
+    ],
+    "style": "0x50010003"
+   },
+   {
+    "id": 65535,
+    "id_hex": "0xffff",
+    "class": "Button",
+    "text": "Display Gamma Settings",
+    "rect": [
+     10,
+     105,
+     150,
+     35
+    ],
+    "style": "0x50000007"
+   },
+   {
+    "id": 1059,
+    "id_hex": "0x423",
+    "class": "Button",
+    "text": "-2",
+    "rect": [
+     20,
+     120,
+     20,
+     10
+    ],
+    "style": "0x50010009"
+   },
+   {
+    "id": 1058,
+    "id_hex": "0x422",
+    "class": "Button",
+    "text": "-1",
+    "rect": [
+     45,
+     120,
+     20,
+     10
+    ],
+    "style": "0x50010009"
+   },
+   {
+    "id": 1055,
+    "id_hex": "0x41f",
+    "class": "Button",
+    "text": "Normal",
+    "rect": [
+     70,
+     120,
+     35,
+     10
+    ],
+    "style": "0x50010009"
+   },
+   {
+    "id": 1056,
+    "id_hex": "0x420",
+    "class": "Button",
+    "text": "+1",
+    "rect": [
+     110,
+     120,
+     20,
+     10
+    ],
+    "style": "0x50010009"
+   },
+   {
+    "id": 1057,
+    "id_hex": "0x421",
+    "class": "Button",
+    "text": "+2",
+    "rect": [
+     135,
+     120,
+     20,
+     10
+    ],
+    "style": "0x50010009"
+   }
+  ],
+  "resource_id": 139
+ },
+ {
+  "title": "Outerchange",
+  "class": "",
+  "controls": [
+   {
+    "id": 1182,
+    "id_hex": "0x49e",
+    "class": "Button",
+    "text": "",
+    "rect": [
+     3,
+     32,
+     278,
+     275
+    ],
+    "style": "0x40000007"
+   },
+   {
+    "id": 1176,
+    "id_hex": "0x498",
+    "class": "SysTabControl32",
+    "text": "Tab2",
+    "rect": [
+     0,
+     19,
+     285,
+     289
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 4294967295,
+    "id_hex": "0xffffffff",
+    "class": "Static",
+    "text": "New Troy",
+    "rect": [
+     3,
+     4,
+     32,
+     8
+    ],
+    "style": "0x50020000"
+   },
+   {
+    "id": 1340,
+    "id_hex": "0x53c",
+    "class": "Button",
+    "text": "Refresh",
+    "rect": [
+     235,
+     0,
+     50,
+     14
+    ],
+    "style": "0x50010000"
+   }
+  ],
+  "resource_id": 140
+ },
+ {
+  "title": "",
+  "class": "",
+  "controls": [
+   {
+    "id": 4294967295,
+    "id_hex": "0xffffffff",
+    "class": "Static",
+    "text": "Account Balance:",
+    "rect": [
+     166,
+     17,
+     58,
+     8
+    ],
+    "style": "0x5002000c"
+   },
+   {
+    "id": 4294967295,
+    "id_hex": "0xffffffff",
+    "class": "Static",
+    "text": "Current Fighter Maintence:",
+    "rect": [
+     140,
+     36,
+     84,
+     8
+    ],
+    "style": "0x50020000"
+   },
+   {
+    "id": 4294967295,
+    "id_hex": "0xffffffff",
+    "class": "Static",
+    "text": "Cumulative Tax %:",
+    "rect": [
+     165,
+     55,
+     59,
+     8
+    ],
+    "style": "0x50020000"
+   },
+   {
+    "id": 1179,
+    "id_hex": "0x49b",
+    "class": "SysListView32",
+    "text": "List1",
+    "rect": [
+     5,
+     97,
+     269,
+     76
+    ],
+    "style": "0x50018001"
+   },
+   {
+    "id": 1185,
+    "id_hex": "0x4a1",
+    "class": "Static",
+    "text": "0",
+    "rect": [
+     233,
+     17,
+     38,
+     11
+    ],
+    "style": "0x50020200"
+   },
+   {
+    "id": 1186,
+    "id_hex": "0x4a2",
+    "class": "Static",
+    "text": "0",
+    "rect": [
+     233,
+     36,
+     38,
+     11
+    ],
+    "style": "0x50020200"
+   },
+   {
+    "id": 1140,
+    "id_hex": "0x474",
+    "class": "Edit",
+    "text": "",
+    "rect": [
+     103,
+     250,
+     78,
+     12
+    ],
+    "style": "0x50012080"
+   },
+   {
+    "id": 1141,
+    "id_hex": "0x475",
+    "class": "Edit",
+    "text": "",
+    "rect": [
+     103,
+     225,
+     107,
+     12
+    ],
+    "style": "0x50010080"
+   },
+   {
+    "id": 4294967295,
+    "id_hex": "0xffffffff",
+    "class": "Static",
+    "text": "Amount to Transfer:",
+    "rect": [
+     35,
+     253,
+     63,
+     8
+    ],
+    "style": "0x50020000"
+   },
+   {
+    "id": 4294967295,
+    "id_hex": "0xffffffff",
+    "class": "Static",
+    "text": "Receiving Account:",
+    "rect": [
+     34,
+     226,
+     64,
+     8
+    ],
+    "style": "0x50020000"
+   },
+   {
+    "id": 1181,
+    "id_hex": "0x49d",
+    "class": "Button",
+    "text": "Player",
+    "rect": [
+     103,
+     193,
+     35,
+     10
+    ],
+    "style": "0x50000009"
+   },
+   {
+    "id": 1183,
+    "id_hex": "0x49f",
+    "class": "Button",
+    "text": "Squad",
+    "rect": [
+     103,
+     206,
+     37,
+     10
+    ],
+    "style": "0x58000009"
+   },
+   {
+    "id": 4294967295,
+    "id_hex": "0xffffffff",
+    "class": "Static",
+    "text": "Receiving Account Type:",
+    "rect": [
+     16,
+     193,
+     82,
+     8
+    ],
+    "style": "0x50020000"
+   },
+   {
+    "id": 1091,
+    "id_hex": "0x443",
+    "class": "Button",
+    "text": "Search",
+    "rect": [
+     212,
+     225,
+     41,
+     12
+    ],
+    "style": "0x50010000"
+   },
+   {
+    "id": 4294967295,
+    "id_hex": "0xffffffff",
+    "class": "Button",
+    "text": "Transfers",
+    "rect": [
+     2,
+     178,
+     275,
+     94
+    ],
+    "style": "0x50000307"
+   },
+   {
+    "id": 1189,
+    "id_hex": "0x4a5",
+    "class": "Button",
+    "text": "Transfer",
+    "rect": [
+     182,
+     250,
+     41,
+     12
+    ],
+    "style": "0x50010000"
+   },
+   {
+    "id": 1190,
+    "id_hex": "0x4a6",
+    "class": "Static",
+    "text": "0",
+    "rect": [
+     233,
+     55,
+     38,
+     11
+    ],
+    "style": "0x50020200"
+   },
+   {
+    "id": 4294967295,
+    "id_hex": "0xffffffff",
+    "class": "Button",
+    "text": "Transaction Record",
+    "rect": [
+     2,
+     88,
+     276,
+     88
+    ],
+    "style": "0x50000307"
+   },
+   {
+    "id": 1266,
+    "id_hex": "0x4f2",
+    "class": "SysListView32",
+    "text": "List2",
+    "rect": [
+     3,
+     5,
+     130,
+     74
+    ],
+    "style": "0x50818001"
+   }
+  ],
+  "resource_id": 143
+ },
+ {
+  "title": "",
+  "class": "",
+  "controls": [
+   {
+    "id": 1179,
+    "id_hex": "0x49b",
+    "class": "SysListView32",
+    "text": "List1",
+    "rect": [
+     93,
+     2,
+     87,
+     82
+    ],
+    "style": "0x5081800d"
+   },
+   {
+    "id": 1265,
+    "id_hex": "0x4f1",
+    "class": "Static",
+    "text": "",
+    "rect": [
+     2,
+     2,
+     90,
+     83
+    ],
+    "style": "0x50000007"
+   },
+   {
+    "id": 1204,
+    "id_hex": "0x4b4",
+    "class": "ComboBox",
+    "text": "",
+    "rect": [
+     184,
+     12,
+     91,
+     78
+    ],
+    "style": "0x50210102"
+   },
+   {
+    "id": 4294967295,
+    "id_hex": "0xffffffff",
+    "class": "Static",
+    "text": "Configuration:",
+    "rect": [
+     184,
+     2,
+     44,
+     8
+    ],
+    "style": "0x50020000"
+   },
+   {
+    "id": 4294967295,
+    "id_hex": "0xffffffff",
+    "class": "Static",
+    "text": "Maintenance:",
+    "rect": [
+     184,
+     30,
+     44,
+     8
+    ],
+    "style": "0x50020000"
+   },
+   {
+    "id": 1206,
+    "id_hex": "0x4b6",
+    "class": "Static",
+    "text": "Static",
+    "rect": [
+     184,
+     40,
+     43,
+     12
+    ],
+    "style": "0x50020201"
+   },
+   {
+    "id": 4294967295,
+    "id_hex": "0xffffffff",
+    "class": "Static",
+    "text": "/ hour",
+    "rect": [
+     230,
+     42,
+     20,
+     8
+    ],
+    "style": "0x50020000"
+   },
+   {
+    "id": 1202,
+    "id_hex": "0x4b2",
+    "class": "SysTabControl32",
+    "text": "Tab1",
+    "rect": [
+     3,
+     88,
+     274,
+     185
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1243,
+    "id_hex": "0x4db",
+    "class": "Static",
+    "text": "System Config Not Yet Implemented",
+    "rect": [
+     85,
+     145,
+     114,
+     8
+    ],
+    "style": "0x40020000"
+   },
+   {
+    "id": 1139,
+    "id_hex": "0x473",
+    "class": "Edit",
+    "text": "",
+    "rect": [
+     94,
+     173,
+     120,
+     12
+    ],
+    "style": "0x40810080"
+   },
+   {
+    "id": 1244,
+    "id_hex": "0x4dc",
+    "class": "Static",
+    "text": "Configuration Name:",
+    "rect": [
+     24,
+     174,
+     65,
+     8
+    ],
+    "style": "0x40020000"
+   },
+   {
+    "id": 1091,
+    "id_hex": "0x443",
+    "class": "Button",
+    "text": "Save Configuration",
+    "rect": [
+     200,
+     69,
+     75,
+     15
+    ],
+    "style": "0x50010f00"
+   },
+   {
+    "id": 1276,
+    "id_hex": "0x4fc",
+    "class": "Static",
+    "text": "",
+    "rect": [
+     5,
+     105,
+     270,
+     165
+    ],
+    "style": "0x40000004"
+   }
+  ],
+  "resource_id": 144
+ },
+ {
+  "title": "Search",
+  "class": "",
+  "controls": [
+   {
+    "id": 8,
+    "id_hex": "0x8",
+    "class": "Button",
+    "text": "Close",
+    "rect": [
+     42,
+     178,
+     50,
+     14
+    ],
+    "style": "0x50010000"
+   },
+   {
+    "id": 1179,
+    "id_hex": "0x49b",
+    "class": "SysListView32",
+    "text": "List1",
+    "rect": [
+     4,
+     54,
+     126,
+     119
+    ],
+    "style": "0x50810003"
+   },
+   {
+    "id": 1139,
+    "id_hex": "0x473",
+    "class": "Edit",
+    "text": "",
+    "rect": [
+     4,
+     34,
+     126,
+     14
+    ],
+    "style": "0x50810080"
+   },
+   {
+    "id": 1181,
+    "id_hex": "0x49d",
+    "class": "Button",
+    "text": "Squad",
+    "rect": [
+     4,
+     19,
+     37,
+     10
+    ],
+    "style": "0x50000009"
+   },
+   {
+    "id": 1182,
+    "id_hex": "0x49e",
+    "class": "Button",
+    "text": "Player",
+    "rect": [
+     4,
+     6,
+     35,
+     10
+    ],
+    "style": "0x50000009"
+   },
+   {
+    "id": 1091,
+    "id_hex": "0x443",
+    "class": "Button",
+    "text": "Search",
+    "rect": [
+     57,
+     11,
+     50,
+     14
+    ],
+    "style": "0x50010001"
+   }
+  ],
+  "resource_id": 145
+ },
+ {
+  "title": "",
+  "class": "",
+  "controls": [
+   {
+    "id": 1179,
+    "id_hex": "0x49b",
+    "class": "SysListView32",
+    "text": "List1",
+    "rect": [
+     5,
+     30,
+     246,
+     83
+    ],
+    "style": "0x5081800d"
+   },
+   {
+    "id": 1176,
+    "id_hex": "0x498",
+    "class": "SysTabControl32",
+    "text": "Tab2",
+    "rect": [
+     256,
+     30,
+     15,
+     215
+    ],
+    "style": "0x50000182"
+   },
+   {
+    "id": 1194,
+    "id_hex": "0x4aa",
+    "class": "Button",
+    "text": "Purchase",
+    "rect": [
+     213,
+     254,
+     45,
+     12
+    ],
+    "style": "0x50010000"
+   },
+   {
+    "id": 1139,
+    "id_hex": "0x473",
+    "class": "Edit",
+    "text": "",
+    "rect": [
+     126,
+     255,
+     26,
+     12
+    ],
+    "style": "0x50812081"
+   },
+   {
+    "id": 1200,
+    "id_hex": "0x4b0",
+    "class": "Static",
+    "text": "Cost",
+    "rect": [
+     164,
+     255,
+     44,
+     12
+    ],
+    "style": "0x50020201"
+   },
+   {
+    "id": 4294967295,
+    "id_hex": "0xffffffff",
+    "class": "Static",
+    "text": "#",
+    "rect": [
+     118,
+     257,
+     8,
+     8
+    ],
+    "style": "0x50020001"
+   },
+   {
+    "id": 4294967295,
+    "id_hex": "0xffffffff",
+    "class": "Static",
+    "text": "$",
+    "rect": [
+     156,
+     257,
+     8,
+     8
+    ],
+    "style": "0x50020001"
+   },
+   {
+    "id": 1199,
+    "id_hex": "0x4af",
+    "class": "Static",
+    "text": "Static",
+    "rect": [
+     6,
+     255,
+     109,
+     12
+    ],
+    "style": "0x50020200"
+   },
+   {
+    "id": 4294967295,
+    "id_hex": "0xffffffff",
+    "class": "Static",
+    "text": "Name:",
+    "rect": [
+     163,
+     205,
+     22,
+     8
+    ],
+    "style": "0x50020000"
+   },
+   {
+    "id": 4294967295,
+    "id_hex": "0xffffffff",
+    "class": "Static",
+    "text": "Price per Unit:",
+    "rect": [
+     163,
+     221,
+     46,
+     8
+    ],
+    "style": "0x50020000"
+   },
+   {
+    "id": 1197,
+    "id_hex": "0x4ad",
+    "class": "Static",
+    "text": "Static",
+    "rect": [
+     188,
+     204,
+     64,
+     11
+    ],
+    "style": "0x50020201"
+   },
+   {
+    "id": 1198,
+    "id_hex": "0x4ae",
+    "class": "Static",
+    "text": "Static",
+    "rect": [
+     210,
+     220,
+     42,
+     11
+    ],
+    "style": "0x50020201"
+   },
+   {
+    "id": 1195,
+    "id_hex": "0x4ab",
+    "class": "Button",
+    "text": "Sell",
+    "rect": [
+     213,
+     254,
+     46,
+     12
+    ],
+    "style": "0x40010000"
+   },
+   {
+    "id": 4294967295,
+    "id_hex": "0xffffffff",
+    "class": "Static",
+    "text": "Current Funds:",
+    "rect": [
+     178,
+     9,
+     47,
+     8
+    ],
+    "style": "0x50020000"
+   },
+   {
+    "id": 1141,
+    "id_hex": "0x475",
+    "class": "Edit",
+    "text": "",
+    "rect": [
+     230,
+     8,
+     41,
+     12
+    ],
+    "style": "0x50810880"
+   },
+   {
+    "id": 1140,
+    "id_hex": "0x474",
+    "class": "Edit",
+    "text": "",
+    "rect": [
+     5,
+     118,
+     146,
+     126
+    ],
+    "style": "0x50811844"
+   },
+   {
+    "id": 4294967295,
+    "id_hex": "0xffffffff",
+    "class": "Static",
+    "text": "",
+    "rect": [
+     5,
+     250,
+     254,
+     1
+    ],
+    "style": "0x50000010"
+   },
+   {
+    "id": 1196,
+    "id_hex": "0x4ac",
+    "class": "Static",
+    "text": "",
+    "rect": [
+     163,
+     118,
+     89,
+     82
+    ],
+    "style": "0x50001007"
+   },
+   {
+    "id": 1180,
+    "id_hex": "0x49c",
+    "class": "SysListView32",
+    "text": "List1",
+    "rect": [
+     5,
+     30,
+     246,
+     83
+    ],
+    "style": "0x4081800d"
+   },
+   {
+    "id": 1181,
+    "id_hex": "0x49d",
+    "class": "SysListView32",
+    "text": "List1",
+    "rect": [
+     5,
+     30,
+     246,
+     83
+    ],
+    "style": "0x4081800d"
+   },
+   {
+    "id": 1182,
+    "id_hex": "0x49e",
+    "class": "SysListView32",
+    "text": "List1",
+    "rect": [
+     5,
+     30,
+     246,
+     83
+    ],
+    "style": "0x4081800d"
+   },
+   {
+    "id": 1183,
+    "id_hex": "0x49f",
+    "class": "SysListView32",
+    "text": "List1",
+    "rect": [
+     5,
+     30,
+     246,
+     83
+    ],
+    "style": "0x4081800d"
+   }
+  ],
+  "resource_id": 146
+ },
+ {
+  "title": "Add Account",
+  "class": "",
+  "controls": [
+   {
+    "id": 65535,
+    "id_hex": "0xffff",
+    "class": "Button",
+    "text": "Add Handle",
+    "rect": [
+     7,
+     7,
+     237,
+     116
+    ],
+    "style": "0x50000007"
+   },
+   {
+    "id": 65535,
+    "id_hex": "0xffff",
+    "class": "Static",
+    "text": "Enter the Handle and Password you wish to associate with the current email account:",
+    "rect": [
+     15,
+     20,
+     221,
+     22
+    ],
+    "style": "0x50020000"
+   },
+   {
+    "id": 1139,
+    "id_hex": "0x473",
+    "class": "Edit",
+    "text": "",
+    "rect": [
+     66,
+     44,
+     164,
+     12
+    ],
+    "style": "0x58810080"
+   },
+   {
+    "id": 65535,
+    "id_hex": "0xffff",
+    "class": "Static",
+    "text": "Email",
+    "rect": [
+     16,
+     47,
+     33,
+     9
+    ],
+    "style": "0x50020000"
+   },
+   {
+    "id": 65535,
+    "id_hex": "0xffff",
+    "class": "Static",
+    "text": "Handle",
+    "rect": [
+     16,
+     64,
+     33,
+     9
+    ],
+    "style": "0x50020000"
+   },
+   {
+    "id": 65535,
+    "id_hex": "0xffff",
+    "class": "Static",
+    "text": "Password",
+    "rect": [
+     16,
+     81,
+     33,
+     9
+    ],
+    "style": "0x50020000"
+   },
+   {
+    "id": 1090,
+    "id_hex": "0x442",
+    "class": "Edit",
+    "text": "",
+    "rect": [
+     66,
+     61,
+     164,
+     12
+    ],
+    "style": "0x50810080"
+   },
+   {
+    "id": 1141,
+    "id_hex": "0x475",
+    "class": "Edit",
+    "text": "",
+    "rect": [
+     66,
+     78,
+     164,
+     12
+    ],
+    "style": "0x508100a0"
+   },
+   {
+    "id": 1191,
+    "id_hex": "0x4a7",
+    "class": "Button",
+    "text": "Request Handle",
+    "rect": [
+     94,
+     101,
+     61,
+     14
+    ],
+    "style": "0x50010001"
+   },
+   {
+    "id": 1091,
+    "id_hex": "0x443",
+    "class": "Button",
+    "text": "Cancel",
+    "rect": [
+     181,
+     101,
+     50,
+     14
+    ],
+    "style": "0x50010000"
+   }
+  ],
+  "resource_id": 147
+ },
+ {
+  "title": "Dialog",
+  "class": "",
+  "controls": [
+   {
+    "id": 1037,
+    "id_hex": "0x40d",
+    "class": "Button",
+    "text": "Yes",
+    "rect": [
+     18,
+     57,
+     50,
+     14
+    ],
+    "style": "0x50010001"
+   },
+   {
+    "id": 1036,
+    "id_hex": "0x40c",
+    "class": "Button",
+    "text": "No",
+    "rect": [
+     108,
+     57,
+     50,
+     14
+    ],
+    "style": "0x50010000"
+   },
+   {
+    "id": 1035,
+    "id_hex": "0x40b",
+    "class": "Static",
+    "text": "name",
+    "rect": [
+     18,
+     21,
+     141,
+     10
+    ],
+    "style": "0x50021201"
+   },
+   {
+    "id": 65535,
+    "id_hex": "0xffff",
+    "class": "Button",
+    "text": "New Character",
+    "rect": [
+     7,
+     7,
+     160,
+     70
+    ],
+    "style": "0x50000007"
+   },
+   {
+    "id": 65535,
+    "id_hex": "0xffff",
+    "class": "Static",
+    "text": "Name not found, would you like to create it?",
+    "rect": [
+     23,
+     39,
+     135,
+     10
+    ],
+    "style": "0x50020000"
+   }
+  ],
+  "resource_id": 155
+ },
+ {
+  "title": "Assertion",
+  "class": "",
+  "controls": [
+   {
+    "id": 1,
+    "id_hex": "0x1",
+    "class": "Button",
+    "text": "OK",
+    "rect": [
+     30,
+     30,
+     50,
+     14
+    ],
+    "style": "0x50010001"
+   },
+   {
+    "id": 65535,
+    "id_hex": "0xffff",
+    "class": "Static",
+    "text": "ASSERT!!!",
+    "rect": [
+     5,
+     10,
+     103,
+     15
+    ],
+    "style": "0x50021201"
+   }
+  ],
+  "resource_id": 156
+ },
+ {
+  "title": "Ace of Angels Game Update",
+  "class": "",
+  "controls": [
+   {
+    "id": 4294967295,
+    "id_hex": "0xffffffff",
+    "class": "Static",
+    "text": "Data File:",
+    "rect": [
+     15,
+     27,
+     31,
+     11
+    ],
+    "style": "0x50020200"
+   },
+   {
+    "id": 1170,
+    "id_hex": "0x492",
+    "class": "Static",
+    "text": "Resource:",
+    "rect": [
+     12,
+     40,
+     35,
+     13
+    ],
+    "style": "0x50020200"
+   },
+   {
+    "id": 1043,
+    "id_hex": "0x413",
+    "class": "Static",
+    "text": "File name",
+    "rect": [
+     53,
+     28,
+     119,
+     10
+    ],
+    "style": "0x50021201"
+   },
+   {
+    "id": 1044,
+    "id_hex": "0x414",
+    "class": "Static",
+    "text": "Record name",
+    "rect": [
+     53,
+     43,
+     119,
+     10
+    ],
+    "style": "0x50021201"
+   },
+   {
+    "id": 4294967295,
+    "id_hex": "0xffffffff",
+    "class": "Button",
+    "text": "",
+    "rect": [
+     5,
+     15,
+     175,
+     114
+    ],
+    "style": "0x50000007"
+   },
+   {
+    "id": 1169,
+    "id_hex": "0x491",
+    "class": "Static",
+    "text": "Synchronizing Game Resources",
+    "rect": [
+     5,
+     2,
+     175,
+     14
+    ],
+    "style": "0x50021201"
+   },
+   {
+    "id": 4294967295,
+    "id_hex": "0xffffffff",
+    "class": "Static",
+    "text": "Total:",
+    "rect": [
+     26,
+     73,
+     22,
+     10
+    ],
+    "style": "0x50020000"
+   },
+   {
+    "id": 1047,
+    "id_hex": "0x417",
+    "class": "Static",
+    "text": "0",
+    "rect": [
+     151,
+     72,
+     21,
+     10
+    ],
+    "style": "0x50021201"
+   },
+   {
+    "id": 1038,
+    "id_hex": "0x40e",
+    "class": "Button",
+    "text": "Abort",
+    "rect": [
+     145,
+     132,
+     35,
+     13
+    ],
+    "style": "0x50010000"
+   },
+   {
+    "id": 1365,
+    "id_hex": "0x555",
+    "class": "Static",
+    "text": "x/y",
+    "rect": [
+     53,
+     72,
+     92,
+     10
+    ],
+    "style": "0x50021201"
+   },
+   {
+    "id": 4294967295,
+    "id_hex": "0xffffffff",
+    "class": "Static",
+    "text": "This File:",
+    "rect": [
+     16,
+     58,
+     32,
+     10
+    ],
+    "style": "0x50020000"
+   },
+   {
+    "id": 1048,
+    "id_hex": "0x418",
+    "class": "Static",
+    "text": "0",
+    "rect": [
+     151,
+     57,
+     21,
+     10
+    ],
+    "style": "0x50021201"
+   },
+   {
+    "id": 1364,
+    "id_hex": "0x554",
+    "class": "Static",
+    "text": "x/y",
+    "rect": [
+     53,
+     57,
+     92,
+     10
+    ],
+    "style": "0x50021201"
+   },
+   {
+    "id": 1366,
+    "id_hex": "0x556",
+    "class": "msctls_progress32",
+    "text": "Progress1",
+    "rect": [
+     13,
+     86,
+     159,
+     9
+    ],
+    "style": "0x50800000"
+   },
+   {
+    "id": 1367,
+    "id_hex": "0x557",
+    "class": "msctls_progress32",
+    "text": "Progress1",
+    "rect": [
+     13,
+     100,
+     159,
+     9
+    ],
+    "style": "0x50800000"
+   },
+   {
+    "id": 4294967295,
+    "id_hex": "0xffffffff",
+    "class": "Static",
+    "text": "KB/Sec:",
+    "rect": [
+     99,
+     114,
+     34,
+     10
+    ],
+    "style": "0x50020000"
+   },
+   {
+    "id": 1049,
+    "id_hex": "0x419",
+    "class": "Static",
+    "text": "0",
+    "rect": [
+     138,
+     113,
+     34,
+     10
+    ],
+    "style": "0x50021201"
+   }
+  ],
+  "resource_id": 157
+ },
+ {
+  "title": "Ace of Angles (No Gfx)",
+  "class": "",
+  "controls": [
+   {
+    "id": 1013,
+    "id_hex": "0x3f5",
+    "class": "Button",
+    "text": "Terminate Session",
+    "rect": [
+     120,
+     225,
+     72,
+     14
+    ],
+    "style": "0x50010000"
+   },
+   {
+    "id": 4294967295,
+    "id_hex": "0xffffffff",
+    "class": "Button",
+    "text": "Keyboard focus control",
+    "rect": [
+     73,
+     170,
+     165,
+     45
+    ],
+    "style": "0x50000007"
+   },
+   {
+    "id": 1014,
+    "id_hex": "0x3f6",
+    "class": "Button",
+    "text": "Return Focus to Game Engine",
+    "rect": [
+     88,
+     185,
+     135,
+     20
+    ],
+    "style": "0x50011f03"
+   },
+   {
+    "id": 1039,
+    "id_hex": "0x40f",
+    "class": "Edit",
+    "text": "",
+    "rect": [
+     10,
+     150,
+     295,
+     12
+    ],
+    "style": "0x508110c4"
+   },
+   {
+    "id": 1083,
+    "id_hex": "0x43b",
+    "class": "SysListView32",
+    "text": "List1",
+    "rect": [
+     10,
+     5,
+     295,
+     140
+    ],
+    "style": "0x50818001"
+   }
+  ],
+  "resource_id": 158
+ },
+ {
+  "title": "",
+  "class": "",
+  "controls": [
+   {
+    "id": 1027,
+    "id_hex": "0x403",
+    "class": "Button",
+    "text": "Ok",
+    "rect": [
+     66,
+     46,
+     50,
+     14
+    ],
+    "style": "0x50010001"
+   },
+   {
+    "id": 1026,
+    "id_hex": "0x402",
+    "class": "Static",
+    "text": "Message...",
+    "rect": [
+     7,
+     7,
+     169,
+     10
+    ],
+    "style": "0x50021201"
+   },
+   {
+    "id": 1028,
+    "id_hex": "0x404",
+    "class": "Edit",
+    "text": "",
+    "rect": [
+     7,
+     19,
+     169,
+     21
+    ],
+    "style": "0x50010885"
+   }
+  ],
+  "resource_id": 159
+ },
+ {
+  "title": "AoA Outerchange",
+  "class": "",
+  "controls": [
+   {
+    "id": 1269,
+    "id_hex": "0x4f5",
+    "class": "Button",
+    "text": "Abort",
+    "rect": [
+     135,
+     27,
+     46,
+     16
+    ],
+    "style": "0x50010001"
+   },
+   {
+    "id": 1268,
+    "id_hex": "0x4f4",
+    "class": "msctls_progress32",
+    "text": "Progress1",
+    "rect": [
+     3,
+     28,
+     127,
+     14
+    ],
+    "style": "0x50800000"
+   },
+   {
+    "id": 1270,
+    "id_hex": "0x4f6",
+    "class": "Static",
+    "text": "Gathering Information about your account.",
+    "rect": [
+     10,
+     10,
+     165,
+     8
+    ],
+    "style": "0x50020000"
+   }
+  ],
+  "resource_id": 161
+ },
+ {
+  "title": "Message of the Day",
+  "class": "",
+  "controls": [
+   {
+    "id": 1179,
+    "id_hex": "0x49b",
+    "class": "SysListView32",
+    "text": "List1",
+    "rect": [
+     3,
+     3,
+     296,
+     84
+    ],
+    "style": "0x5081800d"
+   },
+   {
+    "id": 1273,
+    "id_hex": "0x4f9",
+    "class": "Button",
+    "text": "view",
+    "rect": [
+     302,
+     3,
+     31,
+     14
+    ],
+    "style": "0x50010000"
+   },
+   {
+    "id": 1091,
+    "id_hex": "0x443",
+    "class": "Button",
+    "text": "delete",
+    "rect": [
+     302,
+     19,
+     31,
+     14
+    ],
+    "style": "0x50010000"
+   }
+  ],
+  "resource_id": 163
+ },
+ {
+  "title": "Dialog",
+  "class": "",
+  "controls": [
+   {
+    "id": 1139,
+    "id_hex": "0x473",
+    "class": "Edit",
+    "text": "",
+    "rect": [
+     3,
+     2,
+     229,
+     71
+    ],
+    "style": "0x50000844"
+   }
+  ],
+  "resource_id": 164
+ },
+ {
+  "title": "",
+  "class": "",
+  "controls": [
+   {
+    "id": 1211,
+    "id_hex": "0x4bb",
+    "class": "ListBox",
+    "text": "",
+    "rect": [
+     5,
+     15,
+     79,
+     27
+    ],
+    "style": "0x40a10503"
+   },
+   {
+    "id": 1215,
+    "id_hex": "0x4bf",
+    "class": "ListBox",
+    "text": "",
+    "rect": [
+     95,
+     15,
+     79,
+     27
+    ],
+    "style": "0x40a10103"
+   },
+   {
+    "id": 1205,
+    "id_hex": "0x4b5",
+    "class": "ListBox",
+    "text": "",
+    "rect": [
+     185,
+     15,
+     79,
+     27
+    ],
+    "style": "0x40a10103"
+   },
+   {
+    "id": 1209,
+    "id_hex": "0x4b9",
+    "class": "ListBox",
+    "text": "",
+    "rect": [
+     95,
+     63,
+     79,
+     27
+    ],
+    "style": "0x40a10103"
+   },
+   {
+    "id": 1213,
+    "id_hex": "0x4bd",
+    "class": "ListBox",
+    "text": "",
+    "rect": [
+     5,
+     62,
+     79,
+     27
+    ],
+    "style": "0x40a10103"
+   },
+   {
+    "id": 1214,
+    "id_hex": "0x4be",
+    "class": "ListBox",
+    "text": "",
+    "rect": [
+     185,
+     63,
+     79,
+     27
+    ],
+    "style": "0x40a10103"
+   },
+   {
+    "id": 1216,
+    "id_hex": "0x4c0",
+    "class": "ListBox",
+    "text": "",
+    "rect": [
+     5,
+     111,
+     79,
+     27
+    ],
+    "style": "0x40a10103"
+   },
+   {
+    "id": 1217,
+    "id_hex": "0x4c1",
+    "class": "ListBox",
+    "text": "",
+    "rect": [
+     95,
+     111,
+     79,
+     27
+    ],
+    "style": "0x40a10103"
+   },
+   {
+    "id": 1173,
+    "id_hex": "0x495",
+    "class": "ComboBox",
+    "text": "",
+    "rect": [
+     95,
+     100,
+     79,
+     48
+    ],
+    "style": "0x40210103"
+   },
+   {
+    "id": 1233,
+    "id_hex": "0x4d1",
+    "class": "ComboBox",
+    "text": "",
+    "rect": [
+     95,
+     52,
+     79,
+     54
+    ],
+    "style": "0x40210103"
+   },
+   {
+    "id": 1174,
+    "id_hex": "0x496",
+    "class": "ComboBox",
+    "text": "",
+    "rect": [
+     95,
+     5,
+     79,
+     54
+    ],
+    "style": "0x40210103"
+   },
+   {
+    "id": 1175,
+    "id_hex": "0x497",
+    "class": "ComboBox",
+    "text": "",
+    "rect": [
+     185,
+     5,
+     79,
+     54
+    ],
+    "style": "0x40210103"
+   },
+   {
+    "id": 1176,
+    "id_hex": "0x498",
+    "class": "ComboBox",
+    "text": "",
+    "rect": [
+     5,
+     5,
+     79,
+     54
+    ],
+    "style": "0x40210103"
+   },
+   {
+    "id": 1177,
+    "id_hex": "0x499",
+    "class": "ComboBox",
+    "text": "",
+    "rect": [
+     5,
+     53,
+     79,
+     54
+    ],
+    "style": "0x40210103"
+   },
+   {
+    "id": 1178,
+    "id_hex": "0x49a",
+    "class": "ComboBox",
+    "text": "",
+    "rect": [
+     185,
+     53,
+     79,
+     54
+    ],
+    "style": "0x40210103"
+   },
+   {
+    "id": 1180,
+    "id_hex": "0x49c",
+    "class": "ComboBox",
+    "text": "",
+    "rect": [
+     5,
+     101,
+     79,
+     48
+    ],
+    "style": "0x40210103"
+   },
+   {
+    "id": 1230,
+    "id_hex": "0x4ce",
+    "class": "Button",
+    "text": "CLEAR",
+    "rect": [
+     190,
+     100,
+     67,
+     11
+    ],
+    "style": "0x40010000"
+   }
+  ],
+  "resource_id": 166
+ },
+ {
+  "title": "",
+  "class": "",
+  "controls": [
+   {
+    "id": 1247,
+    "id_hex": "0x4df",
+    "class": "ComboBox",
+    "text": "",
+    "rect": [
+     14,
+     12,
+     103,
+     61
+    ],
+    "style": "0x40210103"
+   },
+   {
+    "id": 1182,
+    "id_hex": "0x49e",
+    "class": "ComboBox",
+    "text": "",
+    "rect": [
+     14,
+     34,
+     103,
+     61
+    ],
+    "style": "0x40210103"
+   },
+   {
+    "id": 1250,
+    "id_hex": "0x4e2",
+    "class": "ComboBox",
+    "text": "",
+    "rect": [
+     14,
+     56,
+     103,
+     61
+    ],
+    "style": "0x40210103"
+   },
+   {
+    "id": 1183,
+    "id_hex": "0x49f",
+    "class": "ComboBox",
+    "text": "",
+    "rect": [
+     14,
+     78,
+     103,
+     61
+    ],
+    "style": "0x40210103"
+   },
+   {
+    "id": 1255,
+    "id_hex": "0x4e7",
+    "class": "ComboBox",
+    "text": "",
+    "rect": [
+     14,
+     100,
+     103,
+     61
+    ],
+    "style": "0x40210103"
+   },
+   {
+    "id": 1184,
+    "id_hex": "0x4a0",
+    "class": "ComboBox",
+    "text": "",
+    "rect": [
+     14,
+     122,
+     103,
+     61
+    ],
+    "style": "0x40210103"
+   },
+   {
+    "id": 65535,
+    "id_hex": "0xffff",
+    "class": "Button",
+    "text": "Gun Specifications",
+    "rect": [
+     130,
+     5,
+     135,
+     135
+    ],
+    "style": "0x50000007"
+   },
+   {
+    "id": 1172,
+    "id_hex": "0x494",
+    "class": "ComboBox",
+    "text": "",
+    "rect": [
+     150,
+     31,
+     100,
+     30
+    ],
+    "style": "0x58210102"
+   },
+   {
+    "id": 65535,
+    "id_hex": "0xffff",
+    "class": "Static",
+    "text": "Maintenance :",
+    "rect": [
+     150,
+     51,
+     46,
+     8
+    ],
+    "style": "0x58020000"
+   },
+   {
+    "id": 65535,
+    "id_hex": "0xffff",
+    "class": "Static",
+    "text": "Mount :",
+    "rect": [
+     150,
+     65,
+     25,
+     8
+    ],
+    "style": "0x58020000"
+   },
+   {
+    "id": 65535,
+    "id_hex": "0xffff",
+    "class": "Static",
+    "text": "Damage:",
+    "rect": [
+     150,
+     80,
+     30,
+     8
+    ],
+    "style": "0x58020000"
+   },
+   {
+    "id": 65535,
+    "id_hex": "0xffff",
+    "class": "Static",
+    "text": "Heat Dissipation :",
+    "rect": [
+     150,
+     96,
+     56,
+     8
+    ],
+    "style": "0x58020000"
+   },
+   {
+    "id": 65535,
+    "id_hex": "0xffff",
+    "class": "Static",
+    "text": "Cyclic Rate :",
+    "rect": [
+     150,
+     111,
+     41,
+     8
+    ],
+    "style": "0x58020000"
+   }
+  ],
+  "resource_id": 167
+ },
+ {
+  "title": "",
+  "class": "",
+  "controls": [
+   {
+    "id": 1279,
+    "id_hex": "0x4ff",
+    "class": "Static",
+    "text": "Rack ?",
+    "rect": [
+     41,
+     9,
+     51,
+     9
+    ],
+    "style": "0x50021201"
+   },
+   {
+    "id": 1282,
+    "id_hex": "0x502",
+    "class": "Static",
+    "text": "0",
+    "rect": [
+     90,
+     54,
+     20,
+     9
+    ],
+    "style": "0x50021001"
+   },
+   {
+    "id": 1277,
+    "id_hex": "0x4fd",
+    "class": "ListBox",
+    "text": "",
+    "rect": [
+     20,
+     68,
+     92,
+     74
+    ],
+    "style": "0x50a10101"
+   },
+   {
+    "id": 1281,
+    "id_hex": "0x501",
+    "class": "Static",
+    "text": "0",
+    "rect": [
+     90,
+     39,
+     20,
+     9
+    ],
+    "style": "0x50021001"
+   },
+   {
+    "id": 1280,
+    "id_hex": "0x500",
+    "class": "Static",
+    "text": "0",
+    "rect": [
+     90,
+     24,
+     20,
+     9
+    ],
+    "style": "0x50021001"
+   },
+   {
+    "id": 1179,
+    "id_hex": "0x49b",
+    "class": "SysListView32",
+    "text": "List1",
+    "rect": [
+     129,
+     5,
+     132,
+     140
+    ],
+    "style": "0x5080800d"
+   },
+   {
+    "id": 1338,
+    "id_hex": "0x53a",
+    "class": "Button",
+    "text": ">>>",
+    "rect": [
+     91,
+     9,
+     19,
+     9
+    ],
+    "style": "0x50018f00"
+   },
+   {
+    "id": 1091,
+    "id_hex": "0x443",
+    "class": "Button",
+    "text": "<<<",
+    "rect": [
+     21,
+     9,
+     20,
+     9
+    ],
+    "style": "0x50018f00"
+   },
+   {
+    "id": 4294967295,
+    "id_hex": "0xffffffff",
+    "class": "Static",
+    "text": "Mount Class:",
+    "rect": [
+     21,
+     24,
+     42,
+     8
+    ],
+    "style": "0x50020000"
+   },
+   {
+    "id": 4294967295,
+    "id_hex": "0xffffffff",
+    "class": "Static",
+    "text": "Total Space :",
+    "rect": [
+     21,
+     39,
+     47,
+     8
+    ],
+    "style": "0x50020000"
+   },
+   {
+    "id": 1286,
+    "id_hex": "0x506",
+    "class": "Static",
+    "text": "Space Remaining :",
+    "rect": [
+     21,
+     54,
+     61,
+     8
+    ],
+    "style": "0x50020000"
+   },
+   {
+    "id": 4294967295,
+    "id_hex": "0xffffffff",
+    "class": "Button",
+    "text": "",
+    "rect": [
+     10,
+     0,
+     110,
+     160
+    ],
+    "style": "0x50000007"
+   },
+   {
+    "id": 1092,
+    "id_hex": "0x444",
+    "class": "Button",
+    "text": "Add To Rack",
+    "rect": [
+     129,
+     145,
+     133,
+     14
+    ],
+    "style": "0x50010000"
+   },
+   {
+    "id": 1093,
+    "id_hex": "0x445",
+    "class": "Button",
+    "text": "Remove",
+    "rect": [
+     20,
+     142,
+     93,
+     14
+    ],
+    "style": "0x50010000"
+   }
+  ],
+  "resource_id": 168
+ },
+ {
+  "title": "Chat",
+  "class": "",
+  "controls": [
+   {
+    "id": 1139,
+    "id_hex": "0x473",
+    "class": "Edit",
+    "text": "",
+    "rect": [
+     5,
+     114,
+     175,
+     12
+    ],
+    "style": "0x508110c4"
+   },
+   {
+    "id": 1284,
+    "id_hex": "0x504",
+    "class": "{972DE6C2-8B09-11D2-B652-A1FD6CC34260}",
+    "text": "",
+    "rect": [
+     190,
+     113,
+     18,
+     20
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1179,
+    "id_hex": "0x49b",
+    "class": "ListBox",
+    "text": "",
+    "rect": [
+     0,
+     5,
+     215,
+     99
+    ],
+    "style": "0x50b14101"
+   }
+  ],
+  "resource_id": 171
+ },
+ {
+  "title": "Ace of Angels: Station",
+  "class": "",
+  "controls": [
+   {
+    "id": 1089,
+    "id_hex": "0x441",
+    "class": "ComboBox",
+    "text": "",
+    "rect": [
+     43,
+     32,
+     118,
+     77
+    ],
+    "style": "0x40210103"
+   },
+   {
+    "id": 1090,
+    "id_hex": "0x442",
+    "class": "ComboBox",
+    "text": "",
+    "rect": [
+     43,
+     16,
+     68,
+     77
+    ],
+    "style": "0x40210103"
+   },
+   {
+    "id": 1284,
+    "id_hex": "0x504",
+    "class": "{972DE6C2-8B09-11D2-B652-A1FD6CC34260}",
+    "text": "",
+    "rect": [
+     0,
+     5,
+     18,
+     20
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1161,
+    "id_hex": "0x489",
+    "class": "Edit",
+    "text": "",
+    "rect": [
+     93,
+     88,
+     99,
+     14
+    ],
+    "style": "0x488300a0"
+   },
+   {
+    "id": 1140,
+    "id_hex": "0x474",
+    "class": "Edit",
+    "text": "",
+    "rect": [
+     93,
+     106,
+     99,
+     14
+    ],
+    "style": "0x488300a0"
+   },
+   {
+    "id": 1141,
+    "id_hex": "0x475",
+    "class": "Edit",
+    "text": "",
+    "rect": [
+     93,
+     124,
+     99,
+     14
+    ],
+    "style": "0x488300a0"
+   },
+   {
+    "id": 1328,
+    "id_hex": "0x530",
+    "class": "{53FA8D41-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     115,
+     15,
+     45,
+     14
+    ],
+    "style": "0x40000000"
+   },
+   {
+    "id": 1334,
+    "id_hex": "0x536",
+    "class": "{53FA8D4A-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     16,
+     17,
+     25,
+     10
+    ],
+    "style": "0x48000000"
+   },
+   {
+    "id": 1335,
+    "id_hex": "0x537",
+    "class": "{53FA8D4A-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     16,
+     34,
+     25,
+     10
+    ],
+    "style": "0x48000000"
+   },
+   {
+    "id": 1336,
+    "id_hex": "0x538",
+    "class": "{53FA8D41-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     15,
+     50,
+     165,
+     25
+    ],
+    "style": "0x40000000"
+   },
+   {
+    "id": 1327,
+    "id_hex": "0x52f",
+    "class": "{53FA8D41-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     20,
+     90,
+     10,
+     10
+    ],
+    "style": "0x40000000"
+   },
+   {
+    "id": 1329,
+    "id_hex": "0x531",
+    "class": "{53FA8D41-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     148,
+     143,
+     44,
+     11
+    ],
+    "style": "0x48000000"
+   },
+   {
+    "id": 1330,
+    "id_hex": "0x532",
+    "class": "{53FA8D4A-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     43,
+     90,
+     45,
+     8
+    ],
+    "style": "0x48000000"
+   },
+   {
+    "id": 1331,
+    "id_hex": "0x533",
+    "class": "{53FA8D4A-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     43,
+     109,
+     45,
+     8
+    ],
+    "style": "0x48000000"
+   },
+   {
+    "id": 1332,
+    "id_hex": "0x534",
+    "class": "{53FA8D4A-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     43,
+     128,
+     45,
+     8
+    ],
+    "style": "0x48000000"
+   },
+   {
+    "id": 1333,
+    "id_hex": "0x535",
+    "class": "{53FA8D47-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     15,
+     85,
+     180,
+     73
+    ],
+    "style": "0x40000000"
+   }
+  ],
+  "resource_id": 172
+ },
+ {
+  "title": "Ace of Angels: Station",
+  "class": "",
+  "controls": [
+   {
+    "id": 1000,
+    "id_hex": "0x3e8",
+    "class": "SysListView32",
+    "text": "List1",
+    "rect": [
+     23,
+     134,
+     187,
+     71
+    ],
+    "style": "0x50010009"
+   },
+   {
+    "id": 1067,
+    "id_hex": "0x42b",
+    "class": "SysListView32",
+    "text": "List2",
+    "rect": [
+     22,
+     18,
+     133,
+     55
+    ],
+    "style": "0x5001800d"
+   },
+   {
+    "id": 1065,
+    "id_hex": "0x429",
+    "class": "Static",
+    "text": "",
+    "rect": [
+     175,
+     116,
+     30,
+     9
+    ],
+    "style": "0x50021001"
+   },
+   {
+    "id": 1069,
+    "id_hex": "0x42d",
+    "class": "Static",
+    "text": "",
+    "rect": [
+     175,
+     106,
+     30,
+     9
+    ],
+    "style": "0x50021001"
+   },
+   {
+    "id": 1070,
+    "id_hex": "0x42e",
+    "class": "Static",
+    "text": "",
+    "rect": [
+     175,
+     96,
+     30,
+     9
+    ],
+    "style": "0x50021001"
+   },
+   {
+    "id": 1288,
+    "id_hex": "0x508",
+    "class": "{53FA8D4A-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     176,
+     81,
+     28,
+     12
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1289,
+    "id_hex": "0x509",
+    "class": "{53FA8D41-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     20,
+     82,
+     50,
+     15
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1290,
+    "id_hex": "0x50a",
+    "class": "{53FA8D41-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     20,
+     112,
+     50,
+     15
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1291,
+    "id_hex": "0x50b",
+    "class": "{53FA8D41-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     20,
+     97,
+     50,
+     15
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1292,
+    "id_hex": "0x50c",
+    "class": "{53FA8D41-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     210,
+     0,
+     11,
+     10
+    ],
+    "style": "0x40000000"
+   },
+   {
+    "id": 1293,
+    "id_hex": "0x50d",
+    "class": "{53FA8D41-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     210,
+     10,
+     11,
+     10
+    ],
+    "style": "0x40000000"
+   },
+   {
+    "id": 1294,
+    "id_hex": "0x50e",
+    "class": "{53FA8D41-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     210,
+     20,
+     11,
+     10
+    ],
+    "style": "0x40000000"
+   },
+   {
+    "id": 1295,
+    "id_hex": "0x50f",
+    "class": "{53FA8D4A-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     88,
+     95,
+     85,
+     10
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1296,
+    "id_hex": "0x510",
+    "class": "{53FA8D4A-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     88,
+     105,
+     85,
+     10
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1297,
+    "id_hex": "0x511",
+    "class": "{53FA8D4A-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     88,
+     115,
+     85,
+     10
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1300,
+    "id_hex": "0x514",
+    "class": "{53FA8D47-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     20,
+     131,
+     195,
+     78
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1301,
+    "id_hex": "0x515",
+    "class": "{53FA8D47-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     20,
+     15,
+     140,
+     62
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1284,
+    "id_hex": "0x504",
+    "class": "{972DE6C2-8B09-11D2-B652-A1FD6CC34260}",
+    "text": "",
+    "rect": [
+     0,
+     0,
+     18,
+     20
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1063,
+    "id_hex": "0x427",
+    "class": "Button",
+    "text": "Show Online (selected)",
+    "rect": [
+     75,
+     95,
+     8,
+     10
+    ],
+    "style": "0x50000009"
+   },
+   {
+    "id": 1066,
+    "id_hex": "0x42a",
+    "class": "Button",
+    "text": "Show Online (all servers)",
+    "rect": [
+     75,
+     105,
+     8,
+     10
+    ],
+    "style": "0x50000009"
+   },
+   {
+    "id": 1068,
+    "id_hex": "0x42c",
+    "class": "Button",
+    "text": "Show Online (station)",
+    "rect": [
+     75,
+     115,
+     8,
+     10
+    ],
+    "style": "0x50000009"
+   }
+  ],
+  "resource_id": 173
+ },
+ {
+  "title": "Ace of Angels: Station",
+  "class": "",
+  "controls": [
+   {
+    "id": 1025,
+    "id_hex": "0x401",
+    "class": "ComboBox",
+    "text": "",
+    "rect": [
+     47,
+     22,
+     93,
+     40
+    ],
+    "style": "0x48210003"
+   },
+   {
+    "id": 1026,
+    "id_hex": "0x402",
+    "class": "ComboBox",
+    "text": "",
+    "rect": [
+     47,
+     38,
+     93,
+     75
+    ],
+    "style": "0x48200003"
+   },
+   {
+    "id": 1018,
+    "id_hex": "0x3fa",
+    "class": "Button",
+    "text": "",
+    "rect": [
+     94,
+     62,
+     8,
+     8
+    ],
+    "style": "0x40018f03"
+   },
+   {
+    "id": 1020,
+    "id_hex": "0x3fc",
+    "class": "Button",
+    "text": "",
+    "rect": [
+     24,
+     62,
+     8,
+     8
+    ],
+    "style": "0x40018f03"
+   },
+   {
+    "id": 1023,
+    "id_hex": "0x3ff",
+    "class": "Button",
+    "text": "",
+    "rect": [
+     162,
+     148,
+     8,
+     8
+    ],
+    "style": "0x40018f03"
+   },
+   {
+    "id": 1024,
+    "id_hex": "0x400",
+    "class": "Button",
+    "text": "",
+    "rect": [
+     162,
+     161,
+     8,
+     8
+    ],
+    "style": "0x40018f03"
+   },
+   {
+    "id": 1163,
+    "id_hex": "0x48b",
+    "class": "ComboBox",
+    "text": "",
+    "rect": [
+     23,
+     137,
+     129,
+     45
+    ],
+    "style": "0x40210003"
+   },
+   {
+    "id": 1030,
+    "id_hex": "0x406",
+    "class": "Button",
+    "text": "<-\n\n<-",
+    "rect": [
+     142,
+     22,
+     15,
+     30
+    ],
+    "style": "0x40002000"
+   },
+   {
+    "id": 1162,
+    "id_hex": "0x48a",
+    "class": "Button",
+    "text": "",
+    "rect": [
+     24,
+     155,
+     8,
+     8
+    ],
+    "style": "0x40018f03"
+   },
+   {
+    "id": 1164,
+    "id_hex": "0x48c",
+    "class": "ComboBox",
+    "text": "",
+    "rect": [
+     23,
+     180,
+     129,
+     45
+    ],
+    "style": "0x40210003"
+   },
+   {
+    "id": 1019,
+    "id_hex": "0x3fb",
+    "class": "Button",
+    "text": "",
+    "rect": [
+     94,
+     76,
+     8,
+     8
+    ],
+    "style": "0x40018f03"
+   },
+   {
+    "id": 1059,
+    "id_hex": "0x423",
+    "class": "Button",
+    "text": "-2",
+    "rect": [
+     22,
+     102,
+     20,
+     10
+    ],
+    "style": "0x40010009"
+   },
+   {
+    "id": 1058,
+    "id_hex": "0x422",
+    "class": "Button",
+    "text": "-1",
+    "rect": [
+     44,
+     102,
+     20,
+     10
+    ],
+    "style": "0x40010009"
+   },
+   {
+    "id": 1055,
+    "id_hex": "0x41f",
+    "class": "Button",
+    "text": "Normal",
+    "rect": [
+     68,
+     102,
+     35,
+     10
+    ],
+    "style": "0x40010009"
+   },
+   {
+    "id": 1056,
+    "id_hex": "0x420",
+    "class": "Button",
+    "text": "+1",
+    "rect": [
+     104,
+     102,
+     20,
+     10
+    ],
+    "style": "0x40010009"
+   },
+   {
+    "id": 1057,
+    "id_hex": "0x421",
+    "class": "Button",
+    "text": "+2",
+    "rect": [
+     128,
+     102,
+     20,
+     10
+    ],
+    "style": "0x40010009"
+   },
+   {
+    "id": 1315,
+    "id_hex": "0x523",
+    "class": "{53FA8D47-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     20,
+     100,
+     135,
+     13
+    ],
+    "style": "0x40000000"
+   },
+   {
+    "id": 1311,
+    "id_hex": "0x51f",
+    "class": "{53FA8D4A-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     172,
+     147,
+     45,
+     10
+    ],
+    "style": "0x40000000"
+   },
+   {
+    "id": 1312,
+    "id_hex": "0x520",
+    "class": "{53FA8D4A-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     172,
+     161,
+     45,
+     10
+    ],
+    "style": "0x40000000"
+   },
+   {
+    "id": 1313,
+    "id_hex": "0x521",
+    "class": "{53FA8D47-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     159,
+     142,
+     62,
+     34
+    ],
+    "style": "0x40000000"
+   },
+   {
+    "id": 1319,
+    "id_hex": "0x527",
+    "class": "{53FA8D4A-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     24,
+     25,
+     20,
+     10
+    ],
+    "style": "0x40000000"
+   },
+   {
+    "id": 1320,
+    "id_hex": "0x528",
+    "class": "{53FA8D4A-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     24,
+     41,
+     20,
+     10
+    ],
+    "style": "0x40000000"
+   },
+   {
+    "id": 1321,
+    "id_hex": "0x529",
+    "class": "{53FA8D4A-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     35,
+     60,
+     52,
+     10
+    ],
+    "style": "0x40000000"
+   },
+   {
+    "id": 1323,
+    "id_hex": "0x52b",
+    "class": "{53FA8D4A-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     105,
+     60,
+     45,
+     10
+    ],
+    "style": "0x40000000"
+   },
+   {
+    "id": 1324,
+    "id_hex": "0x52c",
+    "class": "{53FA8D4A-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     105,
+     76,
+     45,
+     10
+    ],
+    "style": "0x40000000"
+   },
+   {
+    "id": 1310,
+    "id_hex": "0x51e",
+    "class": "{53FA8D47-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     20,
+     20,
+     139,
+     70
+    ],
+    "style": "0x40000000"
+   },
+   {
+    "id": 1325,
+    "id_hex": "0x52d",
+    "class": "{53FA8D41-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     160,
+     121,
+     50,
+     13
+    ],
+    "style": "0x40000000"
+   },
+   {
+    "id": 1326,
+    "id_hex": "0x52e",
+    "class": "{53FA8D4A-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     160,
+     100,
+     52,
+     10
+    ],
+    "style": "0x40000000"
+   },
+   {
+    "id": 1316,
+    "id_hex": "0x524",
+    "class": "{53FA8D4A-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     24,
+     126,
+     100,
+     10
+    ],
+    "style": "0x40000000"
+   },
+   {
+    "id": 1317,
+    "id_hex": "0x525",
+    "class": "{53FA8D4A-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     24,
+     169,
+     100,
+     10
+    ],
+    "style": "0x40000000"
+   },
+   {
+    "id": 1318,
+    "id_hex": "0x526",
+    "class": "{53FA8D4A-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     34,
+     155,
+     100,
+     9
+    ],
+    "style": "0x40000000"
+   },
+   {
+    "id": 1284,
+    "id_hex": "0x504",
+    "class": "{972DE6C2-8B09-11D2-B652-A1FD6CC34260}",
+    "text": "",
+    "rect": [
+     0,
+     0,
+     18,
+     20
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1314,
+    "id_hex": "0x522",
+    "class": "{53FA8D47-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     20,
+     118,
+     135,
+     80
+    ],
+    "style": "0x40000000"
+   }
+  ],
+  "resource_id": 174
+ },
+ {
+  "title": "",
+  "class": "",
+  "controls": [
+   {
+    "id": 1142,
+    "id_hex": "0x476",
+    "class": "Edit",
+    "text": "",
+    "rect": [
+     8,
+     11,
+     67,
+     14
+    ],
+    "style": "0x50810080"
+   },
+   {
+    "id": 1179,
+    "id_hex": "0x49b",
+    "class": "SysListView32",
+    "text": "List1",
+    "rect": [
+     8,
+     28,
+     100,
+     110
+    ],
+    "style": "0x5001c001"
+   },
+   {
+    "id": 1341,
+    "id_hex": "0x53d",
+    "class": "{53FA8D41-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     77,
+     11,
+     32,
+     13
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1277,
+    "id_hex": "0x4fd",
+    "class": "SysListView32",
+    "text": "List2",
+    "rect": [
+     123,
+     18,
+     171,
+     51
+    ],
+    "style": "0x50014001"
+   },
+   {
+    "id": 1278,
+    "id_hex": "0x4fe",
+    "class": "SysListView32",
+    "text": "List2",
+    "rect": [
+     123,
+     91,
+     171,
+     50
+    ],
+    "style": "0x50014001"
+   },
+   {
+    "id": 1279,
+    "id_hex": "0x4ff",
+    "class": "SysListView32",
+    "text": "List2",
+    "rect": [
+     123,
+     163,
+     171,
+     51
+    ],
+    "style": "0x50014001"
+   },
+   {
+    "id": 1302,
+    "id_hex": "0x516",
+    "class": "{53FA8D47-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     118,
+     78,
+     180,
+     67
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1344,
+    "id_hex": "0x540",
+    "class": "{53FA8D41-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     8,
+     139,
+     100,
+     14
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1345,
+    "id_hex": "0x541",
+    "class": "{53FA8D41-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     8,
+     154,
+     100,
+     14
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1346,
+    "id_hex": "0x542",
+    "class": "{53FA8D41-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     8,
+     169,
+     100,
+     14
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1347,
+    "id_hex": "0x543",
+    "class": "{53FA8D41-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     8,
+     184,
+     100,
+     14
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1348,
+    "id_hex": "0x544",
+    "class": "{53FA8D41-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     8,
+     199,
+     100,
+     14
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1342,
+    "id_hex": "0x53e",
+    "class": "{53FA8D47-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     3,
+     6,
+     110,
+     212
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1349,
+    "id_hex": "0x545",
+    "class": "{53FA8D41-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     253,
+     7,
+     40,
+     10
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1343,
+    "id_hex": "0x53f",
+    "class": "{53FA8D47-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     118,
+     5,
+     180,
+     68
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1350,
+    "id_hex": "0x546",
+    "class": "{53FA8D41-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     262,
+     152,
+     31,
+     10
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1351,
+    "id_hex": "0x547",
+    "class": "{53FA8D41-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     229,
+     152,
+     31,
+     10
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1303,
+    "id_hex": "0x517",
+    "class": "{53FA8D47-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     118,
+     150,
+     180,
+     68
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1284,
+    "id_hex": "0x504",
+    "class": "{972DE6C2-8B09-11D2-B652-A1FD6CC34260}",
+    "text": "",
+    "rect": [
+     0,
+     0,
+     21,
+     20
+    ],
+    "style": "0x50000000"
+   }
+  ],
+  "resource_id": 186
+ },
+ {
+  "title": "Squad Manager",
+  "class": "",
+  "controls": [
+   {
+    "id": 1125,
+    "id_hex": "0x465",
+    "class": "ComboBox",
+    "text": "",
+    "rect": [
+     7,
+     10,
+     160,
+     77
+    ],
+    "style": "0x50210103"
+   },
+   {
+    "id": 1127,
+    "id_hex": "0x467",
+    "class": "Button",
+    "text": "Leave Squad",
+    "rect": [
+     7,
+     25,
+     53,
+     14
+    ],
+    "style": "0x50010f00"
+   },
+   {
+    "id": 1091,
+    "id_hex": "0x443",
+    "class": "Button",
+    "text": "Retire Squad",
+    "rect": [
+     61,
+     25,
+     55,
+     14
+    ],
+    "style": "0x58010f00"
+   },
+   {
+    "id": 1103,
+    "id_hex": "0x44f",
+    "class": "Button",
+    "text": "Accept",
+    "rect": [
+     7,
+     300,
+     73,
+     14
+    ],
+    "style": "0x50010000"
+   },
+   {
+    "id": 1104,
+    "id_hex": "0x450",
+    "class": "Button",
+    "text": "Deny",
+    "rect": [
+     81,
+     300,
+     73,
+     14
+    ],
+    "style": "0x50010000"
+   },
+   {
+    "id": 1105,
+    "id_hex": "0x451",
+    "class": "Button",
+    "text": "Clear All",
+    "rect": [
+     230,
+     300,
+     72,
+     14
+    ],
+    "style": "0x50010000"
+   },
+   {
+    "id": 1106,
+    "id_hex": "0x452",
+    "class": "Button",
+    "text": "Deny Invites",
+    "rect": [
+     8,
+     316,
+     293,
+     13
+    ],
+    "style": "0x50011023"
+   },
+   {
+    "id": 4294967295,
+    "id_hex": "0xffffffff",
+    "class": "Button",
+    "text": "Messages",
+    "rect": [
+     3,
+     215,
+     302,
+     117
+    ],
+    "style": "0x50008007"
+   },
+   {
+    "id": 1114,
+    "id_hex": "0x45a",
+    "class": "SysListView32",
+    "text": "List5",
+    "rect": [
+     7,
+     225,
+     293,
+     74
+    ],
+    "style": "0x50818009"
+   },
+   {
+    "id": 1136,
+    "id_hex": "0x470",
+    "class": "Button",
+    "text": "Roster",
+    "rect": [
+     3,
+     44,
+     167,
+     170
+    ],
+    "style": "0x40008307"
+   },
+   {
+    "id": 1126,
+    "id_hex": "0x466",
+    "class": "Button",
+    "text": "New Squad",
+    "rect": [
+     117,
+     25,
+     50,
+     14
+    ],
+    "style": "0x50010f00"
+   },
+   {
+    "id": 1137,
+    "id_hex": "0x471",
+    "class": "Button",
+    "text": "Search",
+    "rect": [
+     175,
+     0,
+     130,
+     214
+    ],
+    "style": "0x40008307"
+   },
+   {
+    "id": 1107,
+    "id_hex": "0x453",
+    "class": "Button",
+    "text": "Clear Selected",
+    "rect": [
+     155,
+     300,
+     73,
+     14
+    ],
+    "style": "0x50010000"
+   },
+   {
+    "id": 4294967295,
+    "id_hex": "0xffffffff",
+    "class": "Button",
+    "text": "Current Squad",
+    "rect": [
+     3,
+     0,
+     167,
+     43
+    ],
+    "style": "0x50008007"
+   }
+  ],
+  "resource_id": 187
+ },
+ {
+  "title": "",
+  "class": "",
+  "controls": [
+   {
+    "id": 1107,
+    "id_hex": "0x453",
+    "class": "Button",
+    "text": "Deny Solicitations",
+    "rect": [
+     9,
+     203,
+     75,
+     11
+    ],
+    "style": "0x40010003"
+   },
+   {
+    "id": 1116,
+    "id_hex": "0x45c",
+    "class": "SysListView32",
+    "text": "List7",
+    "rect": [
+     150,
+     11,
+     144,
+     133
+    ],
+    "style": "0x5001c00d"
+   },
+   {
+    "id": 1355,
+    "id_hex": "0x54b",
+    "class": "{53FA8D4A-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     8,
+     10,
+     67,
+     10
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1356,
+    "id_hex": "0x54c",
+    "class": "{53FA8D4A-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     8,
+     25,
+     67,
+     10
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1357,
+    "id_hex": "0x54d",
+    "class": "{53FA8D4A-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     8,
+     40,
+     67,
+     10
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1358,
+    "id_hex": "0x54e",
+    "class": "{53FA8D4A-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     8,
+     55,
+     67,
+     10
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1139,
+    "id_hex": "0x473",
+    "class": "Edit",
+    "text": "",
+    "rect": [
+     8,
+     70,
+     125,
+     14
+    ],
+    "style": "0x50810080"
+   },
+   {
+    "id": 1359,
+    "id_hex": "0x54f",
+    "class": "{53FA8D4A-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     8,
+     90,
+     67,
+     10
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1140,
+    "id_hex": "0x474",
+    "class": "Edit",
+    "text": "",
+    "rect": [
+     8,
+     105,
+     125,
+     95
+    ],
+    "style": "0x50810080"
+   },
+   {
+    "id": 1360,
+    "id_hex": "0x550",
+    "class": "{53FA8D47-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     3,
+     6,
+     136,
+     210
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1362,
+    "id_hex": "0x552",
+    "class": "{53FA8D41-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     150,
+     147,
+     70,
+     15
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1363,
+    "id_hex": "0x553",
+    "class": "{53FA8D41-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     223,
+     147,
+     70,
+     15
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1364,
+    "id_hex": "0x554",
+    "class": "{53FA8D41-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     150,
+     163,
+     70,
+     15
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1365,
+    "id_hex": "0x555",
+    "class": "{53FA8D41-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     223,
+     163,
+     70,
+     15
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1366,
+    "id_hex": "0x556",
+    "class": "{53FA8D41-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     150,
+     179,
+     70,
+     15
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1367,
+    "id_hex": "0x557",
+    "class": "{53FA8D41-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     223,
+     179,
+     70,
+     15
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1368,
+    "id_hex": "0x558",
+    "class": "{53FA8D41-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     150,
+     195,
+     143,
+     15
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1361,
+    "id_hex": "0x551",
+    "class": "{53FA8D47-2CDD-11D3-9DD0-D3CD4078982A}",
+    "text": "",
+    "rect": [
+     145,
+     6,
+     154,
+     210
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1284,
+    "id_hex": "0x504",
+    "class": "{972DE6C2-8B09-11D2-B652-A1FD6CC34260}",
+    "text": "",
+    "rect": [
+     275,
+     200,
+     21,
+     20
+    ],
+    "style": "0x50000000"
+   }
+  ],
+  "resource_id": 188
+ },
+ {
+  "title": "Dialog",
+  "class": "",
+  "controls": [
+   {
+    "id": 1016,
+    "id_hex": "0x3f8",
+    "class": "Static",
+    "text": "",
+    "rect": [
+     41,
+     10,
+     163,
+     15
+    ],
+    "style": "0x50021201"
+   },
+   {
+    "id": 4294967295,
+    "id_hex": "0xffffffff",
+    "class": "Static",
+    "text": "AoA Notify",
+    "rect": [
+     35,
+     130,
+     119,
+     9
+    ],
+    "style": "0x40021201"
+   },
+   {
+    "id": 1142,
+    "id_hex": "0x476",
+    "class": "Edit",
+    "text": "",
+    "rect": [
+     55,
+     142,
+     99,
+     12
+    ],
+    "style": "0x40800080"
+   },
+   {
+    "id": 1143,
+    "id_hex": "0x477",
+    "class": "ComboBox",
+    "text": "",
+    "rect": [
+     107,
+     155,
+     47,
+     35
+    ],
+    "style": "0x40200102"
+   },
+   {
+    "id": 4294967295,
+    "id_hex": "0xffffffff",
+    "class": "Static",
+    "text": "Find:",
+    "rect": [
+     129,
+     170,
+     23,
+     10
+    ],
+    "style": "0x40020000"
+   },
+   {
+    "id": 1078,
+    "id_hex": "0x436",
+    "class": "Static",
+    "text": "",
+    "rect": [
+     23,
+     195,
+     193,
+     25
+    ],
+    "style": "0x40000005"
+   },
+   {
+    "id": 1012,
+    "id_hex": "0x3f4",
+    "class": "Button",
+    "text": "Play",
+    "rect": [
+     41,
+     60,
+     53,
+     14
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1013,
+    "id_hex": "0x3f5",
+    "class": "Button",
+    "text": "Bug Report",
+    "rect": [
+     41,
+     75,
+     53,
+     14
+    ],
+    "style": "0x58000000"
+   },
+   {
+    "id": 1074,
+    "id_hex": "0x432",
+    "class": "Button",
+    "text": "Quit",
+    "rect": [
+     41,
+     90,
+     53,
+     14
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1064,
+    "id_hex": "0x428",
+    "class": "Button",
+    "text": "Show All (online/offline)",
+    "rect": [
+     49,
+     120,
+     105,
+     10
+    ],
+    "style": "0x40000009"
+   },
+   {
+    "id": 1063,
+    "id_hex": "0x427",
+    "class": "Button",
+    "text": "Show Online (selected)",
+    "rect": [
+     105,
+     65,
+     105,
+     10
+    ],
+    "style": "0x50000009"
+   },
+   {
+    "id": 1066,
+    "id_hex": "0x42a",
+    "class": "Button",
+    "text": "Show Online (all servers)",
+    "rect": [
+     105,
+     75,
+     111,
+     10
+    ],
+    "style": "0x50000009"
+   },
+   {
+    "id": 1068,
+    "id_hex": "0x42c",
+    "class": "Button",
+    "text": "Show Online (station)",
+    "rect": [
+     105,
+     85,
+     111,
+     10
+    ],
+    "style": "0x50000009"
+   },
+   {
+    "id": 1124,
+    "id_hex": "0x464",
+    "class": "Button",
+    "text": "Squad Manager",
+    "rect": [
+     152,
+     175,
+     71,
+     14
+    ],
+    "style": "0x58000000"
+   },
+   {
+    "id": 1125,
+    "id_hex": "0x465",
+    "class": "Button",
+    "text": "Player Info",
+    "rect": [
+     169,
+     120,
+     53,
+     14
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1178,
+    "id_hex": "0x49a",
+    "class": "Button",
+    "text": "Outerchange",
+    "rect": [
+     163,
+     105,
+     59,
+     14
+    ],
+    "style": "0x50000000"
+   },
+   {
+    "id": 1014,
+    "id_hex": "0x3f6",
+    "class": "Button",
+    "text": "Add Handle",
+    "rect": [
+     169,
+     135,
+     53,
+     12
+    ],
+    "style": "0x50000001"
+   },
+   {
+    "id": 1091,
+    "id_hex": "0x443",
+    "class": "Button",
+    "text": "View Messages",
+    "rect": [
+     18,
+     30,
+     193,
+     14
+    ],
+    "style": "0x40000000"
+   },
+   {
+    "id": 4294967295,
+    "id_hex": "0xffffffff",
+    "class": "Button",
+    "text": "Defunct",
+    "rect": [
+     0,
+     0,
+     227,
+     225
+    ],
+    "style": "0x40000007"
+   },
+   {
+    "id": 1150,
+    "id_hex": "0x47e",
+    "class": "Button",
+    "text": "Commit",
+    "rect": [
+     29,
+     160,
+     51,
+     11
+    ],
+    "style": "0x48020000"
+   },
+   {
+    "id": 1153,
+    "id_hex": "0x481",
+    "class": "Button",
+    "text": "Change Password",
+    "rect": [
+     18,
+     180,
+     81,
+     11
+    ],
+    "style": "0x40000001"
+   }
+  ],
+  "resource_id": 191
+ },
+ {
+  "title": "",
+  "class": "",
+  "controls": [
+   {
+    "id": 1103,
+    "id_hex": "0x44f",
+    "class": "Button",
+    "text": "Accept",
+    "rect": [
+     5,
+     202,
+     65,
+     14
+    ],
+    "style": "0x50010000"
+   },
+   {
+    "id": 1104,
+    "id_hex": "0x450",
+    "class": "Button",
+    "text": "Deny",
+    "rect": [
+     75,
+     202,
+     65,
+     14
+    ],
+    "style": "0x50010000"
+   },
+   {
+    "id": 1105,
+    "id_hex": "0x451",
+    "class": "Button",
+    "text": "Clear All",
+    "rect": [
+     225,
+     202,
+     70,
+     14
+    ],
+    "style": "0x50010000"
+   },
+   {
+    "id": 1106,
+    "id_hex": "0x452",
+    "class": "Button",
+    "text": "Deny Invites",
+    "rect": [
+     200,
+     106,
+     95,
+     13
+    ],
+    "style": "0x40010023"
+   },
+   {
+    "id": 1114,
+    "id_hex": "0x45a",
+    "class": "SysListView32",
+    "text": "List5",
+    "rect": [
+     5,
+     123,
+     290,
+     74
+    ],
+    "style": "0x50818009"
+   },
+   {
+    "id": 1107,
+    "id_hex": "0x453",
+    "class": "Button",
+    "text": "Clear Selected",
+    "rect": [
+     145,
+     202,
+     75,
+     14
+    ],
+    "style": "0x50010000"
+   },
+   {
+    "id": 1129,
+    "id_hex": "0x469",
+    "class": "Button",
+    "text": "Invite",
+    "rect": [
+     150,
+     40,
+     39,
+     14
+    ],
+    "style": "0x50010000"
+   },
+   {
+    "id": 1130,
+    "id_hex": "0x46a",
+    "class": "Button",
+    "text": "Solicit",
+    "rect": [
+     150,
+     55,
+     39,
+     14
+    ],
+    "style": "0x50010000"
+   },
+   {
+    "id": 1363,
+    "id_hex": "0x553",
+    "class": "Button",
+    "text": "Info",
+    "rect": [
+     150,
+     70,
+     39,
+     14
+    ],
+    "style": "0x40010000"
+   },
+   {
+    "id": 1142,
+    "id_hex": "0x476",
+    "class": "Edit",
+    "text": "",
+    "rect": [
+     5,
+     21,
+     100,
+     14
+    ],
+    "style": "0x508110c4"
+   },
+   {
+    "id": 1133,
+    "id_hex": "0x46d",
+    "class": "Button",
+    "text": "Search",
+    "rect": [
+     106,
+     21,
+     34,
+     14
+    ],
+    "style": "0x50010f01"
+   },
+   {
+    "id": 1134,
+    "id_hex": "0x46e",
+    "class": "Button",
+    "text": "Players",
+    "rect": [
+     5,
+     6,
+     39,
+     10
+    ],
+    "style": "0x50000009"
+   },
+   {
+    "id": 1135,
+    "id_hex": "0x46f",
+    "class": "Button",
+    "text": "Squads",
+    "rect": [
+     48,
+     6,
+     40,
+     10
+    ],
+    "style": "0x50000009"
+   },
+   {
+    "id": 1128,
+    "id_hex": "0x468",
+    "class": "SysListView32",
+    "text": "List6",
+    "rect": [
+     5,
+     39,
+     141,
+     76
+    ],
+    "style": "0x50810009"
+   },
+   {
+    "id": 1284,
+    "id_hex": "0x504",
+    "class": "{972DE6C2-8B09-11D2-B652-A1FD6CC34260}",
+    "text": "",
+    "rect": [
+     275,
+     0,
+     21,
+     20
+    ],
+    "style": "0x50000000"
+   }
+  ],
+  "resource_id": 192
+ }
+]

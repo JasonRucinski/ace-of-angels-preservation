@@ -1,0 +1,35 @@
+{
+  "date": "2026-10-22",
+  "patch": "solid-world-mesh-distance-v1",
+  "scope": "world model-group surface-distance cutoff; intentional sprite and particle rendering code unchanged",
+  "site": "0x543222",
+  "original_bytes": "d81d300c5b00",
+  "patched_bytes": "d81dc0d95900",
+  "original_surface_distance": 61000,
+  "patched_surface_distance": 900000,
+  "static_model_visibility_callers": {
+    "0x543000": ["0x546bce"],
+    "0x546b20": ["0x49bcc2", "0x4a4e36"]
+  },
+  "automated_validation": {
+    "full_gate": "work/solid-world-render-verification/gate.json",
+    "full_gate_passed": true,
+    "full_gate_tests": 83,
+    "full_gate_emulators": 9,
+    "solid_world_render_tests": 5,
+    "object_lod_tests": 4,
+    "installed_client_check": "ready"
+  },
+  "installed": {
+    "sha256": "0077d59f1762efcaf7fdb42e250e59259f4614771f0df6b12e7187c05f93e2df",
+    "undo_sha256": "45c9f2de5267298de0ad67074fa72ddfee9577f3216863baac26db6e657079c3",
+    "undo_mode": "user-accepted asteroid-only patch",
+    "visual_acceptance": "user confirmed stable ships and stations and normal effects; separate close station LOD brightness jump reported"
+  },
+  "limitations": [
+    "CPU emulation and byte equality do not certify full-frame GPU output",
+    "User flight acceptance does not constitute a full-scene GPU benchmark",
+    "Performance has not been benchmarked",
+    "Other LOD and visibility gates remain active"
+  ]
+}

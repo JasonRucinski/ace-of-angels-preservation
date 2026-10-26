@@ -1,0 +1,42 @@
+name: Tests
+
+# The suites that need no game files: protocol, server, relay and host checks
+# against synthetic clients on loopback. Client-patch suites need the user's
+# own 2.9.2 executable and run locally through tools/verify_local.py.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  server:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install -r requirements.txt
+      - name: Run game-free suites
+        shell: pwsh
+        run: |
+          $suites = @(
+            "test_network_bounds", "test_relay_motion", "test_relay_recovery",
+            "test_station_runtime", "test_station_sessions", "test_station_stub",
+            "test_guest_admission", "test_combat_delivery", "test_client_extensions",
+            "test_lan_dogfight", "test_internet_play", "test_powerups",
+            "test_target_ships", "test_host_control", "test_prepare_client"
+          )
+          $failed = @()
+          foreach ($suite in $suites) {
+            Write-Host "::group::$suite"
+            python -I "tools/$suite.py"
+            if ($LASTEXITCODE -ne 0) { $failed += $suite }
+            Write-Host "::endgroup::"
+          }
+          if ($failed) { throw "Failed: $($failed -join ', ')" }

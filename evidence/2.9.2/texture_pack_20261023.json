@@ -1,0 +1,102 @@
+{
+  "date": "2026-10-23",
+  "patches": {
+    "texture-argb8888-v1": {
+      "sites": [
+        "0x562ab8",
+        "0x562abd",
+        "0x562ae3"
+      ],
+      "effect": "TGA texture views: 24-bit -> depth 32 / alpha 0 (ARGB8888, converter 0x558b80 forces opaque); 32-bit -> depth 32 / alpha 8; 16-bit unchanged",
+      "installed_client_sha256": "1acafed7b95c8bfb45b33d2b8524b50679b87a728075a5610fa18bfddc69457d",
+      "undo_sha256": "6d0c3fc35805f6f93dbc8606272d5df18c8bfa8de3f0557e8e0f8d4412307e71"
+    }
+  },
+  "texture_pack": {
+    "scope": "close-up skins of the 31 armed fighter .Sco objects (faction, engine, guns, hull <= 200); 26 skins; AlphaFighter model untextured",
+    "method": "Real-ESRGAN realesrgan-x4plus (ncnn-vulkan 20220424, zip sha256 abc02804e17982a3be33675e4d471e91ea374e65b70167abc09e31acb412802d) 4x, ffmpeg Lanczos to 2x, original TGA header fields and footer",
+    "archives": {
+      "TEXTURES.AOA": {
+        "entries": 23,
+        "original_sha256": "060ce8ea65dea219581d49df9d782fdec6c8b5f0b06939e8b40c9a7828a47c88",
+        "sha256": "b685190be2e57adae63191e841c7df416f82412b1adfc4e231d2e97d71218632"
+      },
+      "DATA.AOA": {
+        "entries": 3,
+        "entry_names": [
+          "salamtex.tga",
+          "obdgr_t1.tga",
+          "natak-t1.tga"
+        ],
+        "sha256": "866a5bbf99238c852d317270fd019270042eae1fc6950d40b4e07f74039eca91"
+      }
+    },
+    "sizes": "256x256 -> 512x512; vagym.tga 512x512 -> 1024x1024"
+  },
+  "automated_validation": {
+    "full_gate": "work/texture32-verification/gate.json",
+    "full_gate_passed": true,
+    "full_gate_tests": 122,
+    "texture32_tests": 6,
+    "aoapack_write_tests": 5,
+    "note": "gate ran before texture_pack gained DATA.AOA support; test_aoapack_write (5) and test_prepare_client (8) were rerun and passed afterwards"
+  },
+  "live_session": {
+    "client_window": "14:01:06-14:02:34 local",
+    "log_ymkhtat": "Load Texture.. (YmKhtat.tga) (512 512 24) Format(8888) : Tex(Tex14) Block(472) Rect(0 0 511 511)",
+    "tga_views_format_8888": 17,
+    "tga_views_other_formats": 0,
+    "graphics_log_warnings": 0,
+    "user_observation": "everything checks out"
+  },
+  "limitations": [
+    "Only the player's ship skin was loaded in the live session; other 25 skins await their log lines",
+    "1024x1024 vagym.tga is untested in the client",
+    "Brief session; no performance or long-flight measurement"
+  ],
+  "second_pack_20261025": {
+    "added": 78,
+    "bits": {
+      "24": 55,
+      "32": 23
+    },
+    "scope": "close-up skins of non-fighter models: capital ships, docks, stations, asteroids, turrets, tugs, flags, launch bays, window strips, logos",
+    "method": "16-pixel wrap padding, Real-ESRGAN x4plus on RGB and separately on alpha as grayscale, crop, ffmpeg Lanczos to 2x, original TGA header fields and footer",
+    "excluded": {
+      "space_backgrounds": [
+        "spc02_a",
+        "spc02_b",
+        "spc03_a",
+        "spc03_b",
+        "spc05_a",
+        "spc05_b",
+        "planet02",
+        "planet03",
+        "space4"
+      ],
+      "reason_backgrounds": "model invented sharp strands in soft nebulae",
+      "galogo.tga": "upscaler hung; test-cube logo",
+      "missing_from_archives": [
+        "green_02.tga",
+        "green_03.tga",
+        "spc06_a.tga",
+        "spc06_b.tga",
+        "odtextur.tga"
+      ]
+    },
+    "installed_archives": {
+      "TEXTURES.AOA": {
+        "entries": 96,
+        "bytes": 54550823,
+        "sha256": "24301e053bb110c2e76dadd3a218585a68ebc69c0f929c2ff5fd1fa4840a499b"
+      },
+      "DATA.AOA": {
+        "entries": 8,
+        "bytes": 6039028,
+        "sha256": "b9030b542f82148d965a72c9882d8fe38f9fa7d617399eac996722ea8aeed06d"
+      }
+    },
+    "review": "contact sheet of all 78; crops of grid.tga, astr3.tga, dock1a.tga tiled 2x2, zcs_c.tga alpha over magenta",
+    "client_status": "prepare_client check ready; not yet seen in a live session"
+  }
+}

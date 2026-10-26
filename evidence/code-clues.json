@@ -1,0 +1,328 @@
+{
+  "2.0.0": {
+    "client_sha256": "2faa8ab2161c2ef83a76627171692e95516b626590f1606b10d9192dace122bd",
+    "clues": [
+      {
+        "string": "Loading turret [%s] gun[%d] turn[%d]",
+        "va": "0x522eac",
+        "code_refs": [
+          "0x47d68a"
+        ]
+      },
+      {
+        "string": "you are in edit mode",
+        "va": "0x522f64",
+        "code_refs": [
+          "0x47d3f9"
+        ]
+      },
+      {
+        "string": "SHOTS FROM SAFEZONE DO NO DAMAGE",
+        "va": "0x5234e8",
+        "code_refs": [
+          "0x4803d5"
+        ]
+      }
+    ]
+  },
+  "2.3.1": {
+    "client_sha256": "c80cd9f2998d326ffc0b6aa99ea4fdd1a5846411a84d26d12ab99216b7edc61a",
+    "clues": [
+      {
+        "string": "Loading turret [%s] gun[%d] turn[%d]",
+        "va": "0x59cb30",
+        "code_refs": [
+          "0x49df5e"
+        ]
+      },
+      {
+        "string": "you are in edit mode",
+        "va": "0x59cbe8",
+        "code_refs": [
+          "0x49dcf3"
+        ]
+      },
+      {
+        "string": "SHOTS FROM SAFEZONE DO NO DAMAGE",
+        "va": "0x59d244",
+        "code_refs": [
+          "0x4a21c5"
+        ]
+      },
+      {
+        "string": "CAIScriptHdlr::ParseAcquireHostileAction pcEvent NULL",
+        "va": "0x5a6ca8",
+        "code_refs": [
+          "0x4c9252"
+        ]
+      }
+    ]
+  },
+  "2.7.1": {
+    "client_sha256": "b179c3c22e6426d55de52d57476aaa53b7e92622009daf754c5153be0b7503a7",
+    "clues": [
+      {
+        "string": "arena1_waypoints.txt",
+        "va": "0x686dc8",
+        "code_refs": [
+          "0x504578"
+        ]
+      },
+      {
+        "string": "Loading turret [%s] gun[%d] turn[%d]",
+        "va": "0x687420",
+        "code_refs": [
+          "0x50350a"
+        ]
+      },
+      {
+        "string": "you are in edit mode",
+        "va": "0x6874f8",
+        "code_refs": [
+          "0x50329c"
+        ]
+      },
+      {
+        "string": "WARNING CAOAWorld::CheckCaptureFlagRules won by no one",
+        "va": "0x687b5c",
+        "code_refs": [
+          "0x507e42"
+        ]
+      },
+      {
+        "string": "CAOAWorld::CheckCaptureFlagRules orering [%s] to drop [%s]",
+        "va": "0x687bd8",
+        "code_refs": [
+          "0x507bd4"
+        ]
+      },
+      {
+        "string": "SHOTS FROM SAFEZONE DO NO DAMAGE",
+        "va": "0x6882fc",
+        "code_refs": [
+          "0x50baa5"
+        ]
+      },
+      {
+        "string": "non-Server-side, nothing to do",
+        "va": "0x688c64",
+        "code_refs": [
+          "0x50dd23"
+        ]
+      },
+      {
+        "string": "CAOAWorld::LoadScenarioGroupObjectMembers [%s]",
+        "va": "0x688c8c",
+        "code_refs": [
+          "0x50db55"
+        ]
+      },
+      {
+        "string": "Get up on my wing bitch!",
+        "va": "0x688cfc",
+        "code_refs": [
+          "0x50e6df"
+        ]
+      },
+      {
+        "string": "CAIScriptHdlr::ParseAcquireHostileAction pcEvent NULL",
+        "va": "0x694f94",
+        "code_refs": [
+          "0x54f8e2"
+        ]
+      },
+      {
+        "string": "Fool we's jousting now",
+        "va": "0x695010",
+        "code_refs": [
+          "0x5506d8"
+        ]
+      }
+    ],
+    "ai_action_table": [
+      "EMITTEXT",
+      "GUESSTARGETPOSITION",
+      "ACQUIREHOSTILE",
+      "INTERCEPT",
+      "~"
+    ],
+    "inspected_ranges": {
+      "edit_mode": [
+        "0x503235",
+        "0x5035a8"
+      ],
+      "flag_scoring": [
+        "0x507c80",
+        "0x507e67"
+      ],
+      "scenario_objects": [
+        "0x50db20",
+        "0x50dd50"
+      ],
+      "ai_action_dispatch": [
+        "0x54e3e0",
+        "0x54e59c"
+      ]
+    }
+  },
+  "2.8.0": {
+    "client_sha256": "809ecfc42c9b2cdb1b2dc54e0945160649f40c32e267d6a96ec7e207f44a9145",
+    "clues": [
+      {
+        "string": "arena1_waypoints.txt",
+        "va": "0x5d43cc",
+        "code_refs": [
+          "0x4adf42"
+        ]
+      },
+      {
+        "string": "Loading turret [%s] gun[%d] turn[%d]",
+        "va": "0x5d4938",
+        "code_refs": [
+          "0x4abedb"
+        ]
+      },
+      {
+        "string": "you are in edit mode",
+        "va": "0x5d49f0",
+        "code_refs": [
+          "0x4abc6e"
+        ]
+      },
+      {
+        "string": "SHOTS FROM SAFEZONE DO NO DAMAGE",
+        "va": "0x5d5ba0",
+        "code_refs": [
+          "0x4b2c45"
+        ]
+      },
+      {
+        "string": "Get up on my wing bitch!",
+        "va": "0x5d62ac",
+        "code_refs": [
+          "0x4b49d5"
+        ]
+      },
+      {
+        "string": "Loading turret explosion effect",
+        "va": "0x5d6934",
+        "code_refs": [
+          "0x4b8ece"
+        ]
+      },
+      {
+        "string": "CAIScriptHdlr::ParseAcquireHostileAction pcEvent NULL",
+        "va": "0x5db518",
+        "code_refs": [
+          "0x4e3742"
+        ]
+      }
+    ]
+  },
+  "2.8.2": {
+    "client_sha256": "4783759e27e5ae64fcc554008037e6a191dba3488067ee945d95caeab000aaba",
+    "clues": [
+      {
+        "string": "arena1_waypoints.txt",
+        "va": "0x5d4b60",
+        "code_refs": [
+          "0x4aea66"
+        ]
+      },
+      {
+        "string": "Loading turret [%s] gun[%d] turn[%d]",
+        "va": "0x5d50cc",
+        "code_refs": [
+          "0x4aca13"
+        ]
+      },
+      {
+        "string": "you are in edit mode",
+        "va": "0x5d5184",
+        "code_refs": [
+          "0x4ac7a6"
+        ]
+      },
+      {
+        "string": "SHOTS FROM SAFEZONE DO NO DAMAGE",
+        "va": "0x5d6334",
+        "code_refs": [
+          "0x4b3435"
+        ]
+      },
+      {
+        "string": "Get up on my wing bitch!",
+        "va": "0x5d6a40",
+        "code_refs": [
+          "0x4b5188"
+        ]
+      },
+      {
+        "string": "Loading turret explosion effect",
+        "va": "0x5d70c4",
+        "code_refs": [
+          "0x4b93fe"
+        ]
+      },
+      {
+        "string": "CAIScriptHdlr::ParseAcquireHostileAction pcEvent NULL",
+        "va": "0x5dbc64",
+        "code_refs": [
+          "0x4e3892"
+        ]
+      }
+    ]
+  },
+  "2.9.2": {
+    "client_sha256": "4b6c35e2b3ab473bd98c0afa6538079ee78678d85c28406c07bc27a08cc78c7e",
+    "clues": [
+      {
+        "string": "arena1_waypoints.txt",
+        "va": "0x5d4a00",
+        "code_refs": [
+          "0x4abef9"
+        ]
+      },
+      {
+        "string": "Loading turret [%s] gun[%d] turn[%d]",
+        "va": "0x5d4f34",
+        "code_refs": [
+          "0x4a9dfc"
+        ]
+      },
+      {
+        "string": "you are in edit mode",
+        "va": "0x5d4fec",
+        "code_refs": [
+          "0x4a9b92"
+        ]
+      },
+      {
+        "string": "Loading turret explosion effect",
+        "va": "0x5d6164",
+        "code_refs": [
+          "0x4b5c9e"
+        ]
+      },
+      {
+        "string": "SHOTS FROM SAFEZONE DO NO DAMAGE",
+        "va": "0x5d6da4",
+        "code_refs": []
+      },
+      {
+        "string": "non-Server-side, nothing to do",
+        "va": "0x5d7c6c",
+        "code_refs": [
+          "0x4c0073"
+        ]
+      },
+      {
+        "string": "CAIScriptHdlr::ParseAcquireHostileAction pcEvent NULL",
+        "va": "0x5dc5a8",
+        "code_refs": [
+          "0x4e22d2"
+        ]
+      }
+    ]
+  }
+}

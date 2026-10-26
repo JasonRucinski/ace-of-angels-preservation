@@ -1,0 +1,622 @@
+{
+ "old_client": "15_AOACLIENT.EXE",
+ "new_client": "AOACLIENT.EXE",
+ "names_only_in_old": 20,
+ "rows": [
+  {
+   "name": "SendChangePCShip",
+   "function": "0x4d6920",
+   "string": "WARNING ::SendChangePCShip Not Conected",
+   "sends": [
+    {
+     "type": "0x27",
+     "length": 129
+    },
+    {
+     "type": "0x47",
+     "length": 40
+    }
+   ],
+   "callers": []
+  },
+  {
+   "name": "SendConnectToOtherServer",
+   "function": "0x4d77a0",
+   "string": "CAOAComm::SendConnectToOtherServer",
+   "sends": [
+    {
+     "type": "0xa8",
+     "length": 422
+    }
+   ],
+   "callers": []
+  },
+  {
+   "name": "SendEnterFlightLoop",
+   "function": "0x4d7350",
+   "string": "PANIC: SendEnterFlightLoop null PEER",
+   "sends": [
+    {
+     "type": "0x2c",
+     "length": 4
+    }
+   ],
+   "callers": []
+  },
+  {
+   "name": "SendFile",
+   "function": "0x476a20",
+   "string": "SPacketSendFile (%d)",
+   "sends": [],
+   "callers": []
+  },
+  {
+   "name": "SendFullValue",
+   "function": null,
+   "string": null,
+   "sends": [],
+   "callers": []
+  },
+  {
+   "name": "SendGainScore",
+   "function": "0x4d6da0",
+   "string": "WARNING ::SendGainScore [%d] Not Conected",
+   "sends": [
+    {
+     "type": "0x56",
+     "length": 8
+    }
+   ],
+   "callers": []
+  },
+  {
+   "name": "SendHangup",
+   "function": "0x4d6520",
+   "string": "WARNING CAOAComm::SendHangup [%s:%d] not connected",
+   "sends": [
+    {
+     "type": "0x3e",
+     "length": 4
+    }
+   ],
+   "callers": []
+  },
+  {
+   "name": "SendLoadPlayer",
+   "function": "0x4d85b0",
+   "string": "WARNING -- CAOAComm::SendLoadPlayer [%s] had no team",
+   "sends": [
+    {
+     "type": "0x26",
+     "length": 498
+    }
+   ],
+   "callers": []
+  },
+  {
+   "name": "SendMovePowerupTo",
+   "function": "0x4d6cb0",
+   "string": "WARNING ::SendMovePowerupTo [%d] Not Conected",
+   "sends": [
+    {
+     "type": "0x53",
+     "length": 14
+    }
+   ],
+   "callers": []
+  },
+  {
+   "name": "SendObject",
+   "function": "0x476a20",
+   "string": "SPacketRequestSendObject (%d)",
+   "sends": [],
+   "callers": []
+  },
+  {
+   "name": "SendPacketShipConfiguration",
+   "function": "0x4d7420",
+   "string": "WARNING CAOAComm::SendPacketShipConfiguration [%d] not connected",
+   "sends": [
+    {
+     "type": "0x99",
+     "length": 577
+    }
+   ],
+   "callers": []
+  },
+  {
+   "name": "SendRequestHTTPResourceList",
+   "function": "0x45aff0",
+   "string": "PANIC-- CClientComm::SendRequestHTTPResourceList() CALLED!!",
+   "sends": [],
+   "callers": []
+  },
+  {
+   "name": "SendRequestHTTPTransfer",
+   "function": "0x45b020",
+   "string": "PANIC-- CClientComm::SendRequestHTTPTransfer CALLED!!",
+   "sends": [],
+   "callers": []
+  },
+  {
+   "name": "SendRestart",
+   "function": "0x4d6e80",
+   "string": "WARNING ::SendRestart NULL szParam2",
+   "sends": [
+    {
+     "type": "0x12",
+     "length": 192
+    }
+   ],
+   "callers": []
+  },
+  {
+   "name": "SendSetModSpec",
+   "function": "0x4d5ce0",
+   "string": "WARNING ::SendSetModSpec [%d] had no peer Tag[%ld] b[%s]",
+   "sends": [
+    {
+     "type": "0x83",
+     "length": 5
+    }
+   ],
+   "callers": [
+    "0x4fdc30",
+    "0x509ae0"
+   ]
+  },
+  {
+   "name": "SendSetupTFCGame",
+   "function": "0x4d55f0",
+   "string": "WARNING ::SendSetupTFCGame [%d] Not Conected",
+   "sends": [
+    {
+     "type": "0xa9",
+     "length": 320
+    }
+   ],
+   "callers": []
+  },
+  {
+   "name": "SendTCP",
+   "function": "0x60dd70",
+   "string": "PANIC CComm::SendTCP asked to send to bad socket",
+   "sends": [],
+   "callers": []
+  },
+  {
+   "name": "SendToggleSNM",
+   "function": "0x4d6880",
+   "string": "WARNING: CAOAComm::SendToggleSNM : peer not valid",
+   "sends": [
+    {
+     "type": "0x46",
+     "length": 0
+    }
+   ],
+   "callers": []
+  },
+  {
+   "name": "SendWYSIWIGDamage",
+   "function": "0x4d6450",
+   "string": "WARNING ::SendWYSIWIGDamage [%d] had no peer f[%d] i[%d] t[%d]",
+   "sends": [
+    {
+     "type": "0x3d",
+     "length": 3
+    }
+   ],
+   "callers": []
+  },
+  {
+   "name": "SendYouHaveMadeAKill",
+   "function": "0x4d6700",
+   "string": "WARNING ::SendYouHaveMadeAKill NULL S",
+   "sends": [
+    {
+     "type": "0x42",
+     "length": 418
+    }
+   ],
+   "callers": []
+  }
+ ],
+ "types_sent_only_in_old": [
+  {
+   "type": "0x12",
+   "length": 192,
+   "function": "0x4d6e80",
+   "size_matches": [
+    "SPacketRestart",
+    "SDBEntry"
+   ],
+   "callers": []
+  },
+  {
+   "type": "0x1a",
+   "length": 1,
+   "function": "0x4d7180",
+   "size_matches": [
+    "SKilledBy",
+    "SRemovePlayer",
+    "SPacketYouDie",
+    "SPacketResetShip",
+    "SPacketRequestStats",
+    "SPacketImQuitting",
+    "SPacketKeepAlive",
+    "SPacketRenumberMOTD",
+    "SPacketStationInfoRequest"
+   ],
+   "callers": []
+  },
+  {
+   "type": "0x26",
+   "length": 498,
+   "function": "0x4d85b0",
+   "size_matches": [
+    "SLoadPlayer"
+   ],
+   "callers": []
+  },
+  {
+   "type": "0x27",
+   "length": 129,
+   "function": "0x4d6920",
+   "size_matches": [
+    "SLoadShip"
+   ],
+   "callers": []
+  },
+  {
+   "type": "0x2c",
+   "length": 4,
+   "function": "0x4d7350",
+   "size_matches": [
+    "SPacketRequestHTTPTransfer",
+    "SPacketStationPing",
+    "SPacketMessageAck",
+    "SPacketThrustChange",
+    "SPacketECMChange",
+    "SPacketECCMChange",
+    "SPacketIHaveDied",
+    "SPacketHitPowerup",
+    "SPacketGetSquadRoster",
+    "SPacketGetMOTDList",
+    "SPacketDeleteMOTD",
+    "SMyROI",
+    "SPacketResourceAck",
+    "SPacketUnlockScenario",
+    "SPacketECMEffectiveness",
+    "SPacketEWEffectiveness",
+    "SPacketMissilePredictFactor",
+    "SPacketExecuteFireMissile",
+    "SProcessingScenario",
+    "SPacketChangeMood",
+    "SPacketIDestroyedObject",
+    "SPacketMOTDPreview",
+    "SPacketBeginSerialLoad"
+   ],
+   "callers": []
+  },
+  {
+   "type": "0x38",
+   "length": 8,
+   "function": "0x4d7060",
+   "size_matches": [
+    "SSetCommParam",
+    "SPacketObjectHasDied",
+    "SPacketMissileManuever",
+    "SPacketShiftScore",
+    "SPosUpdateHeader"
+   ],
+   "callers": []
+  },
+  {
+   "type": "0x3d",
+   "length": 3,
+   "function": "0x4d6450",
+   "size_matches": [
+    "SPacketRequestSendObject",
+    "SPacketWYSIWIGDamage"
+   ],
+   "callers": []
+  },
+  {
+   "type": "0x3e",
+   "length": 4,
+   "function": "0x4d6520",
+   "size_matches": [
+    "SPacketRequestHTTPTransfer",
+    "SPacketStationPing",
+    "SPacketMessageAck",
+    "SPacketThrustChange",
+    "SPacketECMChange",
+    "SPacketECCMChange",
+    "SPacketIHaveDied",
+    "SPacketHitPowerup",
+    "SPacketGetSquadRoster",
+    "SPacketGetMOTDList",
+    "SPacketDeleteMOTD",
+    "SMyROI",
+    "SPacketResourceAck",
+    "SPacketUnlockScenario",
+    "SPacketECMEffectiveness",
+    "SPacketEWEffectiveness",
+    "SPacketMissilePredictFactor",
+    "SPacketExecuteFireMissile",
+    "SProcessingScenario",
+    "SPacketChangeMood",
+    "SPacketIDestroyedObject",
+    "SPacketMOTDPreview",
+    "SPacketBeginSerialLoad"
+   ],
+   "callers": []
+  },
+  {
+   "type": "0x3f",
+   "length": 8,
+   "function": "0x4d65f0",
+   "size_matches": [
+    "SSetCommParam",
+    "SPacketObjectHasDied",
+    "SPacketMissileManuever",
+    "SPacketShiftScore",
+    "SPosUpdateHeader"
+   ],
+   "callers": []
+  },
+  {
+   "type": "0x40",
+   "length": 5,
+   "function": "0x4d56d0",
+   "size_matches": [
+    "SPacketGameserverConnectStatus",
+    "SPacketPlaySound",
+    "SPacketSetToTargetsTarget",
+    "SPacketIAmInvulnerable"
+   ],
+   "callers": [
+    "0x509970",
+    "0x509ae0"
+   ]
+  },
+  {
+   "type": "0x41",
+   "length": 10,
+   "function": "0x4d6670",
+   "size_matches": [
+    "SPacketServerRequestConnectAck",
+    "SPacketSetGunDamage"
+   ],
+   "callers": []
+  },
+  {
+   "type": "0x42",
+   "length": 418,
+   "function": "0x4d6700",
+   "size_matches": [
+    "SYouHaveMadeAKill",
+    "SUpdatePlayerRecord"
+   ],
+   "callers": []
+  },
+  {
+   "type": "0x43",
+   "length": 17,
+   "function": "0x4d67e0",
+   "size_matches": [
+    "SPacketSpawnPowerUp"
+   ],
+   "callers": []
+  },
+  {
+   "type": "0x46",
+   "length": 0,
+   "function": "0x4d6880",
+   "size_matches": [],
+   "callers": []
+  },
+  {
+   "type": "0x47",
+   "length": 40,
+   "function": "0x4d6920",
+   "size_matches": [
+    "SPacketChangePCShip"
+   ],
+   "callers": []
+  },
+  {
+   "type": "0x50",
+   "length": 46,
+   "function": "0x4d5360",
+   "size_matches": [
+    "SPacketObjectToTeam",
+    "SGameserverList"
+   ],
+   "callers": [
+    "0x502220"
+   ]
+  },
+  {
+   "type": "0x53",
+   "length": 14,
+   "function": "0x4d6cb0",
+   "size_matches": [
+    "SPacketMovePowerupTo"
+   ],
+   "callers": []
+  },
+  {
+   "type": "0x55",
+   "length": 12,
+   "function": "0x4d2af0",
+   "size_matches": [
+    "SPing",
+    "SSetPosition",
+    "SPacketManueverChange",
+    "SPacketRatingConstants",
+    "SPosUpdate",
+    "SPlayersOnlineInner",
+    "SPacketSetECM"
+   ],
+   "callers": []
+  },
+  {
+   "type": "0x56",
+   "length": 8,
+   "function": "0x4d6da0",
+   "size_matches": [
+    "SSetCommParam",
+    "SPacketObjectHasDied",
+    "SPacketMissileManuever",
+    "SPacketShiftScore",
+    "SPosUpdateHeader"
+   ],
+   "callers": []
+  },
+  {
+   "type": "0x6d",
+   "length": 68,
+   "function": "0x4d8820",
+   "size_matches": [
+    "SPacketSetParam"
+   ],
+   "callers": [
+    "0x4612e0"
+   ]
+  },
+  {
+   "type": "0x71",
+   "length": 4,
+   "function": "0x4d4ff0",
+   "size_matches": [
+    "SPacketRequestHTTPTransfer",
+    "SPacketStationPing",
+    "SPacketMessageAck",
+    "SPacketThrustChange",
+    "SPacketECMChange",
+    "SPacketECCMChange",
+    "SPacketIHaveDied",
+    "SPacketHitPowerup",
+    "SPacketGetSquadRoster",
+    "SPacketGetMOTDList",
+    "SPacketDeleteMOTD",
+    "SMyROI",
+    "SPacketResourceAck",
+    "SPacketUnlockScenario",
+    "SPacketECMEffectiveness",
+    "SPacketEWEffectiveness",
+    "SPacketMissilePredictFactor",
+    "SPacketExecuteFireMissile",
+    "SProcessingScenario",
+    "SPacketChangeMood",
+    "SPacketIDestroyedObject",
+    "SPacketMOTDPreview",
+    "SPacketBeginSerialLoad"
+   ],
+   "callers": []
+  },
+  {
+   "type": "0x73",
+   "length": 11,
+   "function": "0x4d5060",
+   "size_matches": [
+    "SPacketSetTarget",
+    "SPlayerOnlineSubInfo"
+   ],
+   "callers": []
+  },
+  {
+   "type": "0x75",
+   "length": 5,
+   "function": "0x4d51c0",
+   "size_matches": [
+    "SPacketGameserverConnectStatus",
+    "SPacketPlaySound",
+    "SPacketSetToTargetsTarget",
+    "SPacketIAmInvulnerable"
+   ],
+   "callers": []
+  },
+  {
+   "type": "0x81",
+   "length": 2,
+   "function": "0x4d72d0",
+   "size_matches": [
+    "SPacketRequestHTTPResourceList",
+    "SRemoveObject",
+    "SPacketToggleNodam"
+   ],
+   "callers": []
+  },
+  {
+   "type": "0x83",
+   "length": 5,
+   "function": "0x4d5ce0",
+   "size_matches": [
+    "SPacketGameserverConnectStatus",
+    "SPacketPlaySound",
+    "SPacketSetToTargetsTarget",
+    "SPacketIAmInvulnerable"
+   ],
+   "callers": [
+    "0x4fdc30",
+    "0x509ae0"
+   ]
+  },
+  {
+   "type": "0x84",
+   "length": 257,
+   "function": "0x4d08a0",
+   "size_matches": [],
+   "callers": []
+  },
+  {
+   "type": "0x8d",
+   "length": 400,
+   "function": "0x4d5b10",
+   "size_matches": [],
+   "callers": [
+    "0x507750",
+    "0x508590"
+   ]
+  },
+  {
+   "type": "0x99",
+   "length": 577,
+   "function": "0x4d7420",
+   "size_matches": [],
+   "callers": []
+  },
+  {
+   "type": "0xa3",
+   "length": 258,
+   "function": "0x4d6350",
+   "size_matches": [],
+   "callers": [
+    "0x490158"
+   ]
+  },
+  {
+   "type": "0xa6",
+   "length": 409,
+   "function": "0x4d5543",
+   "size_matches": [],
+   "callers": []
+  },
+  {
+   "type": "0xa8",
+   "length": 422,
+   "function": "0x4d77a0",
+   "size_matches": [],
+   "callers": []
+  },
+  {
+   "type": "0xa9",
+   "length": 320,
+   "function": "0x4d55f0",
+   "size_matches": [],
+   "callers": []
+  }
+ ]
+}

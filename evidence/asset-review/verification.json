@@ -1,0 +1,17 @@
+{
+  "versions_verified": 6,
+  "decoded_files_hash_verified": 2609,
+  "crc_counts_match": true,
+  "exported_obj_indices_valid_for_versions": [
+    "2.0.0",
+    "2.7.1",
+    "2.8.0",
+    "2.8.2",
+    "2.9.2"
+  ],
+  "older_turret_nodes_verified_against_pristine_baseline": 80,
+  "older_layout_versions_verified": [
+    "2.8.0",
+    "2.8.2"
+  ]
+}

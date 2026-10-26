@@ -1,0 +1,98 @@
+{
+  "schema": 1,
+  "started_utc": "2026-10-21T11:25:38.328158+00:00",
+  "scope": "synthetic loopback and isolated original-code emulation; excludes real-client UI, combat, collision, internet, clean-machine install and performance release gates",
+  "python": "3.12.6",
+  "checks": [
+    {
+      "name": "test_network_bounds.py",
+      "passed": true,
+      "seconds": 5.906,
+      "tests": 6
+    },
+    {
+      "name": "test_relay_motion.py",
+      "passed": true,
+      "seconds": 0.375,
+      "tests": 5
+    },
+    {
+      "name": "test_prepare_client.py",
+      "passed": true,
+      "seconds": 45.359,
+      "tests": 7
+    },
+    {
+      "name": "test_station_runtime.py",
+      "passed": true,
+      "seconds": 7.141,
+      "tests": 6
+    },
+    {
+      "name": "test_station_sessions.py",
+      "passed": true,
+      "seconds": 5.265,
+      "tests": 4
+    },
+    {
+      "name": "test_guest_admission.py",
+      "passed": true,
+      "seconds": 8.313,
+      "tests": 1
+    },
+    {
+      "name": "test_relay_recovery.py",
+      "passed": true,
+      "seconds": 6.031,
+      "tests": 1
+    },
+    {
+      "name": "test_station_stub.py",
+      "passed": true,
+      "seconds": 49.625,
+      "tests": 16
+    },
+    {
+      "name": "emulate_station_request.py",
+      "passed": true,
+      "seconds": 1.172
+    },
+    {
+      "name": "emulate_station_aliases.py",
+      "passed": true,
+      "seconds": 1.031
+    },
+    {
+      "name": "emulate_reliable_history.py",
+      "passed": true,
+      "seconds": 1.047
+    },
+    {
+      "name": "emulate_movement.py",
+      "passed": true,
+      "seconds": 1.078
+    },
+    {
+      "name": "emulate_motion_state.py",
+      "passed": true,
+      "seconds": 1.078
+    }
+  ],
+  "passed": true,
+  "tests": 46,
+  "source_sha256": {
+    "tools/aoanet.py": "912cb8d2038e343c7d37f245a862a239d1d2aec356aebc27599260110be40088",
+    "tools/aoapack.py": "251cc8095e3928d2280e9cf854f01e8fce53a89a2cddf0c6101a3bacac182d95",
+    "tools/station_stub.py": "72c780b5ea7d16c573eea18157e3d3730bdefd6cb41d76139379d3ce0e35a051",
+    "tools/station_runtime.py": "9fb1b8a57961d0eefcc7e5f7c071c65e6bb894b2edceeb4a3cc6a874d40ddc8a",
+    "tools/relay_motion.py": "936a63e5d9cf2355f9839c8290a70e1ab6b1f3f7aab5fcf854bdf7ede5a432c0",
+    "tools/prepare_client.py": "2297d94575d0855e46cf474074e68a1ead504976446c2a5b5d4f9cea53bb0ff6",
+    "tools/patch_client.py": "17af0c62658f5d739fcfb9d542a128e212f16f4fead87d9e2390796d96cf09c7",
+    "tools/install_wrapper.py": "befaf963374bc3e8ba1c9a667a1494555a8a960e11d75b040947800d93012155",
+    "tools/setup_game.ps1": "0b4812fd73d76af6091eb5c3ddd15fcfe90375121e456efaa1cc46194c75a0cf",
+    "tools/verify_local.py": "0a6c6ade1ba359e18e6e22890a06dfc6ca3422fca438787eb2d9079cf8fa4168",
+    "config/client-2.9.2.json": "fd74f805f467fd30c9b898b3f5f2ddcf658eeb38595b70d55bb258356c5ff437",
+    "tools/test_station_stub.py": "c11410e271ef111ec1f6788f3b4e569754236021fde0b7fb1f01ace94fd1503e"
+  },
+  "note": "Re-run after inbound reliable deduplication (findings 9.21); codec comparison not re-run"
+}

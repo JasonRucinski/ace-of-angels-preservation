@@ -1,0 +1,115 @@
+{
+  "scope": "Replay measured Windows clocks through the original 2.9.2 camera builder.\n\nNo client launch, UI automation or networking. This isolates clock quantization\nand camera math; it does not exercise scene traversal, LOD or GPU presentation.",
+  "clock_replays": [
+    {
+      "fps": 60,
+      "path": "translation",
+      "original": {
+        "max_pixel_error": 1.1359570312500011,
+        "rms_step_error_pixels": 0.3751946218405333,
+        "repeated_clock_samples": 0
+      },
+      "qpc_ms": {
+        "max_pixel_error": 0.05360156250000614,
+        "rms_step_error_pixels": 0.04191482675768426,
+        "repeated_clock_samples": 0
+      }
+    },
+    {
+      "fps": 60,
+      "path": "turn",
+      "original": {
+        "max_pixel_error": 2.6222076634932705,
+        "rms_step_error_pixels": 0.7974489563685658,
+        "repeated_clock_samples": 0
+      },
+      "qpc_ms": {
+        "max_pixel_error": 0.12397058470924094,
+        "rms_step_error_pixels": 0.08927880727706194,
+        "repeated_clock_samples": 0
+      }
+    },
+    {
+      "fps": 60,
+      "path": "combined",
+      "original": {
+        "max_pixel_error": 4.744178971959855,
+        "rms_step_error_pixels": 1.2973010896631874,
+        "repeated_clock_samples": 0
+      },
+      "qpc_ms": {
+        "max_pixel_error": 0.2222624610138837,
+        "rms_step_error_pixels": 0.14549134029827016,
+        "repeated_clock_samples": 0
+      }
+    },
+    {
+      "fps": 144,
+      "path": "translation",
+      "original": {
+        "max_pixel_error": 1.1808750000000003,
+        "rms_step_error_pixels": 0.7447451988147777,
+        "repeated_clock_samples": 160
+      },
+      "qpc_ms": {
+        "max_pixel_error": 0.07720312499998272,
+        "rms_step_error_pixels": 0.033587184620131987,
+        "repeated_clock_samples": 0
+      }
+    },
+    {
+      "fps": 144,
+      "path": "turn",
+      "original": {
+        "max_pixel_error": 2.7087198831587216,
+        "rms_step_error_pixels": 1.5757616475124494,
+        "repeated_clock_samples": 160
+      },
+      "qpc_ms": {
+        "max_pixel_error": 0.17758735471414866,
+        "rms_step_error_pixels": 0.07051083422687252,
+        "repeated_clock_samples": 0
+      }
+    },
+    {
+      "fps": 144,
+      "path": "combined",
+      "original": {
+        "max_pixel_error": 4.869397006152553,
+        "rms_step_error_pixels": 2.547039113600722,
+        "repeated_clock_samples": 160
+      },
+      "qpc_ms": {
+        "max_pixel_error": 0.3161287521329541,
+        "rms_step_error_pixels": 0.11278329928079622,
+        "repeated_clock_samples": 0
+      }
+    }
+  ],
+  "camera_precision": [
+    {
+      "world_offset": 0,
+      "max_camera_origin_error_units": 1.4341823843146094e-05
+    },
+    {
+      "world_offset": 10000,
+      "max_camera_origin_error_units": 0.0011079197631469245
+    },
+    {
+      "world_offset": 100000,
+      "max_camera_origin_error_units": 0.014949589490979612
+    },
+    {
+      "world_offset": 1000000,
+      "max_camera_origin_error_units": 0.11249791525407228
+    }
+  ],
+  "client_source_sha256": "4b6c35e2b3ab473bd98c0afa6538079ee78678d85c28406c07bc27a08cc78c7e",
+  "isolated_patched_sha256": "dc80dcfbe4dd19af999897f991b81fe58455e4c3b9297a18d8c59f5aa5d99abd",
+  "regressions": {
+    "camera_and_timer_test_methods": 3,
+    "clock_test_methods": 2,
+    "menu_test_methods": 2,
+    "result": "passed"
+  }
+}

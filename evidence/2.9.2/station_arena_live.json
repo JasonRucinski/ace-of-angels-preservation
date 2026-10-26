@@ -1,0 +1,28 @@
+{
+  "scope": "Live user-operated client; localhost only; crashed after arena acknowledgement",
+  "client_log": [
+    "20 21:11:56.703>  Got aliases!",
+    "20 21:11:58.968>  CAOAStationDlg::LoginArena Planning to load ter[field20] back[field40]",
+    "20 21:11:58.984>  CAOAComm::SendConnectRequest to 127.0.0.1:5031",
+    "20 21:11:59.234>  ::ReceiveAckConnect Got gameserver ack me[0]:[0x00000001]",
+    "20 21:11:59.234>  loading AI flags"
+  ],
+  "last_report_log": "20 21:11:59.468>  Entering On3dGfxInitialized()",
+  "arena_requests": [
+    {
+      "t": 1792548718.874,
+      "from": "127.0.0.1:59349",
+      "udp_port": 5031,
+      "type": 10,
+      "crc_ok": true,
+      "len": 381,
+      "fields": {
+        "version": "2.9.2",
+        "flag_0x0E": 0,
+        "handle": "testpilot",
+        "login_block_len": 350
+      }
+    }
+  ],
+  "crash_instruction": "unknown; debugger reproduction requested"
+}

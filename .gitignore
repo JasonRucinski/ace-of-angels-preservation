@@ -1,0 +1,22 @@
+# Downloaded builds, archive captures and extracted game files:
+# fetch/rebuild them, never commit them.
+builds/
+wb/
+originals/
+work/
+game/
+*.iso
+*.img
+*.bin
+*.mdf
+*.7z
+*.rar
+*.zpaq
+*.part
+.venv/
+__pycache__/
+*.pyc
+.playwright-cli/
+output/playwright/
+# Third-party media, kept locally only (see CONTEXT.md section 3 for its source):
+media/

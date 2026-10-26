@@ -1,0 +1,303 @@
+{
+  "summary": "Live frame pacing of scratch 2.9.2 clients (findings 9.35). Stock = prepared client (patch set before frame-clock-v1); frame_clock = same plus frame-clock-v1; qpc_only = Codex's clock experiment without the timer gate.",
+  "machine": "1920x1080 60 Hz, AMD Radeon integrated graphics, battery, dgVoodoo 2.87.5 windowed 640x480",
+  "probe": "tools/measure_frame_pacing.py (read-only, ~3 us polling)",
+  "clients_sha256": {
+    "s": "782d1825e944d564e55034e34d52968ae5fc1e2ee22148a54c17c8d4cf2c1b95",
+    "t": "80a0936fa84c382747630a9adac1119c2219fa448254b2bd2f1825c83708dfc5",
+    "u": "660e0d413adc3c934667f42326600bbd06d8dddda869b336f00c52b6a41457a0"
+  },
+  "runs": {
+    "stock_locked_desktop": {
+      "frames": 626,
+      "polls": 3603671,
+      "seconds": 10.000019400031306,
+      "poll_interval_us": 2.77,
+      "missed_counter_steps": 0,
+      "present_interval_ms": {
+        "mean": 15.952,
+        "stdev": 4.296,
+        "p01": 1.242,
+        "p50": 16.014,
+        "p99": 31.591,
+        "max": 32.833
+      },
+      "fps": 62.69,
+      "game_ms_per_frame": {
+        "0": 2,
+        "15": 226,
+        "16": 382,
+        "31": 13,
+        "32": 2
+      },
+      "frames_without_game_time": 2,
+      "game_vs_present_rms_ms": 4.25,
+      "camera": {
+        "units_per_ms": 0.4896,
+        "frames_without_motion": 0,
+        "step_error_rms_frames": 0.2777
+      },
+      "game_step_vs_60hz": {
+        "rms_ms": 2.68,
+        "frames_off_by_more_than_4ms": 17,
+        "frames": 625
+      }
+    },
+    "qpc_only_locked_desktop": {
+      "frames": 751,
+      "polls": 3373041,
+      "seconds": 10.000019699917175,
+      "poll_interval_us": 2.96,
+      "missed_counter_steps": 0,
+      "present_interval_ms": {
+        "mean": 13.315,
+        "stdev": 4.73,
+        "p01": 1.629,
+        "p50": 15.867,
+        "p99": 18.095,
+        "max": 19.82
+      },
+      "fps": 75.1,
+      "game_ms_per_frame": {
+        "2": 14,
+        "3": 21,
+        "4": 32,
+        "5": 20,
+        "6": 23,
+        "7": 10,
+        "8": 16,
+        "9": 10,
+        "10": 23,
+        "11": 19,
+        "12": 28,
+        "13": 15,
+        "14": 12,
+        "15": 11,
+        "16": 491,
+        "17": 5
+      },
+      "frames_without_game_time": 0,
+      "game_vs_present_rms_ms": 0.905,
+      "camera": {
+        "units_per_ms": 0.4897,
+        "frames_without_motion": 0,
+        "step_error_rms_frames": 0.0711
+      },
+      "game_step_vs_60hz": {
+        "rms_ms": 5.53,
+        "frames_off_by_more_than_4ms": 216,
+        "frames": 750
+      }
+    },
+    "stock_focused_60hz": {
+      "frames": 588,
+      "polls": 1314333,
+      "seconds": 10.000014499993995,
+      "poll_interval_us": 7.61,
+      "missed_counter_steps": 0,
+      "present_interval_ms": {
+        "mean": 17.014,
+        "stdev": 3.845,
+        "p01": 9.304,
+        "p50": 16.315,
+        "p99": 32.867,
+        "max": 37.145
+      },
+      "fps": 58.78,
+      "game_ms_per_frame": {
+        "0": 2,
+        "15": 200,
+        "16": 330,
+        "31": 40,
+        "32": 15
+      },
+      "frames_without_game_time": 2,
+      "game_vs_present_rms_ms": 4.226,
+      "camera": {
+        "units_per_ms": 0.4902,
+        "frames_without_motion": 0,
+        "step_error_rms_frames": 0.2725
+      },
+      "active_frames": 588,
+      "game_step_vs_60hz": {
+        "rms_ms": 4.71,
+        "frames_off_by_more_than_4ms": 57,
+        "frames": 587
+      }
+    },
+    "frame_clock_focused_60hz": {
+      "frames": 600,
+      "polls": 1387312,
+      "seconds": 10.000020300038159,
+      "poll_interval_us": 7.21,
+      "missed_counter_steps": 0,
+      "present_interval_ms": {
+        "mean": 16.657,
+        "stdev": 1.698,
+        "p01": 11.95,
+        "p50": 16.686,
+        "p99": 21.751,
+        "max": 25.694
+      },
+      "fps": 60.03,
+      "game_ms_per_frame": {
+        "0": 1,
+        "14": 1,
+        "15": 7,
+        "16": 332,
+        "17": 191,
+        "18": 29,
+        "19": 9,
+        "20": 20,
+        "21": 6,
+        "22": 2,
+        "37": 1
+      },
+      "frames_without_game_time": 1,
+      "game_vs_present_rms_ms": 2.537,
+      "camera": {
+        "units_per_ms": 0.4896,
+        "frames_without_motion": 1,
+        "step_error_rms_frames": 0.1708
+      },
+      "active_frames": 600,
+      "game_step_vs_60hz": {
+        "rms_ms": 1.52,
+        "frames_off_by_more_than_4ms": 10,
+        "frames": 599
+      }
+    },
+    "frame_clock_focused_60hz_repeat": {
+      "frames": 599,
+      "polls": 1477765,
+      "seconds": 10.000027500092983,
+      "poll_interval_us": 6.77,
+      "missed_counter_steps": 1,
+      "present_interval_ms": {
+        "mean": 16.696,
+        "stdev": 2.256,
+        "p01": 10.522,
+        "p50": 16.656,
+        "p99": 22.908,
+        "max": 36.332
+      },
+      "fps": 59.9,
+      "game_ms_per_frame": {
+        "0": 3,
+        "15": 11,
+        "16": 339,
+        "17": 167,
+        "18": 33,
+        "19": 18,
+        "20": 12,
+        "21": 6,
+        "22": 3,
+        "23": 2,
+        "24": 1,
+        "34": 1,
+        "39": 1
+      },
+      "frames_without_game_time": 3,
+      "game_vs_present_rms_ms": 3.392,
+      "camera": {
+        "units_per_ms": 0.4882,
+        "frames_without_motion": 3,
+        "step_error_rms_frames": 0.2351
+      },
+      "active_frames": 599,
+      "game_step_vs_60hz": {
+        "rms_ms": 2.03,
+        "frames_off_by_more_than_4ms": 17,
+        "frames": 597
+      }
+    },
+    "frame_clock_background": {
+      "frames": 128,
+      "polls": 1374687,
+      "seconds": 10.000010200077668,
+      "poll_interval_us": 7.27,
+      "missed_counter_steps": 0,
+      "present_interval_ms": {
+        "mean": 78.27,
+        "stdev": 5.659,
+        "p01": 65.806,
+        "p50": 78.951,
+        "p99": 91.575,
+        "max": 91.891
+      },
+      "fps": 12.78,
+      "game_ms_per_frame": {
+        "69": 1,
+        "70": 7,
+        "71": 8,
+        "72": 11,
+        "73": 11,
+        "74": 4,
+        "75": 2,
+        "76": 4,
+        "78": 5,
+        "79": 4,
+        "80": 7,
+        "81": 23,
+        "82": 21,
+        "83": 9,
+        "84": 2,
+        "85": 1,
+        "86": 3,
+        "87": 1,
+        "89": 1,
+        "90": 2
+      },
+      "frames_without_game_time": 0,
+      "game_vs_present_rms_ms": 2.62,
+      "camera": {
+        "units_per_ms": 0.4537,
+        "frames_without_motion": 0,
+        "step_error_rms_frames": 0.037
+      },
+      "active_frames": 0,
+      "game_step_vs_60hz": {
+        "rms_ms": 61.79,
+        "frames_off_by_more_than_4ms": 127,
+        "frames": 127
+      }
+    },
+    "focused_client_beside_background": {
+      "frames": 300,
+      "polls": 611025,
+      "seconds": 5.000016300007701,
+      "poll_interval_us": 8.18,
+      "missed_counter_steps": 0,
+      "present_interval_ms": {
+        "mean": 16.693,
+        "stdev": 3.908,
+        "p01": 9.825,
+        "p50": 16.627,
+        "p99": 23.46,
+        "max": 30.17
+      },
+      "fps": 59.91,
+      "game_ms_per_frame": {
+        "0": 1,
+        "15": 4,
+        "16": 159,
+        "17": 92,
+        "18": 31,
+        "19": 4,
+        "20": 4,
+        "21": 1,
+        "24": 1,
+        "31": 1,
+        "33": 1
+      },
+      "frames_without_game_time": 1,
+      "game_vs_present_rms_ms": 4.529,
+      "active_frames": 300,
+      "game_step_vs_60hz": {
+        "rms_ms": 1.86,
+        "frames_off_by_more_than_4ms": 5,
+        "frames": 299
+      }
+    }
+  }
+}

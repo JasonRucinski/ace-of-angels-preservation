@@ -1,0 +1,13 @@
+{
+  "version": "2.3.1",
+  "source": "builds/asset-review/2.3.1/aoaclient_2.3.1.exe",
+  "sha256": "c80cd9f2998d326ffc0b6aa99ea4fdd1a5846411a84d26d12ab99216b7edc61a",
+  "bytes": 1794048,
+  "source_url": "https://web.archive.org/web/20010429190419id_/http://www.aceofangels.com:80/dnloads/AoAClient.exe",
+  "kind": "replacement_client_only",
+  "members": [],
+  "archives": [],
+  "assets": [],
+  "client": "builds/asset-review/2.3.1/aoaclient_2.3.1.exe",
+  "client_sha256": "c80cd9f2998d326ffc0b6aa99ea4fdd1a5846411a84d26d12ab99216b7edc61a"
+}

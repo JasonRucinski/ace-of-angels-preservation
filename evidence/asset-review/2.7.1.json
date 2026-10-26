@@ -1,0 +1,4586 @@
+{
+  "version": "2.7.1",
+  "source": "originals/2.7.1/aoa_2.7.1_full.exe",
+  "sha256": "c3f041d08cfc812f346a8c64add585b3a9ac0297fb2cab11ec0fb0f05ff117c2",
+  "bytes": 22267683,
+  "source_url": "https://discmaster.textfiles.com/file/37862/PC%20Master%20%CE%A4%CE%B5%CF%8D%CF%87%CE%BF%CF%82%20147%20-%20%CE%99%CE%B1%CE%BD%CE%BF%CF%85%CE%AC%CF%81%CE%B9%CE%BF%CF%82%202002/PC%20Master%20%CE%A4%CE%B5%CF%8D%CF%87%CE%BF%CF%82%20147%20-%20%CE%99%CE%B1%CE%BD%CE%BF%CF%85%CE%AC%CF%81%CE%B9%CE%BF%CF%82%202002.bin/extras/independentgamesfestival/independentgames.zip/aceofangels/aoa2-7-1.exe",
+  "kind": "full_installer",
+  "members": [
+    {
+      "name": "FILE0010.DAT",
+      "bytes": 479,
+      "sha256": "c7527f8be1b8c072cc5a70b4e027ff4e79d045249b1ed4a4f747682ab35681cf",
+      "path": "work/asset-review/2.7.1/members/00_FILE0010.DAT"
+    },
+    {
+      "name": "PROGRESS.DLL",
+      "bytes": 31232,
+      "sha256": "2efe9a54c8eb878711d9b6cd18f276838645aff52fe69d8a864376cb258ec616",
+      "path": "work/asset-review/2.7.1/members/01_PROGRESS.DLL"
+    },
+    {
+      "name": "OCXREG32.EXE",
+      "bytes": 2560,
+      "sha256": "49833d2820afb1d7409dfbd916480f2cdf5787d2e2d94166725beb9064922d5d",
+      "path": "work/asset-review/2.7.1/members/02_OCXREG32.EXE"
+    },
+    {
+      "name": "WISE0001.DLL",
+      "bytes": 160256,
+      "sha256": "810bba54c92479bb47574bc214911bf310f0e98800bc33cdeff35a5e13c82ac9",
+      "path": "work/asset-review/2.7.1/members/03_WISE0001.DLL"
+    },
+    {
+      "name": "W32INST.DLL",
+      "bytes": 9728,
+      "sha256": "50e7a30e1825fab93b94b698c2c6d2cc1787b094c6cee53eeed5c497f77443c9",
+      "path": "work/asset-review/2.7.1/members/04_W32INST.DLL"
+    },
+    {
+      "name": "AOANOTES.TXT",
+      "bytes": 3259,
+      "sha256": "1285b82c5e796512fd806f084e8138bffe2d39a4db3360473b386b1a403fbcdc",
+      "path": "work/asset-review/2.7.1/members/05_AOANOTES.TXT"
+    },
+    {
+      "name": "FLYINGROCKEULA.TXT",
+      "bytes": 10859,
+      "sha256": "f66997e57f672d0c7efddca1481fd8dc278d4c07cba505972ed537a9fc83678d",
+      "path": "work/asset-review/2.7.1/members/06_FLYINGROCKEULA.TXT"
+    },
+    {
+      "name": "FILE0001.DAT",
+      "bytes": 16882,
+      "sha256": "dc8ccfbb3bb24bfdf31632ccdbe1e18c288cd83cce10d93d08deb7804887903c",
+      "path": "work/asset-review/2.7.1/members/07_FILE0001.DAT"
+    },
+    {
+      "name": "FILE0002.DAT",
+      "bytes": 4460,
+      "sha256": "73459338ed3f9de422ffc3e54b44435669133d8c70d40ef37b6e590e4f96f0ef",
+      "path": "work/asset-review/2.7.1/members/08_FILE0002.DAT"
+    },
+    {
+      "name": "FILE0003.DAT",
+      "bytes": 704,
+      "sha256": "c93d30b6ab08746ff637e1154504f23c79b782ff07a4fad002a33c8b16acbe47",
+      "path": "work/asset-review/2.7.1/members/09_FILE0003.DAT"
+    },
+    {
+      "name": "FILE0004.DAT",
+      "bytes": 1410,
+      "sha256": "1a98eb92ca7b07e3a9326fd84be528a676a7c7e17bba3e7dc5df43d52a2624af",
+      "path": "work/asset-review/2.7.1/members/10_FILE0004.DAT"
+    },
+    {
+      "name": "FILE0005.DAT",
+      "bytes": 496,
+      "sha256": "ea733a33907229295cee28dd240838db478d3b89a01ad916003adcc7e470283c",
+      "path": "work/asset-review/2.7.1/members/11_FILE0005.DAT"
+    },
+    {
+      "name": "FILE0006.DAT",
+      "bytes": 516,
+      "sha256": "ad2b0a5c32e7b60ffe31ad0c87cd2bee519bf54f8e89ff5757a4a47e7a7b7718",
+      "path": "work/asset-review/2.7.1/members/12_FILE0006.DAT"
+    },
+    {
+      "name": "UNWISE32.EXE",
+      "bytes": 149504,
+      "sha256": "49ef36bd01b8ebf38c7b807a5fb44cbaf47c9d4efa883b01c41494c61ae4a2e2",
+      "path": "work/asset-review/2.7.1/members/13_UNWISE32.EXE"
+    },
+    {
+      "name": "FILE0007.DAT",
+      "bytes": 49082,
+      "sha256": "928d85ee3ddc56861e13e517968c65c44dace308f93bf5020f0000fc212ef236",
+      "path": "work/asset-review/2.7.1/members/14_FILE0007.DAT"
+    },
+    {
+      "name": "AOACLIENT.EXE",
+      "bytes": 3899392,
+      "sha256": "b179c3c22e6426d55de52d57476aaa53b7e92622009daf754c5153be0b7503a7",
+      "path": "work/asset-review/2.7.1/members/15_AOACLIENT.EXE"
+    },
+    {
+      "name": "AOACONTACT.TXT",
+      "bytes": 217,
+      "sha256": "1c7e23c603f97c115b3d181c5b8c6c5f80efc8d4bfe860da4d29f6d2902288d1",
+      "path": "work/asset-review/2.7.1/members/16_AOACONTACT.TXT"
+    },
+    {
+      "name": "AOADEFAULTS.PRF",
+      "bytes": 5712,
+      "sha256": "965f2bf9d2ec1aa5cd6df311b824db4db9013fdda1d1a83adeb4891c8c0e5df5",
+      "path": "work/asset-review/2.7.1/members/17_AOADEFAULTS.PRF"
+    },
+    {
+      "name": "AOALOGO.BMP",
+      "bytes": 145256,
+      "sha256": "f9d889d98ac0be9111a3c0cf6b20af40babc202f7ac99666ca21dad09f16ef08",
+      "path": "work/asset-review/2.7.1/members/18_AOALOGO.BMP"
+    },
+    {
+      "name": "AOANOTES.TXT",
+      "bytes": 3259,
+      "sha256": "1285b82c5e796512fd806f084e8138bffe2d39a4db3360473b386b1a403fbcdc",
+      "path": "work/asset-review/2.7.1/members/19_AOANOTES.TXT"
+    },
+    {
+      "name": "AOAOBJECTS.ODB",
+      "bytes": 2012162,
+      "sha256": "882ede7d2d2bd3fcbab2b0c944187c2deef5455b669d7f4a56b37c0c5b9d8066",
+      "path": "work/asset-review/2.7.1/members/20_AOAOBJECTS.ODB"
+    },
+    {
+      "name": "AOATUTORIAL.TXT",
+      "bytes": 4363,
+      "sha256": "4ed2e6c4761690e685dd9cef5643886b002a63dfdb01522f2d6500501ed86167",
+      "path": "work/asset-review/2.7.1/members/21_AOATUTORIAL.TXT"
+    },
+    {
+      "name": "ACTIVESKIN.OCX",
+      "bytes": 352256,
+      "sha256": "2eefa74e6f1086bfd9a164e350ae0d61e9b0ceefaaa923775c80c2a2869a015d",
+      "path": "work/asset-review/2.7.1/members/22_ACTIVESKIN.OCX"
+    },
+    {
+      "name": "DATA.AOA",
+      "bytes": 1690796,
+      "sha256": "0e101bbfeae864a20641e4e431a7882cc58be7664e0c158b1bec0e94c48b09e8",
+      "path": "work/asset-review/2.7.1/members/23_DATA.AOA"
+    },
+    {
+      "name": "HUD.AOA",
+      "bytes": 1865056,
+      "sha256": "f9d8e37d3b47d3fea947b1fd63dc2724233296ba980c8a100282a28bb2978dd8",
+      "path": "work/asset-review/2.7.1/members/24_HUD.AOA"
+    },
+    {
+      "name": "JRMAP.TRN",
+      "bytes": 38516,
+      "sha256": "e3da8fbbdfb84ac7c830314e62bd8ceb7dfbdf9d90cd5fef614601133f23c5c4",
+      "path": "work/asset-review/2.7.1/members/25_JRMAP.TRN"
+    },
+    {
+      "name": "RENEXE.EXE",
+      "bytes": 69632,
+      "sha256": "942d72dcfe6f2b6493cc6e87672058198ea121fae2a6e4627f45c7b92eb10974",
+      "path": "work/asset-review/2.7.1/members/26_RENEXE.EXE"
+    },
+    {
+      "name": "SCRIPTS.AOA",
+      "bytes": 4157,
+      "sha256": "2a9c7b1cc07e1b8c2d5e917f8ace34f0a1b4974fee757dfaa4beca76445ed35f",
+      "path": "work/asset-review/2.7.1/members/27_SCRIPTS.AOA"
+    },
+    {
+      "name": "SCHK.DAT",
+      "bytes": 1718,
+      "sha256": "1399de5351b51e52ec9fbb43247550bb38738941a8d158ea4e7db374c380e504",
+      "path": "work/asset-review/2.7.1/members/28_SCHK.DAT"
+    },
+    {
+      "name": "SCRTY.BIN",
+      "bytes": 256,
+      "sha256": "a2ed2a58a8ca138319696f2853abc2d3d3add8b0e13ed5300642ca16395e97ff",
+      "path": "work/asset-review/2.7.1/members/29_SCRTY.BIN"
+    },
+    {
+      "name": "SOUNDS.AOA",
+      "bytes": 1230636,
+      "sha256": "9db239a4d0e9d695ccf6972e9ecf6b29f21364474f2981c21419f5343812c263",
+      "path": "work/asset-review/2.7.1/members/30_SOUNDS.AOA"
+    },
+    {
+      "name": "TEXTURES.AOA",
+      "bytes": 7569082,
+      "sha256": "42d4af848137daa93028ad4a8b5d6a56513c6e478ca088b7d44cf2ff9cb65075",
+      "path": "work/asset-review/2.7.1/members/31_TEXTURES.AOA"
+    },
+    {
+      "name": "IMAGES.AOA",
+      "bytes": 733160,
+      "sha256": "0999d110deefbe9f6909043d6b570ca8ae03a3755857c79e22df2be1ccc522ae",
+      "path": "work/asset-review/2.7.1/members/32_IMAGES.AOA"
+    },
+    {
+      "name": "MUSIC.MP3",
+      "bytes": 5385951,
+      "sha256": "239780c0616f3ad2467bf651af6d9616e00ea0776fffb7095f088d01a32c3dc1",
+      "path": "work/asset-review/2.7.1/members/33_MUSIC.MP3"
+    },
+    {
+      "name": "REGSVR32.EXE",
+      "bytes": 37136,
+      "sha256": "7c05339da12624396d9911263dc7c993fc2e757e130009465a511045bf06d344",
+      "path": "work/asset-review/2.7.1/members/34_REGSVR32.EXE"
+    },
+    {
+      "name": "AS_CHK.BIN",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "path": "work/asset-review/2.7.1/members/35_AS_CHK.BIN"
+    },
+    {
+      "name": "FILE0008.DAT",
+      "bytes": 16882,
+      "sha256": "dc8ccfbb3bb24bfdf31632ccdbe1e18c288cd83cce10d93d08deb7804887903c",
+      "path": "work/asset-review/2.7.1/members/36_FILE0008.DAT"
+    },
+    {
+      "name": "FILE0009.DAT",
+      "bytes": 645,
+      "sha256": "d523b9779546c28771ab3177f78e363055e758ca88f7b93270a14f125a941fa7",
+      "path": "work/asset-review/2.7.1/members/37_FILE0009.DAT"
+    }
+  ],
+  "archives": [
+    {
+      "archive": "work/asset-review/2.7.1/members/20_AOAOBJECTS.ODB",
+      "version": "0x402",
+      "count": 197,
+      "crc_checked": 197,
+      "crc_ok": 197
+    },
+    {
+      "archive": "work/asset-review/2.7.1/members/23_DATA.AOA",
+      "version": "0x402",
+      "count": 23,
+      "crc_checked": 23,
+      "crc_ok": 23
+    },
+    {
+      "archive": "work/asset-review/2.7.1/members/24_HUD.AOA",
+      "version": "0x402",
+      "count": 52,
+      "crc_checked": 52,
+      "crc_ok": 52
+    },
+    {
+      "archive": "work/asset-review/2.7.1/members/27_SCRIPTS.AOA",
+      "version": "0x402",
+      "count": 8,
+      "crc_checked": 8,
+      "crc_ok": 8
+    },
+    {
+      "archive": "work/asset-review/2.7.1/members/30_SOUNDS.AOA",
+      "version": "0x402",
+      "count": 55,
+      "crc_checked": 55,
+      "crc_ok": 55
+    },
+    {
+      "archive": "work/asset-review/2.7.1/members/31_TEXTURES.AOA",
+      "version": "0x402",
+      "count": 56,
+      "crc_checked": 56,
+      "crc_ok": 56
+    },
+    {
+      "archive": "work/asset-review/2.7.1/members/32_IMAGES.AOA",
+      "version": "0x402",
+      "count": 39,
+      "crc_checked": 39,
+      "crc_ok": 39
+    }
+  ],
+  "assets": [
+    {
+      "archive": "AOAOBJECTS",
+      "name": "DataBaseHeader",
+      "bytes": 4,
+      "sha256": "ece74751d4d3c24d19636bd39727908aea4b8f1ab477d55a5074f452108d21ef",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0000_DataBaseHeader",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "AOAOBJECTS/DataBaseHeader"
+      ]
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "AlphaFighter.Sco",
+      "bytes": 6199,
+      "sha256": "c447330a4000189f7888d15181f3c2092bb0810b7d471d445fb7562c68efd53b",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0001_AlphaFighter.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Buoy.Sco",
+      "bytes": 1593,
+      "sha256": "6284c4c11254b42fcc0031de87f32cdd8439b46e7b9e3013a6f01009654c2302",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0002_Buoy.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "CCVB.Sco",
+      "bytes": 1981,
+      "sha256": "d3a845035c3f268421f87e37f0da91111902325c2f39bbd7e05f1cb3cae01c4c",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0003_CCVB.Sco",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "AOAOBJECTS/CCVB.Sco"
+      ]
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Eagle.Sco",
+      "bytes": 7027,
+      "sha256": "c455707995dad67852bcadb3909e9f9f945c8f3ca9aed42e03b68f14faef7982",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0004_Eagle.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Etat'Illraku.Sco",
+      "bytes": 7932,
+      "sha256": "4c406e113422629cfc0933fe397239d17dffdb79be7415c59b96fa54b9bddf28",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0005_Etat_Illraku.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Grathven.Sco",
+      "bytes": 6568,
+      "sha256": "96d35d18b003b0e0d0a4c0b6a2297ecb0f6a8249185bbb0867be72ae69f1f1ff",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0006_Grathven.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "IBCH.Sco",
+      "bytes": 6089,
+      "sha256": "d8bd63f44c282f795f9098d2b282a977fadea342fedf25ec73042cda5791d7bb",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0007_IBCH.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Janha Vari.Sco",
+      "bytes": 6228,
+      "sha256": "63a1fb24912c98e329d816e16caed7b6a5c3711c9f6a90a03bd3dcdfbf587556",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0008_Janha Vari.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Kafic.Sco",
+      "bytes": 6193,
+      "sha256": "e5b066d50fc99b36a200afe717f43152511ef3251021cf3f977c69d3f6232afd",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0009_Kafic.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "MBB.Sco",
+      "bytes": 4762,
+      "sha256": "e2c021f1dfd0a49e5f33565d843b8146a11fda6d4abb41fb0b7eb177f55395f4",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0010_MBB.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "MCVA.Sco",
+      "bytes": 6160,
+      "sha256": "0a7ca62ee892ee9afaa221d1e27edab4c185f3cc616453d06ac5a5a867ec1d0b",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0011_MCVA.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Meskvak Su.Sco",
+      "bytes": 7891,
+      "sha256": "41789fb64dabf04c8b9c09e1a5e56bccf6c9954ef16575624631849d8a496168",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0012_Meskvak Su.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Mkulat.Sco",
+      "bytes": 7077,
+      "sha256": "d1b7a3834afb5738d51769f066fd9a4c370da2959a04ea486fe641d23a7b4f1e",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0013_Mkulat.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "ModFighter1.Sco",
+      "bytes": 5438,
+      "sha256": "e32f025c467b522d9405452d4afb960fe1b1616c9b1d0b79308ada8c1235f4bd",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0014_ModFighter1.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Natak'Illraku.Sco",
+      "bytes": 7484,
+      "sha256": "97529b981c841dc8161905f605a8a8e7f96fbf67c9df05afb77fab11d5b4bf0c",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0015_Natak_Illraku.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "N'Goc.Sco",
+      "bytes": 7503,
+      "sha256": "da6dcf4558b1ef114587a7d39ddff28e2548da767953ec0de1a27705dcc7597d",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0016_N_Goc.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "PowerUp1.Sco",
+      "bytes": 1259,
+      "sha256": "f1a7260d5a95cdb0c93d962901c2db0138dfe8aee7c545b6e5b330b8d4603b38",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0017_PowerUp1.Sco",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "AOAOBJECTS/PowerUp1.Sco"
+      ]
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Rhino.Sco",
+      "bytes": 6716,
+      "sha256": "bcc0314888b80e1c771c835d8b25c37a2cd72cdcd79a4fd29c4330223bc259b4",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0018_Rhino.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Saksatar.Sco",
+      "bytes": 5326,
+      "sha256": "9f9ebeb1bb477a42988f2cbd1f32e85c227528bc92e0519a3307ce9150cb8c20",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0019_Saksatar.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Tholfus.Sco",
+      "bytes": 6204,
+      "sha256": "125bc57c7d06190dc36f309cb1ff03c896826724495ed7e08969ad2d29deb5f4",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0020_Tholfus.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "TurretA.Sco",
+      "bytes": 2075,
+      "sha256": "a2a1795ee6aac3019773bc9a231e58d6717a8f6390b404a50e15e10fc320abe5",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0021_TurretA.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Vasa Chovo.Sco",
+      "bytes": 7443,
+      "sha256": "1d4570af30d576a46dd2fe5856cef1256306600f2e28c918b5b6a97e7db8d614",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0022_Vasa Chovo.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Vermok.Sco",
+      "bytes": 6187,
+      "sha256": "b151f67bb9ed87ec14f97763814380a5c2c924d40858dafa16806e16173db544",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0023_Vermok.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "WarpGate.Sco",
+      "bytes": 1236,
+      "sha256": "684bc1244c93a9ec408e2f7a84afeb191b555edffc06068fbaad39c1f3abb237",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0024_WarpGate.Sco",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "AOAOBJECTS/WarpGate.Sco"
+      ]
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Ym Khtat.Sco",
+      "bytes": 7077,
+      "sha256": "55be2a2dd904ca8904c2253b98d2b3585d23f04f26b0ace62df0c7187022f1b8",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0025_Ym Khtat.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "ZCVA.Sco",
+      "bytes": 37157,
+      "sha256": "c7018e1560c1a72bf7cfaed9982b3a302d75825a048e2ca9baac270845640cef",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0026_ZCVA.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Zkole.Sco",
+      "bytes": 6642,
+      "sha256": "c0d4b7b919f9676687a905733d9f6718ab240b0b0bbec677e33a936c0ad32508",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0027_Zkole.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Cube.Sco",
+      "bytes": 1596,
+      "sha256": "c86b3536e2686ae402fa48ad3dec611fea9392ab882e79c1d1539649b69c6f4c",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0028_Cube.Sco",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "AOAOBJECTS/Cube.Sco"
+      ]
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Station.Sco",
+      "bytes": 1234,
+      "sha256": "8e49773d8e7b1827284d62e63828dc01eb4c1772aa317a9ea06a3eae4a2a6f6b",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0029_Station.Sco",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "AOAOBJECTS/Station.Sco"
+      ]
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Wall.Sco",
+      "bytes": 1596,
+      "sha256": "8ff29c1caf19d6b2dfd1dc031bbea784770d80c1832a2d7b5c1812b9eb369480",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0030_Wall.Sco",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "AOAOBJECTS/Wall.Sco"
+      ]
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Naroch.Sco",
+      "bytes": 7062,
+      "sha256": "6e36004b4902d676968c06ef0ea9838e7a6ee8253e1f4f9ddcdd5518e5bb7512",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0031_Naroch.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Type II 1.1.Sco",
+      "bytes": 937,
+      "sha256": "68b25f012d97ea1f1666c6046cf09bd5b47041740770600878a5860e3cbadf8b",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0032_Type II 1.1.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Type III 1.1.Sco",
+      "bytes": 939,
+      "sha256": "68ca58473562bd442a8c2429ed1c2aab53e52fbf06ad0789e4060e7de2889cd2",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0033_Type III 1.1.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "TypeII-1-0.Shs",
+      "bytes": 414,
+      "sha256": "6675f987dff6737979242ab964adc324936c9bdb487fb927cdd495469bb566dd",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0034_TypeII-1-0.Shs",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "TypeIII-1-0.Shs",
+      "bytes": 415,
+      "sha256": "c71b1138db550811634fcf4ece6db2db2db0f73ba08ea10ce1dacd888601fe17",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0035_TypeIII-1-0.Shs",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "TypeI-1-0.Shs",
+      "bytes": 413,
+      "sha256": "689b3f026e78281f109aea2e79c7facfe2e3f51597afe248a482fa5929897e77",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0036_TypeI-1-0.Shs",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Type I 1.0.Sco",
+      "bytes": 935,
+      "sha256": "ba2b15613378066f8b7eb88eb7469f0332fec8cb5d4208965ecfba1eae0bb5df",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0037_Type I 1.0.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "AlphaFighter.Gob",
+      "bytes": 31044,
+      "sha256": "254cf7160f58c0cc34457052507e02121aea7d9e3f22dc3949d82f528bc81885",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0038_AlphaFighter.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "CapShipTurret.Gob",
+      "bytes": 7774,
+      "sha256": "2d2d4894a2041ed7c724b2f82311583d8e10aa553d322de767fa6a1df4fa6bb6",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0039_CapShipTurret.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Ccvb.Gob",
+      "bytes": 32833,
+      "sha256": "1fdfebe8768f76ceea96cdeb8871a5a62e74dcdef788144858fa6b8be0cb577b",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0040_Ccvb.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Cube1.Gob",
+      "bytes": 2232,
+      "sha256": "6de55c1474f5389ca37a299e6d4b57b623de08914196c71b28c42b8890f48e99",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0041_Cube1.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "DishWall.Gob",
+      "bytes": 114530,
+      "sha256": "890145c9a5a1f2dc10103cf7e3fee519e89b53efc522b1311ff19505e16caae1",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0042_DishWall.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "DishWall.Sco",
+      "bytes": 1239,
+      "sha256": "233404cd4ede46bc07f9973fd004f13450e87cda3a74cbd07a63848a872a63e9",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0043_DishWall.Sco",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "AOAOBJECTS/DishWall.Sco"
+      ]
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Dzhesra.Gob",
+      "bytes": 80059,
+      "sha256": "ad9d7137978a180b92bee9f554197eacd8e0cd1a6264c2867cdf59881e0f19f2",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0044_Dzhesra.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Eagle.Gob",
+      "bytes": 24668,
+      "sha256": "198ce901f106d34fc2f47dd587d9e55a1681061eae979a1de2d53ff572315f2f",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0045_Eagle.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Ibch.Gob",
+      "bytes": 41117,
+      "sha256": "8673c503c39b574cc96427282f878dd92418271d54346843071be742918b6bc0",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0046_Ibch.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Kafic.Gob",
+      "bytes": 44721,
+      "sha256": "613829b387fe45ff67ae169c5099f222e319c916430f847140e7a9b65402ab2b",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0047_Kafic.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Mbb.Gob",
+      "bytes": 58199,
+      "sha256": "d7afebf7a0dbde0596dc6d97c2ce893034112dd3cedaece5d64370b681a4a501",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0048_Mbb.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Mcva.Gob",
+      "bytes": 89719,
+      "sha256": "4685cab55e73d7998468ff98b4c0e1d74398816a0a91761e5376f6d86facdf73",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0049_Mcva.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "MissileA.Gob",
+      "bytes": 10972,
+      "sha256": "4bddb5cd95a990122b6d4fa52b01566837b1cf7fe5d37ee437c55996dff2f356",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0050_MissileA.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Mkulat.Gob",
+      "bytes": 43654,
+      "sha256": "9ccdfc04a8ed1d291da225ac80e968be564f58f4c7f99f27c6dcc19f3fc70d82",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0051_Mkulat.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Natak'Illraku.Gob",
+      "bytes": 38348,
+      "sha256": "cac052b7b8b13718d0a6ebe6a1e9b32759b5c63fab994fd164ae52cb78e20e99",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0052_Natak_Illraku.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "NavC.Gob",
+      "bytes": 30497,
+      "sha256": "c572b7490f79f57ed45be98cfd7ec0196ddc7d969527b536771cc8abd10ca57d",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0053_NavC.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Rhino.Gob",
+      "bytes": 68283,
+      "sha256": "b0fcd8efe880d0705358853f41e3bb467e9f36cd47c818a23f07995a659abc89",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0054_Rhino.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "spacebkgd.Gob",
+      "bytes": 16420,
+      "sha256": "ebf0265a8f96cab893e4c7f69384740efb170cf83ca9925ac288371999f79703",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0055_spacebkgd.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "TMTestBox.Gob",
+      "bytes": 4685,
+      "sha256": "6e9cd69b96656b92999d2fa7964e039aca91da6da90c4a09cf160046ec829854",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0056_TMTestBox.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Vasa Chovo.Gob",
+      "bytes": 41236,
+      "sha256": "1564c90225b61f0d6ff8358ee001937f057b7904029d6c78bf1d7664853808b8",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0057_Vasa Chovo.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Wall1.Gob",
+      "bytes": 2063,
+      "sha256": "2aacd7141dc6deef35a5250f8f40d7a16bd4523729799750752c782d20467372",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0058_Wall1.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "WarpA.Gob",
+      "bytes": 39899,
+      "sha256": "a55b42dcf62ee858506affe9a85acc62ebfcfc755b5005933656ad418dfb635c",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0059_WarpA.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Ym Khtat.Gob",
+      "bytes": 48039,
+      "sha256": "f9baadbf2e7ba02f20be2a6312f65b55a263616594a648024ff0c8cf1762e8fd",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0060_Ym Khtat.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Flag.Sco",
+      "bytes": 1237,
+      "sha256": "a71cec399122fb685e959cef5fb97ec0450bb4ebbcb6d945c32183c9892263cc",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0061_Flag.Sco",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "AOAOBJECTS/Flag.Sco"
+      ]
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Naroch.Gob",
+      "bytes": 33423,
+      "sha256": "f54c99c3d2f8237b64fc616fa5b55326c30861bef2e73be35d744ad9775b73c7",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0062_Naroch.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "RingPanel.Gob",
+      "bytes": 5568,
+      "sha256": "59812ca41ce88f3b7df5ea053c8de8919d8ec2c3707bbc8c43dec85ff6e2f6de",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0063_RingPanel.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "RingPan.Sco",
+      "bytes": 513,
+      "sha256": "75de79f01e7401ee48cacda79e0e09040aa5851c36bd6d69c8cc46c967027b8b",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0064_RingPan.Sco",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "AOAOBJECTS/RingPan.Sco"
+      ]
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "optionsdisplay.Gob",
+      "bytes": 22750,
+      "sha256": "0176465f80f4f5982c16eeab6a8eb9d107b9f8c23b7d3d9e01ce8622ce7000c0",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0065_optionsdisplay.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "newdock.Gob",
+      "bytes": 97213,
+      "sha256": "c775b46642a0695a0129c754c1ec6b1875fa5569ba7c42ab7d57fd2d44e4ccc0",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0066_newdock.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "NewDock.Sco",
+      "bytes": 1237,
+      "sha256": "3f4f51bd79a46393d5e6fe58069a03f4997259bc2ae65e0dd821f17fbf209554",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0067_NewDock.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "pwrup1.Gob",
+      "bytes": 1935,
+      "sha256": "476ae5f27b6473fe79134900c37ecadaa7f31ee197e57e6ca9fe72b5d4344eaa",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0068_pwrup1.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "RingShape.Sco",
+      "bytes": 1598,
+      "sha256": "9fcc8206c78ae1e3580f8caef3acbc376db1c96e3c17b99b0118b8afc6cf1aae",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0069_RingShape.Sco",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "AOAOBJECTS/RingShape.Sco"
+      ]
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Gun250.Shs",
+      "bytes": 428,
+      "sha256": "9849acea95558de3aee71ca357fcecc92eb0d1045341a1240f5aaf01370b1f1b",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0070_Gun250.Shs",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Gun280.Shs",
+      "bytes": 428,
+      "sha256": "33069362f333a37027d7319924281355053a3a861450d1fca92911bc74867893",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0071_Gun280.Shs",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Gun310.Shs",
+      "bytes": 428,
+      "sha256": "c390940436524f369ae5882c6bae1c1a1376ad05489d7fa9a35219d7448da808",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0072_Gun310.Shs",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Gun-360.Shs",
+      "bytes": 429,
+      "sha256": "a15007038adb88cd34ba33a009566bc3e6c9e1a08b8d395d9115b5a5f0d7af64",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0073_Gun-360.Shs",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Gun-410.Shs",
+      "bytes": 429,
+      "sha256": "570f7067e2ab3f73a6bd4f05c33ece40907f1c052b98bfaeea6dfd6db9dd67ad",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0074_Gun-410.Shs",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Gun-460.Shs",
+      "bytes": 429,
+      "sha256": "354d81490302cc35f0c666be243d236134efe35f565aa0d3cf470e9dbfbe2172",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0075_Gun-460.Shs",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Gun-550.Shs",
+      "bytes": 432,
+      "sha256": "7088a6013711501c20a493b6686dd24bad8cca83c8838cdbb73fdce2e2f547ca",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0076_Gun-550.Shs",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Gun-650.Shs",
+      "bytes": 432,
+      "sha256": "aceae4a7766351df9dfaeac90cd5e094a5ebed7bad4636ff1c4aa2d6cca8de5d",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0077_Gun-650.Shs",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Gun-750.Shs",
+      "bytes": 432,
+      "sha256": "21c9a9cd813d2f237f0ad9ebbc7526572de7d8ef537bf7de30a0c87f1095ef3e",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0078_Gun-750.Shs",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Gun-850.Shs",
+      "bytes": 432,
+      "sha256": "4167e3406a67519480ea12895586519c12823a20cde05046297263d6b7a308ee",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0079_Gun-850.Shs",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Turret460.Shs",
+      "bytes": 431,
+      "sha256": "cf266471ef26e6f18856e47cc38ab960db567c5457cf87b3a9db3bfffe11b7e2",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0080_Turret460.Shs",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Turret550.Shs",
+      "bytes": 434,
+      "sha256": "1e2f3c57fbaee0d633226c93390c696fbb322992916a23f4c48f347e1ccf13e2",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0081_Turret550.Shs",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Turret650.Shs",
+      "bytes": 434,
+      "sha256": "5a3b415792f162448bc64389c14b21a7ff4e696f49ecf2ea3b1b15838cac575b",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0082_Turret650.Shs",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Turret750.Shs",
+      "bytes": 434,
+      "sha256": "a70048d5d4139cbde8e98e9dcfc9f52acede6e4ca0130efd084d3c19a894aba5",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0083_Turret750.Shs",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Turret850.Shs",
+      "bytes": 434,
+      "sha256": "fb63c16a5c1095f05950de63b31bd1bf9496305fbe596311c4748eb117dded3f",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0084_Turret850.Shs",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "fighterselect.Gob",
+      "bytes": 33736,
+      "sha256": "6dd79584f21f41d1cf3c8ed09025fdf4d2ac2cd1f128bf73853fc86272c86c37",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0085_fighterselect.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "N'Goc.Gob",
+      "bytes": 41973,
+      "sha256": "4a32e0a12028bcab4bd9efa2077d8357b6ac3e04337f4bbdd84d90d65cd8a474",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0086_N_Goc.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "vrakstat.Gob",
+      "bytes": 40005,
+      "sha256": "21cd481e2c6a165f40ef49dfd39a997288733ea3e0af2dc2cafae08e1d64b37d",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0087_vrakstat.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Vrak Stat.Sco",
+      "bytes": 7468,
+      "sha256": "166da8f79b99fe446f8fe7cb805c36cb086b4c5360c9161f8f967e14c79254e7",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0088_Vrak Stat.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "newterrain.Gob",
+      "bytes": 137900,
+      "sha256": "03b63938043c96553241f85fa28e3dbe7242a5ccd1d4682f98116d451947aff7",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0089_newterrain.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Flag1.Gob",
+      "bytes": 13323,
+      "sha256": "89ed4e30ecf213fa6e04178492f03b56c68d73307f10c8b8cc21a70e0487829e",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0090_Flag1.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Astr-C.Gob",
+      "bytes": 28671,
+      "sha256": "ca41add35a1aef80141db3caad00361eb3931a3d9a3d6cd8ac21a890718a17a1",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0091_Astr-C.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Astr-B.Gob",
+      "bytes": 28671,
+      "sha256": "853293ce419a70ddea75facd923faac77b2a60f5a6c14d2bbcd02a56b50b4928",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0092_Astr-B.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Astr-A.Gob",
+      "bytes": 28671,
+      "sha256": "681d5e03d4f9c5a6751af6953eb2a4e38668abbb260179b8dfacc81b285fb305",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0093_Astr-A.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Astr-A.Sco",
+      "bytes": 1235,
+      "sha256": "4f6fa512f34648590df65b8c635f320e15c55ed4935d8c96385fe9fe4233ab37",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0094_Astr-A.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Astr-B.Sco",
+      "bytes": 1235,
+      "sha256": "d68baabf4d49698165cda53645c9398ed3f8179e32de6f3b3fe7d07c3c9de34a",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0095_Astr-B.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Astr-C.Sco",
+      "bytes": 1235,
+      "sha256": "ddc07ced4bc414eca1fadc89ea8c093ce28787470669ec937642351a018f0d12",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0096_Astr-C.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "BotFlag.Gob",
+      "bytes": 62806,
+      "sha256": "bcf7bc25bfd802bd239c74ab88277d2567b07b5eeb64e4a9f558880609d9db68",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0097_BotFlag.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "BotFlag.Sco",
+      "bytes": 1594,
+      "sha256": "bdd9affe87e11d55b10dd5d5dac822759e8e57959f3fcd80fcfcc2089d1e69b5",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0098_BotFlag.Sco",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "AOAOBJECTS/BotFlag.Sco"
+      ]
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "turret_a.Gob",
+      "bytes": 13112,
+      "sha256": "41ec355798ef37cb76783cfe20d07197274552e99e7f7a2f75f7e38cfb1d4734",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0099_turret_a.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Flag2.Gob",
+      "bytes": 24315,
+      "sha256": "a33221996cf0b09fc9cc49b483d66b0d1d084fde66f0ef66759ee66822e2b305",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0100_Flag2.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "CaptureFlag.Sco",
+      "bytes": 1596,
+      "sha256": "a201d6170184f277fbdfed9b2d4b5ca7dc9ac717800bbfe4249cc1e985069e97",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0101_CaptureFlag.Sco",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "AOAOBJECTS/CaptureFlag.Sco"
+      ]
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Jiva.Gob",
+      "bytes": 75107,
+      "sha256": "d2bf4ade50b92243ea57d59860554696d244cdc6b2a05c8793f0526905122e0a",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0102_Jiva.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Jiva.Sco",
+      "bytes": 13822,
+      "sha256": "84ae79d0525e8fabd5df363e679406d481243287754da5a3f3f854db935f9b88",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0103_Jiva.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "SpikeFighter.Gob",
+      "bytes": 57350,
+      "sha256": "e3f993351f65b8666595d3ac0b59c4ccd14af0ffdaca4392c943f13201942eca",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0104_SpikeFighter.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "zkole.Gob",
+      "bytes": 47439,
+      "sha256": "e8cb171fe3eb362ff416ca85c7a4df9177b915530fdd0ce563791dcdf054cf26",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0105_zkole.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Grathven.Gob",
+      "bytes": 33000,
+      "sha256": "286c770df3ce68c9b3b855c1740d413a628ef2f116e55c568defb2965e869dd0",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0106_Grathven.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Vermok.Gob",
+      "bytes": 44994,
+      "sha256": "d8bd5cb41d821773567135c53ca180fc1cc03b8fe27e26d99cebbdb5fe7b641f",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0107_Vermok.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Test Missile Boat.Sco",
+      "bytes": 6766,
+      "sha256": "80b8f168c413915bfaa94f039627f7eb7aa659fc1f4bb1834a7d43afe1622117",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0108_Test Missile Boat.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "hy_base_test.Gob",
+      "bytes": 1697,
+      "sha256": "c9c698c9b94da096174562229a56e63786c45a3d4a179fddcc7da508831d10ef",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0109_hy_base_test.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "hy_base1.Sco",
+      "bytes": 1239,
+      "sha256": "2a9cf20e9c77c88fd5cc2939d2aea479c64f3ff166b4b8e340995a721e621db2",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0110_hy_base1.Sco",
+      "comparison": "absent_name_and_content"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Hittest.Gob",
+      "bytes": 3134,
+      "sha256": "7f850469dca7fc1ed86d2ebf6146a4c9d5894db1632ea2b1d13309c547158a41",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0111_Hittest.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "hy_tur_a.Gob",
+      "bytes": 2604,
+      "sha256": "dfd3c4ffa6aad44da47b05b672ac951c499a3ec0070d516e078c8161947b8a82",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0112_hy_tur_a.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "hy_tur_a.Sco",
+      "bytes": 2055,
+      "sha256": "51d32978d8595e725f2c6323ec5af595723fd0b7e6573a4aa86bc7fe827dc5a9",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0113_hy_tur_a.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Arena1a.Gob",
+      "bytes": 143620,
+      "sha256": "27d425a42bf03c924a5055b4874201181ae4fb4c293d57c39c896949e8ace8cc",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0114_Arena1a.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "hy_winga.Gob",
+      "bytes": 5822,
+      "sha256": "3a0faecb367d3ac47d73eee052245af7abd1b6f11ac8cdd1dce8f50817baf283",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0115_hy_winga.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "ze_winga.Gob",
+      "bytes": 7306,
+      "sha256": "fece4479d327b808b3200520cc858dcf1ab19aa5c8a60d70bf4a0fd8ee1fce1a",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0116_ze_winga.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "ze_wingb.Gob",
+      "bytes": 2443,
+      "sha256": "03a3527abad26876dbb42be868ca15351b89bfecb6fe43abe254614b50ba93d8",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0117_ze_wingb.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Janha Vari.Gob",
+      "bytes": 53520,
+      "sha256": "8c125d44d6e2b6e677a62e18a13d4e21a8b6fc5de10122888a5b14a553706c25",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0118_Janha Vari.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Zcva.Gob",
+      "bytes": 69723,
+      "sha256": "e70b2baab9c148cd4d7a38d8414e53d9eea1f785c3bd565275dd624f37a08212",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0119_Zcva.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Hy_base1.Gob",
+      "bytes": 405599,
+      "sha256": "6baed6d26660cff35c10ca31df3f1bfa577cec5473410ee90e09bf3e3397d6d1",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0120_Hy_base1.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "HyBase2Lay.Gob",
+      "bytes": 4312,
+      "sha256": "2adc48c9412c5f8194bbb3f2e6338edf30212df9282d1330a27f689d005b0432",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0121_HyBase2Lay.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "crosshair1.Gob",
+      "bytes": 5944,
+      "sha256": "fe094ff2531ddf057099fd0e839bf15878fffd7055e27a3126e82bce536bd640",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0122_crosshair1.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Rack IA.Shs",
+      "bytes": 435,
+      "sha256": "3562355e8da498bac46e2030d9d0b22b2a17bdf12bd42bbfebf1d68e172c3bf0",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0123_Rack IA.Shs",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "AOAOBJECTS/Rack IA.Shs"
+      ]
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Rack IB.Shs",
+      "bytes": 435,
+      "sha256": "a2e52ff9032cda385194985ebdb92d8e12eb45353b9f2bd4e2a19e7014cfb25e",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0124_Rack IB.Shs",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "AOAOBJECTS/Rack IB.Shs"
+      ]
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Rack IC.Shs",
+      "bytes": 435,
+      "sha256": "161c740f4b154d0873ec194d97169a14e7fcf003a6d5426f9edb41215b388ac1",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0125_Rack IC.Shs",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "AOAOBJECTS/Rack IC.Shs"
+      ]
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Rack IIA.Shs",
+      "bytes": 441,
+      "sha256": "ad460fcd22ee6562b849b3dae00a5658d842bfaf691d9430d494e74267fbf417",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0126_Rack IIA.Shs",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "AOAOBJECTS/Rack IIA.Shs"
+      ]
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Rack IIB.Shs",
+      "bytes": 441,
+      "sha256": "3c528d70b47b5bf6cd21ef88ba1fba6c2d1141021fd23fc36091697cb9ec4db8",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0127_Rack IIB.Shs",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "AOAOBJECTS/Rack IIB.Shs"
+      ]
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Rack IIC.Shs",
+      "bytes": 441,
+      "sha256": "e38fd89cba3b654a6a0444b291ae867b7d9c5541022a9c06d75a5495edcd001c",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0128_Rack IIC.Shs",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "AOAOBJECTS/Rack IIC.Shs"
+      ]
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Rack IIIA.Shs",
+      "bytes": 443,
+      "sha256": "e724ba76bfc3d3de6d4f61a8b1662bcf564db338e740f8b11081918534463fa3",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0129_Rack IIIA.Shs",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "AOAOBJECTS/Rack IIIA.Shs"
+      ]
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Rack IIIB.Shs",
+      "bytes": 443,
+      "sha256": "cbc711241f6adcc22165a42f3102eae0333acbd0fd718c2bc1c412fe61c85e62",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0130_Rack IIIB.Shs",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "AOAOBJECTS/Rack IIIB.Shs"
+      ]
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Rack IIIC.Shs",
+      "bytes": 443,
+      "sha256": "d9d632f1974e8db068016757703cca48ed97c8b350da811a062525a40035640d",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0131_Rack IIIC.Shs",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "AOAOBJECTS/Rack IIIC.Shs"
+      ]
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Rack IVA.Shs",
+      "bytes": 388,
+      "sha256": "080aa69c26387d65c86d371d280998dab9120318f0d5f4e4be4879dc1ec4b7fd",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0132_Rack IVA.Shs",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "AOAOBJECTS/Rack IVA.Shs"
+      ]
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Rack IVB.Shs",
+      "bytes": 388,
+      "sha256": "becbc1987542757f7e654e2068620099487b3e12a7b8d4a1a4b96d885c898f51",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0133_Rack IVB.Shs",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "AOAOBJECTS/Rack IVB.Shs"
+      ]
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Rack IVC.Shs",
+      "bytes": 388,
+      "sha256": "127c9350cacf167796b129ac3412f7b54bd1ee17df2ead01a91618abd8acbb85",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0134_Rack IVC.Shs",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "AOAOBJECTS/Rack IVC.Shs"
+      ]
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Rack ID.Shs",
+      "bytes": 435,
+      "sha256": "f5b2cc9abfd3757aa2216a6f075b65b0fdd820bf9882b23aa91e968530388579",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0135_Rack ID.Shs",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "AOAOBJECTS/Rack ID.Shs"
+      ]
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Rack IID.Shs",
+      "bytes": 436,
+      "sha256": "3a129a11af970cc1bbf8bdd639d9ef6e80360380e7ebaf6b87e8e0b8f9b57939",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0136_Rack IID.Shs",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "AOAOBJECTS/Rack IID.Shs"
+      ]
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Rack IIID.Shs",
+      "bytes": 442,
+      "sha256": "7c9e2bfc907e9967fab7acfc1ff6c4e564922dea1ca3ef7244ca28383039f7d2",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0137_Rack IIID.Shs",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "AOAOBJECTS/Rack IIID.Shs"
+      ]
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Rack IVD.Shs",
+      "bytes": 388,
+      "sha256": "a817b0e98cfc721fcf9228defc5a682817a8f04fc7048cade50392dd706d0c0c",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0138_Rack IVD.Shs",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "AOAOBJECTS/Rack IVD.Shs"
+      ]
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Mine Pod 1.Sco",
+      "bytes": 524,
+      "sha256": "fa17e6f29af12e1c2df6d00b353f021a447649d6c88e8ff390aeec24373422d0",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0139_Mine Pod 1.Sco",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "AOAOBJECTS/Mine Pod 1.Sco"
+      ]
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Mine Pod 2.Sco",
+      "bytes": 541,
+      "sha256": "495b4e37b1ee8420382cecc103f569c9a8b512c25eeb67ee51c044289567addc",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0140_Mine Pod 2.Sco",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "AOAOBJECTS/Mine Pod 2.Sco"
+      ]
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Mine Pod 3.Sco",
+      "bytes": 541,
+      "sha256": "e8f115e01ad4efb1f440b54189b26790a68e02bf482269b60cc7c474f3a6cc94",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0141_Mine Pod 3.Sco",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "AOAOBJECTS/Mine Pod 3.Sco"
+      ]
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Transport Pod.Sco",
+      "bytes": 541,
+      "sha256": "9094ac581a4329b430e609b53caff8b0346b58ffa0e1eade26a13579de959490",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0142_Transport Pod.Sco",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "AOAOBJECTS/Transport Pod.Sco"
+      ]
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Energy Module Pod.Sco",
+      "bytes": 556,
+      "sha256": "53bd8941be2ac4021f20d211ca75df4cf0c114342f30b3436ee53068cbd0f2a7",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0143_Energy Module Pod.Sco",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "AOAOBJECTS/Energy Module Pod.Sco"
+      ]
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Gun Pod.Sco",
+      "bytes": 577,
+      "sha256": "ca9069d0e8e720e3a9be34b63e023ab5bb268ec2c44dd818bc54e5b15a849bf6",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0144_Gun Pod.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Cannon Pod.Sco",
+      "bytes": 585,
+      "sha256": "99822171708d19c53cfa8856ce9f5a9270a65e5d5ddd17aae823cb64c25340cb",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0145_Cannon Pod.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Gravity Boost Pod.Sco",
+      "bytes": 553,
+      "sha256": "1eb14f394a388b72b82d7763cc07b28e62e6a3b362d5401c024b5c0ceb49dd0a",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0146_Gravity Boost Pod.Sco",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "AOAOBJECTS/Gravity Boost Pod.Sco"
+      ]
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Shield Boost Pod.Sco",
+      "bytes": 551,
+      "sha256": "863228501c2c7528873add46f54ee9565c7007b25dd519d758f8a2f9fb37d2eb",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0147_Shield Boost Pod.Sco",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "AOAOBJECTS/Shield Boost Pod.Sco"
+      ]
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Repair Boost Pod.Sco",
+      "bytes": 557,
+      "sha256": "84fdb7bbaad5f8847418921ac9fcf12249152c3ad2d2702fae952a78c2f89ace",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0148_Repair Boost Pod.Sco",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "AOAOBJECTS/Repair Boost Pod.Sco"
+      ]
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Chaff Pod.Sco",
+      "bytes": 534,
+      "sha256": "3b32e40597e277b9bda34f0ac736b2ac9a6bec36226a7f22dcdc27498ba2a4cc",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0149_Chaff Pod.Sco",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "AOAOBJECTS/Chaff Pod.Sco"
+      ]
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Decoy Pod 1.Sco",
+      "bytes": 536,
+      "sha256": "3d18bf67953631bc22a2ecdf26019ba9a1338443f4c40b71772bd1034cb6b24d",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0150_Decoy Pod 1.Sco",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "AOAOBJECTS/Decoy Pod 1.Sco"
+      ]
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Decoy Pod 2.Sco",
+      "bytes": 536,
+      "sha256": "6c179633f4090e1c6823dbf6d73a2c30259ad3fbbf11f79ebc01fdafa1a7aad5",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0151_Decoy Pod 2.Sco",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "AOAOBJECTS/Decoy Pod 2.Sco"
+      ]
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "ECM Pod.Sco",
+      "bytes": 536,
+      "sha256": "225606f53b4084dada569d52870dd9af8383baefda881d1889fd2a0483dbec0d",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0152_ECM Pod.Sco",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "AOAOBJECTS/ECM Pod.Sco"
+      ]
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "ECCM Pod.Sco",
+      "bytes": 541,
+      "sha256": "ffa8324a3b725dd2f0a341a78a24e00e4631c419078a594029efc173300fe7df",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0153_ECCM Pod.Sco",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "AOAOBJECTS/ECCM Pod.Sco"
+      ]
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Fuel Pod.Sco",
+      "bytes": 531,
+      "sha256": "75276cd7077929f1ba6c189cefa80ea9abea583066bd5ceaf35eab88e43c7479",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0154_Fuel Pod.Sco",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "AOAOBJECTS/Fuel Pod.Sco"
+      ]
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Turret Mine Pod.Sco",
+      "bytes": 609,
+      "sha256": "e5ea1360a40810e92bf85c76d4606c27418df7e767d6c0019d98c445a963b5f9",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0155_Turret Mine Pod.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Entangle Pod.Sco",
+      "bytes": 543,
+      "sha256": "698343d4135b886dd0e6f0c3fb558d9a09187176e4311c43e5094e3902765dfe",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0156_Entangle Pod.Sco",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "AOAOBJECTS/Entangle Pod.Sco"
+      ]
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Nuke Pod.Sco",
+      "bytes": 514,
+      "sha256": "c1dbf62f6dc77d14920be827232e6099430023072863ef69642d2a2bf2380742",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0157_Nuke Pod.Sco",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "AOAOBJECTS/Nuke Pod.Sco"
+      ]
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Mod Pod.Sco",
+      "bytes": 536,
+      "sha256": "ea9e4cb5f8ed6ada6cc346124bcdbb716ae14cb0ac2c48041736d227b7299268",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0158_Mod Pod.Sco",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "AOAOBJECTS/Mod Pod.Sco"
+      ]
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Shield Enforce Pod.Sco",
+      "bytes": 538,
+      "sha256": "3d99a512e5799de62965a61c7ae353d8bfcfcc1ad3108c385c691c62eb3f5a49",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0159_Shield Enforce Pod.Sco",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "AOAOBJECTS/Shield Enforce Pod.Sco"
+      ]
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "MarkII 410.Shs",
+      "bytes": 427,
+      "sha256": "72860eb513cd92463e2b4a120f22ffa739a39049876b2d7ee2fbbdb16bd0f18f",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0160_MarkII 410.Shs",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "MarkIII 410.Shs",
+      "bytes": 428,
+      "sha256": "67fbe7900db59f5f47439987b9e4b646b9419c21a8b805403ef04dfa2f33023f",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0161_MarkIII 410.Shs",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "MarkI 360.Shs",
+      "bytes": 426,
+      "sha256": "d64285a425019d10c7a2c796bd076800e8fd82a8c38c651cd5db2f51857faf33",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0162_MarkI 360.Shs",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "MarkII 360.Shs",
+      "bytes": 427,
+      "sha256": "6bb0638a02ff71b2a50ec8d9dadcd0811af8c649353041285101c032134fb44f",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0163_MarkII 360.Shs",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "DockingSt.Gob",
+      "bytes": 39943,
+      "sha256": "c1b6d018eced81cd27c9811b99cd44c4f3bfea03286cd5f374efebb0fafa0b32",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0164_DockingSt.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "spacebkgd2.Gob",
+      "bytes": 29995,
+      "sha256": "8f4f5cd8bb1e76f80db52546364111b089f68239ea62d6257e3a31b7226f2571",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0165_spacebkgd2.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Shrike.Gob",
+      "bytes": 29035,
+      "sha256": "aa8acb1d395fc2184db2e2a94ca4cae7d42141f25ff033c2eddcff7cd4eb5b21",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0166_Shrike.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Dafusha.Gob",
+      "bytes": 30427,
+      "sha256": "ea6cbc5a1840d2c0de7400f3f92bbb6fd73c8cda0c265ba39bf082af3833c11c",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0167_Dafusha.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "outerchange.Gob",
+      "bytes": 33550,
+      "sha256": "994dd9b0aae60026d931bdec37afbc5154539f58f76d83351ff693bb5a4052b4",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0168_outerchange.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Shrike.Sco",
+      "bytes": 6591,
+      "sha256": "1dcd4e982ad9eba611b2f13dca5545333a9352571fb84905fe59b10009ff0b93",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0169_Shrike.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Dafusha.Sco",
+      "bytes": 7557,
+      "sha256": "235f8a90f939856e1e7642dc7586849053c5ee4751a77d55d490a24319028bee",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0170_Dafusha.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "irrosa01.Gob",
+      "bytes": 16690,
+      "sha256": "199d6f9e4892a4cfb99e3cd6dfef2a6b2006630b5d86861a2fdf8286199bcdea",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0171_irrosa01.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "spacebkgd3.Gob",
+      "bytes": 29995,
+      "sha256": "f2ce0ffb653cd7e4b1bbd39d099da67cfdd5deb2f7daf5f52c6cb8439620fa0f",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0172_spacebkgd3.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "hu_base_b.Gob",
+      "bytes": 12567,
+      "sha256": "93d65eda374d492e91a33975fbd24166b8a52f7e68f094516441adb0e589ed15",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0173_hu_base_b.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "hu_base_a.Gob",
+      "bytes": 22309,
+      "sha256": "e83679d1a3af8fb87eb77beac9f6937094b1091d8c26b8a20004644f233d77b5",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0174_hu_base_a.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "ast_fld_d.Gob",
+      "bytes": 3936,
+      "sha256": "73f8202ddde14218290a45ac3a95bffe37fe3a4805a5f95dd4773f1fb49802f9",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0175_ast_fld_d.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "ast_fld_b.Gob",
+      "bytes": 20731,
+      "sha256": "6ea96449413443b89a139f39f058b0b83ede7a7b45d1f8d9d7511d203471e4a5",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0176_ast_fld_b.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "ast_fld_c.Gob",
+      "bytes": 6550,
+      "sha256": "ae7d21653f94c573d49b6fc15f2bafcd4b74dfddd86429b41508d247c9ec3a14",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0177_ast_fld_c.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "ast_fld_a.Gob",
+      "bytes": 11400,
+      "sha256": "c8f0bf0b3317678653b1aa1a4b1253d0bc4349602cbb4d890509f8c8a9860c49",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0178_ast_fld_a.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "railhead01.Gob",
+      "bytes": 107082,
+      "sha256": "ef3bc086da4387e5ea8965026ab99f36bd783cec38858f46d33744c7ab2f5390",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0179_railhead01.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Dock01.Sco",
+      "bytes": 513,
+      "sha256": "2791341e850c74560cfd30442e881829f81696730e17fce825ec5b3a390fc5a4",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0180_Dock01.Sco",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "AOAOBJECTS/Dock01.Sco"
+      ]
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Warp02.Sco",
+      "bytes": 1961,
+      "sha256": "503336fc4e41937d26a457862df927e28f263fa3b1f44b246054c8d6abcfa300",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0181_Warp02.Sco",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "AOAOBJECTS/Warp02.Sco"
+      ]
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Right Hand.Gob",
+      "bytes": 32607,
+      "sha256": "bf54399d3daea331c1a26f85de632ab8ec7ef9ad21b20036ec6c7a86301d33f7",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0182_Right Hand.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Tekan.Sco",
+      "bytes": 6576,
+      "sha256": "f0d8a2085b4aee430a017396ce4d75bc7365a0b22028ac5029f5d62b2831c285",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0183_Tekan.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "tekan.Gob",
+      "bytes": 30178,
+      "sha256": "f171825242f3c4455e5d1de9324493dc93f29673334a0dfc98f038102c2fff1b",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0184_tekan.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Yagari.Gob",
+      "bytes": 35641,
+      "sha256": "e125dca734f5c4bf16426c995174621497d31547c1b89d806bfc377c6b3d42b4",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0185_Yagari.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Dasibaz.Gob",
+      "bytes": 46281,
+      "sha256": "f366895035162541e116bf3027affcaf02740843f1d7ef2a48b48e080bd14d08",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0186_Dasibaz.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Dasibaz.Sco",
+      "bytes": 7480,
+      "sha256": "86bcf38d7a8f0f8892f47d36563ff7558fb767db048a5287cf6992231662b631",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0187_Dasibaz.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "Yagari.Sco",
+      "bytes": 6582,
+      "sha256": "6e4835268c55fa0375b14a16b779f3f39a3e7bd22d209416374e5c49e06fc234",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0188_Yagari.Sco",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "CTF_base.Gob",
+      "bytes": 12130,
+      "sha256": "bc537ff40fb9b943b2df85b23d04fbefb357ba1d4a8e6459ba03f7673dfefe6a",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0189_CTF_base.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "CTF_arena.Gob",
+      "bytes": 44576,
+      "sha256": "c3c399dee3e9ab3767b5679d32397ef3643c46c8a8d4776659c05b9444fffe0f",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0190_CTF_arena.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "AFC Flag Blue.Sco",
+      "bytes": 1255,
+      "sha256": "680d60deb07365aa152edf2d1dafb9d0146b69ad7834161e65eada703a057b80",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0191_AFC Flag Blue.Sco",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "AOAOBJECTS/AFC Flag Blue.Sco"
+      ]
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "ctf_flag_red.Gob",
+      "bytes": 14893,
+      "sha256": "fe7c4b2573df90c61fca5a5cb1c0a74ccf331adb0119a5518db4e7411d97f3ae",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0192_ctf_flag_red.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "ctf_flag_blue.Gob",
+      "bytes": 14894,
+      "sha256": "1f6dd6a9fed60151541397251bead385c988a9ae61f46bba5d0d799282e725d6",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0193_ctf_flag_blue.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "AFC Flag Red.Sco",
+      "bytes": 1247,
+      "sha256": "b5df61543a63fd1972721e8335fa39a95c857a34f7a8e5dcbc74ca9913604751",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0194_AFC Flag Red.Sco",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "AOAOBJECTS/AFC Flag Red.Sco"
+      ]
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "MeskvakSu.Gob",
+      "bytes": 50388,
+      "sha256": "9a70f3432d3f4dd08ca6a1738b6cad4dfd79de8d7d30bb53804128456c7a1211",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0195_MeskvakSu.Gob",
+      "comparison": "changed"
+    },
+    {
+      "archive": "AOAOBJECTS",
+      "name": "DataBaseIndex",
+      "bytes": 7956,
+      "sha256": "8e8f434362a8c3b436003e2edb7a791af38c45777ea8c0dc50cc36aff8e558e3",
+      "path": "work/asset-review/2.7.1/assets/AOAOBJECTS/0196_DataBaseIndex",
+      "comparison": "changed"
+    },
+    {
+      "archive": "DATA",
+      "name": "radar_gridicle",
+      "bytes": 13500,
+      "sha256": "b86d31fc620d46095a71a381129a3bd4bd153ac5d5147163442e6b7d19a8c8d9",
+      "path": "work/asset-review/2.7.1/assets/DATA/0000_radar_gridicle",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "DATA/radar_gridicle"
+      ]
+    },
+    {
+      "archive": "DATA",
+      "name": "radar_profile",
+      "bytes": 14,
+      "sha256": "19502f85aa85bf54d447cbafc0fec503f70b7f9ad71881b08ae0fcc6dcb6b00d",
+      "path": "work/asset-review/2.7.1/assets/DATA/0001_radar_profile",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "DATA/radar_profile"
+      ]
+    },
+    {
+      "archive": "DATA",
+      "name": "gunshots",
+      "bytes": 220,
+      "sha256": "b769209a936544962e18d5333f27bbee8cf7c9dbb3a6173a075eefeeef280a9f",
+      "path": "work/asset-review/2.7.1/assets/DATA/0002_gunshots",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "DATA/gunshots"
+      ]
+    },
+    {
+      "archive": "DATA",
+      "name": "missiles",
+      "bytes": 60,
+      "sha256": "c16e136b4a1ac15ccf3c2350ecc13dcd57bec02dedf018c26869225baf70244f",
+      "path": "work/asset-review/2.7.1/assets/DATA/0003_missiles",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "DATA/missiles"
+      ]
+    },
+    {
+      "archive": "DATA",
+      "name": "update_interval_0",
+      "bytes": 128,
+      "sha256": "18b0363c126d86a476b778f1476ec32df700e2baac468d5d6c8dd402996aca9c",
+      "path": "work/asset-review/2.7.1/assets/DATA/0004_update_interval_0",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "DATA/update_interval_0"
+      ]
+    },
+    {
+      "archive": "DATA",
+      "name": "update_interval_1",
+      "bytes": 128,
+      "sha256": "096fbd49dcaf12c16f112eb87ca8389ae31aa6459aa901f7b1b956dfb1d5d67d",
+      "path": "work/asset-review/2.7.1/assets/DATA/0005_update_interval_1",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "DATA/update_interval_1"
+      ]
+    },
+    {
+      "archive": "DATA",
+      "name": "update_interval_2",
+      "bytes": 128,
+      "sha256": "67e3206ed5a22b3ec7c9685a5a921356384fb866c4ed8e5b657159f584368704",
+      "path": "work/asset-review/2.7.1/assets/DATA/0006_update_interval_2",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "DATA/update_interval_2"
+      ]
+    },
+    {
+      "archive": "DATA",
+      "name": "update_interval_3",
+      "bytes": 128,
+      "sha256": "95bcd1b1b1e128435f099ef7abdbdfeb40566abae05f0b923c20d28f0488839a",
+      "path": "work/asset-review/2.7.1/assets/DATA/0007_update_interval_3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "DATA/update_interval_3"
+      ]
+    },
+    {
+      "archive": "DATA",
+      "name": "update_interval_4",
+      "bytes": 128,
+      "sha256": "a798f2eeb82d2ab6264e2abdd8d965bb7c4914b33f2903825c7420fd00a0cd3f",
+      "path": "work/asset-review/2.7.1/assets/DATA/0008_update_interval_4",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "DATA/update_interval_4"
+      ]
+    },
+    {
+      "archive": "DATA",
+      "name": "space4.tga",
+      "bytes": 786476,
+      "sha256": "0ab8467483ca4d1dd90ade628a2061344fd3af8535e995aa027c69770dfab3a8",
+      "path": "work/asset-review/2.7.1/assets/DATA/0009_space4.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "DATA/space4.tga"
+      ]
+    },
+    {
+      "archive": "DATA",
+      "name": "event_times",
+      "bytes": 40,
+      "sha256": "b4e98b0a6655c1ce62b74e587adec42b04ca5d03513fc3b7f4f58824667d8f83",
+      "path": "work/asset-review/2.7.1/assets/DATA/0010_event_times",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "DATA/event_times"
+      ]
+    },
+    {
+      "archive": "DATA",
+      "name": "space4-2.tga",
+      "bytes": 196652,
+      "sha256": "a6538e6dc88b117b9b861570fb8d4de80adf14c1062bb855354d52501f7666ce",
+      "path": "work/asset-review/2.7.1/assets/DATA/0011_space4-2.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "DATA/space4-2.tga"
+      ]
+    },
+    {
+      "archive": "DATA",
+      "name": "grid2.tga",
+      "bytes": 196652,
+      "sha256": "dfa2e24496418d6e2099b80d2cb0bfd03b10ef75ecff705a1e037559b2a33cfd",
+      "path": "work/asset-review/2.7.1/assets/DATA/0012_grid2.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "DATA/grid2.tga"
+      ]
+    },
+    {
+      "archive": "DATA",
+      "name": "grid.tga",
+      "bytes": 196652,
+      "sha256": "ad3f5e679f5899b0db034f5c3221c8aa0fc0184c64099d2745f4e2f09effde6e",
+      "path": "work/asset-review/2.7.1/assets/DATA/0013_grid.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "DATA/grid.tga"
+      ]
+    },
+    {
+      "archive": "DATA",
+      "name": "salamtex.tga",
+      "bytes": 196652,
+      "sha256": "f95393b9cb06cfbf0a4ed4b2eaaf943d4559b3b5b47b9e874ea7e132607a9985",
+      "path": "work/asset-review/2.7.1/assets/DATA/0014_salamtex.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "DATA/salamtex.tga"
+      ]
+    },
+    {
+      "archive": "DATA",
+      "name": "carr2_t1.tga",
+      "bytes": 196652,
+      "sha256": "d0e656e1b9a862a7b25f36d4f814219ec7e978b8141b8985751240fb4dc64a57",
+      "path": "work/asset-review/2.7.1/assets/DATA/0015_carr2_t1.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "DATA/carr2_t1.tga"
+      ]
+    },
+    {
+      "archive": "DATA",
+      "name": "zcarr_t1.tga",
+      "bytes": 196652,
+      "sha256": "9ee4be7e61e2455e0330e43783c95f3e6c44d01c88230539770acc4ed0595895",
+      "path": "work/asset-review/2.7.1/assets/DATA/0016_zcarr_t1.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "DATA/zcarr_t1.tga"
+      ]
+    },
+    {
+      "archive": "DATA",
+      "name": "mndst_t1.tga",
+      "bytes": 196652,
+      "sha256": "0a1dd362a6652cf809f67671aba74237746cce7b5a9b0753fadba602abebaf26",
+      "path": "work/asset-review/2.7.1/assets/DATA/0017_mndst_t1.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "DATA/mndst_t1.tga"
+      ]
+    },
+    {
+      "archive": "DATA",
+      "name": "obdgr_t1.tga",
+      "bytes": 196652,
+      "sha256": "b6862ce1a2650e941a3612e90f10aad04f4a4b618c3a98894d5b216d842e1796",
+      "path": "work/asset-review/2.7.1/assets/DATA/0018_obdgr_t1.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "DATA/obdgr_t1.tga"
+      ]
+    },
+    {
+      "archive": "DATA",
+      "name": "vcarr_t1.tga",
+      "bytes": 196652,
+      "sha256": "74253819e52914f2d5a0349798f30eb37d849b12a0c8d417c014f22cd686bd57",
+      "path": "work/asset-review/2.7.1/assets/DATA/0019_vcarr_t1.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "DATA/vcarr_t1.tga"
+      ]
+    },
+    {
+      "archive": "DATA",
+      "name": "pwrup1.tga",
+      "bytes": 49196,
+      "sha256": "b39e8cfb034adde9afe07a8467f69b57af7160e5588ffa500b2875d89dec605a",
+      "path": "work/asset-review/2.7.1/assets/DATA/0020_pwrup1.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "DATA/pwrup1.tga"
+      ]
+    },
+    {
+      "archive": "DATA",
+      "name": "aoaindev.tga",
+      "bytes": 49196,
+      "sha256": "cdbb9d2f6243ddba7c85420658ba734c56304a8f90a0f53589fc3f47ec0468f7",
+      "path": "work/asset-review/2.7.1/assets/DATA/0021_aoaindev.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "DATA/aoaindev.tga",
+        "TEXTURES/aoaindev.tga"
+      ]
+    },
+    {
+      "archive": "DATA",
+      "name": "natak-t1.tga",
+      "bytes": 196652,
+      "sha256": "dee9a9eaa982292d65dfab5e924592560c258b111a42629e5c934d609845e61c",
+      "path": "work/asset-review/2.7.1/assets/DATA/0022_natak-t1.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "DATA/natak-t1.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "twinfrme.tga",
+      "bytes": 60044,
+      "sha256": "bdd5dad9e3adf6e711b56db83361121265e72be56d67dafa614f5539b25726ba",
+      "path": "work/asset-review/2.7.1/assets/HUD/0000_twinfrme.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/twinfrme.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "aoa.tga",
+      "bytes": 307739,
+      "sha256": "1614eb97ef5a7ae93a6aaa3ac9a726820d51293d8806b69bba7119e545c0316d",
+      "path": "work/asset-review/2.7.1/assets/HUD/0001_aoa.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/aoa.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "rtcl1_32.tga",
+      "bytes": 65580,
+      "sha256": "3a58ce77cefa96e2d490fa884d849f0aa518a9ce3cf6ba13642587c386946a51",
+      "path": "work/asset-review/2.7.1/assets/HUD/0002_rtcl1_32.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/rtcl1_32.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "dist1_24.tga",
+      "bytes": 9404,
+      "sha256": "916613c62e0e0683ce8426a6eed619f3ab4049dc2fbd84048744f94d124928ae",
+      "path": "work/asset-review/2.7.1/assets/HUD/0003_dist1_24.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/dist1_24.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "rdr1_24.tga",
+      "bytes": 43595,
+      "sha256": "43f1d634f4363a4c1af0cf4be1542c0ebb71a177a664a670c5119a10b3ef9bff",
+      "path": "work/asset-review/2.7.1/assets/HUD/0004_rdr1_24.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/rdr1_24.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "comm0000.tga",
+      "bytes": 78044,
+      "sha256": "795a4a1de05e8c1b7d56498dcf97f3dba1e2704cb6f045d749100df5ee7a8307",
+      "path": "work/asset-review/2.7.1/assets/HUD/0005_comm0000.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/comm0000.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "kwin0000.tga",
+      "bytes": 45044,
+      "sha256": "a681e97452a7609b5339155b018dee841fa3961b926848f4cbe8dd39fe6bb7c8",
+      "path": "work/asset-review/2.7.1/assets/HUD/0006_kwin0000.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/kwin0000.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "kwinanm1.tga",
+      "bytes": 187218,
+      "sha256": "c7106f5a31e2bb8e8d064adc2ea7e280dfb8865765828756df501e54b77c1846",
+      "path": "work/asset-review/2.7.1/assets/HUD/0007_kwinanm1.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/kwinanm1.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "kwinhilt.tga",
+      "bytes": 45044,
+      "sha256": "9e36b3217eb722ad54483983fa8a09741700c266afdaa8635fda8f40da8302b3",
+      "path": "work/asset-review/2.7.1/assets/HUD/0008_kwinhilt.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/kwinhilt.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "dist2_24.tga",
+      "bytes": 9404,
+      "sha256": "2cb700554afca431a93680f5b638ebdfe75d8e68efb355cd7025911630e07dc3",
+      "path": "work/asset-review/2.7.1/assets/HUD/0009_dist2_24.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/dist2_24.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "pred1.tga",
+      "bytes": 3116,
+      "sha256": "181ea25a6c990be747190e00549cee6242068b5f69af039fdfbc5c053c1538f8",
+      "path": "work/asset-review/2.7.1/assets/HUD/0010_pred1.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/pred1.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "mlock1.tga",
+      "bytes": 12827,
+      "sha256": "6bd3ccdef985a6165e0af8526c1c409d0267f8f1f20b92c24dbd44b084d2f450",
+      "path": "work/asset-review/2.7.1/assets/HUD/0011_mlock1.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/mlock1.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "mlock2.tga",
+      "bytes": 49691,
+      "sha256": "6ee867d43ac8d57d795b093d6d656052c7b59c645b1910f9c0068ff19bae1f39",
+      "path": "work/asset-review/2.7.1/assets/HUD/0012_mlock2.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/mlock2.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "tgttst.tga",
+      "bytes": 49196,
+      "sha256": "fa1b8b1bec6515be9b809de4dc31aa8f0a436c68cdbb74e636f23913d9f4e0cd",
+      "path": "work/asset-review/2.7.1/assets/HUD/0013_tgttst.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/tgttst.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "tdisp1.tga",
+      "bytes": 70844,
+      "sha256": "cb5e3f991bb4bad82d51fef9c70085c6022bcaaf175b1cb228899f55e6675095",
+      "path": "work/asset-review/2.7.1/assets/HUD/0014_tdisp1.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/tdisp1.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "tdisp2.tga",
+      "bytes": 70844,
+      "sha256": "4ed4b46fb2f70eb87ff430294277740913bc101ad4fd9c226dc8a7a4ce42c7a2",
+      "path": "work/asset-review/2.7.1/assets/HUD/0015_tdisp2.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/tdisp2.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "mlok0000.tga",
+      "bytes": 49196,
+      "sha256": "118c3d58a0d91489c2300b359b3f5e460604d3d72c84e976bdd07b39b8b10cd7",
+      "path": "work/asset-review/2.7.1/assets/HUD/0016_mlok0000.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/mlok0000.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "gunicon1.tga",
+      "bytes": 5504,
+      "sha256": "6054f1fda3c553de5418ef1b86de95ea7735512221117b1821d435b0d52a5035",
+      "path": "work/asset-review/2.7.1/assets/HUD/0017_gunicon1.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/gunicon1.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "ginfowin.tga",
+      "bytes": 34739,
+      "sha256": "27ed28166ed947d120963601a024329133806ef95d103339e2a93a187bc23add",
+      "path": "work/asset-review/2.7.1/assets/HUD/0018_ginfowin.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/ginfowin.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "userlist.tga",
+      "bytes": 33959,
+      "sha256": "c13bca4d0def99021b97543c4f1ece345db586cfc6c821f414c2aaafbd92edd8",
+      "path": "work/asset-review/2.7.1/assets/HUD/0019_userlist.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/userlist.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "commanm1.tga",
+      "bytes": 178244,
+      "sha256": "924d968aa28148fd00b911caf2a3f1e670986465500b1c29f88dc6ff833277a3",
+      "path": "work/asset-review/2.7.1/assets/HUD/0020_commanm1.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/commanm1.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "dmgdisp.tga",
+      "bytes": 56219,
+      "sha256": "677135b528da52f953736dc99d9c2576d55c450a482da99f71a05420877bc346",
+      "path": "work/asset-review/2.7.1/assets/HUD/0021_dmgdisp.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/dmgdisp.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "weapdisp.tga",
+      "bytes": 25916,
+      "sha256": "f23c3e33838b98d3c2646218db01f28c847a145fbc8d5f833514dbb6336609f5",
+      "path": "work/asset-review/2.7.1/assets/HUD/0022_weapdisp.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/weapdisp.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "brickruf.tga",
+      "bytes": 49196,
+      "sha256": "c50431afa6bbda9257f89b4a5bb7346a586a0d63cd269461ce3760fe26655d4f",
+      "path": "work/asset-review/2.7.1/assets/HUD/0023_brickruf.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/brickruf.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "natak-co.tga",
+      "bytes": 196652,
+      "sha256": "c05d8f0557dd8d9a5e05dcff4ca89497465c353bcbc96b817c28277667dda04c",
+      "path": "work/asset-review/2.7.1/assets/HUD/0024_natak-co.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/natak-co.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "squadlist.tga",
+      "bytes": 45305,
+      "sha256": "38f54fb0ea879f0d2d007c633c8354189371fe4c5b34cdb4dfaf0c4d3d231dbe",
+      "path": "work/asset-review/2.7.1/assets/HUD/0025_squadlist.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/squadlist.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "groupcomm.tga",
+      "bytes": 32849,
+      "sha256": "46021e105a690e5131777e0bb72c1b63054d85f61b78ef4af2e9a7ea0ff0b253",
+      "path": "work/asset-review/2.7.1/assets/HUD/0026_groupcomm.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/groupcomm.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "gs1.tga",
+      "bytes": 262188,
+      "sha256": "8fe7b46d06bc7145ce230443159ec0d87415aa905021941d1a9e7eab5ffab21c",
+      "path": "work/asset-review/2.7.1/assets/HUD/0027_gs1.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/gs1.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "gs2.tga",
+      "bytes": 262188,
+      "sha256": "7a9868d2e50c786cd26ed04aa770f6c2f1be1c63bb2c080a631cfc2a779b21a0",
+      "path": "work/asset-review/2.7.1/assets/HUD/0028_gs2.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/gs2.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "gs3.tga",
+      "bytes": 262188,
+      "sha256": "babb397810fd874f91eeb1309faa2f72577ddd95f9a6b328e63ea8aea3ce99b9",
+      "path": "work/asset-review/2.7.1/assets/HUD/0029_gs3.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/gs3.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "hitfx1.tga",
+      "bytes": 262188,
+      "sha256": "18c70fd66cedc8173a7a62e0873e2033bbde177c650edc6a0ceff02e5bdea838",
+      "path": "work/asset-review/2.7.1/assets/HUD/0030_hitfx1.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/hitfx1.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "hitfx2.tga",
+      "bytes": 262188,
+      "sha256": "03403ea2bf65f7edc82f1d6cb9144550fffc7f10e8aee56d581a502d0f329392",
+      "path": "work/asset-review/2.7.1/assets/HUD/0031_hitfx2.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/hitfx2.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "cursor3.tga",
+      "bytes": 812,
+      "sha256": "482d08f3e895c2a99862742f5cf98f186980b589b562bcb917ad216f218e8ceb",
+      "path": "work/asset-review/2.7.1/assets/HUD/0032_cursor3.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/cursor3.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "aoatext2.tga",
+      "bytes": 262188,
+      "sha256": "f05a9d434ad05433aed6a15626c6431d18c0e708b09d150a304f0f29e362b10e",
+      "path": "work/asset-review/2.7.1/assets/HUD/0033_aoatext2.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/aoatext2.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "centeraim.tga",
+      "bytes": 262188,
+      "sha256": "1597a50a14f7425306210734c7c0558d1da88eedb58411db609a8f44f6209008",
+      "path": "work/asset-review/2.7.1/assets/HUD/0034_centeraim.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/centeraim.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "aoatext1.tga",
+      "bytes": 262188,
+      "sha256": "5f96bbc3848057aeafedb07221eb1d7dce046057c04ca3328cb459894741f9df",
+      "path": "work/asset-review/2.7.1/assets/HUD/0035_aoatext1.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/aoatext1.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "cursor1.tga",
+      "bytes": 1068,
+      "sha256": "b4913e612c9c27b564d56ecde012326cc6f08f0d317b3837ca3b3cfd1d736f34",
+      "path": "work/asset-review/2.7.1/assets/HUD/0036_cursor1.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/cursor1.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "opttext.tga",
+      "bytes": 262188,
+      "sha256": "3325ef25c51a041eddb888dd56c907601339ab99d2a3b21d4f8dcfc48b1fe502",
+      "path": "work/asset-review/2.7.1/assets/HUD/0037_opttext.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/opttext.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "newuserlist.tga",
+      "bytes": 262188,
+      "sha256": "87498236653378b72551892e4375e3e3780a5a21ff11e4392ee318280e3afbe4",
+      "path": "work/asset-review/2.7.1/assets/HUD/0038_newuserlist.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/newuserlist.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "aoaalpha.tga",
+      "bytes": 66075,
+      "sha256": "7593e8ef0884e0a915a979dc549d3da3cca13f195aab2ecae998d6b6c7f4c029",
+      "path": "work/asset-review/2.7.1/assets/HUD/0039_aoaalpha.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/aoaalpha.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "odtextur.tga",
+      "bytes": 196652,
+      "sha256": "915c2514fe96b69b62f723573fcfdb41560de74f9bc416b2aa31d9f8547a11e8",
+      "path": "work/asset-review/2.7.1/assets/HUD/0040_odtextur.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/odtextur.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "largetext.tga",
+      "bytes": 262188,
+      "sha256": "7a272c745f28cd6fcdc7b0241bf779ac9656d2f0d703b17ba7e1b0d1e48829cd",
+      "path": "work/asset-review/2.7.1/assets/HUD/0041_largetext.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/largetext.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "newtext.tga",
+      "bytes": 262188,
+      "sha256": "286a65ef1ec6e578791eb85381e0679bfd5caefea760a5329e5c33ca579308a0",
+      "path": "work/asset-review/2.7.1/assets/HUD/0042_newtext.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/newtext.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "ctrlcfg1.tga",
+      "bytes": 65580,
+      "sha256": "ef48238f3c72eeaa0b66346ae212a8990edbf002e9180f31a859addb1f4e0ee0",
+      "path": "work/asset-review/2.7.1/assets/HUD/0043_ctrlcfg1.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/ctrlcfg1.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "mentor.tga",
+      "bytes": 262188,
+      "sha256": "3fd1f46c5f9087e52e4c3f0d29a1216d81642e1b080d4d27e5eae64c76be42c5",
+      "path": "work/asset-review/2.7.1/assets/HUD/0044_mentor.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/mentor.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "aoatext3.tga",
+      "bytes": 262188,
+      "sha256": "9d3ff9966a335762ff24a388d850b00a111ebe9816c30d7600880515f664b04c",
+      "path": "work/asset-review/2.7.1/assets/HUD/0045_aoatext3.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/aoatext3.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "iconsh1.tga",
+      "bytes": 1068,
+      "sha256": "93417e7587a239aa5971dd4bce4a5acc7bc98b1a1cdb6b4d442f8143cff1bf23",
+      "path": "work/asset-review/2.7.1/assets/HUD/0046_iconsh1.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/iconsh1.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "tgtwina.tga",
+      "bytes": 80044,
+      "sha256": "18d17da35f0c758fbe6ca6c6619cf436c59188fb95b52240699e3d8c159ff840",
+      "path": "work/asset-review/2.7.1/assets/HUD/0047_tgtwina.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/tgtwina.tga",
+        "TEXTURES/tgtwina.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "tgtwinb.tga",
+      "bytes": 93644,
+      "sha256": "9e7736e897c04b0e86b23c1dd4b942223af99f22ba7a1d45e6dde7f970851ddc",
+      "path": "work/asset-review/2.7.1/assets/HUD/0048_tgtwinb.tga",
+      "comparison": "changed"
+    },
+    {
+      "archive": "HUD",
+      "name": "msldisp1.tga",
+      "bytes": 65580,
+      "sha256": "60c2c5f2f0490bc8da4706c03d0d495bebdf95650ab998719ae4d4681f9c8ba6",
+      "path": "work/asset-review/2.7.1/assets/HUD/0049_msldisp1.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/msldisp1.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "TgtIcons.tga",
+      "bytes": 262188,
+      "sha256": "3efeb59174bee3f37c5f574ff0cb9654a2486718feb97c1ab715995c187349e3",
+      "path": "work/asset-review/2.7.1/assets/HUD/0050_TgtIcons.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/TgtIcons.tga"
+      ]
+    },
+    {
+      "archive": "HUD",
+      "name": "glovewin.tga",
+      "bytes": 65580,
+      "sha256": "e0b47c144ab367f88a7b575afdb0dfd26f371d33e2d74e468f60a65c6a852f02",
+      "path": "work/asset-review/2.7.1/assets/HUD/0051_glovewin.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "HUD/glovewin.tga"
+      ]
+    },
+    {
+      "archive": "SCRIPTS",
+      "name": "jrscen.scr",
+      "bytes": 304,
+      "sha256": "d77faa88ae0d695b8fcf308006385d8f9345e4faf6c1f46c9964aadf2ab11e75",
+      "path": "work/asset-review/2.7.1/assets/SCRIPTS/0000_jrscen.scr",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SCRIPTS/jrscen.scr"
+      ]
+    },
+    {
+      "archive": "SCRIPTS",
+      "name": "capship1.scr",
+      "bytes": 265,
+      "sha256": "df2a1a6c63909084c7dbda0c7dd44483070548b6c501971ca01206435b9c06de",
+      "path": "work/asset-review/2.7.1/assets/SCRIPTS/0001_capship1.scr",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SCRIPTS/capship1.scr"
+      ]
+    },
+    {
+      "archive": "SCRIPTS",
+      "name": "gen_missile.scr",
+      "bytes": 172,
+      "sha256": "69ae531ddddd6018d4fe86242f83b64a5249080378848536f3823fd3860232d9",
+      "path": "work/asset-review/2.7.1/assets/SCRIPTS/0002_gen_missile.scr",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SCRIPTS/gen_missile.scr"
+      ]
+    },
+    {
+      "archive": "SCRIPTS",
+      "name": "gen_turret.scr",
+      "bytes": 232,
+      "sha256": "f6de3ed2a8b88e5c21f075d0403d818087349ea6574d647bfa6454ee2d2b74c1",
+      "path": "work/asset-review/2.7.1/assets/SCRIPTS/0003_gen_turret.scr",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SCRIPTS/gen_turret.scr"
+      ]
+    },
+    {
+      "archive": "SCRIPTS",
+      "name": "ssmajestic.scr",
+      "bytes": 71,
+      "sha256": "af2b319d45e4635b70f4df0e993a75a9f7e0590540f4246c77bd33771a60ad78",
+      "path": "work/asset-review/2.7.1/assets/SCRIPTS/0004_ssmajestic.scr",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SCRIPTS/ssmajestic.scr"
+      ]
+    },
+    {
+      "archive": "SCRIPTS",
+      "name": "MCVA_Scenario1.scr",
+      "bytes": 306,
+      "sha256": "c02bd33803be4af6d81abb9e3e05164f32b8851a87838c0c50be6299063415d7",
+      "path": "work/asset-review/2.7.1/assets/SCRIPTS/0005_MCVA_Scenario1.scr",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SCRIPTS/MCVA_Scenario1.scr"
+      ]
+    },
+    {
+      "archive": "SCRIPTS",
+      "name": "robot_ai.scr",
+      "bytes": 447,
+      "sha256": "883e8230eda559c0b55b4b4e7f8d570cfee47bc0637ddd074594e343bbafb97f",
+      "path": "work/asset-review/2.7.1/assets/SCRIPTS/0006_robot_ai.scr",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SCRIPTS/robot_ai.scr"
+      ]
+    },
+    {
+      "archive": "SCRIPTS",
+      "name": "gen_idle.scr",
+      "bytes": 79,
+      "sha256": "9079fe98193fd05f3a4cb67b77b83de09a47daf9320880d8616367bd9a3c2acd",
+      "path": "work/asset-review/2.7.1/assets/SCRIPTS/0007_gen_idle.scr",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SCRIPTS/gen_idle.scr"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "switch1.mp3",
+      "bytes": 6270,
+      "sha256": "8bffd2627c8fdbf4d7925b293f44601f1613e6291313fd75bc1d868df13eed32",
+      "path": "work/asset-review/2.7.1/assets/SOUNDS/0000_switch1.mp3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SOUNDS/switch1.mp3"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "msg1.mp3",
+      "bytes": 2717,
+      "sha256": "e4d4396352e37658cebf7c1425f95a27e110f89840d9dfc812da1a493b717d69",
+      "path": "work/asset-review/2.7.1/assets/SOUNDS/0001_msg1.mp3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SOUNDS/msg1.mp3"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "off1.mp3",
+      "bytes": 7942,
+      "sha256": "7755449732480c8c52ba5942b278b715bbef2b9f50db141414c16f6f271b04df",
+      "path": "work/asset-review/2.7.1/assets/SOUNDS/0002_off1.mp3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SOUNDS/off1.mp3"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "impact1.mp3",
+      "bytes": 17555,
+      "sha256": "f3ffd9f3a7667e1b25a914ed52794c7c8d22d8df8122f54809351fe9848484ae",
+      "path": "work/asset-review/2.7.1/assets/SOUNDS/0003_impact1.mp3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SOUNDS/impact1.mp3"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "gun1.mp3",
+      "bytes": 2508,
+      "sha256": "9c5695e1838e5b3603a0a19cfff1fe72c9028153ce005b7937f5f456600c903a",
+      "path": "work/asset-review/2.7.1/assets/SOUNDS/0004_gun1.mp3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SOUNDS/gun1.mp3"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "gun2.mp3",
+      "bytes": 19227,
+      "sha256": "80013143e10221164ae1d468491229aa7754ccde0169aae317c2182f4667fa63",
+      "path": "work/asset-review/2.7.1/assets/SOUNDS/0005_gun2.mp3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SOUNDS/gun2.mp3"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "gun3.mp3",
+      "bytes": 4598,
+      "sha256": "b91fe8189716bce55fc69eef9385c410f0e7db7e3548e572cf5b717492b0a497",
+      "path": "work/asset-review/2.7.1/assets/SOUNDS/0006_gun3.mp3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SOUNDS/gun3.mp3"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "gun4.mp3",
+      "bytes": 12539,
+      "sha256": "d924e952555531d6a6abcb4617f00b7afc908c6c75c4729ef15070750034edec",
+      "path": "work/asset-review/2.7.1/assets/SOUNDS/0007_gun4.mp3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SOUNDS/gun4.mp3"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "gun5.mp3",
+      "bytes": 16301,
+      "sha256": "b3d9ce5f9cda5bcdca52645f88fbbb72b4077db8c12a4f0203282f635fddc883",
+      "path": "work/asset-review/2.7.1/assets/SOUNDS/0008_gun5.mp3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SOUNDS/gun5.mp3"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "gun6.mp3",
+      "bytes": 1463,
+      "sha256": "2f9c8f4b106777e0aef60f909fe9a151d8ac11f5add842e66ffcc9550ba13f44",
+      "path": "work/asset-review/2.7.1/assets/SOUNDS/0009_gun6.mp3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SOUNDS/gun6.mp3"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "gun7.mp3",
+      "bytes": 15883,
+      "sha256": "294fcaa2067a4a79f42f017aa67ed0f462d49d2ac05b643553e11cb229247d7e",
+      "path": "work/asset-review/2.7.1/assets/SOUNDS/0010_gun7.mp3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SOUNDS/gun7.mp3"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "collide2.mp3",
+      "bytes": 13375,
+      "sha256": "e4c316961cd847b96730caed4da46757d78598e104be17882ffb305613e9d218",
+      "path": "work/asset-review/2.7.1/assets/SOUNDS/0011_collide2.mp3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SOUNDS/collide2.mp3"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "missilefire1.mp3",
+      "bytes": 26750,
+      "sha256": "a7adc34bd1b88a7f8e1ebcbd35c05dcc9f274faf7ce13aa24432175009ecf497",
+      "path": "work/asset-review/2.7.1/assets/SOUNDS/0012_missilefire1.mp3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SOUNDS/missilefire1.mp3"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "laugh1.mp3",
+      "bytes": 18182,
+      "sha256": "14dcdeb78052479fa7cd8f23a19402da1eff99399c5ec5730007eeb41e41cad2",
+      "path": "work/asset-review/2.7.1/assets/SOUNDS/0013_laugh1.mp3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SOUNDS/laugh1.mp3"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "beep1.mp3",
+      "bytes": 627,
+      "sha256": "c7ab9c89b7f51cd2df457345b396d90b80105d967d292fdb1dd1c18d5c7c301a",
+      "path": "work/asset-review/2.7.1/assets/SOUNDS/0014_beep1.mp3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SOUNDS/beep1.mp3"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "missilealarm1.mp3",
+      "bytes": 627,
+      "sha256": "a513e1af3ed375a36f32f32ad7977f92990fc40556ff19b7cf87de6534f76907",
+      "path": "work/asset-review/2.7.1/assets/SOUNDS/0015_missilealarm1.mp3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SOUNDS/missilealarm1.mp3"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "cannon1.mp3",
+      "bytes": 21316,
+      "sha256": "c804fc8b88b23c602571812178bf1257b85cf6bda963f74f845620b0ead61d7c",
+      "path": "work/asset-review/2.7.1/assets/SOUNDS/0016_cannon1.mp3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SOUNDS/cannon1.mp3"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "alarm1.mp3",
+      "bytes": 20063,
+      "sha256": "2ef828a99a68f6cbe4fcca8a5c4253b1357b4612415e668759310b6bcc4bc469",
+      "path": "work/asset-review/2.7.1/assets/SOUNDS/0017_alarm1.mp3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SOUNDS/alarm1.mp3"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "back1.mp3",
+      "bytes": 11285,
+      "sha256": "5728db119ccacb46805c0f248ea271d0a59eedf7a391369cda3996c62fc0dc41",
+      "path": "work/asset-review/2.7.1/assets/SOUNDS/0018_back1.mp3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SOUNDS/back1.mp3"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "warning1.mp3",
+      "bytes": 2508,
+      "sha256": "fd0ea4246b6845ae74cbcae53bb225b5a55367a73736d4b99c9ca2244c97ce86",
+      "path": "work/asset-review/2.7.1/assets/SOUNDS/0019_warning1.mp3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SOUNDS/warning1.mp3"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "pikaspeech.mp3",
+      "bytes": 51827,
+      "sha256": "3a416fe371e15ea409e492f3abd96caf26cf55499217f0fee893dd3f3fa482fb",
+      "path": "work/asset-review/2.7.1/assets/SOUNDS/0020_pikaspeech.mp3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SOUNDS/pikaspeech.mp3"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "gameoverman.mp3",
+      "bytes": 9405,
+      "sha256": "89d9f9e943dcbaff6a12c825569c0266d5659f596122f436180f50730cafc75d",
+      "path": "work/asset-review/2.7.1/assets/SOUNDS/0021_gameoverman.mp3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SOUNDS/gameoverman.mp3"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "knockeddown.mp3",
+      "bytes": 21734,
+      "sha256": "03436463386cf5940ead20f1d948a45a064e6b9cd1a4e49285c6ec81b4b50fcd",
+      "path": "work/asset-review/2.7.1/assets/SOUNDS/0022_knockeddown.mp3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SOUNDS/knockeddown.mp3"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "closeencounter.mp3",
+      "bytes": 37826,
+      "sha256": "279b7f4ccc5861681cce46097449c9ab0e2d9162e26504be7a687a094b885440",
+      "path": "work/asset-review/2.7.1/assets/SOUNDS/0023_closeencounter.mp3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SOUNDS/closeencounter.mp3"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "abandonship.mp3",
+      "bytes": 26959,
+      "sha256": "55ebef80fc41f0576b985397868205eb5097829e63b4a00511a790553be2e65e",
+      "path": "work/asset-review/2.7.1/assets/SOUNDS/0024_abandonship.mp3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SOUNDS/abandonship.mp3"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "armwarheads.mp3",
+      "bytes": 27377,
+      "sha256": "bcd6ef89ca7d7ae70c05070a447daff4f13ea23181f6f557182890342cb330b0",
+      "path": "work/asset-review/2.7.1/assets/SOUNDS/0025_armwarheads.mp3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SOUNDS/armwarheads.mp3"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "homerhell.mp3",
+      "bytes": 8569,
+      "sha256": "41cb90650d474a3689c2698d6de53c92ac4c133443dbc6d484e4dedd87d3c7ba",
+      "path": "work/asset-review/2.7.1/assets/SOUNDS/0026_homerhell.mp3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SOUNDS/homerhell.mp3"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "hell.mp3",
+      "bytes": 30720,
+      "sha256": "81a62d806c67555592e019f8e22251a92c7f2772a295235817ffe288b4d3c28e",
+      "path": "work/asset-review/2.7.1/assets/SOUNDS/0027_hell.mp3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SOUNDS/hell.mp3"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "getout.mp3",
+      "bytes": 12121,
+      "sha256": "9752a9b478fb27b67758bf0e60dde41687ef6d2c66124720d2c68de075d97425",
+      "path": "work/asset-review/2.7.1/assets/SOUNDS/0028_getout.mp3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SOUNDS/getout.mp3"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "ahhell.mp3",
+      "bytes": 6061,
+      "sha256": "3e6bb2ab5f8fafa854f4c46a566ad0b88ee2b727b234a7f13644cf9c82a0a9d6",
+      "path": "work/asset-review/2.7.1/assets/SOUNDS/0029_ahhell.mp3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SOUNDS/ahhell.mp3"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "online.mp3",
+      "bytes": 8778,
+      "sha256": "e6bb880dc1ba0b8db53e266c7d323243955f3f3dd490a0148998105efcc6946d",
+      "path": "work/asset-review/2.7.1/assets/SOUNDS/0030_online.mp3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SOUNDS/online.mp3"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "collision.mp3",
+      "bytes": 9614,
+      "sha256": "c60278f27e28be88368b37023dd1978ea18e6ee721063af574194968385c3a09",
+      "path": "work/asset-review/2.7.1/assets/SOUNDS/0031_collision.mp3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SOUNDS/collision.mp3"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "covrfire.mp3",
+      "bytes": 29676,
+      "sha256": "4db0d73ad3b0552665f9ced4f8a87211bdbdcbc7f00e3f943e800e2c123e53e8",
+      "path": "work/asset-review/2.7.1/assets/SOUNDS/0032_covrfire.mp3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SOUNDS/covrfire.mp3"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "firing.mp3",
+      "bytes": 11285,
+      "sha256": "0b5827c5d8f516becee7eeaf3015c4a8cc25de8596b07ac2871ffb7fa736bdeb",
+      "path": "work/asset-review/2.7.1/assets/SOUNDS/0033_firing.mp3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SOUNDS/firing.mp3"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "lights.mp3",
+      "bytes": 14838,
+      "sha256": "f9d617e505fe58051b4b9b6cb919bfb26ed03d790aca138559c36c4d906135fa",
+      "path": "work/asset-review/2.7.1/assets/SOUNDS/0034_lights.mp3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SOUNDS/lights.mp3"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "skull.mp3",
+      "bytes": 19227,
+      "sha256": "ba5198e147a6bfa1e17a30be560c14f5996b7dc2e26aab9cf1c739ec90cbe0dd",
+      "path": "work/asset-review/2.7.1/assets/SOUNDS/0035_skull.mp3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SOUNDS/skull.mp3"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "mistake.mp3",
+      "bytes": 21943,
+      "sha256": "bc57cb10e39fa5b2e594cfb22d4af8c22cfdd3d985afb555fb4965d472c70463",
+      "path": "work/asset-review/2.7.1/assets/SOUNDS/0036_mistake.mp3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SOUNDS/mistake.mp3"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "gamegame.mp3",
+      "bytes": 8360,
+      "sha256": "0d3f71963e4a77bb4d22dcc9300f892b40579b2daf61ce231ce07b35a5e8fc4c",
+      "path": "work/asset-review/2.7.1/assets/SOUNDS/0037_gamegame.mp3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SOUNDS/gamegame.mp3"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "warp1.mp3",
+      "bytes": 44722,
+      "sha256": "3bbb164326a6b0630488bf642f745f9cf3c2dbb052e58d9da18a1231aced2d09",
+      "path": "work/asset-review/2.7.1/assets/SOUNDS/0038_warp1.mp3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SOUNDS/warp1.mp3"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "hitflag.mp3",
+      "bytes": 40125,
+      "sha256": "f84e4c0c6cfd8f0172cc635e63cdb4c196b7292b37134d6b0020566b222202e0",
+      "path": "work/asset-review/2.7.1/assets/SOUNDS/0039_hitflag.mp3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SOUNDS/hitflag.mp3"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "shipexplode.mp3",
+      "bytes": 80249,
+      "sha256": "10e2d1d17a35e6a52ad1e1ad3aaf2486bffced5af49888ec7db70cef9bebf4b2",
+      "path": "work/asset-review/2.7.1/assets/SOUNDS/0040_shipexplode.mp3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SOUNDS/shipexplode.mp3"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "cscheck.mp3",
+      "bytes": 28840,
+      "sha256": "b777619099b2864452dbc9dc8612552b515b5b08dd1fc321451d3705ca40f413",
+      "path": "work/asset-review/2.7.1/assets/SOUNDS/0041_cscheck.mp3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SOUNDS/cscheck.mp3"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "alshorn.mp3",
+      "bytes": 33228,
+      "sha256": "82768b2282809f8504a4dc857e4938eb2bf9f51c6923004cd6e5d4ad90e33086",
+      "path": "work/asset-review/2.7.1/assets/SOUNDS/0042_alshorn.mp3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SOUNDS/alshorn.mp3"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "enginehit1.mp3",
+      "bytes": 37199,
+      "sha256": "d1cffb701353b34b5e13ff9d6421b6ac7a3c3aa03635a5861862aba5a5b2c213",
+      "path": "work/asset-review/2.7.1/assets/SOUNDS/0043_enginehit1.mp3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SOUNDS/enginehit1.mp3"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "ash.mp3",
+      "bytes": 84637,
+      "sha256": "3280fe91a36d57255649a03bf4ec856519ca7b9f0a21c961348e28402d871246",
+      "path": "work/asset-review/2.7.1/assets/SOUNDS/0044_ash.mp3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SOUNDS/ash.mp3"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "main_event.mp3",
+      "bytes": 20689,
+      "sha256": "39c755c6963585f4bb13b62e83f3b6400a39c0088f7551c4e614583ac6a543e3",
+      "path": "work/asset-review/2.7.1/assets/SOUNDS/0045_main_event.mp3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SOUNDS/main_event.mp3"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "capture_pickup.mp3",
+      "bytes": 6688,
+      "sha256": "7739aa0e722d267499fe81a460a4105a4f890b593f35e595188eb335e8659694",
+      "path": "work/asset-review/2.7.1/assets/SOUNDS/0046_capture_pickup.mp3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SOUNDS/capture_pickup.mp3"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "all_your_base.mp3",
+      "bytes": 38035,
+      "sha256": "3ff2defa2c4756bcf1b90eaa039521ff6314ac7fb73cdd473a4b736c4da4ef4d",
+      "path": "work/asset-review/2.7.1/assets/SOUNDS/0047_all_your_base.mp3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SOUNDS/all_your_base.mp3"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "ha_ha_ha.mp3",
+      "bytes": 10867,
+      "sha256": "bd4719a706f2da2cde8a881f6960d02e10e098c37ed6d5b694b424d2bf1c834e",
+      "path": "work/asset-review/2.7.1/assets/SOUNDS/0048_ha_ha_ha.mp3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SOUNDS/ha_ha_ha.mp3"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "chess2.mp3",
+      "bytes": 28631,
+      "sha256": "f56166b8028317b88f67f5e18d9827ca67c47aa6f65640b65e22cf5b2855f076",
+      "path": "work/asset-review/2.7.1/assets/SOUNDS/0049_chess2.mp3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SOUNDS/chess2.mp3"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "playgame.mp3",
+      "bytes": 17137,
+      "sha256": "05ea84fbc607f2f88e4ac45732ccc7d19aec561520e3781235745c6c75bdc160",
+      "path": "work/asset-review/2.7.1/assets/SOUNDS/0050_playgame.mp3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SOUNDS/playgame.mp3"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "logoff.mp3",
+      "bytes": 65202,
+      "sha256": "775f3e98e5ce7855d082bf493a632e1cf90b3e1b47cc52559dfa9b7c0ec494a0",
+      "path": "work/asset-review/2.7.1/assets/SOUNDS/0051_logoff.mp3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SOUNDS/logoff.mp3"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "act_of_god.mp3",
+      "bytes": 32544,
+      "sha256": "d2a3264f40dd7dad239cf6891f1b4b5502b5861bd1a039ef6345912dfe35e21b",
+      "path": "work/asset-review/2.7.1/assets/SOUNDS/0052_act_of_god.mp3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SOUNDS/act_of_god.mp3"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "docking.mp3",
+      "bytes": 56007,
+      "sha256": "e9d020db28718e9b1d012ca7d234c792f43d31430a1fdc6619c67fc8a2574879",
+      "path": "work/asset-review/2.7.1/assets/SOUNDS/0053_docking.mp3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SOUNDS/docking.mp3"
+      ]
+    },
+    {
+      "archive": "SOUNDS",
+      "name": "gasup.mp3",
+      "bytes": 12539,
+      "sha256": "317395299274491b027bee10d196b99b70236bb68ddb9849cc58418ca6cc198e",
+      "path": "work/asset-review/2.7.1/assets/SOUNDS/0054_gasup.mp3",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "SOUNDS/gasup.mp3"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "smokefx2.tga",
+      "bytes": 524332,
+      "sha256": "cbe0212aaa33f4b442cfa97a0d2365f89c7ddb6bad4074e9b7783be09b94157c",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0000_smokefx2.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/smokefx2.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "smokefx3.tga",
+      "bytes": 262188,
+      "sha256": "5bc34e100c5ac669294f3ed946f85321cb87ec42f198600e1546546c1509b0e6",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0001_smokefx3.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/smokefx3.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "natak-b1.tga",
+      "bytes": 196652,
+      "sha256": "4f52e5f2b1844ce41af844eb4246b156eda0cf4d1d5e8aa789a028b343610d28",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0002_natak-b1.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/natak-b1.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "EnvMap.tga",
+      "bytes": 196652,
+      "sha256": "d12b8ad8dd8cd5c9dadd0e63a1f2a09ad0d7dca278e0822e6f1909954bd9c0cf",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0003_EnvMap.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/EnvMap.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "EnvMap2.tga",
+      "bytes": 196652,
+      "sha256": "f60f3f392414b371ef82fcaa1a369f8bfd464cb336a74d85cc11becfc688ec4e",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0004_EnvMap2.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/EnvMap2.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "vcarr_t1 bump.tga",
+      "bytes": 196652,
+      "sha256": "d0ed3bc022a8189c3d6c6f76cb1a7a34ef5671f1a4fded3c313b43cd1a7f6d27",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0005_vcarr_t1 bump.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/vcarr_t1 bump.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "aoaindev bump.tga",
+      "bytes": 49196,
+      "sha256": "6e8ea9499bfbe17dbf50bac7618020fd415b0851441de2fb50dcf937ef9b29a9",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0006_aoaindev bump.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/aoaindev bump.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "aoaindev.tga",
+      "bytes": 49196,
+      "sha256": "cdbb9d2f6243ddba7c85420658ba734c56304a8f90a0f53589fc3f47ec0468f7",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0007_aoaindev.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "DATA/aoaindev.tga",
+        "TEXTURES/aoaindev.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "technotexture.tga",
+      "bytes": 49196,
+      "sha256": "f4ecc48de64f7865dfa289d2009aab9476bc162ed6d6c3ecf1c48595d76a0f20",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0008_technotexture.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/technotexture.tga",
+        "TEXTURES/technobump.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "narocht1.tga",
+      "bytes": 196652,
+      "sha256": "5ad8aaae32e63ac96af97d96b1c7aed975152ce8321a972ad78532f9e599b576",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0009_narocht1.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/narocht1.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "technobump.tga",
+      "bytes": 49196,
+      "sha256": "f4ecc48de64f7865dfa289d2009aab9476bc162ed6d6c3ecf1c48595d76a0f20",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0010_technobump.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/technotexture.tga",
+        "TEXTURES/technobump.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "kafic10.tga",
+      "bytes": 196652,
+      "sha256": "524e4223d1e229c4d2b3382053458d1e382dd761105c8a941683331504492047",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0011_kafic10.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/kafic10.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "jvari_t1.tga",
+      "bytes": 196652,
+      "sha256": "cf40e0f3ae8bbe9071784598c284676a7b6eeb5bf7acba8022abe39ad45fbe77",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0012_jvari_t1.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/jvari_t1.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "eagle.tga",
+      "bytes": 196652,
+      "sha256": "c38b40f494eb32ec94fc241dc96871d26bf0b75bddf60188bb4ddbda89f35c7b",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0013_eagle.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/eagle.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "n'goc.tga",
+      "bytes": 196652,
+      "sha256": "d1cf03b2eb37896de874eb585e75b8cf14ca149df51cf098bc40d667ac2467c9",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0014_n_goc.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/n'goc.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "vrakstat.tga",
+      "bytes": 196652,
+      "sha256": "c56659f41bf8f574d936732922f5c3cdbe796ee6335e2307293a52ce5c98771d",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0015_vrakstat.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/vrakstat.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "astr3.tga",
+      "bytes": 196652,
+      "sha256": "12962a58205aa7267bbafabfb84b6ea1cac213658e5003ca5afd27b226c24b60",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0016_astr3.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/astr3.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "dock1a.tga",
+      "bytes": 196652,
+      "sha256": "08f38c30e1a29ee0589ed810be70e3ae6db951b64377d3be09e5f064be70f1f9",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0017_dock1a.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/dock1a.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "dock1b.tga",
+      "bytes": 196652,
+      "sha256": "cb23d7aaab01199d60ef0b6e6bb3bb77484de67ee380f29e3a75ec9bc66bf223",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0018_dock1b.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/dock1b.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "dock1c.tga",
+      "bytes": 196652,
+      "sha256": "621e254eac8937b958bda32bfc819e2c7c8076e52e85aaa2fe079b6ab4f5d62c",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0019_dock1c.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/dock1c.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "flag1.tga",
+      "bytes": 49196,
+      "sha256": "af753ca0db3a596dc5eeabde872e3be3082c95df29ba0b64ffd280bb38e9f028",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0020_flag1.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/flag1.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "turret.tga",
+      "bytes": 49196,
+      "sha256": "a7f8ae063e2361e352e7bf475e1db36c7f703adafd0fc517a5d5386b02a20d71",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0021_turret.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/turret.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "dock1d.tga",
+      "bytes": 196652,
+      "sha256": "f41902a5c10a91c64c351d52d87ff4ef033e53538ea7810429a191119ef93b21",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0022_dock1d.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/dock1d.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "jiva_a.tga",
+      "bytes": 49170,
+      "sha256": "47da69d864c5b3f9554e0d2270ae66322a6ab2d8b821b64b931bd82c6e86b16c",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0023_jiva_a.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/jiva_a.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "jiva_b.tga",
+      "bytes": 196652,
+      "sha256": "9513733852747177130ff4416773742f813121e966a78a3ea867f5126db16737",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0024_jiva_b.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/jiva_b.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "jiva_c.tga",
+      "bytes": 196652,
+      "sha256": "10520922491814530e790ee02ea8b2f796be5da544fa23fd83f89eba858b064a",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0025_jiva_c.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/jiva_c.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "jiva_d.tga",
+      "bytes": 196652,
+      "sha256": "5c1c44b5ad567da9057ab53645db4a146c134538d7bcd938cecc195f2851f9f4",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0026_jiva_d.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/jiva_d.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "spike.tga",
+      "bytes": 196652,
+      "sha256": "8be15358119987b99e649d7263293c74691c54363fb3440b55606fd9dcbba1f3",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0027_spike.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/spike.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "vasachov.tga",
+      "bytes": 196652,
+      "sha256": "ef6c883d2c435862935d8cf96f8983792aa21e6a5bb5e9d8d0ceb1da162be930",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0028_vasachov.tga",
+      "comparison": "changed"
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "vermok.tga",
+      "bytes": 196652,
+      "sha256": "f61a2dce98a475e445b9e7f57304eeb65c88ed02eef4c39cc22c3f31ae74cb70",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0029_vermok.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/vermok.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "grathven.tga",
+      "bytes": 196652,
+      "sha256": "b544ce1730ac57691450da74671c02890f7e33c9d8dbe8d40ae611a531527661",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0030_grathven.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/grathven.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "zkole.tga",
+      "bytes": 196652,
+      "sha256": "fe288334ce9de0f842b46f3019658eccff0614e16c448f8d3a06eb0cc73954a0",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0031_zkole.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/zkole.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "ymkhtat.tga",
+      "bytes": 196652,
+      "sha256": "c3b6092f292e04d740a7bd0f1169b8094341d4c37631a264b0b06b02e9fc4783",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0032_ymkhtat.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/ymkhtat.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "Mkulat.tga",
+      "bytes": 196652,
+      "sha256": "1eca2e80f121fc0e35dd52e05b05e2acfeaec5b98df9cd6bcdcc543f86459be0",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0033_Mkulat.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/Mkulat.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "Naroch.tga",
+      "bytes": 196652,
+      "sha256": "968f126af032c79c91b47bf069a8751df70b10e92b9402a8b604ba19815ebccb",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0034_Naroch.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/Naroch.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "missi1_a.tga",
+      "bytes": 49196,
+      "sha256": "eadd89660de46c8c8136cb7345688aa16d4567e93fb70694b1f0095c68527654",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0035_missi1_a.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/missi1_a.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "Eagle_bump.tga",
+      "bytes": 196652,
+      "sha256": "d0dffa9aef3f35b30a9198c63d2592d62cb16fae626b943eeee3c56dba083af1",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0036_Eagle_bump.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/Eagle_bump.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "base1_a.tga",
+      "bytes": 196652,
+      "sha256": "c42b64a69af84da0cb244cbea267d4f1e7012128ad6941956aa68704fd72200e",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0037_base1_a.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/base1_a.tga",
+        "TEXTURES/hy_bs1_a.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "base1_b.tga",
+      "bytes": 196652,
+      "sha256": "4149c5d025303c545b7a8620bafd58978828c3afa8c35bcdaf1d4b168e66859a",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0038_base1_b.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/base1_b.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "hy_bs1_a.tga",
+      "bytes": 196652,
+      "sha256": "c42b64a69af84da0cb244cbea267d4f1e7012128ad6941956aa68704fd72200e",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0039_hy_bs1_a.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/base1_a.tga",
+        "TEXTURES/hy_bs1_a.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "hy_bs1_b.tga",
+      "bytes": 196652,
+      "sha256": "5f7c168d729da8b96aab2db56e0c43a253e579667ed5bc5c674c906127abd076",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0040_hy_bs1_b.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/hy_bs1_b.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "Hy_tur_a.tga",
+      "bytes": 12332,
+      "sha256": "e3a7067f0c7ecb6149cbd033557c86e2cceedef5fba422f8fe049de51af30c96",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0041_Hy_tur_a.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/Hy_tur_a.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "Hy_tur_a_128.tga",
+      "bytes": 49196,
+      "sha256": "717626273c55a107c71be2209ee79c39c02ff46d66c58f4d02cc26f4b0c1eb16",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0042_Hy_tur_a_128.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/Hy_tur_a_128.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "zcva.tga",
+      "bytes": 196652,
+      "sha256": "145896d7a911a32b874d52e01fcc1f6ad85131a707fb74e6a4ac9e1abc2c30b6",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0043_zcva.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/zcva.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "spc02_b.tga",
+      "bytes": 196652,
+      "sha256": "be6c92f7c679355561ebfdf714c9052a04529208e31625abd83f2eaf3fae8c14",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0044_spc02_b.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/spc02_b.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "spc02_a.tga",
+      "bytes": 196652,
+      "sha256": "72e48a5b251193e8c087e91cecbcf1b91856255111f0f7a5dacd6fb491c0708a",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0045_spc02_a.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/spc02_a.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "Dafusha.tga",
+      "bytes": 196652,
+      "sha256": "5196a25885cb584de6bed5979ee77f7fcfaf1956c00abffa41914d25ac51661e",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0046_Dafusha.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/Dafusha.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "shrike.tga",
+      "bytes": 196652,
+      "sha256": "7b7be44b380b83553bb59f5404dd29e7bdcd1312ce6f024ff7e768dc8bc7f5f6",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0047_shrike.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/shrike.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "spc03_b.tga",
+      "bytes": 196652,
+      "sha256": "5292b50607f4826c2dc31b50afc8358c818fdd4ebda20550080afcc6212afdb9",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0048_spc03_b.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/spc03_b.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "spc03_a.tga",
+      "bytes": 196652,
+      "sha256": "e85d4d97dc5175fc1b3bb184f2eb8b7ae923d204e8341fe32a116f020bebdfa8",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0049_spc03_a.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/spc03_a.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "tekan.tga",
+      "bytes": 196652,
+      "sha256": "e4b77174a040da5ad4bc3c7a7d929f847ae3ef14c288c49d6b4f8f9c3c5f0815",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0050_tekan.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/tekan.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "Yagari.tga",
+      "bytes": 196652,
+      "sha256": "5e30760f8e9e1522ee0dda6a680c8dfda07389df6e60c1a4967002cd9f7b407e",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0051_Yagari.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/Yagari.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "Dasibaz.tga",
+      "bytes": 196652,
+      "sha256": "b4ff97063d1d6c0a3617b70e20523695927905f8452f59d9f0bddbbc7f19c327",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0052_Dasibaz.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/Dasibaz.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "msltr1.tga",
+      "bytes": 65580,
+      "sha256": "37b593186c5410dfe3f258332e77d43cfcb5a6ed5df32251025aeee80954c800",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0053_msltr1.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/msltr1.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "ctf.tga",
+      "bytes": 49196,
+      "sha256": "1f1f43628a146426a2326f62d3441092785211a0161c99186c399bb8d8815c9c",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0054_ctf.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/ctf.tga"
+      ]
+    },
+    {
+      "archive": "TEXTURES",
+      "name": "meskvaks.tga",
+      "bytes": 196652,
+      "sha256": "19b5d0b07fe6630529bfd57c3e111a84739c71869ee33a591ebbc1fba0ad145d",
+      "path": "work/asset-review/2.7.1/assets/TEXTURES/0055_meskvaks.tga",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "TEXTURES/meskvaks.tga"
+      ]
+    },
+    {
+      "archive": "IMAGES",
+      "name": "eagle.bmp",
+      "bytes": 49208,
+      "sha256": "80c4d77a8b64d5b633bcb5aeeaaf7d07825261b8f58aa9b473eed8d24292e0e2",
+      "path": "work/asset-review/2.7.1/assets/IMAGES/0000_eagle.bmp",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "IMAGES/eagle.bmp"
+      ]
+    },
+    {
+      "archive": "IMAGES",
+      "name": "grathven.bmp",
+      "bytes": 49208,
+      "sha256": "c3525da703031269867f351e6f7965f9740ada915cc11daa8a535b11de815d87",
+      "path": "work/asset-review/2.7.1/assets/IMAGES/0001_grathven.bmp",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "IMAGES/grathven.bmp"
+      ]
+    },
+    {
+      "archive": "IMAGES",
+      "name": "janhavari.bmp",
+      "bytes": 49208,
+      "sha256": "556b85a30890cf91f1da9f304e3deea83d7d22cc90fcb9a3400f6ec193d08c39",
+      "path": "work/asset-review/2.7.1/assets/IMAGES/0002_janhavari.bmp",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "IMAGES/janhavari.bmp"
+      ]
+    },
+    {
+      "archive": "IMAGES",
+      "name": "kafic.bmp",
+      "bytes": 49208,
+      "sha256": "9b0d01aaaab2ebf8e87b11f898165c33ed89ba972923cef7e35c96f64f6021e2",
+      "path": "work/asset-review/2.7.1/assets/IMAGES/0003_kafic.bmp",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "IMAGES/kafic.bmp"
+      ]
+    },
+    {
+      "archive": "IMAGES",
+      "name": "mkulat.bmp",
+      "bytes": 49208,
+      "sha256": "71700d82e707cbfc3e780ba381fd851f73029aae563f7abbaeecdfc5a077a2ed",
+      "path": "work/asset-review/2.7.1/assets/IMAGES/0004_mkulat.bmp",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "IMAGES/mkulat.bmp"
+      ]
+    },
+    {
+      "archive": "IMAGES",
+      "name": "ngoc.bmp",
+      "bytes": 49208,
+      "sha256": "6073af1d181553b9662160d1c3a13782d52747019839b917f6e4d53fa80cd1ec",
+      "path": "work/asset-review/2.7.1/assets/IMAGES/0005_ngoc.bmp",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "IMAGES/ngoc.bmp"
+      ]
+    },
+    {
+      "archive": "IMAGES",
+      "name": "vasachovo.bmp",
+      "bytes": 49208,
+      "sha256": "7ffa27b24a66caf0adbb54d767a4dc66790c6445ad99925d4db6c0bf7b9467c7",
+      "path": "work/asset-review/2.7.1/assets/IMAGES/0006_vasachovo.bmp",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "IMAGES/vasachovo.bmp"
+      ]
+    },
+    {
+      "archive": "IMAGES",
+      "name": "zkole.bmp",
+      "bytes": 49208,
+      "sha256": "04856d194ae9ce7d2db66eb80ec6734138e49138d05edaead338d1f0607a12b0",
+      "path": "work/asset-review/2.7.1/assets/IMAGES/0007_zkole.bmp",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "IMAGES/zkole.bmp"
+      ]
+    },
+    {
+      "archive": "IMAGES",
+      "name": "naroch.bmp",
+      "bytes": 49208,
+      "sha256": "4a4d98af03e7d5fda3edd9b0ebb7e2d8bf72ec6232c77f4cf182ec949645372a",
+      "path": "work/asset-review/2.7.1/assets/IMAGES/0008_naroch.bmp",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "IMAGES/naroch.bmp"
+      ]
+    },
+    {
+      "archive": "IMAGES",
+      "name": "type_2.bmp",
+      "bytes": 49208,
+      "sha256": "9171fd7f40e230df63ee41a54fc8ddf89312067e2323fceff787425d8dc2c8ef",
+      "path": "work/asset-review/2.7.1/assets/IMAGES/0009_type_2.bmp",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "IMAGES/type_2.bmp"
+      ]
+    },
+    {
+      "archive": "IMAGES",
+      "name": "vrakstat.bmp",
+      "bytes": 49208,
+      "sha256": "0cef058edc7a08ad899aee5a610354e5758515dcdde7cabce63e2d0369d43d66",
+      "path": "work/asset-review/2.7.1/assets/IMAGES/0010_vrakstat.bmp",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "IMAGES/vrakstat.bmp"
+      ]
+    },
+    {
+      "archive": "IMAGES",
+      "name": "natak.bmp",
+      "bytes": 49208,
+      "sha256": "dad42397e43de9781aa3a791dc79d3faba708288e22b29728ac73c060ecaf4db",
+      "path": "work/asset-review/2.7.1/assets/IMAGES/0011_natak.bmp",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "IMAGES/natak.bmp"
+      ]
+    },
+    {
+      "archive": "IMAGES",
+      "name": "drop_mine_a.bmp",
+      "bytes": 49208,
+      "sha256": "cb4f6d2b314890d04a61652204e0bcbc5ea437b469779e26b202a1982e93a4c6",
+      "path": "work/asset-review/2.7.1/assets/IMAGES/0012_drop_mine_a.bmp",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "IMAGES/drop_mine_a.bmp"
+      ]
+    },
+    {
+      "archive": "IMAGES",
+      "name": "drop_mine_b.bmp",
+      "bytes": 49208,
+      "sha256": "addad1945850de24af21d1e050c3120c1728b41d462868bdd8db80253e72ed23",
+      "path": "work/asset-review/2.7.1/assets/IMAGES/0013_drop_mine_b.bmp",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "IMAGES/drop_mine_b.bmp"
+      ]
+    },
+    {
+      "archive": "IMAGES",
+      "name": "drop_mine_c.bmp",
+      "bytes": 49208,
+      "sha256": "1731d7049c7f777ff355ac92bf0a892804a28ba24b638199008f4dadef7db95e",
+      "path": "work/asset-review/2.7.1/assets/IMAGES/0014_drop_mine_c.bmp",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "IMAGES/drop_mine_c.bmp"
+      ]
+    },
+    {
+      "archive": "IMAGES",
+      "name": "transport.bmp",
+      "bytes": 49208,
+      "sha256": "824838388bb0c20de7eb1a0b56f499bd3dcfed2d47002c4ced22ea5c1875bd5c",
+      "path": "work/asset-review/2.7.1/assets/IMAGES/0015_transport.bmp",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "IMAGES/transport.bmp"
+      ]
+    },
+    {
+      "archive": "IMAGES",
+      "name": "energy_module.bmp",
+      "bytes": 49208,
+      "sha256": "02b3646a8b95813a0df6b2a29b1f7de4564a2d0b0e2a69c1479f928ad6dba3f5",
+      "path": "work/asset-review/2.7.1/assets/IMAGES/0016_energy_module.bmp",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "IMAGES/energy_module.bmp"
+      ]
+    },
+    {
+      "archive": "IMAGES",
+      "name": "gun.bmp",
+      "bytes": 49208,
+      "sha256": "a9e4d5aa2ab7c4d694cf96e43db5be548b26774a0b3324cd5fe811cb078e130a",
+      "path": "work/asset-review/2.7.1/assets/IMAGES/0017_gun.bmp",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "IMAGES/gun.bmp"
+      ]
+    },
+    {
+      "archive": "IMAGES",
+      "name": "cannon.bmp",
+      "bytes": 49208,
+      "sha256": "2a66e4733006b9d6e3739f70b2a7ac429b877f39ae85a94fdb4549f8c668c522",
+      "path": "work/asset-review/2.7.1/assets/IMAGES/0018_cannon.bmp",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "IMAGES/cannon.bmp"
+      ]
+    },
+    {
+      "archive": "IMAGES",
+      "name": "gravity_booster.bmp",
+      "bytes": 49208,
+      "sha256": "e961b5a34ce4f40a16c06818d03a8941b0de24ffada9475c873f3d5f4a437051",
+      "path": "work/asset-review/2.7.1/assets/IMAGES/0019_gravity_booster.bmp",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "IMAGES/gravity_booster.bmp"
+      ]
+    },
+    {
+      "archive": "IMAGES",
+      "name": "shield_booster.bmp",
+      "bytes": 49208,
+      "sha256": "226a08325706b9729ea95bcc7223852898d6b54102d92c3578e66fd991a9200f",
+      "path": "work/asset-review/2.7.1/assets/IMAGES/0020_shield_booster.bmp",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "IMAGES/shield_booster.bmp"
+      ]
+    },
+    {
+      "archive": "IMAGES",
+      "name": "repair_points.bmp",
+      "bytes": 49208,
+      "sha256": "5fd99fcd2f6504bd037d9dd0f3963cb864f24c109d5df5490f9967b4ba51c141",
+      "path": "work/asset-review/2.7.1/assets/IMAGES/0021_repair_points.bmp",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "IMAGES/repair_points.bmp"
+      ]
+    },
+    {
+      "archive": "IMAGES",
+      "name": "chaff.bmp",
+      "bytes": 49208,
+      "sha256": "fee749706590a84b73d87a51515d46ede52f2613075fe956cdd9b3509e936b2f",
+      "path": "work/asset-review/2.7.1/assets/IMAGES/0022_chaff.bmp",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "IMAGES/chaff.bmp"
+      ]
+    },
+    {
+      "archive": "IMAGES",
+      "name": "decoy.bmp",
+      "bytes": 49208,
+      "sha256": "90866eb0c4355e8c29cf66826bad820eb449a94b8ddf5c71c702fbaaecaf5a07",
+      "path": "work/asset-review/2.7.1/assets/IMAGES/0023_decoy.bmp",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "IMAGES/decoy.bmp"
+      ]
+    },
+    {
+      "archive": "IMAGES",
+      "name": "ecm_booster.bmp",
+      "bytes": 49208,
+      "sha256": "c58f92124795dc29afe956e9f4982a2301964904c0face2fa256a922a706b743",
+      "path": "work/asset-review/2.7.1/assets/IMAGES/0024_ecm_booster.bmp",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "IMAGES/ecm_booster.bmp"
+      ]
+    },
+    {
+      "archive": "IMAGES",
+      "name": "fuel.bmp",
+      "bytes": 49208,
+      "sha256": "1f99f97d31a33747f79e1a50344cb17cb91af264111878f5394220bf71d08c06",
+      "path": "work/asset-review/2.7.1/assets/IMAGES/0025_fuel.bmp",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "IMAGES/fuel.bmp"
+      ]
+    },
+    {
+      "archive": "IMAGES",
+      "name": "drop_turret.bmp",
+      "bytes": 49208,
+      "sha256": "b0ab867e8150c803a2fee9e8eb5f1d91c99e486ea2380c54b065f9cc04fae047",
+      "path": "work/asset-review/2.7.1/assets/IMAGES/0026_drop_turret.bmp",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "IMAGES/drop_turret.bmp"
+      ]
+    },
+    {
+      "archive": "IMAGES",
+      "name": "entangle.bmp",
+      "bytes": 49208,
+      "sha256": "886b2ad9863254f30753d881749a5876cf9324dad735438fb4f939b5fc8083a6",
+      "path": "work/asset-review/2.7.1/assets/IMAGES/0027_entangle.bmp",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "IMAGES/entangle.bmp"
+      ]
+    },
+    {
+      "archive": "IMAGES",
+      "name": "nuke.bmp",
+      "bytes": 49208,
+      "sha256": "55dd3cb2c0fcbd23c0378ccd49691440648a9f01c3bcc7332a4c365a33e1400a",
+      "path": "work/asset-review/2.7.1/assets/IMAGES/0028_nuke.bmp",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "IMAGES/nuke.bmp"
+      ]
+    },
+    {
+      "archive": "IMAGES",
+      "name": "shield_reinforce.bmp",
+      "bytes": 49208,
+      "sha256": "511f1fcce95eba622392b28b4d93d90af8d713839ba09ec02712ea4da2f916fb",
+      "path": "work/asset-review/2.7.1/assets/IMAGES/0029_shield_reinforce.bmp",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "IMAGES/shield_reinforce.bmp"
+      ]
+    },
+    {
+      "archive": "IMAGES",
+      "name": "ym.bmp",
+      "bytes": 49208,
+      "sha256": "66d82cd72b778db97889a3bf5d7b278dfde52f0609ef3136742c08ee248891cd",
+      "path": "work/asset-review/2.7.1/assets/IMAGES/0030_ym.bmp",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "IMAGES/ym.bmp"
+      ]
+    },
+    {
+      "archive": "IMAGES",
+      "name": "type_1.bmp",
+      "bytes": 49208,
+      "sha256": "fea325b6c4bcb54840397adb45310561738d2f3fbbd5efc479f7dfcac1541c38",
+      "path": "work/asset-review/2.7.1/assets/IMAGES/0031_type_1.bmp",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "IMAGES/type_1.bmp"
+      ]
+    },
+    {
+      "archive": "IMAGES",
+      "name": "type_3.bmp",
+      "bytes": 49208,
+      "sha256": "0c25c0140d3b5d893c009fbfd37c6f3b068adb8fe5e03e5a73419eb65e4d9d3f",
+      "path": "work/asset-review/2.7.1/assets/IMAGES/0032_type_3.bmp",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "IMAGES/type_3.bmp"
+      ]
+    },
+    {
+      "archive": "IMAGES",
+      "name": "vermok.bmp",
+      "bytes": 49208,
+      "sha256": "604cfc9ef8944ff018263a52011bfb73638a959720fa87e94ebcbba01f3e8a2d",
+      "path": "work/asset-review/2.7.1/assets/IMAGES/0033_vermok.bmp",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "IMAGES/vermok.bmp"
+      ]
+    },
+    {
+      "archive": "IMAGES",
+      "name": "dafusha.bmp",
+      "bytes": 49208,
+      "sha256": "79a1b91e01e05ae0e18eeaeefbc2e0a18262cb2af7b386cdae985ce441d4abce",
+      "path": "work/asset-review/2.7.1/assets/IMAGES/0034_dafusha.bmp",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "IMAGES/dafusha.bmp"
+      ]
+    },
+    {
+      "archive": "IMAGES",
+      "name": "shrike.bmp",
+      "bytes": 49208,
+      "sha256": "12ad21928d991a02953c8cfdb3fc46883f8c04a68b8846834cff13b3fa097eff",
+      "path": "work/asset-review/2.7.1/assets/IMAGES/0035_shrike.bmp",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "IMAGES/shrike.bmp"
+      ]
+    },
+    {
+      "archive": "IMAGES",
+      "name": "tekan.bmp",
+      "bytes": 49208,
+      "sha256": "d615373f5b4325315d6b7dbf94f73f885ed4058487d36a942859017b5d3a13b0",
+      "path": "work/asset-review/2.7.1/assets/IMAGES/0036_tekan.bmp",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "IMAGES/tekan.bmp"
+      ]
+    },
+    {
+      "archive": "IMAGES",
+      "name": "yagari.bmp",
+      "bytes": 49208,
+      "sha256": "7f1f417b4f2d184bf00bb55ae31c29cbb586fa27dbda5ae5323fe2277dc74117",
+      "path": "work/asset-review/2.7.1/assets/IMAGES/0037_yagari.bmp",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "IMAGES/yagari.bmp"
+      ]
+    },
+    {
+      "archive": "IMAGES",
+      "name": "dasibaz.bmp",
+      "bytes": 49208,
+      "sha256": "40b75a074fac0bdfe2baffa8de64df6b5bfe14f2808bab85d15e8d36ef075e16",
+      "path": "work/asset-review/2.7.1/assets/IMAGES/0038_dasibaz.bmp",
+      "comparison": "identical",
+      "baseline_content_matches": [
+        "IMAGES/dasibaz.bmp"
+      ]
+    }
+  ],
+  "client": "work/asset-review/2.7.1/members/15_AOACLIENT.EXE",
+  "client_sha256": "b179c3c22e6426d55de52d57476aaa53b7e92622009daf754c5153be0b7503a7"
+}

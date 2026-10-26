@@ -1,0 +1,250 @@
+{
+  "summary": "Two patched 2.9.2 clients on the local relay, ships 6000 units apart. The shooter sent 0x2A with zero missile tags; the server assigned 0x40CCIIII tags and echoed it to both; the shooter reported each hit with 0x30, which the server relayed once; the target applied the damage itself.",
+  "client_sha256": "782d1825e944d564e55034e34d52968ae5fc1e2ee22148a54c17c8d4cf2c1b95",
+  "server": "station_stub.py --profile local-relay --spawn-axis z --spawn-spacing 6000",
+  "client_launches": [
+    {
+      "t": 1792607501.164,
+      "reliable": true,
+      "len": 146,
+      "lock": 100.0,
+      "target": "0x80010002",
+      "shooter": "0x80010001",
+      "count": 1,
+      "tags_zero": true,
+      "missile": "Type II 1.1",
+      "rack": "Rack IIB a",
+      "bytes_after_names_nonzero": true,
+      "system": 0
+    },
+    {
+      "t": 1792607535.773,
+      "reliable": true,
+      "len": 146,
+      "lock": 100.0,
+      "target": "0x80010002",
+      "shooter": "0x80010001",
+      "count": 1,
+      "tags_zero": true,
+      "missile": "Type II 1.1",
+      "rack": "Rack IIB a",
+      "bytes_after_names_nonzero": true,
+      "system": 0
+    },
+    {
+      "t": 1792607542.114,
+      "reliable": true,
+      "len": 146,
+      "lock": 100.0,
+      "target": "0x80010002",
+      "shooter": "0x80010001",
+      "count": 1,
+      "tags_zero": true,
+      "missile": "Type II 1.1",
+      "rack": "Rack IIB b",
+      "bytes_after_names_nonzero": true,
+      "system": 0
+    },
+    {
+      "t": 1792607554.784,
+      "reliable": true,
+      "len": 146,
+      "lock": 100.0,
+      "target": "0x80010002",
+      "shooter": "0x80010001",
+      "count": 1,
+      "tags_zero": true,
+      "missile": "Type II 1.1",
+      "rack": "Rack IIB b",
+      "bytes_after_names_nonzero": true,
+      "system": 0
+    },
+    {
+      "t": 1792607579.893,
+      "reliable": true,
+      "len": 146,
+      "lock": 100.0,
+      "target": "0x80010002",
+      "shooter": "0x80010001",
+      "count": 1,
+      "tags_zero": true,
+      "missile": "Type III 1.1",
+      "rack": "Rack IIIB a",
+      "bytes_after_names_nonzero": true,
+      "system": 0
+    },
+    {
+      "t": 1792607594.6,
+      "reliable": true,
+      "len": 146,
+      "lock": 100.0,
+      "target": "0x80010002",
+      "shooter": "0x80010001",
+      "count": 1,
+      "tags_zero": true,
+      "missile": "Type III 1.1",
+      "rack": "Rack IIIB a",
+      "bytes_after_names_nonzero": true,
+      "system": 0
+    }
+  ],
+  "client_impacts": [
+    {
+      "t": 1792607503.982,
+      "reliable": true,
+      "missile": "0x400101f4",
+      "hit": "0x80010002",
+      "position": [
+        5.7,
+        -1.9,
+        4465.7
+      ],
+      "direct": 1
+    },
+    {
+      "t": 1792607538.588,
+      "reliable": true,
+      "missile": "0x400201f5",
+      "hit": "0x80010002",
+      "position": [
+        5.6,
+        -1.9,
+        4414.6
+      ],
+      "direct": 1
+    },
+    {
+      "t": 1792607544.901,
+      "reliable": true,
+      "missile": "0x400301f6",
+      "hit": "0x80010002",
+      "position": [
+        -5.5,
+        -1.8,
+        4414.6
+      ],
+      "direct": 1
+    },
+    {
+      "t": 1792607557.564,
+      "reliable": true,
+      "missile": "0x400401f7",
+      "hit": "0x80010002",
+      "position": [
+        -5.4,
+        -1.9,
+        4415.3
+      ],
+      "direct": 1
+    },
+    {
+      "t": 1792607582.688,
+      "reliable": true,
+      "missile": "0x400501f8",
+      "hit": "0x80010002",
+      "position": [
+        6.4,
+        0.7,
+        4418.3
+      ],
+      "direct": 1
+    },
+    {
+      "t": 1792607597.375,
+      "reliable": true,
+      "missile": "0x400601f9",
+      "hit": "0x80010002",
+      "position": [
+        6.0,
+        0.7,
+        4414.9
+      ],
+      "direct": 1
+    }
+  ],
+  "server_events": [
+    {
+      "t": 1792607501.164,
+      "event": "missile_launch",
+      "slot": 1,
+      "accepted": true
+    },
+    {
+      "t": 1792607503.982,
+      "event": "missile_impact",
+      "slot": 1,
+      "accepted": true
+    },
+    {
+      "t": 1792607535.773,
+      "event": "missile_launch",
+      "slot": 1,
+      "accepted": true
+    },
+    {
+      "t": 1792607538.588,
+      "event": "missile_impact",
+      "slot": 1,
+      "accepted": true
+    },
+    {
+      "t": 1792607542.114,
+      "event": "missile_launch",
+      "slot": 1,
+      "accepted": true
+    },
+    {
+      "t": 1792607544.901,
+      "event": "missile_impact",
+      "slot": 1,
+      "accepted": true
+    },
+    {
+      "t": 1792607554.784,
+      "event": "missile_launch",
+      "slot": 1,
+      "accepted": true
+    },
+    {
+      "t": 1792607557.564,
+      "event": "missile_impact",
+      "slot": 1,
+      "accepted": true
+    },
+    {
+      "t": 1792607579.893,
+      "event": "missile_launch",
+      "slot": 1,
+      "accepted": true
+    },
+    {
+      "t": 1792607582.688,
+      "event": "missile_impact",
+      "slot": 1,
+      "accepted": true
+    },
+    {
+      "t": 1792607594.6,
+      "event": "missile_launch",
+      "slot": 1,
+      "accepted": true
+    },
+    {
+      "t": 1792607597.375,
+      "event": "missile_impact",
+      "slot": 1,
+      "accepted": true
+    }
+  ],
+  "observed_by_memory_read": {
+    "shooter_racks_before": "Rack IIB a/b: Type II 1.1 2/2; Rack IIIB a/b: Type III 1.1 2/2",
+    "target_shield_hp": [
+      107.0,
+      97.2,
+      64.7,
+      41.0
+    ],
+    "target_shield_note": "after 0, 1, 4 (Type II) and 6 (+2 Type III) impacts; hull 40.0 unchanged",
+    "shooter_trace": "0x489020 SendFireMissile -> 0x4B16B0 OnReceiveMissileLaunch (server echo) -> 0x4A4810 ObjectToMissile -> 0x485960 SendImpactMissile -> 0x433FC0 ReceiveMissileImpact -> 0x49B9F0 DoMissileImpact(target 0x80010002)"
+  }
+}

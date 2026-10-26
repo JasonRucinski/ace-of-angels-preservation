@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Setup guide
+    url: https://github.com/JasonRucinski/ace-of-angels-preservation/blob/main/docs/play.md
+    about: Step-by-step setup and troubleshooting for Windows 10/11.

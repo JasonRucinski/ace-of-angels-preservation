@@ -1,0 +1,210 @@
+{
+  "scope": "Extracted mesh-node assets and original x86 LOD selector/projected-size arithmetic; no full scene traversal or GPU validation",
+  "original_executable_sha256": "4b6c35e2b3ab473bd98c0afa6538079ee78678d85c28406c07bc27a08cc78c7e",
+  "mesh_models_audited": 154,
+  "unparsed_or_layout_models": 18,
+  "runtime": {
+    "selector_va": "0x542920",
+    "projected_size_slice": [
+      "0x54310D",
+      "0x54315E"
+    ],
+    "selection_rule": "minimum <= projected_size < maximum",
+    "projected_size_cap": 4000,
+    "tests_command": ".venv/Scripts/python.exe -I tools/test_object_lod.py",
+    "test_methods_passed": 4
+  },
+  "asteroids": [
+    {
+      "model": "Astr-A",
+      "source_sha256": "2340d21e94900a4fd76f0bd7c2762478cd73a300bb5313e0e0d4a54bcbec1ac1",
+      "mesh_count": 1,
+      "geometry_identical_within_model": true,
+      "node_transforms_identical_within_model": true,
+      "screen_size_ranges": [
+        [
+          5.0,
+          4096.0
+        ]
+      ]
+    },
+    {
+      "model": "Astr-A__mip",
+      "source_sha256": "c53e20bdee040122f368c81e43812c47d81021d14b9187a728a370c4849018ac",
+      "mesh_count": 3,
+      "geometry_identical_within_model": true,
+      "node_transforms_identical_within_model": true,
+      "screen_size_ranges": [
+        [
+          2000.0,
+          4096.0
+        ],
+        [
+          712.0,
+          2000.0
+        ],
+        [
+          5.0,
+          712.0
+        ]
+      ]
+    },
+    {
+      "model": "Astr-B",
+      "source_sha256": "45bc6daca2bd51fc64c724455e3982ba7cc255b4183c40faaf63c40b6283f2b2",
+      "mesh_count": 1,
+      "geometry_identical_within_model": true,
+      "node_transforms_identical_within_model": true,
+      "screen_size_ranges": [
+        [
+          5.0,
+          4096.0
+        ]
+      ]
+    },
+    {
+      "model": "Astr-B_mip",
+      "source_sha256": "6bd7943ac800c1c51afa610596484638a3a520c65852ce2510ec813391cd20c7",
+      "mesh_count": 3,
+      "geometry_identical_within_model": true,
+      "node_transforms_identical_within_model": true,
+      "screen_size_ranges": [
+        [
+          2000.0,
+          4096.0
+        ],
+        [
+          712.0,
+          2000.0
+        ],
+        [
+          5.0,
+          712.0
+        ]
+      ]
+    },
+    {
+      "model": "Astr-C",
+      "source_sha256": "dba674a1363774a4ad75b2fc633e6738dd3bee169c47d41d7f4ca9965d874767",
+      "mesh_count": 1,
+      "geometry_identical_within_model": true,
+      "node_transforms_identical_within_model": true,
+      "screen_size_ranges": [
+        [
+          5.0,
+          4096.0
+        ]
+      ]
+    },
+    {
+      "model": "Astr-C_mip",
+      "source_sha256": "84c719ee5cc6c49cdd63c260a7cb7582dfc4c87bc6e9bc407ebbb32d7e5fd53a",
+      "mesh_count": 3,
+      "geometry_identical_within_model": true,
+      "node_transforms_identical_within_model": true,
+      "screen_size_ranges": [
+        [
+          2000.0,
+          4096.0
+        ],
+        [
+          712.0,
+          2000.0
+        ],
+        [
+          5.0,
+          712.0
+        ]
+      ]
+    },
+    {
+      "model": "Astr-D",
+      "source_sha256": "62a06d4097e3885b19fe3323393ca4a253092fc6b707f99ba8087aa18b21d2ea",
+      "mesh_count": 3,
+      "geometry_identical_within_model": true,
+      "node_transforms_identical_within_model": true,
+      "screen_size_ranges": [
+        [
+          1024.0,
+          4096.0
+        ],
+        [
+          400.0,
+          1024.0
+        ],
+        [
+          5.0,
+          400.0
+        ]
+      ]
+    },
+    {
+      "model": "Astr-E",
+      "source_sha256": "32666af61489062e462785600a433faf2b0016bcec8ab72fba08a0615e8fbd5c",
+      "mesh_count": 3,
+      "geometry_identical_within_model": true,
+      "node_transforms_identical_within_model": true,
+      "screen_size_ranges": [
+        [
+          1024.0,
+          4096.0
+        ],
+        [
+          400.0,
+          1024.0
+        ],
+        [
+          5.0,
+          400.0
+        ]
+      ]
+    },
+    {
+      "model": "Astr-F",
+      "source_sha256": "b2424d02f14b3a8dd548c38d377591dab3e60f2991aaade88c8c6421beee00cb",
+      "mesh_count": 3,
+      "geometry_identical_within_model": true,
+      "node_transforms_identical_within_model": true,
+      "screen_size_ranges": [
+        [
+          1024.0,
+          4096.0
+        ],
+        [
+          400.0,
+          1024.0
+        ],
+        [
+          5.0,
+          400.0
+        ]
+      ]
+    },
+    {
+      "model": "Astr_06-A",
+      "source_sha256": "7078b99b71da93252027011ac830813590cfbf909ceb648bf3a280668f6524c1",
+      "mesh_count": 3,
+      "geometry_identical_within_model": true,
+      "node_transforms_identical_within_model": true,
+      "screen_size_ranges": [
+        [
+          2000.0,
+          4096.0
+        ],
+        [
+          600.0,
+          2000.0
+        ],
+        [
+          5.0,
+          600.0
+        ]
+      ]
+    }
+  ],
+  "limitations": [
+    "Separate base and _mip files are not asserted to have identical geometry.",
+    "Ship LOD simplification may change silhouette; raw vertex offsets must be evaluated with serialized node transforms.",
+    "Parent transforms, scene culling, textures, draw submission and host/client parity are not verified."
+  ]
+}

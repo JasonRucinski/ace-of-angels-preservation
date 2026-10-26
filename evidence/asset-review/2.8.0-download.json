@@ -1,0 +1,16 @@
+{
+  "catalog_url": "https://www.old-games.ru/game/download/8520.html",
+  "selector_url": "https://www.old-games.ru/game/download/get.php?fileid=22845&modal=1",
+  "outer_rar": {
+    "path": "builds/asset-review/2.8.0/Ace_of_Angels_cancelled_demo_v2_8_0.rar",
+    "bytes": 28196908,
+    "sha256": "5694dcc6d8b9fda629c6e15ab54ef5286af0b99a81156d3d5fd7e5ec0f95164e"
+  },
+  "installer": {
+    "path": "builds/asset-review/2.8.0/AoA_demo_v2_8_0.exe",
+    "bytes": 27918963,
+    "sha256": "32f457c9b9891d231db2b2ae43735fe48c6a839f916392211e943672045b866d",
+    "md5": "7401dd3d2a54256e60c1bb3e5b35f752"
+  },
+  "method": "Retrieved fresh public mirror link from selector; extracted only named EXE using Windows tar; installer not executed."
+}

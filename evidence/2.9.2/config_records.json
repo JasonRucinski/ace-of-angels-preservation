@@ -1,0 +1,984 @@
+{
+ "file": "work/2.9.2/members/15_AOACLIENT.EXE",
+ "name_len": 64,
+ "table_start_off": "0x1d8110",
+ "table_start_va": "0x5d8110",
+ "count": 120,
+ "refs_to_table_start": [
+  "0x4c1512",
+  "0x4c152e",
+  "0x4c154f"
+ ],
+ "records": [
+  {
+   "name": "MaxLoadRange",
+   "name_off": "0x1d8110",
+   "value_off": "0x1d8150",
+   "name_va": "0x5d8110",
+   "value": 500000.0,
+   "code_refs": [
+    "0x4c1329",
+    "0x4c139d",
+    "0x4c13dd",
+    "0x4c141d",
+    "0x4c145d",
+    "0x4c14a2",
+    "0x4c1512",
+    "0x4c152e",
+    "0x4c154f"
+   ]
+  },
+  {
+   "name": "ArenaUnloadTimeout",
+   "name_off": "0x1d8154",
+   "value_off": "0x1d8194",
+   "name_va": "0x5d8154",
+   "value": 300000.0,
+   "code_refs": []
+  },
+  {
+   "name": "ArenaUnloadCheck",
+   "name_off": "0x1d8198",
+   "value_off": "0x1d81d8",
+   "name_va": "0x5d8198",
+   "value": 30000.0,
+   "code_refs": []
+  },
+  {
+   "name": "MaxPerTeam",
+   "name_off": "0x1d81dc",
+   "value_off": "0x1d821c",
+   "name_va": "0x5d81dc",
+   "value": 5.0,
+   "code_refs": []
+  },
+  {
+   "name": "TargettingAIProcessCountPerFrame",
+   "name_off": "0x1d8220",
+   "value_off": "0x1d8260",
+   "name_va": "0x5d8220",
+   "value": 15.0,
+   "code_refs": []
+  },
+  {
+   "name": "FlagGameRadius",
+   "name_off": "0x1d8264",
+   "value_off": "0x1d82a4",
+   "name_va": "0x5d8264",
+   "value": 275000.0,
+   "code_refs": []
+  },
+  {
+   "name": "FlagsCanCarryAtOnce",
+   "name_off": "0x1d82a8",
+   "value_off": "0x1d82e8",
+   "name_va": "0x5d82a8",
+   "value": 1.0,
+   "code_refs": []
+  },
+  {
+   "name": "CarryFlagTimer",
+   "name_off": "0x1d82ec",
+   "value_off": "0x1d832c",
+   "name_va": "0x5d82ec",
+   "value": 120000.0,
+   "code_refs": []
+  },
+  {
+   "name": "WarningDistToDock",
+   "name_off": "0x1d8330",
+   "value_off": "0x1d8370",
+   "name_va": "0x5d8330",
+   "value": 5000.0,
+   "code_refs": []
+  },
+  {
+   "name": "SHOTPROCESSMINDELTATIME",
+   "name_off": "0x1d8374",
+   "value_off": "0x1d83b4",
+   "name_va": "0x5d8374",
+   "value": 125.0,
+   "code_refs": []
+  },
+  {
+   "name": "DEFAULTGUNSHOTPROJPLANE",
+   "name_off": "0x1d83b8",
+   "value_off": "0x1d83f8",
+   "name_va": "0x5d83b8",
+   "value": 512.0,
+   "code_refs": []
+  },
+  {
+   "name": "MINTARGETBOUNTYBEFORESCOREACCUM",
+   "name_off": "0x1d83fc",
+   "value_off": "0x1d843c",
+   "name_va": "0x5d83fc",
+   "value": 2.0,
+   "code_refs": []
+  },
+  {
+   "name": "SCOREACCUMFACTOR",
+   "name_off": "0x1d8440",
+   "value_off": "0x1d8480",
+   "name_va": "0x5d8440",
+   "value": 0.05000000074505806,
+   "code_refs": []
+  },
+  {
+   "name": "MINRADIUSBEFORESCOREACCUM",
+   "name_off": "0x1d8484",
+   "value_off": "0x1d84c4",
+   "name_va": "0x5d8484",
+   "value": 1500.0,
+   "code_refs": []
+  },
+  {
+   "name": "ObjectAIECMBreakEvenDist",
+   "name_off": "0x1d84c8",
+   "value_off": "0x1d8508",
+   "name_va": "0x5d84c8",
+   "value": 100.0,
+   "code_refs": []
+  },
+  {
+   "name": "ObjectAISpeedECMIncreases",
+   "name_off": "0x1d850c",
+   "value_off": "0x1d854c",
+   "name_va": "0x5d850c",
+   "value": 3000.0,
+   "code_refs": []
+  },
+  {
+   "name": "ObjectAISpeedLockDEgredationFactor",
+   "name_off": "0x1d8550",
+   "value_off": "0x1d8590",
+   "name_va": "0x5d8550",
+   "value": 0.00039999998989515007,
+   "code_refs": []
+  },
+  {
+   "name": "EWBreakEvenDistance",
+   "name_off": "0x1d8594",
+   "value_off": "0x1d85d4",
+   "name_va": "0x5d8594",
+   "value": 8000.0,
+   "code_refs": []
+  },
+  {
+   "name": "EWEffectiveness",
+   "name_off": "0x1d85d8",
+   "value_off": "0x1d8618",
+   "name_va": "0x5d85d8",
+   "value": 7.0,
+   "code_refs": []
+  },
+  {
+   "name": "MISSILEPREDICTFACTOR",
+   "name_off": "0x1d861c",
+   "value_off": "0x1d865c",
+   "name_va": "0x5d861c",
+   "value": 1.0,
+   "code_refs": []
+  },
+  {
+   "name": "ECMEFFECTIVENESS",
+   "name_off": "0x1d8660",
+   "value_off": "0x1d86a0",
+   "name_va": "0x5d8660",
+   "value": 2.0,
+   "code_refs": []
+  },
+  {
+   "name": "ECMACCELFACTOR",
+   "name_off": "0x1d86a4",
+   "value_off": "0x1d86e4",
+   "name_va": "0x5d86a4",
+   "value": 0.800000011920929,
+   "code_refs": []
+  },
+  {
+   "name": "MISSILESELFDESTRUCTLOCKFACTOR",
+   "name_off": "0x1d86e8",
+   "value_off": "0x1d8728",
+   "name_va": "0x5d86e8",
+   "value": 70.0,
+   "code_refs": []
+  },
+  {
+   "name": "MissileMinimumLaunchDist",
+   "name_off": "0x1d872c",
+   "value_off": "0x1d876c",
+   "name_va": "0x5d872c",
+   "value": 5000.0,
+   "code_refs": []
+  },
+  {
+   "name": "ScaleECMGuessWith",
+   "name_off": "0x1d8770",
+   "value_off": "0x1d87b0",
+   "name_va": "0x5d8770",
+   "value": 3000.0,
+   "code_refs": []
+  },
+  {
+   "name": "AIBaseAccelFactor",
+   "name_off": "0x1d87b4",
+   "value_off": "0x1d87f4",
+   "name_va": "0x5d87b4",
+   "value": 0.800000011920929,
+   "code_refs": []
+  },
+  {
+   "name": "EWBaseLockOnLevel",
+   "name_off": "0x1d87f8",
+   "value_off": "0x1d8838",
+   "name_va": "0x5d87f8",
+   "value": 30.0,
+   "code_refs": []
+  },
+  {
+   "name": "MINDISTFORBOUNTYCOUNTENABLED",
+   "name_off": "0x1d883c",
+   "value_off": "0x1d887c",
+   "name_va": "0x5d883c",
+   "value": 150000.0,
+   "code_refs": []
+  },
+  {
+   "name": "BASEECFALLOFF",
+   "name_off": "0x1d8880",
+   "value_off": "0x1d88c0",
+   "name_va": "0x5d8880",
+   "value": 10.0,
+   "code_refs": []
+  },
+  {
+   "name": "BASEECDFACTOR",
+   "name_off": "0x1d88c4",
+   "value_off": "0x1d8904",
+   "name_va": "0x5d88c4",
+   "value": 1.0,
+   "code_refs": []
+  },
+  {
+   "name": "MAXCONSECUTIVEPINGS",
+   "name_off": "0x1d8908",
+   "value_off": "0x1d8948",
+   "name_va": "0x5d8908",
+   "value": 5.0,
+   "code_refs": []
+  },
+  {
+   "name": "SYNCEVERY_MS",
+   "name_off": "0x1d894c",
+   "value_off": "0x1d898c",
+   "name_va": "0x5d894c",
+   "value": 50000.0,
+   "code_refs": []
+  },
+  {
+   "name": "MINCAREDISTANCE",
+   "name_off": "0x1d8990",
+   "value_off": "0x1d89d0",
+   "name_va": "0x5d8990",
+   "value": 10000.0,
+   "code_refs": []
+  },
+  {
+   "name": "MAXPEERTOPEER",
+   "name_off": "0x1d89d4",
+   "value_off": "0x1d8a14",
+   "name_va": "0x5d89d4",
+   "value": 0.0,
+   "code_refs": []
+  },
+  {
+   "name": "BOUNTYACCUMPERSECOND",
+   "name_off": "0x1d8a18",
+   "value_off": "0x1d8a58",
+   "name_va": "0x5d8a18",
+   "value": 0.05000000074505806,
+   "code_refs": []
+  },
+  {
+   "name": "EVENTPINGSTATION",
+   "name_off": "0x1d8a5c",
+   "value_off": "0x1d8a9c",
+   "name_va": "0x5d8a5c",
+   "value": 10000.0,
+   "code_refs": []
+  },
+  {
+   "name": "EVENTPINGPEERS",
+   "name_off": "0x1d8aa0",
+   "value_off": "0x1d8ae0",
+   "name_va": "0x5d8aa0",
+   "value": 3000.0,
+   "code_refs": []
+  },
+  {
+   "name": "EVENTCHECKWATCHDOGS",
+   "name_off": "0x1d8ae4",
+   "value_off": "0x1d8b24",
+   "name_va": "0x5d8ae4",
+   "value": 3000.0,
+   "code_refs": []
+  },
+  {
+   "name": "EVENTRETRYMESSAGES",
+   "name_off": "0x1d8b28",
+   "value_off": "0x1d8b68",
+   "name_va": "0x5d8b28",
+   "value": 850.0,
+   "code_refs": []
+  },
+  {
+   "name": "EVENTUPDATEPOSITIONS",
+   "name_off": "0x1d8b6c",
+   "value_off": "0x1d8bac",
+   "name_va": "0x5d8b6c",
+   "value": 55.0,
+   "code_refs": []
+  },
+  {
+   "name": "EVENTRESETCOMMSTATS",
+   "name_off": "0x1d8bb0",
+   "value_off": "0x1d8bf0",
+   "name_va": "0x5d8bb0",
+   "value": 1000.0,
+   "code_refs": []
+  },
+  {
+   "name": "EVENTREFRESHWORLDINTERNALS",
+   "name_off": "0x1d8bf4",
+   "value_off": "0x1d8c34",
+   "name_va": "0x5d8bf4",
+   "value": 5000.0,
+   "code_refs": []
+  },
+  {
+   "name": "EVENTHOUSEKEEPNAMESERVERRETRIES",
+   "name_off": "0x1d8c38",
+   "value_off": "0x1d8c78",
+   "name_va": "0x5d8c38",
+   "value": 500.0,
+   "code_refs": []
+  },
+  {
+   "name": "EVENTSENDLOGINMESSAGE",
+   "name_off": "0x1d8c7c",
+   "value_off": "0x1d8cbc",
+   "name_va": "0x5d8c7c",
+   "value": 60000.0,
+   "code_refs": []
+  },
+  {
+   "name": "EVENTAWARDCYCLICFLAGSCORE",
+   "name_off": "0x1d8cc0",
+   "value_off": "0x1d8d00",
+   "name_va": "0x5d8cc0",
+   "value": 60000.0,
+   "code_refs": []
+  },
+  {
+   "name": "EVENTZEROOUTOFRANGE",
+   "name_off": "0x1d8d04",
+   "value_off": "0x1d8d44",
+   "name_va": "0x5d8d04",
+   "value": 2000.0,
+   "code_refs": []
+  },
+  {
+   "name": "EVENTCLEARINCOMINGDAMAGE",
+   "name_off": "0x1d8d48",
+   "value_off": "0x1d8d88",
+   "name_va": "0x5d8d48",
+   "value": 1500.0,
+   "code_refs": []
+  },
+  {
+   "name": "EVENTCOMPUTEEW",
+   "name_off": "0x1d8d8c",
+   "value_off": "0x1d8dcc",
+   "name_va": "0x5d8d8c",
+   "value": 300.0,
+   "code_refs": []
+  },
+  {
+   "name": "EVENTCHECKMISSILELOCKS",
+   "name_off": "0x1d8dd0",
+   "value_off": "0x1d8e10",
+   "name_va": "0x5d8dd0",
+   "value": 250.0,
+   "code_refs": []
+  },
+  {
+   "name": "EVENTRETRYGAMESERVERCONNECT",
+   "name_off": "0x1d8e14",
+   "value_off": "0x1d8e54",
+   "name_va": "0x5d8e14",
+   "value": 1500.0,
+   "code_refs": []
+  },
+  {
+   "name": "EVENTSENDSCOREINFO",
+   "name_off": "0x1d8e58",
+   "value_off": "0x1d8e98",
+   "name_va": "0x5d8e58",
+   "value": 1200.0,
+   "code_refs": []
+  },
+  {
+   "name": "EVENTREQUESTNOTIFYLIST",
+   "name_off": "0x1d8e9c",
+   "value_off": "0x1d8edc",
+   "name_va": "0x5d8e9c",
+   "value": 4000.0,
+   "code_refs": []
+  },
+  {
+   "name": "EVENTSPAWNFROMOBJECT",
+   "name_off": "0x1d8ee0",
+   "value_off": "0x1d8f20",
+   "name_va": "0x5d8ee0",
+   "value": 20000.0,
+   "code_refs": []
+  },
+  {
+   "name": "EVENTHEARTBEAT",
+   "name_off": "0x1d8f24",
+   "value_off": "0x1d8f64",
+   "name_va": "0x5d8f24",
+   "value": 60000.0,
+   "code_refs": []
+  },
+  {
+   "name": "EVENTCHECKMISSILELOCKS",
+   "name_off": "0x1d8f68",
+   "value_off": "0x1d8fa8",
+   "name_va": "0x5d8f68",
+   "value": 200.0,
+   "code_refs": []
+  },
+  {
+   "name": "EVENTCHECKCHIMES",
+   "name_off": "0x1d8fac",
+   "value_off": "0x1d8fec",
+   "name_va": "0x5d8fac",
+   "value": 7500.0,
+   "code_refs": []
+  },
+  {
+   "name": "EVENTCHECKBOUNTYDIST",
+   "name_off": "0x1d8ff0",
+   "value_off": "0x1d9030",
+   "name_va": "0x5d8ff0",
+   "value": 5000.0,
+   "code_refs": []
+  },
+  {
+   "name": "EventPropogateDelayedFire",
+   "name_off": "0x1d9034",
+   "value_off": "0x1d9074",
+   "name_va": "0x5d9034",
+   "value": 250.0,
+   "code_refs": []
+  },
+  {
+   "name": "EventTickStatCollector",
+   "name_off": "0x1d9078",
+   "value_off": "0x1d90b8",
+   "name_va": "0x5d9078",
+   "value": 60000.0,
+   "code_refs": []
+  },
+  {
+   "name": "EventClientPingStation",
+   "name_off": "0x1d90bc",
+   "value_off": "0x1d90fc",
+   "name_va": "0x5d90bc",
+   "value": 5000.0,
+   "code_refs": []
+  },
+  {
+   "name": "EventSendRequestGameServerList",
+   "name_off": "0x1d9100",
+   "value_off": "0x1d9140",
+   "name_va": "0x5d9100",
+   "value": 7000.0,
+   "code_refs": []
+  },
+  {
+   "name": "EventDecrementMaintenance",
+   "name_off": "0x1d9144",
+   "value_off": "0x1d9184",
+   "name_va": "0x5d9144",
+   "value": 60000.0,
+   "code_refs": []
+  },
+  {
+   "name": "EventComputeSeverities",
+   "name_off": "0x1d9188",
+   "value_off": "0x1d91c8",
+   "name_va": "0x5d9188",
+   "value": 400.0,
+   "code_refs": []
+  },
+  {
+   "name": "SPAWNAISEVERY",
+   "name_off": "0x1d91cc",
+   "value_off": "0x1d920c",
+   "name_va": "0x5d91cc",
+   "value": 6000.0,
+   "code_refs": []
+  },
+  {
+   "name": "TIMEBETWEENOBJLOADS",
+   "name_off": "0x1d9210",
+   "value_off": "0x1d9250",
+   "name_va": "0x5d9210",
+   "value": 4000.0,
+   "code_refs": []
+  },
+  {
+   "name": "GAMESERVERFPS",
+   "name_off": "0x1d9254",
+   "value_off": "0x1d9294",
+   "name_va": "0x5d9254",
+   "value": 20.0,
+   "code_refs": []
+  },
+  {
+   "name": "OBJECTZONEUPDATEEVERY",
+   "name_off": "0x1d9298",
+   "value_off": "0x1d92d8",
+   "name_va": "0x5d9298",
+   "value": 500.0,
+   "code_refs": []
+  },
+  {
+   "name": "OBJECTSYSTEMTICKEVERY",
+   "name_off": "0x1d92dc",
+   "value_off": "0x1d931c",
+   "name_va": "0x5d92dc",
+   "value": 750.0,
+   "code_refs": []
+  },
+  {
+   "name": "RATINGCONSTANT_1",
+   "name_off": "0x1d9320",
+   "value_off": "0x1d9360",
+   "name_va": "0x5d9320",
+   "value": 1.0,
+   "code_refs": []
+  },
+  {
+   "name": "RATINGCONSTANT_2",
+   "name_off": "0x1d9364",
+   "value_off": "0x1d93a4",
+   "name_va": "0x5d9364",
+   "value": 1.0,
+   "code_refs": []
+  },
+  {
+   "name": "RATINGCONSTANT_3",
+   "name_off": "0x1d93a8",
+   "value_off": "0x1d93e8",
+   "name_va": "0x5d93a8",
+   "value": 10.0,
+   "code_refs": []
+  },
+  {
+   "name": "MUSICCHUNKSIZE",
+   "name_off": "0x1d93ec",
+   "value_off": "0x1d942c",
+   "name_va": "0x5d93ec",
+   "value": 150000.0,
+   "code_refs": []
+  },
+  {
+   "name": "MUSICBUFFERSIZE",
+   "name_off": "0x1d9430",
+   "value_off": "0x1d9470",
+   "name_va": "0x5d9430",
+   "value": 400000.0,
+   "code_refs": []
+  },
+  {
+   "name": "MUSICWATCHTOLERANCE",
+   "name_off": "0x1d9474",
+   "value_off": "0x1d94b4",
+   "name_va": "0x5d9474",
+   "value": 90000.0,
+   "code_refs": []
+  },
+  {
+   "name": "FLAGDISABLEDFOR",
+   "name_off": "0x1d94b8",
+   "value_off": "0x1d94f8",
+   "name_va": "0x5d94b8",
+   "value": 300.0,
+   "code_refs": []
+  },
+  {
+   "name": "FLAGPERCENTONTEAM",
+   "name_off": "0x1d94fc",
+   "value_off": "0x1d953c",
+   "name_va": "0x5d94fc",
+   "value": 0.6000000238418579,
+   "code_refs": []
+  },
+  {
+   "name": "SAFEZONESIZE",
+   "name_off": "0x1d9540",
+   "value_off": "0x1d9580",
+   "name_va": "0x5d9540",
+   "value": 3000.0,
+   "code_refs": []
+  },
+  {
+   "name": "PREDICTORSITEDISTTOFIRINGAT",
+   "name_off": "0x1d9584",
+   "value_off": "0x1d95c4",
+   "name_va": "0x5d9584",
+   "value": 0.20000000298023224,
+   "code_refs": []
+  },
+  {
+   "name": "ARENAMODE",
+   "name_off": "0x1d95c8",
+   "value_off": "0x1d9608",
+   "name_va": "0x5d95c8",
+   "value": 1.0,
+   "code_refs": []
+  },
+  {
+   "name": "DISTANCETOWAYPOINTENGINEHAPPY",
+   "name_off": "0x1d960c",
+   "value_off": "0x1d964c",
+   "name_va": "0x5d960c",
+   "value": 1500.0,
+   "code_refs": []
+  },
+  {
+   "name": "MAXPOWERUPSPERUNITDENSITY",
+   "name_off": "0x1d9650",
+   "value_off": "0x1d9690",
+   "name_va": "0x5d9650",
+   "value": 10.0,
+   "code_refs": []
+  },
+  {
+   "name": "POWERUPUNITDENSITY",
+   "name_off": "0x1d9694",
+   "value_off": "0x1d96d4",
+   "name_va": "0x5d9694",
+   "value": 5000.0,
+   "code_refs": []
+  },
+  {
+   "name": "NUMBEROFTARGETINGWINDOWS",
+   "name_off": "0x1d96d8",
+   "value_off": "0x1d9718",
+   "name_va": "0x5d96d8",
+   "value": 3.0,
+   "code_refs": []
+  },
+  {
+   "name": "ROTATIONALCORRECTIONCONSTANT",
+   "name_off": "0x1d971c",
+   "value_off": "0x1d975c",
+   "name_va": "0x5d971c",
+   "value": 0.10000000149011612,
+   "code_refs": []
+  },
+  {
+   "name": "POSITIONALCORRECTIONCONSTANT",
+   "name_off": "0x1d9760",
+   "value_off": "0x1d97a0",
+   "name_va": "0x5d9760",
+   "value": 0.029999999329447746,
+   "code_refs": []
+  },
+  {
+   "name": "MaxPositionalErrorUntilJump",
+   "name_off": "0x1d97a4",
+   "value_off": "0x1d97e4",
+   "name_va": "0x5d97a4",
+   "value": 5000.0,
+   "code_refs": []
+  },
+  {
+   "name": "SKEWREDUCTIONDIVISOR",
+   "name_off": "0x1d97e8",
+   "value_off": "0x1d9828",
+   "name_va": "0x5d97e8",
+   "value": 4.0,
+   "code_refs": []
+  },
+  {
+   "name": "MOSTBYTESTOSENDPERSECOND",
+   "name_off": "0x1d982c",
+   "value_off": "0x1d986c",
+   "name_va": "0x5d982c",
+   "value": 4500.0,
+   "code_refs": []
+  },
+  {
+   "name": "MOSTPACKETSTOSENDPERSECOND",
+   "name_off": "0x1d9870",
+   "value_off": "0x1d98b0",
+   "name_va": "0x5d9870",
+   "value": 12.0,
+   "code_refs": []
+  },
+  {
+   "name": "PermitTransmitResetInterval",
+   "name_off": "0x1d98b4",
+   "value_off": "0x1d98f4",
+   "name_va": "0x5d98b4",
+   "value": 1800.0,
+   "code_refs": []
+  },
+  {
+   "name": "WATCHDOGTIMEOUT",
+   "name_off": "0x1d98f8",
+   "value_off": "0x1d9938",
+   "name_va": "0x5d98f8",
+   "value": 1000.0,
+   "code_refs": []
+  },
+  {
+   "name": "STATIONTIMEOUTWATCHDOG",
+   "name_off": "0x1d993c",
+   "value_off": "0x1d997c",
+   "name_va": "0x5d993c",
+   "value": 15000.0,
+   "code_refs": []
+  },
+  {
+   "name": "WATCHDOGGRACE",
+   "name_off": "0x1d9980",
+   "value_off": "0x1d99c0",
+   "name_va": "0x5d9980",
+   "value": 40000.0,
+   "code_refs": []
+  },
+  {
+   "name": "CLIENTWATCHDOG",
+   "name_off": "0x1d99c4",
+   "value_off": "0x1d9a04",
+   "name_va": "0x5d99c4",
+   "value": 1000.0,
+   "code_refs": []
+  },
+  {
+   "name": "CLIENTGRACE",
+   "name_off": "0x1d9a08",
+   "value_off": "0x1d9a48",
+   "name_va": "0x5d9a08",
+   "value": 16000.0,
+   "code_refs": []
+  },
+  {
+   "name": "MAXLOGINS",
+   "name_off": "0x1d9a4c",
+   "value_off": "0x1d9a8c",
+   "name_va": "0x5d9a4c",
+   "value": 50.0,
+   "code_refs": []
+  },
+  {
+   "name": "DAMAGEALARMPERCENTLEVEL",
+   "name_off": "0x1d9a90",
+   "value_off": "0x1d9ad0",
+   "name_va": "0x5d9a90",
+   "value": 20.0,
+   "code_refs": []
+  },
+  {
+   "name": "OBJECTTEAMSTARTAT",
+   "name_off": "0x1d9ad4",
+   "value_off": "0x1d9b14",
+   "name_va": "0x5d9ad4",
+   "value": 8960.0,
+   "code_refs": []
+  },
+  {
+   "name": "FLIGHTLOOPWATCHDOGTIMEOUT",
+   "name_off": "0x1d9b18",
+   "value_off": "0x1d9b58",
+   "name_va": "0x5d9b18",
+   "value": 10000.0,
+   "code_refs": []
+  },
+  {
+   "name": "MILLISECONDSBETWEENPLAYERVISITS",
+   "name_off": "0x1d9b5c",
+   "value_off": "0x1d9b9c",
+   "name_va": "0x5d9b5c",
+   "value": 150.0,
+   "code_refs": []
+  },
+  {
+   "name": "GAMESERVERPORT",
+   "name_off": "0x1d9ba0",
+   "value_off": "0x1d9be0",
+   "name_va": "0x5d9ba0",
+   "value": 5031.0,
+   "code_refs": []
+  },
+  {
+   "name": "NAMESERVERPORT",
+   "name_off": "0x1d9be4",
+   "value_off": "0x1d9c24",
+   "name_va": "0x5d9be4",
+   "value": 5032.0,
+   "code_refs": []
+  },
+  {
+   "name": "LOCALPORT",
+   "name_off": "0x1d9c28",
+   "value_off": "0x1d9c68",
+   "name_va": "0x5d9c28",
+   "value": 5033.0,
+   "code_refs": []
+  },
+  {
+   "name": "SERVERPORT",
+   "name_off": "0x1d9c6c",
+   "value_off": "0x1d9cac",
+   "name_va": "0x5d9c6c",
+   "value": 5033.0,
+   "code_refs": []
+  },
+  {
+   "name": "STATION_RUNONPORT",
+   "name_off": "0x1d9cb0",
+   "value_off": "0x1d9cf0",
+   "name_va": "0x5d9cb0",
+   "value": 5033.0,
+   "code_refs": []
+  },
+  {
+   "name": "STATION_TCPJOBPORT",
+   "name_off": "0x1d9cf4",
+   "value_off": "0x1d9d34",
+   "name_va": "0x5d9cf4",
+   "value": 5034.0,
+   "code_refs": []
+  },
+  {
+   "name": "STATION_PINGCONNECTIONS",
+   "name_off": "0x1d9d38",
+   "value_off": "0x1d9d78",
+   "name_va": "0x5d9d38",
+   "value": 4000.0,
+   "code_refs": []
+  },
+  {
+   "name": "STATION_CHECKWATCHDOGS",
+   "name_off": "0x1d9d7c",
+   "value_off": "0x1d9dbc",
+   "name_va": "0x5d9d7c",
+   "value": 5000.0,
+   "code_refs": []
+  },
+  {
+   "name": "STATION_HOUSEKEEPRETRIES",
+   "name_off": "0x1d9dc0",
+   "value_off": "0x1d9e00",
+   "name_va": "0x5d9dc0",
+   "value": 500.0,
+   "code_refs": []
+  },
+  {
+   "name": "STATION_PINGREGISTEREDSERVERS",
+   "name_off": "0x1d9e04",
+   "value_off": "0x1d9e44",
+   "name_va": "0x5d9e04",
+   "value": 3000.0,
+   "code_refs": []
+  },
+  {
+   "name": "STATION_SERVERREGISTERHOLDOFF",
+   "name_off": "0x1d9e48",
+   "value_off": "0x1d9e88",
+   "name_va": "0x5d9e48",
+   "value": 30000.0,
+   "code_refs": []
+  },
+  {
+   "name": "STATION_WATCHDOGTIMEOUT",
+   "name_off": "0x1d9e8c",
+   "value_off": "0x1d9ecc",
+   "name_va": "0x5d9e8c",
+   "value": 19000.0,
+   "code_refs": []
+  },
+  {
+   "name": "STATION_PLAYERONTIMES",
+   "name_off": "0x1d9ed0",
+   "value_off": "0x1d9f10",
+   "name_va": "0x5d9ed0",
+   "value": 20000.0,
+   "code_refs": []
+  },
+  {
+   "name": "STATION_EventClearMissionCache",
+   "name_off": "0x1d9f14",
+   "value_off": "0x1d9f54",
+   "name_va": "0x5d9f14",
+   "value": 60000.0,
+   "code_refs": []
+  },
+  {
+   "name": "FULLLOCKONLEVEL",
+   "name_off": "0x1d9f58",
+   "value_off": "0x1d9f98",
+   "name_va": "0x5d9f58",
+   "value": 100.0,
+   "code_refs": []
+  },
+  {
+   "name": "ECMSHIFTLOCKDEGRADEFACTOR",
+   "name_off": "0x1d9f9c",
+   "value_off": "0x1d9fdc",
+   "name_va": "0x5d9f9c",
+   "value": 3.0,
+   "code_refs": []
+  },
+  {
+   "name": "MISSILELOCKACCELFACTOR",
+   "name_off": "0x1d9fe0",
+   "value_off": "0x1da020",
+   "name_va": "0x5d9fe0",
+   "value": 4.0,
+   "code_refs": []
+  },
+  {
+   "name": "LOCKACCUMPERSECOND",
+   "name_off": "0x1da024",
+   "value_off": "0x1da064",
+   "name_va": "0x5da024",
+   "value": 8.0,
+   "code_refs": []
+  },
+  {
+   "name": "TorpedoRunSpeed",
+   "name_off": "0x1da068",
+   "value_off": "0x1da0a8",
+   "name_va": "0x5da068",
+   "value": 1000.0,
+   "code_refs": []
+  },
+  {
+   "name": "TorpedoRangeTime",
+   "name_off": "0x1da0ac",
+   "value_off": "0x1da0ec",
+   "name_va": "0x5da0ac",
+   "value": 15.0,
+   "code_refs": []
+  }
+ ]
+}

@@ -1,0 +1,88 @@
+{
+  "schema": 1,
+  "started_utc": "2026-10-21T18:35:51.878104+00:00",
+  "scope": "synthetic loopback and isolated original-code emulation; excludes real-client UI, combat, collision, internet, clean-machine install and performance release gates",
+  "python": "3.12.6",
+  "checks": [
+    {
+      "name": "test_network_bounds.py",
+      "passed": true,
+      "seconds": 2.25,
+      "tests": 6
+    },
+    {
+      "name": "test_relay_motion.py",
+      "passed": true,
+      "seconds": 0.141,
+      "tests": 7
+    },
+    {
+      "name": "test_prepare_client.py",
+      "passed": true,
+      "seconds": 29.531,
+      "tests": 7
+    },
+    {
+      "name": "test_station_runtime.py",
+      "passed": true,
+      "seconds": 6.938,
+      "tests": 7
+    },
+    {
+      "name": "test_station_sessions.py",
+      "passed": true,
+      "seconds": 9.828,
+      "tests": 5
+    },
+    {
+      "name": "test_guest_admission.py",
+      "passed": true,
+      "seconds": 7.594,
+      "tests": 1
+    },
+    {
+      "name": "test_relay_recovery.py",
+      "passed": true,
+      "seconds": 5.437,
+      "tests": 1
+    },
+    {
+      "name": "test_station_stub.py",
+      "passed": true,
+      "seconds": 47.485,
+      "tests": 22
+    },
+    {
+      "name": "emulate_station_request.py",
+      "passed": true,
+      "seconds": 0.468
+    },
+    {
+      "name": "emulate_station_aliases.py",
+      "passed": true,
+      "seconds": 0.391
+    },
+    {
+      "name": "emulate_reliable_history.py",
+      "passed": true,
+      "seconds": 0.422
+    },
+    {
+      "name": "emulate_movement.py",
+      "passed": true,
+      "seconds": 0.422
+    },
+    {
+      "name": "emulate_motion_state.py",
+      "passed": true,
+      "seconds": 0.437
+    },
+    {
+      "name": "emulate_archive_terminator.py",
+      "passed": true,
+      "seconds": 2.0
+    }
+  ],
+  "passed": true,
+  "tests": 56
+}

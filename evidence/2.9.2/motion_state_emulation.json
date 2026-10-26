@@ -1,0 +1,10 @@
+{
+  "source_sha256": "4b6c35e2b3ab473bd98c0afa6538079ee78678d85c28406c07bc27a08cc78c7e",
+  "decoder": "0x495330",
+  "state_cases": 300,
+  "field_groups": 16,
+  "absolute_refresh_cases": 200,
+  "scaled_delta_constant": 4.999999987376214e-07,
+  "control_scalar_excluded_from_refresh": true,
+  "scope": "original isolated decoder; destination bytes and scale verified, not physical semantics, upstream ordering, renderer or authoritative simulation"
+}

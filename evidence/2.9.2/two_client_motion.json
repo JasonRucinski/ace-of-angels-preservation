@@ -1,0 +1,119 @@
+{
+  "scope": "two real localhost clients; foreground activation required; not continuous synchronization accuracy",
+  "a": {
+    "active_players": [
+      {
+        "slot": 0,
+        "tag": "0x80010001",
+        "position": [
+          -19908.78125,
+          0.0,
+          141653.546875
+        ],
+        "target_position": [
+          -19908.78125,
+          0.0,
+          141653.546875
+        ],
+        "velocity": [
+          -85.02002716064453,
+          0.0,
+          609.0499877929688
+        ],
+        "acceleration": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "max_velocity": 3250,
+        "max_acceleration": 650,
+        "name": "LocalPilot1"
+      },
+      {
+        "slot": 2,
+        "tag": "0x80010002",
+        "position": [
+          -2145.797119140625,
+          0.0,
+          18352.056640625
+        ],
+        "target_position": [
+          -2145.797119140625,
+          0.0,
+          18352.056640625
+        ],
+        "velocity": [
+          0.0,
+          0.0,
+          -131.95034790039062
+        ],
+        "acceleration": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "max_velocity": 3250,
+        "max_acceleration": 650,
+        "name": "LocalPilot2"
+      }
+    ]
+  },
+  "b": {
+    "active_players": [
+      {
+        "slot": 0,
+        "tag": "0x80010002",
+        "position": [
+          -2145.797119140625,
+          0.0,
+          18430.427734375
+        ],
+        "target_position": [
+          -2145.797119140625,
+          0.0,
+          18430.427734375
+        ],
+        "velocity": [
+          0.0,
+          0.0,
+          -131.95034790039062
+        ],
+        "acceleration": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "max_velocity": 3250,
+        "max_acceleration": 650,
+        "name": "LocalPilot2"
+      },
+      {
+        "slot": 1,
+        "tag": "0x80010001",
+        "position": [
+          -5386.85888671875,
+          0.0,
+          36005.2890625
+        ],
+        "target_position": [
+          -5386.85888671875,
+          0.0,
+          36005.2890625
+        ],
+        "velocity": [
+          -56.89226150512695,
+          0.0,
+          407.5537414550781
+        ],
+        "acceleration": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "max_velocity": 3250,
+        "max_acceleration": 650,
+        "name": "LocalPilot1"
+      }
+    ]
+  }
+}

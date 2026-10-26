@@ -1,0 +1,655 @@
+{
+  "source_sha256": "4b6c35e2b3ab473bd98c0afa6538079ee78678d85c28406c07bc27a08cc78c7e",
+  "scope": "original CPU routines with synthetic scene nodes; CRT trig substituted; no GPU or full scene traversal",
+  "nested_transform_cases": 120,
+  "maximum_matrix_error": 0.0035014195964322425,
+  "world_submission_matrix_copy_cases": 120,
+  "primitive_dispatch_cases_with_mock_device": 12,
+  "state_failure_injection": [
+    {
+      "device_hresult": "0x0",
+      "wrapper_result": 1
+    },
+    {
+      "device_hresult": "0x80004005",
+      "wrapper_result": 1
+    }
+  ],
+  "audited_code_comparisons": [
+    {
+      "path": "game/offline-baseline-2.9.2/AOACLIENT.EXE",
+      "sha256": "dc80dcfbe4dd19af999897f991b81fe58455e4c3b9297a18d8c59f5aa5d99abd",
+      "matches_original": {
+        "world_transform": true,
+        "visibility": true,
+        "view_builder": true,
+        "primitive_dispatch": true,
+        "state_wrapper": true,
+        "flip": true
+      }
+    },
+    {
+      "path": "game/2.9.2/AOACLIENT.EXE",
+      "sha256": "f082a0f0d9d419919e61787d78146d0564ff23cbce0aae845105aafe640cf04b",
+      "matches_original": {
+        "world_transform": true,
+        "visibility": true,
+        "view_builder": true,
+        "primitive_dispatch": true,
+        "state_wrapper": true,
+        "flip": true
+      }
+    }
+  ],
+  "cache_contract": "position setter invalidates only the changed node; descendants require a separate notification/update path",
+  "moving_turning_culling_cases": 480,
+  "angular_domain_cases": [
+    {
+      "frame": 5,
+      "angle": 0,
+      "visible": true,
+      "direction_finite": true,
+      "angular_bound_finite": false,
+      "size": 192.0,
+      "math_calls": [
+        {
+          "function": "acos",
+          "input": 1.0000001192092896
+        },
+        {
+          "function": "asin",
+          "input": 0.10000000894069672
+        }
+      ]
+    },
+    {
+      "frame": 5,
+      "angle": 3.141592653589793,
+      "visible": true,
+      "direction_finite": true,
+      "angular_bound_finite": false,
+      "size": 192.0,
+      "math_calls": [
+        {
+          "function": "acos",
+          "input": -1.0000001192092896
+        },
+        {
+          "function": "asin",
+          "input": 0.10000000894069672
+        }
+      ]
+    },
+    {
+      "frame": 15,
+      "angle": 3.141592653589793,
+      "visible": true,
+      "direction_finite": true,
+      "angular_bound_finite": false,
+      "size": 192.0,
+      "math_calls": [
+        {
+          "function": "acos",
+          "input": -1.0000001192092896
+        },
+        {
+          "function": "asin",
+          "input": 0.10000000149011612
+        }
+      ]
+    },
+    {
+      "frame": 16,
+      "angle": 3.141592653589793,
+      "visible": true,
+      "direction_finite": true,
+      "angular_bound_finite": false,
+      "size": 192.0,
+      "math_calls": [
+        {
+          "function": "acos",
+          "input": -1.0000001192092896
+        },
+        {
+          "function": "asin",
+          "input": 0.10000000149011612
+        }
+      ]
+    },
+    {
+      "frame": 54,
+      "angle": 3.141592653589793,
+      "visible": true,
+      "direction_finite": true,
+      "angular_bound_finite": false,
+      "size": 192.0,
+      "math_calls": [
+        {
+          "function": "acos",
+          "input": -1.0000001192092896
+        },
+        {
+          "function": "asin",
+          "input": 0.10000000894069672
+        }
+      ]
+    },
+    {
+      "frame": 60,
+      "angle": 0,
+      "visible": true,
+      "direction_finite": true,
+      "angular_bound_finite": false,
+      "size": 192.0,
+      "math_calls": [
+        {
+          "function": "acos",
+          "input": 1.0000001192092896
+        },
+        {
+          "function": "asin",
+          "input": 0.10000000894069672
+        }
+      ]
+    },
+    {
+      "frame": 60,
+      "angle": 3.141592653589793,
+      "visible": true,
+      "direction_finite": true,
+      "angular_bound_finite": false,
+      "size": 192.0,
+      "math_calls": [
+        {
+          "function": "acos",
+          "input": -1.0000001192092896
+        },
+        {
+          "function": "asin",
+          "input": 0.10000000894069672
+        }
+      ]
+    },
+    {
+      "frame": 69,
+      "angle": 0,
+      "visible": true,
+      "direction_finite": true,
+      "angular_bound_finite": false,
+      "size": 192.0,
+      "math_calls": [
+        {
+          "function": "acos",
+          "input": 1.0000001192092896
+        },
+        {
+          "function": "asin",
+          "input": 0.10000000894069672
+        }
+      ]
+    },
+    {
+      "frame": 69,
+      "angle": 3.141592653589793,
+      "visible": true,
+      "direction_finite": true,
+      "angular_bound_finite": false,
+      "size": 192.0,
+      "math_calls": [
+        {
+          "function": "acos",
+          "input": -1.0000001192092896
+        },
+        {
+          "function": "asin",
+          "input": 0.10000000894069672
+        }
+      ]
+    },
+    {
+      "frame": 70,
+      "angle": 0,
+      "visible": true,
+      "direction_finite": true,
+      "angular_bound_finite": false,
+      "size": 192.0,
+      "math_calls": [
+        {
+          "function": "acos",
+          "input": 1.0000001192092896
+        },
+        {
+          "function": "asin",
+          "input": 0.10000000894069672
+        }
+      ]
+    },
+    {
+      "frame": 70,
+      "angle": 3.141592653589793,
+      "visible": true,
+      "direction_finite": true,
+      "angular_bound_finite": false,
+      "size": 192.0,
+      "math_calls": [
+        {
+          "function": "acos",
+          "input": -1.0000001192092896
+        },
+        {
+          "function": "asin",
+          "input": 0.10000000894069672
+        }
+      ]
+    },
+    {
+      "frame": 87,
+      "angle": 0,
+      "visible": true,
+      "direction_finite": true,
+      "angular_bound_finite": false,
+      "size": 191.99998474121094,
+      "math_calls": [
+        {
+          "function": "acos",
+          "input": 1.0000001192092896
+        },
+        {
+          "function": "asin",
+          "input": 0.09999999403953552
+        }
+      ]
+    },
+    {
+      "frame": 87,
+      "angle": 3.141592653589793,
+      "visible": true,
+      "direction_finite": true,
+      "angular_bound_finite": false,
+      "size": 191.99998474121094,
+      "math_calls": [
+        {
+          "function": "acos",
+          "input": -1.0000001192092896
+        },
+        {
+          "function": "asin",
+          "input": 0.09999999403953552
+        }
+      ]
+    },
+    {
+      "frame": 93,
+      "angle": 0,
+      "visible": true,
+      "direction_finite": true,
+      "angular_bound_finite": false,
+      "size": 191.9999237060547,
+      "math_calls": [
+        {
+          "function": "acos",
+          "input": 1.0000001192092896
+        },
+        {
+          "function": "asin",
+          "input": 0.09999996423721313
+        }
+      ]
+    },
+    {
+      "frame": 93,
+      "angle": 3.141592653589793,
+      "visible": true,
+      "direction_finite": true,
+      "angular_bound_finite": false,
+      "size": 192.00001525878906,
+      "math_calls": [
+        {
+          "function": "acos",
+          "input": -1.0000001192092896
+        },
+        {
+          "function": "asin",
+          "input": 0.10000000894069672
+        }
+      ]
+    },
+    {
+      "frame": 114,
+      "angle": 0,
+      "visible": true,
+      "direction_finite": true,
+      "angular_bound_finite": false,
+      "size": 191.99996948242188,
+      "math_calls": [
+        {
+          "function": "acos",
+          "input": 1.0000001192092896
+        },
+        {
+          "function": "asin",
+          "input": 0.09999998658895493
+        }
+      ]
+    },
+    {
+      "frame": 114,
+      "angle": 3.141592653589793,
+      "visible": true,
+      "direction_finite": true,
+      "angular_bound_finite": false,
+      "size": 191.99996948242188,
+      "math_calls": [
+        {
+          "function": "acos",
+          "input": -1.0000001192092896
+        },
+        {
+          "function": "asin",
+          "input": 0.09999998658895493
+        }
+      ]
+    }
+  ],
+  "visibility_mismatches_with_nan_math_stub": [
+    {
+      "frame": 5,
+      "angle": 3.141592653589793,
+      "expected_visible": false,
+      "visible": true,
+      "direction_finite": true,
+      "angular_bound_finite": false,
+      "size": 192.0,
+      "math_calls": [
+        {
+          "function": "acos",
+          "input": -1.0000001192092896
+        },
+        {
+          "function": "asin",
+          "input": 0.10000000894069672
+        }
+      ]
+    },
+    {
+      "frame": 15,
+      "angle": 3.141592653589793,
+      "expected_visible": false,
+      "visible": true,
+      "direction_finite": true,
+      "angular_bound_finite": false,
+      "size": 192.0,
+      "math_calls": [
+        {
+          "function": "acos",
+          "input": -1.0000001192092896
+        },
+        {
+          "function": "asin",
+          "input": 0.10000000149011612
+        }
+      ]
+    },
+    {
+      "frame": 16,
+      "angle": 3.141592653589793,
+      "expected_visible": false,
+      "visible": true,
+      "direction_finite": true,
+      "angular_bound_finite": false,
+      "size": 192.0,
+      "math_calls": [
+        {
+          "function": "acos",
+          "input": -1.0000001192092896
+        },
+        {
+          "function": "asin",
+          "input": 0.10000000149011612
+        }
+      ]
+    },
+    {
+      "frame": 54,
+      "angle": 3.141592653589793,
+      "expected_visible": false,
+      "visible": true,
+      "direction_finite": true,
+      "angular_bound_finite": false,
+      "size": 192.0,
+      "math_calls": [
+        {
+          "function": "acos",
+          "input": -1.0000001192092896
+        },
+        {
+          "function": "asin",
+          "input": 0.10000000894069672
+        }
+      ]
+    },
+    {
+      "frame": 60,
+      "angle": 3.141592653589793,
+      "expected_visible": false,
+      "visible": true,
+      "direction_finite": true,
+      "angular_bound_finite": false,
+      "size": 192.0,
+      "math_calls": [
+        {
+          "function": "acos",
+          "input": -1.0000001192092896
+        },
+        {
+          "function": "asin",
+          "input": 0.10000000894069672
+        }
+      ]
+    },
+    {
+      "frame": 69,
+      "angle": 3.141592653589793,
+      "expected_visible": false,
+      "visible": true,
+      "direction_finite": true,
+      "angular_bound_finite": false,
+      "size": 192.0,
+      "math_calls": [
+        {
+          "function": "acos",
+          "input": -1.0000001192092896
+        },
+        {
+          "function": "asin",
+          "input": 0.10000000894069672
+        }
+      ]
+    },
+    {
+      "frame": 70,
+      "angle": 3.141592653589793,
+      "expected_visible": false,
+      "visible": true,
+      "direction_finite": true,
+      "angular_bound_finite": false,
+      "size": 192.0,
+      "math_calls": [
+        {
+          "function": "acos",
+          "input": -1.0000001192092896
+        },
+        {
+          "function": "asin",
+          "input": 0.10000000894069672
+        }
+      ]
+    },
+    {
+      "frame": 87,
+      "angle": 3.141592653589793,
+      "expected_visible": false,
+      "visible": true,
+      "direction_finite": true,
+      "angular_bound_finite": false,
+      "size": 191.99998474121094,
+      "math_calls": [
+        {
+          "function": "acos",
+          "input": -1.0000001192092896
+        },
+        {
+          "function": "asin",
+          "input": 0.09999999403953552
+        }
+      ]
+    },
+    {
+      "frame": 93,
+      "angle": 3.141592653589793,
+      "expected_visible": false,
+      "visible": true,
+      "direction_finite": true,
+      "angular_bound_finite": false,
+      "size": 192.00001525878906,
+      "math_calls": [
+        {
+          "function": "acos",
+          "input": -1.0000001192092896
+        },
+        {
+          "function": "asin",
+          "input": 0.10000000894069672
+        }
+      ]
+    },
+    {
+      "frame": 114,
+      "angle": 3.141592653589793,
+      "expected_visible": false,
+      "visible": true,
+      "direction_finite": true,
+      "angular_bound_finite": false,
+      "size": 191.99996948242188,
+      "math_calls": [
+        {
+          "function": "acos",
+          "input": -1.0000001192092896
+        },
+        {
+          "function": "asin",
+          "input": 0.09999998658895493
+        }
+      ]
+    }
+  ],
+  "near_center_cases": {
+    "101": {
+      "visible": true,
+      "direction_finite": true,
+      "angular_bound_finite": true,
+      "size": 1900.9901123046875,
+      "math_calls": [
+        {
+          "function": "acos",
+          "input": 1.0
+        },
+        {
+          "function": "asin",
+          "input": 0.9900990128517151
+        }
+      ]
+    },
+    "100": {
+      "visible": true,
+      "direction_finite": true,
+      "angular_bound_finite": true,
+      "size": 1920.0001220703125,
+      "math_calls": [
+        {
+          "function": "acos",
+          "input": 1.0
+        },
+        {
+          "function": "asin",
+          "input": 1.0
+        }
+      ]
+    },
+    "99": {
+      "visible": true,
+      "direction_finite": true,
+      "angular_bound_finite": false,
+      "size": 1939.39404296875,
+      "math_calls": [
+        {
+          "function": "acos",
+          "input": 1.0
+        },
+        {
+          "function": "asin",
+          "input": 1.0101009607315063
+        }
+      ]
+    },
+    "1": {
+      "visible": true,
+      "direction_finite": true,
+      "angular_bound_finite": false,
+      "size": 4000.0,
+      "math_calls": [
+        {
+          "function": "acos",
+          "input": 1.0
+        },
+        {
+          "function": "asin",
+          "input": 100.0
+        }
+      ]
+    },
+    "0": {
+      "visible": false,
+      "direction_finite": false,
+      "angular_bound_finite": false,
+      "size": 200.0,
+      "math_calls": []
+    }
+  },
+  "small_object_cutoff_cases": {
+    "383": {
+      "visible": true,
+      "direction_finite": true,
+      "angular_bound_finite": true,
+      "size": 5.013054847717285,
+      "math_calls": []
+    },
+    "384": {
+      "visible": false,
+      "direction_finite": true,
+      "angular_bound_finite": true,
+      "size": 5.0,
+      "math_calls": []
+    },
+    "385": {
+      "visible": false,
+      "direction_finite": true,
+      "angular_bound_finite": true,
+      "size": 4.98701286315918,
+      "math_calls": []
+    }
+  },
+  "findings": [
+    "Single-precision normalized direction dot products can exceed [-1,1] before _CIacos.",
+    "Inside a bounding sphere, original code passes radius/distance > 1 to _CIasin.",
+    "At coincident camera/object origins, original x87 normalization creates nonfinite direction and final visibility is false.",
+    "Render-state wrapper returns 1 even when the mocked device returns E_FAIL.",
+    "Final visibility requires projected size strictly greater than 5."
+  ],
+  "unverified": [
+    "Whether normal update traversal invalidates every changed descendant.",
+    "Actual MSVCRT domain-error behavior and downstream use of nonfinite angular bounds.",
+    "Device transforms, depth, textures, draw calls, surface recovery and presentation.",
+    "Causality for the reported large-scale jumping; localhost host/client parity."
+  ]
+}

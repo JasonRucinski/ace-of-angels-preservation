@@ -1,0 +1,155 @@
+{
+  "scope": "Extracted local assets only; no multiplayer rules or hosting verification",
+  "layouts": [
+    {
+      "name": "Arena1a",
+      "nodes": 303,
+      "geometry_nodes": 244,
+      "marker_nodes": 59,
+      "missing_referenced_models": [],
+      "sha256": "5d652eaca4972d958eb1dc54b8ef277fdb8ea475be4912f01a5fd8d02afa7886"
+    },
+    {
+      "name": "ast_fld_a",
+      "nodes": 30,
+      "geometry_nodes": 27,
+      "marker_nodes": 3,
+      "missing_referenced_models": [],
+      "sha256": "afe75708078bf0c1d44f0c42a2f875aa032f24098972240ffb82c1f6879f0a63"
+    },
+    {
+      "name": "ast_fld_b",
+      "nodes": 55,
+      "geometry_nodes": 49,
+      "marker_nodes": 6,
+      "missing_referenced_models": [],
+      "sha256": "0170adc1d7ab7eb61423e3527ae419e134d6853e94d57f582dd6ed5b097ba24d"
+    },
+    {
+      "name": "ast_fld_c",
+      "nodes": 17,
+      "geometry_nodes": 15,
+      "marker_nodes": 2,
+      "missing_referenced_models": [],
+      "sha256": "e667ea6d513ca0ca8648db2bee3ff6ea526812ea150a0fad393242e9cd37e87b"
+    },
+    {
+      "name": "ast_fld_d",
+      "nodes": 10,
+      "geometry_nodes": 10,
+      "marker_nodes": 0,
+      "missing_referenced_models": [],
+      "sha256": "408a0e9f8236606f2cb4d2cb61147a0a5b82bc24e42786a645b74b6a8897c0cc"
+    },
+    {
+      "name": "CTF_arena_b",
+      "nodes": 64,
+      "geometry_nodes": 59,
+      "marker_nodes": 5,
+      "missing_referenced_models": [],
+      "sha256": "b89946f1e921f1820c4df4d9e8d1bb03bcdbe40f25640353f098dfc742390a0d"
+    },
+    {
+      "name": "CTF_arena",
+      "nodes": 119,
+      "geometry_nodes": 113,
+      "marker_nodes": 6,
+      "missing_referenced_models": [],
+      "sha256": "942b92f5a078579824d9e31df36c6388c1d6fe7087436de7d9eaf0161bb31ae5"
+    },
+    {
+      "name": "CTF_base",
+      "nodes": 32,
+      "geometry_nodes": 31,
+      "marker_nodes": 1,
+      "missing_referenced_models": [],
+      "sha256": "ecd27e71c4f1fc220d1613eb4d4e6beaf8aa349867cc7ff507b2fb16b9a9b5b9"
+    },
+    {
+      "name": "hu_base_a",
+      "nodes": 59,
+      "geometry_nodes": 12,
+      "marker_nodes": 47,
+      "missing_referenced_models": [],
+      "sha256": "c6b04fc22d7e952943259881deeaff185c06e141daf1235c0175e542637c1c52"
+    },
+    {
+      "name": "hu_base_b",
+      "nodes": 33,
+      "geometry_nodes": 6,
+      "marker_nodes": 27,
+      "missing_referenced_models": [],
+      "sha256": "ec65caa5d071e6948da4984d5103e8524a72df7fc5bdbba7df832423bb7af90c"
+    },
+    {
+      "name": "hy_base_test",
+      "nodes": 4,
+      "geometry_nodes": 2,
+      "marker_nodes": 2,
+      "missing_referenced_models": [],
+      "sha256": "31b81ea6b0a1928a5e517f34326d4cc9177387a627e876ed57d22cdcfcdbc6b5"
+    },
+    {
+      "name": "hy_winga",
+      "nodes": 15,
+      "geometry_nodes": 15,
+      "marker_nodes": 0,
+      "missing_referenced_models": [],
+      "sha256": "82e8bd6c3f197671c2ce23d9d8c888e0a04d0e914525578900f85460142b03ec"
+    },
+    {
+      "name": "HyBase2Lay",
+      "nodes": 11,
+      "geometry_nodes": 10,
+      "marker_nodes": 1,
+      "missing_referenced_models": [],
+      "sha256": "9fa19694e0ced7df7bcaf09af8c386f6e9308e8e3788ae946b09447504eb1ebb"
+    },
+    {
+      "name": "irrosa01",
+      "nodes": 44,
+      "geometry_nodes": 2,
+      "marker_nodes": 42,
+      "missing_referenced_models": [],
+      "sha256": "abf86cb5b37e483c5569fa300188762b592be91102a340625978e132afad5430"
+    },
+    {
+      "name": "newterrain",
+      "nodes": 368,
+      "geometry_nodes": 248,
+      "marker_nodes": 120,
+      "missing_referenced_models": [],
+      "sha256": "cc9fbc2a5d9bf8cc5836472182e27f7bc7e22c14fb76ece7c8cd7a0afd4842f2"
+    },
+    {
+      "name": "outerchange",
+      "nodes": 89,
+      "geometry_nodes": 7,
+      "marker_nodes": 82,
+      "missing_referenced_models": [],
+      "sha256": "4525886d931188ca53ce844ccab22e2eaeccfef56feb2a206895c64b648b60a4"
+    },
+    {
+      "name": "ze_winga",
+      "nodes": 19,
+      "geometry_nodes": 15,
+      "marker_nodes": 4,
+      "missing_referenced_models": [],
+      "sha256": "3d3dd89f57c99966451f4e77c47b60588ec6e2cab6c25a504d89b6e0412ad3f4"
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "Curt3",
+      "bytes": 2282,
+      "sha256": "a096377e05fd000ace39289b66828ff8f23a150fa0a39c669ac4c86e3d4f1f00"
+    }
+  ],
+  "backdrops": [
+    "spacebkgd",
+    "spacebkgd2",
+    "spacebkgd3",
+    "spacebkgd5",
+    "spacebkgd6"
+  ]
+}

@@ -1,0 +1,127 @@
+{
+  "schema": 1,
+  "started_utc": "2026-10-21T21:34:52.675391+00:00",
+  "scope": "synthetic loopback and isolated original-code emulation; excludes real-client UI, combat, collision, internet, clean-machine install and performance release gates",
+  "python": "3.12.6",
+  "checks": [
+    {
+      "name": "test_network_bounds.py",
+      "passed": true,
+      "seconds": 6.453,
+      "tests": 6
+    },
+    {
+      "name": "test_relay_motion.py",
+      "passed": true,
+      "seconds": 0.391,
+      "tests": 7
+    },
+    {
+      "name": "test_prepare_client.py",
+      "passed": true,
+      "seconds": 79.703,
+      "tests": 8
+    },
+    {
+      "name": "test_station_runtime.py",
+      "passed": true,
+      "seconds": 8.516,
+      "tests": 7
+    },
+    {
+      "name": "test_station_sessions.py",
+      "passed": true,
+      "seconds": 10.734,
+      "tests": 5
+    },
+    {
+      "name": "test_guest_admission.py",
+      "passed": true,
+      "seconds": 8.25,
+      "tests": 1
+    },
+    {
+      "name": "test_relay_recovery.py",
+      "passed": true,
+      "seconds": 5.938,
+      "tests": 1
+    },
+    {
+      "name": "test_station_stub.py",
+      "passed": true,
+      "seconds": 49.703,
+      "tests": 25
+    },
+    {
+      "name": "test_combat_delivery.py",
+      "passed": true,
+      "seconds": 10.578,
+      "tests": 1
+    },
+    {
+      "name": "test_client_extensions.py",
+      "passed": true,
+      "seconds": 16.031,
+      "tests": 1
+    },
+    {
+      "name": "test_lan_dogfight.py",
+      "passed": true,
+      "seconds": 16.485,
+      "tests": 4
+    },
+    {
+      "name": "test_scene_nodes.py",
+      "passed": true,
+      "seconds": 1.453,
+      "tests": 3
+    },
+    {
+      "name": "emulate_station_request.py",
+      "passed": true,
+      "seconds": 0.953
+    },
+    {
+      "name": "emulate_station_aliases.py",
+      "passed": true,
+      "seconds": 0.969
+    },
+    {
+      "name": "emulate_reliable_history.py",
+      "passed": true,
+      "seconds": 1.125
+    },
+    {
+      "name": "emulate_movement.py",
+      "passed": true,
+      "seconds": 1.015
+    },
+    {
+      "name": "emulate_motion_state.py",
+      "passed": true,
+      "seconds": 1.016
+    },
+    {
+      "name": "emulate_archive_terminator.py",
+      "passed": true,
+      "seconds": 5.047
+    },
+    {
+      "name": "emulate_client_extensions.py",
+      "passed": true,
+      "seconds": 4.531
+    },
+    {
+      "name": "emulate_ordered_events.py",
+      "passed": true,
+      "seconds": 1.797
+    },
+    {
+      "name": "emulate_terrain_nodes.py",
+      "passed": true,
+      "seconds": 0.937
+    }
+  ],
+  "passed": true,
+  "tests": 69
+}

@@ -1,0 +1,761 @@
+{
+ "versions": {
+  "2.0.0": {
+   "archives": {
+    "AOAOBJECTS": {
+     "entries": 98,
+     "bytes": 1023050,
+     "uncovered_bytes": 0
+    },
+    "DATA": {
+     "entries": 34,
+     "bytes": 3813150,
+     "uncovered_bytes": 0
+    },
+    "HUD": {
+     "entries": 41,
+     "bytes": 1556290,
+     "uncovered_bytes": 0
+    },
+    "SCRIPTS": {
+     "entries": 7,
+     "bytes": 3638,
+     "uncovered_bytes": 0
+    },
+    "SOUNDS": {
+     "entries": 47,
+     "bytes": 1859928,
+     "uncovered_bytes": 0
+    },
+    "TERRAIN": {
+     "entries": 1,
+     "bytes": 24813,
+     "uncovered_bytes": 0
+    },
+    "TEXTURES": {
+     "entries": 16,
+     "bytes": 2082986,
+     "uncovered_bytes": 0
+    }
+   },
+   "scripts": {
+    "jrscen.scr": "d77faa88ae0d695b8fcf308006385d8f9345e4faf6c1f46c9964aadf2ab11e75",
+    "capship1.scr": "d77faa88ae0d695b8fcf308006385d8f9345e4faf6c1f46c9964aadf2ab11e75",
+    "gen_missile.scr": "709bf8adfa06e7dee9f8493f920e8a01a39d979e9efc6c057ef5ae7e35f73340",
+    "gen_turret.scr": "f9e72ae3c0d5be50bce4a2c7536fd59098a291932e53e8b6eae6ebeafd11659e",
+    "ssmajestic.scr": "af2b319d45e4635b70f4df0e993a75a9f7e0590540f4246c77bd33771a60ad78",
+    "MCVA_Scenario1.scr": "c02bd33803be4af6d81abb9e3e05164f32b8851a87838c0c50be6299063415d7",
+    "robot_ai.scr": "ad01052f39c627b001d18505593e88cd3a8d3986d00163b2e5b67774bd918ed6"
+   },
+   "scenarios": {},
+   "testscene": {
+    "sha256": "5213d58631e6165e33421e51e99a916dfe1dbb1f488ebc3618469cfbf30cad6f",
+    "nodes": 178,
+    "skipped": [
+     "TestScene"
+    ]
+   },
+   "jrmap_trn": {
+    "sha256": "e3da8fbbdfb84ac7c830314e62bd8ceb7dfbdf9d90cd5fef614601133f23c5c4",
+    "records": 74,
+    "links": 13,
+    "consumed_exactly": true,
+    "objects": {
+     "-/kind2": 5,
+     "-/kind6": 11,
+     "Buoy/kind3": 3,
+     "Cube/kind3": 4,
+     "Dish/kind0": 5,
+     "IBCH/kind0": 3,
+     "MBB/kind0": 2,
+     "MCVA/kind0": 1,
+     "Station/kind8": 3,
+     "TurretA/kind1": 13,
+     "Wall/kind0": 7,
+     "WarpGate/kind7": 6,
+     "ss1/kind0": 6,
+     "ss4/kind0": 1,
+     "ss5/kind0": 4
+    }
+   }
+  },
+  "2.7.1": {
+   "archives": {
+    "AOAOBJECTS": {
+     "entries": 197,
+     "bytes": 2012162,
+     "uncovered_bytes": 0
+    },
+    "DATA": {
+     "entries": 23,
+     "bytes": 1690796,
+     "uncovered_bytes": 0
+    },
+    "HUD": {
+     "entries": 52,
+     "bytes": 1865056,
+     "uncovered_bytes": 0
+    },
+    "IMAGES": {
+     "entries": 39,
+     "bytes": 733160,
+     "uncovered_bytes": 0
+    },
+    "SCRIPTS": {
+     "entries": 8,
+     "bytes": 4157,
+     "uncovered_bytes": 0
+    },
+    "SOUNDS": {
+     "entries": 55,
+     "bytes": 1230636,
+     "uncovered_bytes": 0
+    },
+    "TEXTURES": {
+     "entries": 56,
+     "bytes": 7569082,
+     "uncovered_bytes": 0
+    }
+   },
+   "scripts": {
+    "jrscen.scr": "d77faa88ae0d695b8fcf308006385d8f9345e4faf6c1f46c9964aadf2ab11e75",
+    "capship1.scr": "df2a1a6c63909084c7dbda0c7dd44483070548b6c501971ca01206435b9c06de",
+    "gen_missile.scr": "69ae531ddddd6018d4fe86242f83b64a5249080378848536f3823fd3860232d9",
+    "gen_turret.scr": "f6de3ed2a8b88e5c21f075d0403d818087349ea6574d647bfa6454ee2d2b74c1",
+    "ssmajestic.scr": "af2b319d45e4635b70f4df0e993a75a9f7e0590540f4246c77bd33771a60ad78",
+    "MCVA_Scenario1.scr": "c02bd33803be4af6d81abb9e3e05164f32b8851a87838c0c50be6299063415d7",
+    "robot_ai.scr": "883e8230eda559c0b55b4b4e7f8d570cfee47bc0637ddd074594e343bbafb97f",
+    "gen_idle.scr": "9079fe98193fd05f3a4cb67b77b83de09a47daf9320880d8616367bd9a3c2acd"
+   },
+   "scenarios": {},
+   "jrmap_trn": {
+    "sha256": "e3da8fbbdfb84ac7c830314e62bd8ceb7dfbdf9d90cd5fef614601133f23c5c4",
+    "records": 74,
+    "links": 13,
+    "consumed_exactly": true,
+    "objects": {
+     "-/kind2": 5,
+     "-/kind6": 11,
+     "Buoy/kind3": 3,
+     "Cube/kind3": 4,
+     "Dish/kind0": 5,
+     "IBCH/kind0": 3,
+     "MBB/kind0": 2,
+     "MCVA/kind0": 1,
+     "Station/kind8": 3,
+     "TurretA/kind1": 13,
+     "Wall/kind0": 7,
+     "WarpGate/kind7": 6,
+     "ss1/kind0": 6,
+     "ss4/kind0": 1,
+     "ss5/kind0": 4
+    }
+   }
+  },
+  "2.8.0": {
+   "archives": {
+    "AOAOBJECTS": {
+     "entries": 261,
+     "bytes": 2920075,
+     "uncovered_bytes": 0
+    },
+    "DATA": {
+     "entries": 23,
+     "bytes": 1690796,
+     "uncovered_bytes": 0
+    },
+    "FX": {
+     "entries": 12,
+     "bytes": 10571,
+     "uncovered_bytes": 0
+    },
+    "HUD": {
+     "entries": 55,
+     "bytes": 1922618,
+     "uncovered_bytes": 0
+    },
+    "IMAGES": {
+     "entries": 39,
+     "bytes": 733160,
+     "uncovered_bytes": 0
+    },
+    "SCENARIOS": {
+     "entries": 1,
+     "bytes": 1489,
+     "uncovered_bytes": 0
+    },
+    "SCRIPTS": {
+     "entries": 8,
+     "bytes": 4157,
+     "uncovered_bytes": 0
+    },
+    "SOUNDS": {
+     "entries": 55,
+     "bytes": 1230636,
+     "uncovered_bytes": 0
+    },
+    "TEXTURES": {
+     "entries": 138,
+     "bytes": 12509136,
+     "uncovered_bytes": 0
+    }
+   },
+   "scripts": {
+    "jrscen.scr": "d77faa88ae0d695b8fcf308006385d8f9345e4faf6c1f46c9964aadf2ab11e75",
+    "capship1.scr": "df2a1a6c63909084c7dbda0c7dd44483070548b6c501971ca01206435b9c06de",
+    "gen_missile.scr": "69ae531ddddd6018d4fe86242f83b64a5249080378848536f3823fd3860232d9",
+    "gen_turret.scr": "f6de3ed2a8b88e5c21f075d0403d818087349ea6574d647bfa6454ee2d2b74c1",
+    "ssmajestic.scr": "af2b319d45e4635b70f4df0e993a75a9f7e0590540f4246c77bd33771a60ad78",
+    "MCVA_Scenario1.scr": "c02bd33803be4af6d81abb9e3e05164f32b8851a87838c0c50be6299063415d7",
+    "robot_ai.scr": "883e8230eda559c0b55b4b4e7f8d570cfee47bc0637ddd074594e343bbafb97f",
+    "gen_idle.scr": "9079fe98193fd05f3a4cb67b77b83de09a47daf9320880d8616367bd9a3c2acd"
+   },
+   "scenarios": {
+    "Curt3": {
+     "sha256": "a096377e05fd000ace39289b66828ff8f23a150fa0a39c669ac4c86e3d4f1f00",
+     "consumed_exactly": true,
+     "teams": [
+      "Defense",
+      "Offense"
+     ],
+     "groups": [
+      {
+       "name": "Attackers",
+       "team": "Offense",
+       "members": 1,
+       "ship_types": [
+        "ZCVS"
+       ],
+       "orders": [
+        "Attack EDefenders"
+       ],
+       "waypoints": [
+        "Idle At",
+        "Patrol To",
+        "Patrol To"
+       ]
+      },
+      {
+       "name": "Defenders",
+       "team": "Defense",
+       "members": 1,
+       "ship_types": [
+        "ZCVS"
+       ],
+       "orders": [],
+       "waypoints": [
+        "Idle At",
+        "Escort To"
+       ]
+      },
+      {
+       "name": "EDefenders",
+       "team": "Defense",
+       "members": 0,
+       "ship_types": [],
+       "orders": [
+        "Defend Defenders"
+       ],
+       "waypoints": [
+        "Idle At",
+        "Patrol To",
+        "Patrol To"
+       ]
+      },
+      {
+       "name": "EAttackers",
+       "team": "Offense",
+       "members": 0,
+       "ship_types": [],
+       "orders": [],
+       "waypoints": [
+        "Idle At",
+        "Patrol To",
+        "Patrol To"
+       ]
+      },
+      {
+       "name": "Attack Escort",
+       "team": "",
+       "members": 6,
+       "ship_types": [
+        "Zkole"
+       ],
+       "orders": [],
+       "waypoints": [
+        "Idle At",
+        "Patrol To",
+        "Patrol To"
+       ]
+      }
+     ]
+    }
+   },
+   "jrmap_trn": {
+    "sha256": "e3da8fbbdfb84ac7c830314e62bd8ceb7dfbdf9d90cd5fef614601133f23c5c4",
+    "records": 74,
+    "links": 13,
+    "consumed_exactly": true,
+    "objects": {
+     "-/kind2": 5,
+     "-/kind6": 11,
+     "Buoy/kind3": 3,
+     "Cube/kind3": 4,
+     "Dish/kind0": 5,
+     "IBCH/kind0": 3,
+     "MBB/kind0": 2,
+     "MCVA/kind0": 1,
+     "Station/kind8": 3,
+     "TurretA/kind1": 13,
+     "Wall/kind0": 7,
+     "WarpGate/kind7": 6,
+     "ss1/kind0": 6,
+     "ss4/kind0": 1,
+     "ss5/kind0": 4
+    }
+   }
+  },
+  "2.8.2": {
+   "archives": {
+    "AOAOBJECTS": {
+     "entries": 261,
+     "bytes": 2920147,
+     "uncovered_bytes": 0
+    },
+    "DATA": {
+     "entries": 23,
+     "bytes": 1690796,
+     "uncovered_bytes": 0
+    },
+    "FX": {
+     "entries": 13,
+     "bytes": 13011,
+     "uncovered_bytes": 0
+    },
+    "HUD": {
+     "entries": 56,
+     "bytes": 1919596,
+     "uncovered_bytes": 0
+    },
+    "IMAGES": {
+     "entries": 39,
+     "bytes": 733160,
+     "uncovered_bytes": 0
+    },
+    "SCENARIOS": {
+     "entries": 1,
+     "bytes": 1489,
+     "uncovered_bytes": 0
+    },
+    "SCRIPTS": {
+     "entries": 8,
+     "bytes": 4157,
+     "uncovered_bytes": 0
+    },
+    "SOUNDS": {
+     "entries": 55,
+     "bytes": 1230636,
+     "uncovered_bytes": 0
+    },
+    "TEXTURES": {
+     "entries": 139,
+     "bytes": 12576779,
+     "uncovered_bytes": 0
+    }
+   },
+   "scripts": {
+    "jrscen.scr": "d77faa88ae0d695b8fcf308006385d8f9345e4faf6c1f46c9964aadf2ab11e75",
+    "capship1.scr": "df2a1a6c63909084c7dbda0c7dd44483070548b6c501971ca01206435b9c06de",
+    "gen_missile.scr": "69ae531ddddd6018d4fe86242f83b64a5249080378848536f3823fd3860232d9",
+    "gen_turret.scr": "f6de3ed2a8b88e5c21f075d0403d818087349ea6574d647bfa6454ee2d2b74c1",
+    "ssmajestic.scr": "af2b319d45e4635b70f4df0e993a75a9f7e0590540f4246c77bd33771a60ad78",
+    "MCVA_Scenario1.scr": "c02bd33803be4af6d81abb9e3e05164f32b8851a87838c0c50be6299063415d7",
+    "robot_ai.scr": "883e8230eda559c0b55b4b4e7f8d570cfee47bc0637ddd074594e343bbafb97f",
+    "gen_idle.scr": "9079fe98193fd05f3a4cb67b77b83de09a47daf9320880d8616367bd9a3c2acd"
+   },
+   "scenarios": {
+    "Curt3": {
+     "sha256": "a096377e05fd000ace39289b66828ff8f23a150fa0a39c669ac4c86e3d4f1f00",
+     "consumed_exactly": true,
+     "teams": [
+      "Defense",
+      "Offense"
+     ],
+     "groups": [
+      {
+       "name": "Attackers",
+       "team": "Offense",
+       "members": 1,
+       "ship_types": [
+        "ZCVS"
+       ],
+       "orders": [
+        "Attack EDefenders"
+       ],
+       "waypoints": [
+        "Idle At",
+        "Patrol To",
+        "Patrol To"
+       ]
+      },
+      {
+       "name": "Defenders",
+       "team": "Defense",
+       "members": 1,
+       "ship_types": [
+        "ZCVS"
+       ],
+       "orders": [],
+       "waypoints": [
+        "Idle At",
+        "Escort To"
+       ]
+      },
+      {
+       "name": "EDefenders",
+       "team": "Defense",
+       "members": 0,
+       "ship_types": [],
+       "orders": [
+        "Defend Defenders"
+       ],
+       "waypoints": [
+        "Idle At",
+        "Patrol To",
+        "Patrol To"
+       ]
+      },
+      {
+       "name": "EAttackers",
+       "team": "Offense",
+       "members": 0,
+       "ship_types": [],
+       "orders": [],
+       "waypoints": [
+        "Idle At",
+        "Patrol To",
+        "Patrol To"
+       ]
+      },
+      {
+       "name": "Attack Escort",
+       "team": "",
+       "members": 6,
+       "ship_types": [
+        "Zkole"
+       ],
+       "orders": [],
+       "waypoints": [
+        "Idle At",
+        "Patrol To",
+        "Patrol To"
+       ]
+      }
+     ]
+    }
+   },
+   "jrmap_trn": {
+    "sha256": "e3da8fbbdfb84ac7c830314e62bd8ceb7dfbdf9d90cd5fef614601133f23c5c4",
+    "records": 74,
+    "links": 13,
+    "consumed_exactly": true,
+    "objects": {
+     "-/kind2": 5,
+     "-/kind6": 11,
+     "Buoy/kind3": 3,
+     "Cube/kind3": 4,
+     "Dish/kind0": 5,
+     "IBCH/kind0": 3,
+     "MBB/kind0": 2,
+     "MCVA/kind0": 1,
+     "Station/kind8": 3,
+     "TurretA/kind1": 13,
+     "Wall/kind0": 7,
+     "WarpGate/kind7": 6,
+     "ss1/kind0": 6,
+     "ss4/kind0": 1,
+     "ss5/kind0": 4
+    }
+   }
+  },
+  "2.9.2": {
+   "archives": {
+    "AOAOBJECTS": {
+     "entries": 337,
+     "bytes": 5041075,
+     "uncovered_bytes": 0
+    },
+    "DATA": {
+     "entries": 23,
+     "bytes": 1690796,
+     "uncovered_bytes": 0
+    },
+    "FX": {
+     "entries": 14,
+     "bytes": 14186,
+     "uncovered_bytes": 0
+    },
+    "HUD": {
+     "entries": 57,
+     "bytes": 1958597,
+     "uncovered_bytes": 0
+    },
+    "IMAGES": {
+     "entries": 39,
+     "bytes": 733160,
+     "uncovered_bytes": 0
+    },
+    "SCENARIOS": {
+     "entries": 1,
+     "bytes": 1489,
+     "uncovered_bytes": 0
+    },
+    "SCRIPTS": {
+     "entries": 8,
+     "bytes": 4157,
+     "uncovered_bytes": 0
+    },
+    "SOUNDS": {
+     "entries": 55,
+     "bytes": 1230636,
+     "uncovered_bytes": 0
+    },
+    "TEXTURES": {
+     "entries": 214,
+     "bytes": 17817070,
+     "uncovered_bytes": 0
+    }
+   },
+   "scripts": {
+    "jrscen.scr": "d77faa88ae0d695b8fcf308006385d8f9345e4faf6c1f46c9964aadf2ab11e75",
+    "capship1.scr": "df2a1a6c63909084c7dbda0c7dd44483070548b6c501971ca01206435b9c06de",
+    "gen_missile.scr": "69ae531ddddd6018d4fe86242f83b64a5249080378848536f3823fd3860232d9",
+    "gen_turret.scr": "f6de3ed2a8b88e5c21f075d0403d818087349ea6574d647bfa6454ee2d2b74c1",
+    "ssmajestic.scr": "af2b319d45e4635b70f4df0e993a75a9f7e0590540f4246c77bd33771a60ad78",
+    "MCVA_Scenario1.scr": "c02bd33803be4af6d81abb9e3e05164f32b8851a87838c0c50be6299063415d7",
+    "robot_ai.scr": "883e8230eda559c0b55b4b4e7f8d570cfee47bc0637ddd074594e343bbafb97f",
+    "gen_idle.scr": "9079fe98193fd05f3a4cb67b77b83de09a47daf9320880d8616367bd9a3c2acd"
+   },
+   "scenarios": {
+    "Curt3": {
+     "sha256": "a096377e05fd000ace39289b66828ff8f23a150fa0a39c669ac4c86e3d4f1f00",
+     "consumed_exactly": true,
+     "teams": [
+      "Defense",
+      "Offense"
+     ],
+     "groups": [
+      {
+       "name": "Attackers",
+       "team": "Offense",
+       "members": 1,
+       "ship_types": [
+        "ZCVS"
+       ],
+       "orders": [
+        "Attack EDefenders"
+       ],
+       "waypoints": [
+        "Idle At",
+        "Patrol To",
+        "Patrol To"
+       ]
+      },
+      {
+       "name": "Defenders",
+       "team": "Defense",
+       "members": 1,
+       "ship_types": [
+        "ZCVS"
+       ],
+       "orders": [],
+       "waypoints": [
+        "Idle At",
+        "Escort To"
+       ]
+      },
+      {
+       "name": "EDefenders",
+       "team": "Defense",
+       "members": 0,
+       "ship_types": [],
+       "orders": [
+        "Defend Defenders"
+       ],
+       "waypoints": [
+        "Idle At",
+        "Patrol To",
+        "Patrol To"
+       ]
+      },
+      {
+       "name": "EAttackers",
+       "team": "Offense",
+       "members": 0,
+       "ship_types": [],
+       "orders": [],
+       "waypoints": [
+        "Idle At",
+        "Patrol To",
+        "Patrol To"
+       ]
+      },
+      {
+       "name": "Attack Escort",
+       "team": "",
+       "members": 6,
+       "ship_types": [
+        "Zkole"
+       ],
+       "orders": [],
+       "waypoints": [
+        "Idle At",
+        "Patrol To",
+        "Patrol To"
+       ]
+      }
+     ]
+    }
+   },
+   "jrmap_trn": {
+    "sha256": "e3da8fbbdfb84ac7c830314e62bd8ceb7dfbdf9d90cd5fef614601133f23c5c4",
+    "records": 74,
+    "links": 13,
+    "consumed_exactly": true,
+    "objects": {
+     "-/kind2": 5,
+     "-/kind6": 11,
+     "Buoy/kind3": 3,
+     "Cube/kind3": 4,
+     "Dish/kind0": 5,
+     "IBCH/kind0": 3,
+     "MBB/kind0": 2,
+     "MCVA/kind0": 1,
+     "Station/kind8": 3,
+     "TurretA/kind1": 13,
+     "Wall/kind0": 7,
+     "WarpGate/kind7": 6,
+     "ss1/kind0": 6,
+     "ss4/kind0": 1,
+     "ss5/kind0": 4
+    }
+   }
+  }
+ },
+ "layout_sha256": {
+  "testscene": {
+   "2.0.0": "5213d58631e6165e33421e51e99a916dfe1dbb1f488ebc3618469cfbf30cad6f"
+  },
+  "newterrain": {
+   "2.7.1": "03b63938043c96553241f85fa28e3dbe7242a5ccd1d4682f98116d451947aff7",
+   "2.8.0": "1b6b02223ca6179ba2c759597ee413e663c09c9d92cf382f3f41ac959c5cf8ff",
+   "2.8.2": "1b6b02223ca6179ba2c759597ee413e663c09c9d92cf382f3f41ac959c5cf8ff",
+   "2.9.2": "cc9fbc2a5d9bf8cc5836472182e27f7bc7e22c14fb76ece7c8cd7a0afd4842f2"
+  },
+  "hy_base_test": {
+   "2.7.1": "c9c698c9b94da096174562229a56e63786c45a3d4a179fddcc7da508831d10ef",
+   "2.8.0": "83f6199793b1312e8c0eb05cb09782c1bc174c5ca34c4db6a8951c0bc4b29601",
+   "2.8.2": "83f6199793b1312e8c0eb05cb09782c1bc174c5ca34c4db6a8951c0bc4b29601",
+   "2.9.2": "31b81ea6b0a1928a5e517f34326d4cc9177387a627e876ed57d22cdcfcdbc6b5"
+  },
+  "hittest": {
+   "2.7.1": "7f850469dca7fc1ed86d2ebf6146a4c9d5894db1632ea2b1d13309c547158a41",
+   "2.8.0": "665e1ab44c6fc948a5d970d45f0d55de129753bf9ce89e2f378d31a285abff7e",
+   "2.8.2": "665e1ab44c6fc948a5d970d45f0d55de129753bf9ce89e2f378d31a285abff7e",
+   "2.9.2": "ae261a6f7ac4d2d5aa079c0a310599217f1b9577007922910d498128aa3e4a28"
+  },
+  "arena1a": {
+   "2.7.1": "27d425a42bf03c924a5055b4874201181ae4fb4c293d57c39c896949e8ace8cc",
+   "2.8.0": "c783dcfd359836e67ee749169b68c678f53c82a197567a70db4b5a8213def82b",
+   "2.8.2": "c783dcfd359836e67ee749169b68c678f53c82a197567a70db4b5a8213def82b",
+   "2.9.2": "5d652eaca4972d958eb1dc54b8ef277fdb8ea475be4912f01a5fd8d02afa7886"
+  },
+  "hy_winga": {
+   "2.7.1": "3a0faecb367d3ac47d73eee052245af7abd1b6f11ac8cdd1dce8f50817baf283",
+   "2.8.0": "fff9ab1f70632979990330e69b6e8a8d52e57466278abaa99ee299e8049884d3",
+   "2.8.2": "fff9ab1f70632979990330e69b6e8a8d52e57466278abaa99ee299e8049884d3",
+   "2.9.2": "82e8bd6c3f197671c2ce23d9d8c888e0a04d0e914525578900f85460142b03ec"
+  },
+  "ze_winga": {
+   "2.7.1": "fece4479d327b808b3200520cc858dcf1ab19aa5c8a60d70bf4a0fd8ee1fce1a",
+   "2.8.0": "8426f949ce375eb692f88fe8ed826bcf7979b661e4b4a525441a75cc57ea655a",
+   "2.8.2": "8426f949ce375eb692f88fe8ed826bcf7979b661e4b4a525441a75cc57ea655a",
+   "2.9.2": "3d3dd89f57c99966451f4e77c47b60588ec6e2cab6c25a504d89b6e0412ad3f4"
+  },
+  "ze_wingb": {
+   "2.7.1": "03a3527abad26876dbb42be868ca15351b89bfecb6fe43abe254614b50ba93d8",
+   "2.8.0": "ea46c49eda413ec14903510d346df7fae636097217c3274c63b93d496a59f4d4",
+   "2.8.2": "ea46c49eda413ec14903510d346df7fae636097217c3274c63b93d496a59f4d4",
+   "2.9.2": "ea46c49eda413ec14903510d346df7fae636097217c3274c63b93d496a59f4d4"
+  },
+  "hybase2lay": {
+   "2.7.1": "2adc48c9412c5f8194bbb3f2e6338edf30212df9282d1330a27f689d005b0432",
+   "2.8.0": "18679b4c1f95051519c8f8326803921533b54b6e75955610c18f4cf6473ab14c",
+   "2.8.2": "18679b4c1f95051519c8f8326803921533b54b6e75955610c18f4cf6473ab14c",
+   "2.9.2": "9fa19694e0ced7df7bcaf09af8c386f6e9308e8e3788ae946b09447504eb1ebb"
+  },
+  "outerchange": {
+   "2.7.1": "994dd9b0aae60026d931bdec37afbc5154539f58f76d83351ff693bb5a4052b4",
+   "2.8.0": "cc897c679ccc412d6d2b91cbf4c67e883e5ee4acc143783e924d7b2c569db9fb",
+   "2.8.2": "cc897c679ccc412d6d2b91cbf4c67e883e5ee4acc143783e924d7b2c569db9fb",
+   "2.9.2": "4525886d931188ca53ce844ccab22e2eaeccfef56feb2a206895c64b648b60a4"
+  },
+  "irrosa01": {
+   "2.7.1": "199d6f9e4892a4cfb99e3cd6dfef2a6b2006630b5d86861a2fdf8286199bcdea",
+   "2.8.0": "e38f8761b5512e98c094f1c44fddfc90538abd1306fa72692758665ce6fe5378",
+   "2.8.2": "e38f8761b5512e98c094f1c44fddfc90538abd1306fa72692758665ce6fe5378",
+   "2.9.2": "abf86cb5b37e483c5569fa300188762b592be91102a340625978e132afad5430"
+  },
+  "hu_base_b": {
+   "2.7.1": "93d65eda374d492e91a33975fbd24166b8a52f7e68f094516441adb0e589ed15",
+   "2.8.0": "27ac9058b61b344232661f8997a5cf50787965ce538aaa711e9314dd8ac34e0a",
+   "2.8.2": "27ac9058b61b344232661f8997a5cf50787965ce538aaa711e9314dd8ac34e0a",
+   "2.9.2": "ec65caa5d071e6948da4984d5103e8524a72df7fc5bdbba7df832423bb7af90c"
+  },
+  "hu_base_a": {
+   "2.7.1": "e83679d1a3af8fb87eb77beac9f6937094b1091d8c26b8a20004644f233d77b5",
+   "2.8.0": "2a3f8cf4bd8323a8dcf2be3f7a74554d3181a15a2d948d29f51bd66f5442c2ff",
+   "2.8.2": "2a3f8cf4bd8323a8dcf2be3f7a74554d3181a15a2d948d29f51bd66f5442c2ff",
+   "2.9.2": "c6b04fc22d7e952943259881deeaff185c06e141daf1235c0175e542637c1c52"
+  },
+  "ast_fld_d": {
+   "2.7.1": "73f8202ddde14218290a45ac3a95bffe37fe3a4805a5f95dd4773f1fb49802f9",
+   "2.8.0": "fbf290b485f5e21d03124d8b337d1fc646352458b8a3b96f34f3c458460588ef",
+   "2.8.2": "fbf290b485f5e21d03124d8b337d1fc646352458b8a3b96f34f3c458460588ef",
+   "2.9.2": "408a0e9f8236606f2cb4d2cb61147a0a5b82bc24e42786a645b74b6a8897c0cc"
+  },
+  "ast_fld_b": {
+   "2.7.1": "6ea96449413443b89a139f39f058b0b83ede7a7b45d1f8d9d7511d203471e4a5",
+   "2.8.0": "3c64a47cf904f12b86b33f42a123675ab22f53081b614309b8885b6c59709bfd",
+   "2.8.2": "3c64a47cf904f12b86b33f42a123675ab22f53081b614309b8885b6c59709bfd",
+   "2.9.2": "0170adc1d7ab7eb61423e3527ae419e134d6853e94d57f582dd6ed5b097ba24d"
+  },
+  "ast_fld_c": {
+   "2.7.1": "ae7d21653f94c573d49b6fc15f2bafcd4b74dfddd86429b41508d247c9ec3a14",
+   "2.8.0": "a1a6e9a27918bc18d2e94a086087de54ee9b1542be7aae4929c0b39c37a898d3",
+   "2.8.2": "a1a6e9a27918bc18d2e94a086087de54ee9b1542be7aae4929c0b39c37a898d3",
+   "2.9.2": "e667ea6d513ca0ca8648db2bee3ff6ea526812ea150a0fad393242e9cd37e87b"
+  },
+  "ast_fld_a": {
+   "2.7.1": "c8f0bf0b3317678653b1aa1a4b1253d0bc4349602cbb4d890509f8c8a9860c49",
+   "2.8.0": "b2b423005ce52d76cc93029171a68d0ab9d0fe679058d8248d51360f9481e93c",
+   "2.8.2": "b2b423005ce52d76cc93029171a68d0ab9d0fe679058d8248d51360f9481e93c",
+   "2.9.2": "afe75708078bf0c1d44f0c42a2f875aa032f24098972240ffb82c1f6879f0a63"
+  },
+  "ctf_base": {
+   "2.7.1": "bc537ff40fb9b943b2df85b23d04fbefb357ba1d4a8e6459ba03f7673dfefe6a",
+   "2.8.0": "1c80b5d1cbeb6b9479c6fce7f49b3259f4fcd7df4a75b6732070f9c81c74b7e8",
+   "2.8.2": "1c80b5d1cbeb6b9479c6fce7f49b3259f4fcd7df4a75b6732070f9c81c74b7e8",
+   "2.9.2": "ecd27e71c4f1fc220d1613eb4d4e6beaf8aa349867cc7ff507b2fb16b9a9b5b9"
+  },
+  "ctf_arena": {
+   "2.7.1": "c3c399dee3e9ab3767b5679d32397ef3643c46c8a8d4776659c05b9444fffe0f",
+   "2.8.0": "ce051093e893fa3ad5fd2b22be91a5baa93b91a6ffaa1a41307cdb8621bb74a9",
+   "2.8.2": "ce051093e893fa3ad5fd2b22be91a5baa93b91a6ffaa1a41307cdb8621bb74a9",
+   "2.9.2": "942b92f5a078579824d9e31df36c6388c1d6fe7087436de7d9eaf0161bb31ae5"
+  },
+  "ctf_arena_b": {
+   "2.9.2": "b89946f1e921f1820c4df4d9e8d1bb03bcdbe40f25640353f098dfc742390a0d"
+  }
+ }
+}

@@ -1,0 +1,29 @@
+{
+  "source_sha256": "4b6c35e2b3ab473bd98c0afa6538079ee78678d85c28406c07bc27a08cc78c7e",
+  "capacity": 30,
+  "constructor": "0x4C26D0",
+  "filter": "0x4C2730",
+  "zero_rejected": true,
+  "recent_duplicates_rejected": true,
+  "evicted_duplicate_accepted": true,
+  "receive_probe": {
+    "packets_received": 5,
+    "acknowledgments": 5,
+    "remove_player_calls": [
+      2,
+      3
+    ],
+    "duplicate_dispatches": 0,
+    "server_retry_cleared_by_client_ack": true,
+    "entry": "0x4863C8",
+    "removal_case": "0x430710",
+    "mocked": [
+      "packet initialization/address setup",
+      "Winsock address conversion",
+      "ACK transmission",
+      "RemovePlayer body"
+    ],
+    "scope": "admitted-peer wrapper path and removal case; no wire decode, sender lookup, world destruction or rendering"
+  },
+  "scope": "isolated original duplicate filter and admitted-peer reliable receive path; not full network dispatch or renderer"
+}

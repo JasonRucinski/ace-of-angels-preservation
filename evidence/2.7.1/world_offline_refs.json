@@ -1,0 +1,49 @@
+{
+ "world_offline_flag": "[CAOAWorld + 0xd00b9]",
+ "refs": 6,
+ "reads": 4,
+ "writes": [
+  "0x4fa1d5",
+  "0x4fbf04"
+ ],
+ "functions": [
+  {
+   "function": "0x47f800",
+   "reads": 1,
+   "files": [],
+   "strings": [
+    "Status (StationGameLoop) forcing game into flight loop."
+   ]
+  },
+  {
+   "function": "0x4fd4a0",
+   "reads": 1,
+   "files": [],
+   "strings": [
+    "WARNING ::CollideMissile pcFrom was NULL",
+    "WARNING ::CollideMissile GetOwner was NULL",
+    "WARNING ::CollideMissile pcTo was a zone"
+   ]
+  },
+  {
+   "function": "0x503068",
+   "reads": 1,
+   "files": [],
+   "strings": [
+    "Resetting comm Stats",
+    "you are no longer in edit mode",
+    "edit mode not allowed -management"
+   ]
+  },
+  {
+   "function": "0x512950",
+   "reads": 1,
+   "files": [],
+   "strings": [
+    "WARNING ::CollideWithFlag pcObj NULL",
+    "WARNING ::CollideWithFlag pcFlag NULL",
+    "CCollisions::CollideWithFlag [%s]->[%s]"
+   ]
+  }
+ ]
+}

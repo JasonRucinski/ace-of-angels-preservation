@@ -1,0 +1,193 @@
+{
+  "schema": 1,
+  "started_utc": "2026-10-23T18:42:19.752943+00:00",
+  "scope": "synthetic loopback and isolated original-code emulation; excludes real-client UI, combat, collision, internet, clean-machine install and performance release gates",
+  "python": "3.12.6",
+  "checks": [
+    {
+      "name": "test_network_bounds.py",
+      "passed": true,
+      "seconds": 5.532,
+      "tests": 6
+    },
+    {
+      "name": "test_relay_motion.py",
+      "passed": true,
+      "seconds": 0.343,
+      "tests": 7
+    },
+    {
+      "name": "test_prepare_client.py",
+      "passed": true,
+      "seconds": 83.172,
+      "tests": 8
+    },
+    {
+      "name": "test_station_runtime.py",
+      "passed": true,
+      "seconds": 8.594,
+      "tests": 7
+    },
+    {
+      "name": "test_station_sessions.py",
+      "passed": true,
+      "seconds": 10.609,
+      "tests": 5
+    },
+    {
+      "name": "test_guest_admission.py",
+      "passed": true,
+      "seconds": 8.297,
+      "tests": 1
+    },
+    {
+      "name": "test_relay_recovery.py",
+      "passed": true,
+      "seconds": 5.922,
+      "tests": 1
+    },
+    {
+      "name": "test_station_stub.py",
+      "passed": true,
+      "seconds": 50.235,
+      "tests": 25
+    },
+    {
+      "name": "test_combat_delivery.py",
+      "passed": true,
+      "seconds": 10.593,
+      "tests": 1
+    },
+    {
+      "name": "test_client_extensions.py",
+      "passed": true,
+      "seconds": 16.032,
+      "tests": 1
+    },
+    {
+      "name": "test_lan_dogfight.py",
+      "passed": true,
+      "seconds": 16.187,
+      "tests": 4
+    },
+    {
+      "name": "test_scene_nodes.py",
+      "passed": true,
+      "seconds": 1.5,
+      "tests": 3
+    },
+    {
+      "name": "test_online_terrain.py",
+      "passed": true,
+      "seconds": 10.625,
+      "tests": 6
+    },
+    {
+      "name": "test_host_control.py",
+      "passed": true,
+      "seconds": 3.188,
+      "tests": 4
+    },
+    {
+      "name": "test_asteroid_render.py",
+      "passed": true,
+      "seconds": 12.796,
+      "tests": 5
+    },
+    {
+      "name": "test_solid_world_render.py",
+      "passed": true,
+      "seconds": 19.766,
+      "tests": 5
+    },
+    {
+      "name": "test_station_detail.py",
+      "passed": true,
+      "seconds": 17.406,
+      "tests": 5
+    },
+    {
+      "name": "test_world_detail.py",
+      "passed": true,
+      "seconds": 17.703,
+      "tests": 5
+    },
+    {
+      "name": "test_internet_play.py",
+      "passed": true,
+      "seconds": 47.594,
+      "tests": 8
+    },
+    {
+      "name": "test_cursor_warp.py",
+      "passed": true,
+      "seconds": 0.766,
+      "tests": 4
+    },
+    {
+      "name": "test_texture32.py",
+      "passed": true,
+      "seconds": 17.062,
+      "tests": 6
+    },
+    {
+      "name": "test_aoapack_write.py",
+      "passed": true,
+      "seconds": 68.891,
+      "tests": 5
+    },
+    {
+      "name": "test_frame_clock.py",
+      "passed": true,
+      "seconds": 1.703,
+      "tests": 5
+    },
+    {
+      "name": "emulate_station_request.py",
+      "passed": true,
+      "seconds": 1.109
+    },
+    {
+      "name": "emulate_station_aliases.py",
+      "passed": true,
+      "seconds": 1.032
+    },
+    {
+      "name": "emulate_reliable_history.py",
+      "passed": true,
+      "seconds": 1.156
+    },
+    {
+      "name": "emulate_movement.py",
+      "passed": true,
+      "seconds": 1.016
+    },
+    {
+      "name": "emulate_motion_state.py",
+      "passed": true,
+      "seconds": 1.062
+    },
+    {
+      "name": "emulate_archive_terminator.py",
+      "passed": true,
+      "seconds": 5.047
+    },
+    {
+      "name": "emulate_client_extensions.py",
+      "passed": true,
+      "seconds": 4.844
+    },
+    {
+      "name": "emulate_ordered_events.py",
+      "passed": true,
+      "seconds": 1.781
+    },
+    {
+      "name": "emulate_terrain_nodes.py",
+      "passed": true,
+      "seconds": 0.922
+    }
+  ],
+  "passed": true,
+  "tests": 127
+}

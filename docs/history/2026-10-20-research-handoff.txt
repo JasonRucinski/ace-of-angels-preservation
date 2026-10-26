@@ -1,0 +1,1236 @@
+ACE OF ANGELS — RESEARCH AND TECHNICAL HANDOFF FOR CLAUDE CODE
+Research checked: 20 October 2026
+
+PURPOSE
+
+Continue the preservation and multiplayer-server investigation for Ace of Angels,
+the late-1990s/early-2000s 3D space combat game by Flying Rock Enterprises (FRE).
+The user first requested a working game download, the developers' complete
+fictional universe, and evidence of a revival. The work then expanded to deeper
+archive searches, additional releases, and possible multiplayer host files.
+
+This document contains the verified results, exact retrieval links and hashes,
+static binary findings, source links, archive coverage, and unresolved leads.
+It is a handoff of completed research, not a claim that multiplayer now works.
+
+The original research files were in another ChatGPT environment. Claude Code
+will NOT automatically have those files. Download the public originals using
+the manifest below, or ask the user for any files they have retained. Temporary
+paths in the final evidence section are provenance references only.
+
+1. CURRENT STATE — READ THIS FIRST
+
+• Five complete installers were recovered and inspected: runtime versions
+  2.0.0, 2.7.1, 2.8.0, 2.8.2, and 2.9.2. A sixth recovered binary is a standalone
+  replacement client, version 2.3.1, without its complete installation assets.
+• All five installers can be read as ZIP/self-extracting archives using Python's
+  zipfile module without executing the Windows installer.
+• The latest recovered package has installer resource version 2.11.1.0, but its
+  embedded game client reports 2.9.2 through its compiled version variables.
+  Do not rename the actual game version 2.11.1 without explaining this conflict.
+• No identifiable dedicated server executable, released server source, account
+  database, or server-state dump was recovered. All five complete installers
+  were inventoried, including checks for PE executables under unusual names.
+• Clients contain valuable network names, default ports, packet-size diagnostics,
+  source-path clues, and packed game data. None of these alone is a working host.
+• The original universe is the Known Sphere. Forgotten Suns is a separate
+  backstory for the later MMO redesign. The official site explains the change.
+• There was a documented OGRE-based restart in 2009–2010. A separate July 2020
+  YouTube announcement by an account identifying itself as original developer
+  Curtis Hartung describes rebuilding the game with Unreal Engine 4.
+• No current 2026 development activity, public UE4 build, or working revived
+  multiplayer service was confirmed. The 2020 announcement is real evidence of
+  intent at that time, not proof that the project is active today.
+• Facebook chatter was part of the user's recollection, but no concrete Facebook
+  revival post or comment permalink was verified. Do not invent one.
+• No installer or game EXE was executed during this work. Gameplay, authentication,
+  connection behavior, and server compatibility have not been tested.
+
+Evidence wording used below:
+CONFIRMED = retrieved bytes, static inspection, or content actually read.
+REPORTED = a source states it, but the underlying event was not independently tested.
+INFERENCE = a conclusion suggested by evidence, with limits stated.
+LEAD = a possible next source, not a recovered or verified deliverable.
+
+2. VERIFIED DOWNLOADS
+
+“Working” means original payload bytes were retrieved during this research,
+not merely that a catalog page returned HTTP 200. These checks were made on
+20 October 2026. Archive services can change or intermittently fail.
+
+The full machine-readable URL/size/hash manifest is Appendix A. Preserve unique
+local filenames because two different versions are both named aoa-current.exe.
+Hashes in that manifest identify the original EXEs, not repackaged ZIP wrappers.
+
+2.1 Version 2.0.0 — full installer
+
+Original filename: aoa2-0-0.exe
+Bytes: 16,708,608
+Source: Wayback capture of Sunet's GamesDomain mirror.
+Direct download:
+https://web.archive.org/web/20020420000855id_/http://ftp.sunet.se:80/pub/pc/games/gamesdomain/demos/aoa2-0-0.exe
+
+The installer contains 17 members. ZIP CRC checks passed. Its game client's
+compiled version variables indicate 2.0.0. Old release-note text saying 1.7.5
+is stale. The 2002 capture date is not the game's build or release date.
+
+2.2 Version 2.3.1 — replacement client only
+
+Original filename: AoAClient.exe
+Bytes: 1,794,048
+Direct download:
+https://web.archive.org/web/20010429190419id_/http://www.aceofangels.com:80/dnloads/AoAClient.exe
+
+This is not a full installer. It needs the surrounding game assets; compatibility
+with any particular recovered full installer was not tested. The archived March
+2001 download page offered a replacement client for existing installations and
+Windows ME, but its advertised size must not be substituted for this later April
+binary's measured size.
+Download-page context:
+https://web.archive.org/web/20010308211502/http://www.aceofangels.com:80/pwgogetit.html
+
+2.3 Version 2.7.1 — full installer and independently accessible client
+
+Original filename: aoa2-7-1.exe
+Bytes: 22,267,683
+Source: PC Master issue 147, January 2002; nested in an Independent Games Festival
+archive on the cover disc. Discmaster exposes the actual nested file.
+Disc index:
+https://discmaster.textfiles.com/browse/37862
+
+The exact full download and direct embedded AOACLIENT.EXE URL are in Appendix A.
+The direct client link was an observed archive href, not a guessed filename.
+It returned HTTP 206 with an MZ payload and a total size of 3,899,392 bytes.
+
+This is the best first analysis target because the port records and packet-size
+diagnostics below have exact offsets for this client.
+
+2.4 Version 2.8.0 — full installer through Old-Games.ru
+
+Stable catalog page:
+https://www.old-games.ru/game/download/8520.html
+Mirror selector:
+https://www.old-games.ru/game/download/get.php?fileid=22845&modal=1
+
+The selector is HTML, not a direct EXE. It supplies current US/RU mirror links.
+Both mirrors returned actual RAR bytes during the research. Their direct URLs
+are signed and expire; obtain fresh ones from the selector instead of preserving
+expired signed URLs in scripts.
+
+Outer RAR: Ace_of_Angels_cancelled_demo_v2_8_0.rar — 28,196,908 bytes.
+Inside: AoA_demo_v2_8_0.exe — 27,918,963 bytes.
+The installer itself can then be opened as ZIP.
+Its client is confirmed by compiled version variables as 2.8.0.
+Installer MD5: 7401dd3d2a54256e60c1bb3e5b35f752
+This matches the historical FilePlanet catalog record:
+https://fileplanet.download.it/p-79711/Ace-of-Angels-Beta-v2-8-0
+
+The current FilePlanet download route is a wrapper rather than the preserved
+original installer. Use Old-Games for the original payload. A Hidden Palace
+entry was also found, but its file was missing; it was not a working source.
+
+2.5 Version 2.8.2 — full installer
+
+Original filename: aoa-current.exe
+Bytes: 28,083,710
+Source: PC Master issue 153, July 2002; nested IGF archive.
+Disc index:
+https://discmaster.textfiles.com/browse/37867
+Exact direct file URL: Appendix A.
+
+The embedded client is 2.8.2, built in February 2002 according to its PE timestamp.
+
+2.6 Version 2.9.2 — latest recovered game client, in a 2.11.1 installer
+
+Original filename: aoa-current.exe
+Bytes: 35,461,120
+Source item:
+https://archive.org/details/family-game-pack-3-mmh-269
+Direct extraction from the disc image:
+https://archive.org/download/family-game-pack-3-mmh-269/Family%20GamePack%203%20MMH269.iso/Games%2FAce%20of%20Angels%2Faoa-current.exe
+ISO contents:
+https://archive.org/download/family-game-pack-3-mmh-269/Family%20GamePack%203%20MMH269.iso/
+Whole ISO, if the nested-file extractor is unavailable:
+https://archive.org/download/family-game-pack-3-mmh-269/Family%20GamePack%203%20MMH269.iso
+
+The direct extraction redirects to an archive-view endpoint and returned real
+MZ bytes, HTTP 200. Whole ISO: 527,499,264 bytes;
+MD5 ca4b06e0af6f95836ff3581b7c702b6a.
+
+Important date/version correction:
+The installer resource says 2.11.1.0. The actual client is 2.9.2. Its PE timestamp
+is 26 September 2003 UTC. The ISO member is dated 20 July 2004 and the disc also
+contains September 2004 files. The item's broad “2002” metadata is unsuitable
+for dating this specific payload. None of these dates proves its public release
+date. Keep the installer label, client version, and disc date separate.
+
+3. EMBEDDED CLIENT IDENTIFICATION
+
+All timestamps in this table are PE header timestamps expressed in UTC. They are
+build metadata, not independently verified release dates. ZIP member timestamps
+have no embedded timezone.
+
+Runtime | Client bytes | PE timestamp UTC | Client SHA-256
+2.0.0 | 1,253,376 | 2000-10-15T23:46:44Z | 2faa8ab2161c2ef83a76627171692e95516b626590f1606b10d9192dace122bd
+2.3.1 | 1,794,048 | 2001-04-10T20:47:36Z | c80cd9f2998d326ffc0b6aa99ea4fdd1a5846411a84d26d12ab99216b7edc61a
+2.7.1 | 3,899,392 | 2001-09-15T01:27:08Z | b179c3c22e6426d55de52d57476aaa53b7e92622009daf754c5153be0b7503a7
+2.8.0 | 2,691,072 | 2002-01-03T09:53:12Z | 809ecfc42c9b2cdb1b2dc54e0945160649f40c32e267d6a96ec7e207f44a9145
+2.8.2 | 2,830,336 | 2002-02-26T02:43:15Z | 4783759e27e5ae64fcc554008037e6a191dba3488067ee945d95caeab000aaba
+2.9.2 | 2,916,352 | 2003-09-26T04:47:08Z | 4b6c35e2b3ab473bd98c0afa6538079ee78678d85c28406c07bc27a08cc78c7e
+
+3.1 How the actual versions were established
+
+The clients contain the format string “Ace of Angels (v%d.%d.%d Beta)”. Static
+cross-references show the three globals passed to that title/log formatting call.
+The file-backed values and relevant zero-initialized virtual data were checked.
+
+Version | Major/minor/patch locations
+2.0.0 | major file 0x120D4C, VA 0x520D4C = 2; minor VA 0x52F038 and patch VA 0x52F03C are zero-initialized virtual data, with no corresponding file bytes.
+2.3.1 | file 0x19A370 / 0x19A374 / 0x19A378 = 2 / 3 / 1.
+2.7.1 | file 0x2838B8 / 0x2838BC / 0x2838C0 = 2 / 7 / 1.
+2.8.0 | file 0x1D16DC = 2; file 0x1D16E0 = 8; patch VA 0x5E3B40 is zero-initialized virtual .data, with no corresponding file bytes.
+2.8.2 | file 0x1D1ECC / 0x1D1ED0 / 0x1D1ED4 = 2 / 8 / 2.
+2.9.2 | file 0x1D1A10 / 0x1D1A14 / 0x1D1A18 = 2 / 9 / 2.
+
+Additional reference points:
+• 2.0.0 format string VA 0x51C134; nine code references per version global were reads.
+• 2.3.1 format string file offset 0x1917B0.
+• 2.8.0 format string file offset 0x1C2464; five format references and twelve
+  references per version global, all reads in the inspected code.
+• 2.7.1, 2.8.2, and 2.9.2 each had five references to the version format.
+
+Map file offsets, RVAs, and VAs through the PE section table. Do not blindly add
+0x400000 to every file offset. Virtual zero-fill matters for 2.0.0 and 2.8.0.
+
+Misleading labels already encountered:
+• Installer resources in the 2.7.1, 2.8.0, and 2.8.2 packages say 2.2.0.0.
+• Old notes say 1.7.5 or 2.3.0; some UI resources say 2.5.4.
+• Installer-stub PE timestamps from 1997/2000 are not client build dates.
+• The Family GamePack installer resource says 2.11.1.0, while its client is 2.9.2.
+
+4. MULTIPLAYER HOST / SERVER FINDINGS
+
+4.1 What was and was not present
+
+All five complete installers were inspected. Member counts were 17, 38, 40, 40,
+and 41 for 2.0.0, 2.7.1, 2.8.0, 2.8.2, and 2.9.2 respectively. Appendix C records
+their full member inventories so the result is reviewable.
+
+No separate multiplayer host executable, server source tree, player-account
+database, or server-state dump was identified. This finding is limited to the
+material inspected. It does not prove that the developers never distributed a
+server, or that an undocumented hosting path cannot exist inside a client.
+
+The earliest package contains the game client and RENEXE.EXE. Later packages
+contain these executable/helper names:
+AOACLIENT.EXE; RENEXE.EXE; OCXREG32.EXE; REGSVR32.EXE; UNWISE32.EXE.
+Other PE components include PROGRESS.DLL, WISE0001.DLL, W32INST.DLL, ACTIVESKIN.OCX.
+
+The helper material relates to update/rename, component registration, and
+uninstallation. RENEXE refers to AoAClient.exe/AoAClient.ex_ and ActiveSkin
+registration. COM's DllRegisterServer export is not a multiplayer-host feature.
+Every extracted member was checked for an MZ signature, including files without
+an executable extension. No extra PE hidden under a data extension was found.
+
+4.2 Game data that may be useful for reconstruction
+
+File | Finding | Limit
+AOADEFAULTS.PRF | Binary HUD/UI preferences | Not identified as host configuration.
+SCHK.DAT | Audio filenames with hexadecimal values/checksums | Not an account database.
+JRMAP.TRN | 38,516 bytes; identical across all five full packages; references AoAObjects.odb and WallTest2 | Map data; does not establish a server.
+AOAOBJECTS.ODB | Packed object database; size changes across releases | Format has not been decoded in this work.
+SCRIPTS.AOA | Opaque packed data | Contents/purpose not fully decoded.
+SCENARIOS.AOA | 1,489 bytes; identical in 2.8.0, 2.8.2, and 2.9.2 | Scenario data; not a standalone simulation host.
+SCRTY.BIN | 256 bytes; identical across all five packages | Purpose unknown. Do not call it an authentication database, server key, or license bypass.
+AS_CHK.BIN | Empty or one zero byte | Purpose not established.
+FILE000x.DAT | Installer resources | Not identified as host payloads.
+aoa.cfg | Referenced by the 2.7.1 client | No such file was present in its installer; contents and role unconfirmed.
+
+Offline UI exists. No explicit host-creation UI was identified. Strings involving
+listen/accept or server-side mission work are insufficient on their own: shared
+code or libraries can contain them. Trace callers and actual control flow.
+
+4.3 Network defaults — exact 2.7.1 client offsets
+
+Records consist of a 64-byte ASCII name followed by a four-byte IEEE-754 float.
+
+Name | Name file offset | Value file offset | Default float
+GAMESERVERPORT | 0x28C3D4 | 0x28C414 | 5031.0
+NAMESERVERPORT | 0x28C418 | 0x28C458 | 5032.0
+STATION_RUNONPORT | 0x28C4E4 | 0x28C524 | 5033.0
+STATION_TCPJOBPORT | 0x28C528 | 0x28C568 | 5034.0
+
+LOCALPORT and SERVERPORT also have default 5033 in the inspected records.
+Related defaults recur in other clients. The 2.0.0 records use 32-byte names,
+so do not use the later record stride when parsing that version.
+Historical hostname found in the clients: aoahost.com.
+
+These are compiled defaults, not independently documented firewall instructions.
+Transport, direction, service ownership, and current endpoints remain to be
+established from code or controlled testing. Do not present an open port or a
+working server as a confirmed finding.
+
+4.4 Packet-size diagnostics — exact 2.7.1 evidence
+
+Structure label | Logged value | Push instruction VA | Format-string VA
+SPacketServerRegister | 61 / 0x3D | 0x476AFE | 0x675DD8
+SPacketRequestServerConnect | 35 / 0x23 | 0x476A95 | 0x675EC0
+SPacketGameserverList | 461 / 0x1CD | 0x47708B | 0x6754C8
+SPacketGameserverConnectStatus | 5 | 0x476B42 | 0x675D5C
+
+These calls use a common logging function at VA 0x60B0C0 and logging object at
+0x6A58B8. A related SGameserverList diagnostic is 46; 461 = 1 + 10 × 46 supports
+the interpretation as compiled structure sizes. There is no literal sizeof
+label, but the call sites and constants are strong size evidence.
+
+Do NOT treat 61, 35, 461, and 5 as confirmed packet opcode IDs. Neither exact
+wire lengths nor field layouts, framing, byte order, handshakes, encryption,
+compression, or a compatible implementation have been established.
+
+Other useful names and debug source-path clues:
+CClientComm; CAOAComm; CStationServer.
+AoA_Client_Comm.cpp; AoA_LoginDlg.cpp; AoA_StationDlg.cpp; AoA_World.cpp;
+PlayerLoginInfo.cpp; AoA_MissionData.cpp.
+AoAClientCode; AoAIncludeCode; AoADBaseCode; AoAAICode.
+These are strings/debug paths in compiled binaries, not recovered source files.
+
+4.5 Primary sources describing the original online system
+
+Getting Started manual, captured 9 November 2002:
+https://web.archive.org/web/20021109070112/http://www.aceofangels.com:80/game/manual/GettingStarted.html
+It describes login, an offline checkbox that runs locally without logging in,
+the Station, chat, and selection from game servers. It gives historical default
+IP 66.154.81.19. The 2.0.0 client also contains the older address 216.99.36.129.
+These are historical evidence, not verified current FRE hosts. Do not direct
+test traffic to an old address on the assumption it still belongs to FRE.
+
+Developer Jolly Roger, 12 April 2001, explaining damage calculation:
+https://web.archive.org/web/20010424150604/http://www.flyingrockllc.com:80/ubb/Forum1/HTML/000380.html
+He says the client reports a hit and the guns fired, while the server calculates
+damage. This supports an authoritative server role for that part of combat.
+
+Maintenance announcement, 9 June 2001:
+https://web.archive.org/web/20010615130629/http://www.flyingrockllc.com:80/ubb/Forum2/HTML/000049.html
+Scheduled hosted-games discussion, 21 March 2001:
+https://web.archive.org/web/20010418021221/http://www.flyingrockllc.com:80/ubb/Forum3/HTML/000029.html
+Original download page explaining designer-hosted scenarios:
+https://web.archive.org/web/20010308211502/http://www.aceofangels.com:80/pwgogetit.html
+“Hosted games” in this context means sessions run by the designers. It is not
+an offer of a downloadable hosting package.
+
+FRE interview, 26 February 2002:
+https://gamedev.net/tutorials/industry/interviews/flying-rock-enterprises-r1776
+It identifies Curt/Jolly Roger as responsible for server work and networking,
+with Ahmed leading graphics/software work. This makes Curt a relevant original
+developer lead, but no server backup or source copy was confirmed in his hands.
+
+Historical FRE company page:
+https://web.archive.org/web/20020207220121/http://www.aoahost.com:80/info.html
+The domain was genuinely associated with FRE in the 2001–2002 captures. By late
+2004 it showed a different clan. Do not assume present ownership from old content.
+
+Related manuals and historical license:
+https://web.archive.org/web/20020712012700/http://www.aceofangels.com:80/game/manual/controlsandcommands.html
+https://web.archive.org/web/20010624062438/http://www.aceofangels.com:80/manual/othergamesettings.html
+https://web.archive.org/web/20010303164930/http://aceofangels.com:80/game/faqs.html
+https://web.archive.org/web/20030712200548/http://www.aceofangels.com:80/downloads/license.html
+
+5. OFFICIAL WEBSITE AND FICTIONAL UNIVERSES
+
+Best broad archived homepage:
+https://web.archive.org/web/20110128084333/http://www.aceofangels.com/
+The site contains extensive history, nations, alien races, ships, technology,
+and fiction. A complete 106-page official menu index is included in Appendix B.
+
+5.1 Known Sphere — original setting
+
+Main entry, The Known Sphere – Campaign:
+https://web.archive.org/web/20090228131034/http://www.aceofangels.com:80/?page_id=346
+This presents a forthcoming campaign during the Great War at the start of the
+26th century. Its feature descriptions are plans, not proof that those features
+all shipped. The introduction says eight alien races and ten nations, while the
+menu has a different number of nation entries. Preserve that source inconsistency.
+
+Nations:
+https://web.archive.org/web/20090228131037/http://www.aceofangels.com:80/?page_id=354
+The menu includes the Colonial Republic, Confederacy, Drake, Greater Imperium,
+Hashir Alliance, Imperial League, Irrosa Homeworld Federation, Sho'tahl Republic,
+Sildatha Alliance, United Zethi Commonwealth, and Vosha Monarchy.
+
+History:
+https://web.archive.org/web/20090228131133/http://www.aceofangels.com:80/?page_id=404
+Chronology:
+https://web.archive.org/web/20090228173235/http://www.aceofangels.com:80/?page_id=428
+The Long Look Down:
+https://web.archive.org/web/20090228173633/http://www.aceofangels.com:80/?page_id=433
+Technology:
+https://web.archive.org/web/20090228130837/http://www.aceofangels.com:80/?page_id=406
+Ship classes:
+https://web.archive.org/web/20090228174206/http://www.aceofangels.com:80/?page_id=516
+Ship descriptions:
+https://web.archive.org/web/20090228173240/http://www.aceofangels.com:80/?page_id=448
+
+5.2 Forgotten Suns — separate MMO backstory
+
+Main entry:
+https://web.archive.org/web/20090228131017/http://www.aceofangels.com:80/?page_id=111
+Set in the fourth millennium, this describes a frontier after an interstellar
+war, with settlers, refugees, corporations, prospectors, and mercenaries.
+
+Developer explanation by Seenar, 19 January 2009:
+https://web.archive.org/web/20090228131008/http://www.aceofangels.com:80/?p=326
+It explains that Outerchange was set in the Known Sphere, which had been created
+for the multiplayer Campaign. FRE moved the MMO redesign to a new Forgotten
+Suns backstory to suit the intended mechanics, while retaining a future intention
+to return to Known Sphere for a campaign product. Do not merge the two settings.
+
+5.3 Older site structures and fictional news
+
+Original universe entry:
+https://web.archive.org/web/20010127072200/http://www.aceofangels.com:80/universe/universe.html
+Alternate entry:
+https://web.archive.org/web/20010127075800/http://www.aceofangels.com:80/universe/universe_nf.html
+Earlier Known Sphere page:
+https://web.archive.org/web/20010307180120/http://www.aceofangels.com:80/AoAUniverse/KnownSphere.html
+Earlier history:
+https://web.archive.org/web/20010521043903/http://www.aceofangels.com:80/AoAUniverse/history.html
+Earlier chronology:
+https://web.archive.org/web/20021124162447/http://www.aceofangels.com:80/AoAUniverse/chronology.html
+Earlier Long Look Down:
+https://web.archive.org/web/20010707130101/http://www.aceofangels.com:80/AoAUniverse/longlookdown.html
+Earlier technology:
+https://web.archive.org/web/20010628202249/http://www.aceofangels.com:80/AoAUniverse/tech.html
+
+Jericho's Trumpet fictional news:
+https://web.archive.org/web/20010305200913/http://aceofangels.com:80/headlines/jerichostrumpet.html
+https://web.archive.org/web/20010307123118/http://aceofangels.com:80/headlines/jerichostrumpet2.html
+https://web.archive.org/web/20021125170524/http://www.aceofangels.com:80/headlines/jerichostrumpet3.html
+
+The successful URL inventory contains 1,594 cgi-local/openarticle.pl?... records.
+This is a substantial lead for preserving the fictional news, but the count is
+URL records, not verified unique articles. Duplicate or malformed query variants
+may be included. Their bodies were not all read.
+
+Appendix B records successful CDX capture entries for all 106 menu pages. The main
+universe pages, history/nations, transition article, credits, and homepage were
+reopened. A successful index record does not guarantee that every body, image,
+frame, or linked asset has been individually checked or fully preserved.
+
+6. REVIVAL EVIDENCE AND SOCIAL TRAILS
+
+6.1 July 2020 YouTube announcement — strongest later revival evidence
+
+Video: Ace of Angels, uploaded by gibbed, published 17 November 2006.
+https://www.youtube.com/watch?v=CrZR9Ykxr80
+
+Pinned comment by @curtishartung5220, displayed as Curtis Hartung:
+https://www.youtube.com/watch?v=CrZR9Ykxr80&lc=UgwVu89rFYZ017rZwKJ4AaABAg
+Channel ID: UCCYDffOj33PhQjOsV5MY0SQ
+
+The comment explicitly dates itself July 2020, identifies its author as an
+original developer, says he is rebuilding the game, and asks former players,
+especially Ghost Legion members, to reconnect. The account's name/claim and
+historical developer credits support the connection; an official account-link
+verification or verified badge was not established.
+
+Reply describing UE4, spare-evening work, and ideas for a community site/alpha:
+https://www.youtube.com/watch?v=CrZR9Ykxr80&lc=UgwVu89rFYZ017rZwKJ4AaABAg.9BTEIAwfd_O9BTOT2F3xTg
+Reply about motivation:
+https://www.youtube.com/watch?v=CrZR9Ykxr80&lc=UgwVu89rFYZ017rZwKJ4AaABAg.9BTEIAwfd_O9BTOH37bWc4
+Later question about testing/progress:
+https://www.youtube.com/watch?v=CrZR9Ykxr80&lc=UgwVu89rFYZ017rZwKJ4AaABAg.9BTEIAwfd_OA-aUaTxlM6p
+
+All eleven replies in the pinned thread were retrieved. No newer developer
+progress answer was observed among them. Other comment dates were relative;
+do not manufacture exact posting dates from those labels.
+
+Other useful comments:
+Bryan-named participant recalling funding history:
+https://www.youtube.com/watch?v=CrZR9Ykxr80&lc=UgxXLlRWfISw9vRftep4AaABAg
+Old-player comment expressing the belief that server code was never released:
+https://www.youtube.com/watch?v=CrZR9Ykxr80&lc=UgiCnx6qplOLzXgCoAEC
+The latter is a qualified recollection, not definitive developer confirmation.
+
+Correction to any earlier summary: revival evidence does not stop in 2010.
+The July 2020 UE4 announcement is later and must be included. Conversely, it does
+not establish a playable new release or continuing activity in 2026.
+
+6.2 The distinct 2009–2010 restart
+
+Official credits identify OGRE as the engine:
+https://web.archive.org/web/20090228130842/http://www.aceofangels.com:80/?page_id=426
+
+Closed-alpha statement, preserved by 4 July 2009:
+https://web.archive.org/web/20090704184718/http://www.aceofangels.com:80/forum/topic.php?id=79
+Another closed-alpha/download-request discussion:
+https://web.archive.org/web/20090704184713/http://www.aceofangels.com:80/forum/topic.php?id=78
+Restart discussion:
+https://web.archive.org/web/20090704184707/http://www.aceofangels.com:80/forum/topic.php?id=77
+Offer of closed-alpha access to a former player:
+https://web.archive.org/web/20090704184650/http://www.aceofangels.com:80/forum/topic.php?id=49&page=2
+
+Technical discussion of OGRE, Hikari/Flash UI, Linux/Mac, and a failed Wine attempt:
+https://web.archive.org/web/20090704184701/http://www.aceofangels.com:80/forum/topic.php?id=76#post-1064
+Jolly Roger says most code can compile for Linux/Mac, while the Hikari UI library
+is Windows-only. This does not establish the OS of the original 2000–2003 server.
+The forum shows relative post ages; July 2009 is the capture boundary, not a
+recovered exact posting date for every contribution.
+
+Work Continues, Jolly Roger, 1 February 2010:
+https://web.archive.org/web/20100415182134/http://www.aceofangels.com:80/?p=1232
+Announces resumed development after a hiatus and plans for alpha tests.
+
+Getting Back to the Code, 2 February 2010, visible on this homepage capture:
+https://web.archive.org/web/20110128084333/http://www.aceofangels.com/
+Mentions Lua-based user-editable UI work, mission work, and contributor Ash.
+This is a 2011 capture of a 2010 post, not a new 2011 development announcement.
+
+No public installer for this 2009–2010 alpha, or its server/source, was recovered.
+
+6.3 Reddit
+
+Reddit, r/Eve, thread beginning 2 May 2016 by beanforge:
+https://www.reddit.com/r/Eve/comments/4hfv63/help_me_remember_a_beta_i_played_in_1998/
+Its link to the old gibbed video led to the later pinned YouTube announcement.
+It is a useful identification/community trail, not a fresh developer release.
+No newer developer announcement was verified on Reddit in this research.
+
+6.4 October 2024 ResHax asset-format thread
+
+https://reshax.com/topic/1174-ace-of-angels-aoa-files/
+Posted by Googler123 on 14 October 2024. The author wants to extract models from
+custom .aoa files and links the historical FilePlanet 2.8.0 beta.
+Public sample-folder link in that post:
+https://drive.google.com/drive/folders/1d1XGbZ8diyfYkGW_010a9fYYMvWbMiem
+
+The folder contents were NOT inspected. The author reports that sounds.aoa is
+rewritten on first startup and that SCHK.DAT contains audio filenames with hex
+values. The rewrite is a third-party runtime observation, not something tested
+in this research. No extractor solution or reply was visible on the opened page.
+This is a useful asset-format lead, not an FRE revival or a verified server file.
+
+7. DEVELOPERS, ALIASES, AND SOURCE-REPOSITORY LEADS
+
+Official original creator table:
+https://web.archive.org/web/20010127014100/http://www.aceofangels.com:80/credits/creators.html
+Official 2009 credits:
+https://web.archive.org/web/20090228130842/http://www.aceofangels.com:80/?page_id=426
+2002 interview:
+https://gamedev.net/tutorials/industry/interviews/flying-rock-enterprises-r1776
+
+Verified useful identity mappings:
+• G. Curtis / Curt Hartung — Jolly Roger; original communications/flight code,
+  server work, and the most relevant original networking lead.
+• Bryan G. Stephens — Seenar; campaign work, company leadership, coordination.
+• Jamey / J. A. Wagnon — Uati; campaign work and military history.
+• Ahmed A. Siddique — graphics-engine lead.
+• Michael G. Wymer — Ash; code/web work, later UI/mission contributor.
+• Tim L. Spanjer — Doggnutz; art/web work, joined the team in 2000 per interview.
+• Linda M. Stephens — Rintell in original credits, Fearless_AoA in interview;
+  biology/military consultation and business roles in the respective sources.
+• Paul Gilreath — music in original credits.
+
+Curt's separate original biography is deliberately absurd comedy. Its medieval
+dates and invented claims must not be imported into a factual biography.
+
+Exact-title/company searches on GitHub, GitLab, and Codeberg yielded no relevant
+public source project. grep.app searches for AoADBaseCode, CAOAComm, and
+SPacketServerRegister also yielded no relevant code.
+
+No messages, emails, or contact requests were sent. The research request did not
+authorize contacting developers, players, or site operators.
+
+8. ARCHIVE SEARCHES ALREADY COMPLETED
+
+These searches went beyond web-search-engine results into native file indexes,
+nested disc contents, Wayback CDX records, and archival inventories. Negative
+results are limited to inspected holdings and successful queries.
+
+8.1 Discmaster / cover discs
+
+Used native filename, content/OCR, and hash searches. Representative queries:
+https://discmaster.textfiles.com/search?q=aceofangels&qfields=t&mode=deep&limit=300&outputAs=json
+https://discmaster.textfiles.com/search?q=AoAServer.exe&qfields=name&mode=quick&limit=300&outputAs=json
+
+Observed search coverage:
+• aceofangels content search: 44 hits reviewed.
+• aoa* EXE/archive files over 1 MB: 60 hits.
+• aoa* EXE without size limit: 37 hits.
+• Exact AoAServer, AoAHost, AoADemon, and AoADaemon filename searches: no results.
+• aoaclient content search: 131 hits were driver profiles, not new game payloads.
+• BLAKE3 searches for the known Discmaster installers/clients returned their
+  existing PC Master occurrences, with no additional copy located.
+
+False positives and non-payload references:
+• Winamp skin AceAmp.ws in Nullsoft archive 42989: related skin, not the game.
+• CD Life February 2001, item 45454 / IA pc-life-subat-2001-cd: menu/OCR reference
+  to the game, but no corresponding installer located in the inspected disc.
+• Czech news item 44531: articles only.
+• Revista Geek 19, item 44604, aoa.exe: an Art of Assembly PDF, unrelated.
+
+Some broad quoted-content and misspelled aceofangles content searches timed out.
+Do not describe those failed queries as an exhaustive zero-result search.
+
+8.2 Internet Archive collection inventories
+
+https://archive.org/details/ftp.sunet.se-games
+https://archive.org/details/ftp.sunet.se-pc
+https://archive.org/details/ftp.sunet.se-simtelwin
+Their inventories contained 71,833, 166,315, and 54,583 entries respectively:
+292,731 in total, with some overlap. No additional AoA payload was found.
+
+https://archive.org/details/2008.ftp.bundle.collection
+Eight partial .idx inventories, 14,569 entries, produced no AoA file.
+
+https://archive.org/details/mbnet_semimanual_grab_late_2022
+A compressed CDX of 12,259,486 bytes with more than 385,000 rows was searched;
+mostly personal web pages, with no game payload found. Eight freeoldgames
+collections were also checked without another AoA installer or host.
+
+8.3 Live FTP mirrors and filename indexes
+
+Gamers.org, Infania, Sunet, Funet, ICM, UK Mirror Service, and TASK trees were
+checked without an additional payload. Useful starting points:
+https://www.gamers.org/pub/mirrors/ftp.gamesdomain.co.uk/
+https://ftpmirror.infania.net/pub/gamesdomain/
+https://ftp.sunet.se/mirror/archive/ftp.sunet.se/pub/
+https://ftp.zx.net.nz/cgi-bin/grep-index?aoa,AOA,aceof,ACEOF
+
+The zx.net.nz filename index was about 111 MB and produced no relevant payload.
+Some mirror operations returned intermittent 503s or incomplete indexes. Those
+limits remain; do not claim every historical FTP tree is fully preserved/read.
+
+8.4 Wayback domains and forums
+
+Successful original-URL inventories inspected:
+• aceofangels.com: 2,837 URL records.
+• flyingrockllc.com: 12,932 URL records.
+• Combined: 15,769 successful URL records, not a count of pages fully read.
+• aoahost.com: 29 successful URL records.
+
+All-status binary-related capture records were also inspected for additional
+filenames, without another server package. 598 archived forum titles were
+reviewed, with targeted thread bodies read, plus later 2006–2008 forums and
+seventeen snapshots of 2009 topics. No public host/source release was located.
+
+The misspelled aceofangles.com appears in an official 2004 link pointing at
+dnloads/aoa-current.exe. It is an observed historical alias/link lead, not proof
+of a different release, present ownership, or a current download.
+
+8.5 Restricted holdings — not inspected
+
+https://archive.org/details/Fileplanet_index.htmls_and_logs_scraped_by_id
+https://archive.org/details/Fileplanet_ftp1_gamedemos
+
+Metadata/file access showed restrictions; file requests returned 401/403.
+The contents were not inspected and no access restriction was bypassed.
+Do not describe these holdings as verified download sources or searched payloads.
+
+9. SPECIFIC MISSING RELEASES / ASSETS TO KEEP AS LEADS
+
+These are historical filenames/catalog records, NOT recovered working downloads.
+
+9.1 4Players public beta V2.001
+Filename: aoa2-0-0-1.exe
+Historical URL:
+http://ftp.4players.de/pub/aoa/aoa2-0-0-1.exe
+No original bytes recovered. A different 4Players label “V2.3” linked aoa2-0-0.exe;
+do not count that label alone as a separate full 2.3 release.
+
+9.2 Version 2.5.4
+Developer Jolly Roger post dated 30 June 2001:
+https://web.archive.org/web/20010718043717/http://www.flyingrockllc.com:80/ubb/Forum4/HTML/000348.html
+Historical installer URL:
+http://aceofangels.com/dnloads/aoa2-5-4.exe
+No original installer recovered.
+
+9.3 Higher-quality music
+Historical URLs:
+http://ftp.4players.de/pub/4players/aoa/music.zip
+http://www.flyingrockllc.com/dnloads/music.wav
+No original payload recovered from these URLs. The relevant later 4Players
+captures were 2022 HTTP 302 redirects, not preserved game/music bytes.
+
+9.4 MBnet and Apaja aliases
+
+Catalog CSV:
+https://archive.org/download/mbnet_files_09-01-2005/mbnet_files_09-01-2005_v2.csv
+
+Name | Record ID | Catalog size | Catalog date | Description
+AOADEMO.ZIP | 31470 | 15.9 MB | 2000-10-24 | AoA demo
+AOA280.ZIP | 43701 | 26.6 MB | 2002-01-12 | AoA 2.8.0 package
+AOAHQM.ZIP | 47175 | 27.6 MB | 2000-10-26 | Higher-quality WAV replacement
+ACEOFAD.ZIP | 83259 | 26.8 MB | 2002-03-31 | Apaja demo record
+
+Apaja record:
+https://www.apajalista.net/id?id=83259
+Related catalog IDs can be queried with the same id parameter (31470, 43701).
+These records establish catalog listings, not payload availability. Several may
+be aliases/repackagings of already recovered builds; do not count them as new
+versions unless client bytes establish a difference.
+
+10. NEXT WORK FOR CLAUDE CODE
+
+The most useful next step is a reproducible static analysis of the original
+network client, using 2.7.1 as the reference and 2.9.2 for comparison. Repeating
+broad searches should have a specific new archive, filename, or code clue.
+
+Suggested sequence:
+
+1) Download the original 2.7.1 installer and the Family GamePack installer using
+   Appendix A. Verify SHA-256 and preserve immutable originals with unique names.
+   Optionally retrieve the other versions for code/data comparisons.
+2) Read their ZIP directories and extract only selected members at first. Do not
+   run the installer merely to unpack it. Keep each build in a separate folder.
+3) Reproduce the client identity, version variables, network records, and packet
+   diagnostic call sites listed above. Record tool versions and exact addresses.
+4) Trace login, name-server, Station, and game-server connection paths. Find
+   serializers, dispatch tables, message IDs, framing, lengths, transport setup,
+   disconnect handling, and any version negotiation. Separate evidence from
+   hypotheses in the resulting protocol notes.
+5) Compare offline world initialization with online entry and simulation paths.
+   Determine whether substantial authoritative simulation exists in the client,
+   and whether a real reachable hosting mode exists. Shared strings are not enough.
+6) Trace readers for AOAOBJECTS.ODB, SCRIPTS.AOA, SCENARIOS.AOA, SCRTY.BIN, and
+   related files. Check the ResHax sample-folder lead if it adds useful material.
+7) Produce a protocol specification and missing-component list before claiming
+   that a minimal server can be implemented. A login emulator, Station service,
+   and authoritative game simulation may be different amounts of work.
+8) If runtime analysis becomes necessary, use an isolated local environment with
+   controlled endpoints. Do not send traffic to historical IPs by default.
+9) Revisit original developer backups/source as a lead only with concrete evidence.
+   No one has confirmed possession of a surviving server copy. Ask the user
+   before sending any outside messages.
+
+No server emulator, source patch, asset extractor, or working multiplayer setup
+was produced during this research.
+
+11. SMALL REPRODUCTION EXAMPLES
+
+A standard-library inspection snippet, after downloading a file locally:
+
+    from pathlib import Path
+    import hashlib, zipfile
+
+    path = Path("aoa_2.7.1_full.exe")
+    print(path.stat().st_size)
+    print(hashlib.sha256(path.read_bytes()).hexdigest())
+    with zipfile.ZipFile(path) as archive:
+        for member in archive.infolist():
+            print(member.filename, member.file_size, f"{member.CRC:08x}")
+        names = [n for n in archive.namelist()
+                 if n.replace("\\", "/").split("/")[-1].lower() == "aoaclient.exe"]
+        assert len(names) == 1
+        Path("aoaclient_2.7.1.exe").write_bytes(archive.read(names[0]))
+
+That writes a chosen output filename rather than trusting an archive member path.
+For the Old-Games payload, first extract the outer RAR with a suitable archive
+reader, then apply the same ZIP inspection to its inner EXE.
+
+Recheck the four known 2.7.1 float defaults:
+
+    import struct
+    data = open("aoaclient_2.7.1.exe", "rb").read()
+    for label, offset in [
+        ("GAMESERVERPORT", 0x28C414),
+        ("NAMESERVERPORT", 0x28C458),
+        ("STATION_RUNONPORT", 0x28C524),
+        ("STATION_TCPJOBPORT", 0x28C568),
+    ]:
+        print(label, struct.unpack_from("<f", data, offset)[0])
+
+Discmaster URL forms observed for these files:
+/file/ retrieves a file; /view/ presents its metadata; /browse/ lists its archive
+contents. Preserve the full nested path. The direct AOACLIENT.EXE link in the
+manifest was actually observed and checked; do not assume other paths exist.
+
+Wayback raw bytes/content use id_ after the exact capture timestamp. Human-readable
+replay links omit id_. A CDX length is a stored archive-record measurement, not
+the original installer's true byte size. Count payload bytes yourself and hash.
+
+12. ORIGINAL ENVIRONMENT EVIDENCE MAP
+
+These paths existed in the prior research environment and are not attachments
+to this handoff. Claude Code must not assume they exist in its working directory.
+
+Original downloaded binaries:
+/tmp/aoa2-0-0.exe
+/tmp/aoa_binary2001.exe
+/tmp/aoa-271.exe
+/tmp/aoa-oldgames-280.exe
+/tmp/aoa-july2002.exe
+/tmp/aoa-family-current.exe
+
+Selected extracted clients:
+/tmp/aoa2-0-0-client.exe
+/tmp/aoaclient-271.exe
+/tmp/aoaclient-july2002.exe
+/tmp/aoaclient-2111.exe  (misleading local label: actual runtime is 2.9.2)
+
+Audit directories:
+/tmp/aoa-package-audit/{2000,271,280,282,292}/
+/tmp/aoa-server-analysis/
+
+Static version helper:
+/tmp/aoa_version_probe.py
+It searches version-format references and uses objdump. Its original mapper
+handles file-backed bytes only; extend it to handle virtual zero-fill before
+using it to identify the 2.0.0 or 2.8.0 patch values automatically.
+
+Archive inventories and source captures:
+/tmp/aoa_ace_urls.json
+/tmp/aoa_fre.data
+/tmp/aoa_aoahost.data
+/tmp/aoa_alpha2010.data
+/tmp/aoa_handoff_*.html and matching .txt
+/tmp/aoa_server_*.html and matching .txt
+
+YouTube records:
+/tmp/aoa_yt_CrZR9Ykxr80_comments1.json
+/tmp/aoa_yt_CrZR9Ykxr80_pinned_replies.json  (first seven replies)
+/tmp/aoa_yt_CrZR9Ykxr80_pinned_replies_more_0.json  (four additional replies)
+/tmp/aoa_yt_CrZR9Ykxr80_player.json
+/tmp/aoa_yt_CrZR9Ykxr80_data.json
+/tmp/aoa_yt_curt_about.json
+/tmp/aoa_yt_curt_videos.json
+
+Relevant parsed YouTube fields were commentEntityPayload.properties.commentId,
+properties.content.content, properties.publishedTime, author.displayName, and
+author.channelId. The exact public comment IDs/links above make the social trail
+portable even without those saved responses.
+
+The complete lore index is embedded below so it does not depend on a temporary
+JSON file. The binary inventories and hash manifest are likewise embedded.
+
+13. PASTE-READY STARTING INSTRUCTION
+
+Read this handoff in full and continue the Ace of Angels preservation/server
+investigation. Start from the verified 2.7.1 and 2.9.2 clients. Download the
+originals, verify their manifest hashes, and inspect them without executing the
+installers. Reproduce the version/port/packet diagnostics, then map connection
+handlers, packet framing and dispatch, offline simulation, and any real host
+path. Produce reproducible evidence and protocol notes, separating confirmed
+facts from hypotheses. No standalone server has been recovered; do not assume
+one is present, mistake packet sizes for opcodes, or call the latest client
+2.11.1. Use the archive/search history to avoid repeating completed searches.
+Do not assume access to the prior environment's /tmp files. Do not contact anyone
+or test historical public IPs without separate authorization.
+
+APPENDICES FOLLOW
+
+
+APPENDIX A. MACHINE-READABLE DOWNLOAD MANIFEST
+
+The text between the following markers is valid JSON.
+
+BEGIN_DOWNLOAD_MANIFEST_JSON
+{
+  "checked_date": "2026-10-20",
+  "hash_scope": "Original EXEs; not repackaged wrappers or the outer RAR unless a field explicitly says so.",
+  "downloads": [
+    {
+      "runtime_version": "2.0.0",
+      "kind": "full_installer",
+      "original_filename": "aoa2-0-0.exe",
+      "suggested_local_filename": "aoa_2.0.0_full.exe",
+      "bytes": 16708608,
+      "sha256": "7775e7ac7f4a30a5fb4c712061c704694926923de60004a5ae6f67b4f976f0d7",
+      "direct_url": "https://web.archive.org/web/20020420000855id_/http://ftp.sunet.se:80/pub/pc/games/gamesdomain/demos/aoa2-0-0.exe",
+      "client_bytes": 1253376,
+      "client_sha256": "2faa8ab2161c2ef83a76627171692e95516b626590f1606b10d9192dace122bd",
+      "client_pe_timestamp_utc": "2000-10-15T23:46:44Z"
+    },
+    {
+      "runtime_version": "2.3.1",
+      "kind": "replacement_client_only",
+      "original_filename": "AoAClient.exe",
+      "suggested_local_filename": "aoaclient_2.3.1.exe",
+      "bytes": 1794048,
+      "sha256": "c80cd9f2998d326ffc0b6aa99ea4fdd1a5846411a84d26d12ab99216b7edc61a",
+      "direct_url": "https://web.archive.org/web/20010429190419id_/http://www.aceofangels.com:80/dnloads/AoAClient.exe",
+      "client_bytes": 1794048,
+      "client_sha256": "c80cd9f2998d326ffc0b6aa99ea4fdd1a5846411a84d26d12ab99216b7edc61a",
+      "client_pe_timestamp_utc": "2001-04-10T20:47:36Z",
+      "note": "Requires other game assets; compatibility not tested."
+    },
+    {
+      "runtime_version": "2.7.1",
+      "kind": "full_installer",
+      "original_filename": "aoa2-7-1.exe",
+      "suggested_local_filename": "aoa_2.7.1_full.exe",
+      "bytes": 22267683,
+      "sha256": "c3f041d08cfc812f346a8c64add585b3a9ac0297fb2cab11ec0fb0f05ff117c2",
+      "direct_url": "https://discmaster.textfiles.com/file/37862/PC%20Master%20%CE%A4%CE%B5%CF%8D%CF%87%CE%BF%CF%82%20147%20-%20%CE%99%CE%B1%CE%BD%CE%BF%CF%85%CE%AC%CF%81%CE%B9%CE%BF%CF%82%202002/PC%20Master%20%CE%A4%CE%B5%CF%8D%CF%87%CE%BF%CF%82%20147%20-%20%CE%99%CE%B1%CE%BD%CE%BF%CF%85%CE%AC%CF%81%CE%B9%CE%BF%CF%82%202002.bin/extras/independentgamesfestival/independentgames.zip/aceofangels/aoa2-7-1.exe",
+      "direct_client_url": "https://discmaster.textfiles.com/file/37862/PC%20Master%20%CE%A4%CE%B5%CF%8D%CF%87%CE%BF%CF%82%20147%20-%20%CE%99%CE%B1%CE%BD%CE%BF%CF%85%CE%AC%CF%81%CE%B9%CE%BF%CF%82%202002/PC%20Master%20%CE%A4%CE%B5%CF%8D%CF%87%CE%BF%CF%82%20147%20-%20%CE%99%CE%B1%CE%BD%CE%BF%CF%85%CE%AC%CF%81%CE%B9%CE%BF%CF%82%202002.bin/extras/independentgamesfestival/independentgames.zip/aceofangels/aoa2-7-1.exe/AOACLIENT.EXE",
+      "client_bytes": 3899392,
+      "client_sha256": "b179c3c22e6426d55de52d57476aaa53b7e92622009daf754c5153be0b7503a7",
+      "client_pe_timestamp_utc": "2001-09-15T01:27:08Z",
+      "installer_resource_version": "2.2.0.0"
+    },
+    {
+      "runtime_version": "2.8.0",
+      "kind": "full_installer_inside_rar",
+      "original_filename": "AoA_demo_v2_8_0.exe",
+      "suggested_local_filename": "aoa_2.8.0_full.exe",
+      "bytes": 27918963,
+      "sha256": "32f457c9b9891d231db2b2ae43735fe48c6a839f916392211e943672045b866d",
+      "md5": "7401dd3d2a54256e60c1bb3e5b35f752",
+      "catalog_url": "https://www.old-games.ru/game/download/8520.html",
+      "mirror_selector_url": "https://www.old-games.ru/game/download/get.php?fileid=22845&modal=1",
+      "outer_rar_filename": "Ace_of_Angels_cancelled_demo_v2_8_0.rar",
+      "outer_rar_bytes": 28196908,
+      "note": "Fetch a fresh signed mirror URL from the selector; installer hash is for the EXE inside the RAR.",
+      "client_bytes": 2691072,
+      "client_sha256": "809ecfc42c9b2cdb1b2dc54e0945160649f40c32e267d6a96ec7e207f44a9145",
+      "client_pe_timestamp_utc": "2002-01-03T09:53:12Z",
+      "installer_resource_version": "2.2.0.0"
+    },
+    {
+      "runtime_version": "2.8.2",
+      "kind": "full_installer",
+      "original_filename": "aoa-current.exe",
+      "suggested_local_filename": "aoa_2.8.2_full.exe",
+      "bytes": 28083710,
+      "sha256": "9edcb5376d875188a6986067a3fd05952fb25086db0c456f01bfdfd84e840052",
+      "direct_url": "https://discmaster.textfiles.com/file/37867/PC%20Master%20%CE%A4%CE%B5%CF%8D%CF%87%CE%BF%CF%82%20153%20-%20%CE%99%CE%BF%CF%8D%CE%BB%CE%B9%CE%BF%CF%82%202002/PC%20Master%20%CE%A4%CE%B5%CF%8D%CF%87%CE%BF%CF%82%20153%20-%20%CE%99%CE%BF%CF%8D%CE%BB%CE%B9%CE%BF%CF%82%202002.bin/extras/igf/igf.zip/cd-JULY/extras/igf/aceofangels/aoa-current.exe",
+      "client_bytes": 2830336,
+      "client_sha256": "4783759e27e5ae64fcc554008037e6a191dba3488067ee945d95caeab000aaba",
+      "client_pe_timestamp_utc": "2002-02-26T02:43:15Z",
+      "installer_resource_version": "2.2.0.0"
+    },
+    {
+      "runtime_version": "2.9.2",
+      "kind": "full_installer",
+      "original_filename": "aoa-current.exe",
+      "suggested_local_filename": "aoa_2.9.2_installer_2.11.1.exe",
+      "bytes": 35461120,
+      "sha256": "90c4a47e5df320171667209288edbe9899f957a397cb982bc459f17c785cbe38",
+      "direct_url": "https://archive.org/download/family-game-pack-3-mmh-269/Family%20GamePack%203%20MMH269.iso/Games%2FAce%20of%20Angels%2Faoa-current.exe",
+      "item_url": "https://archive.org/details/family-game-pack-3-mmh-269",
+      "iso_url": "https://archive.org/download/family-game-pack-3-mmh-269/Family%20GamePack%203%20MMH269.iso",
+      "iso_bytes": 527499264,
+      "iso_md5": "ca4b06e0af6f95836ff3581b7c702b6a",
+      "client_bytes": 2916352,
+      "client_sha256": "4b6c35e2b3ab473bd98c0afa6538079ee78678d85c28406c07bc27a08cc78c7e",
+      "client_pe_timestamp_utc": "2003-09-26T04:47:08Z",
+      "installer_resource_version": "2.11.1.0",
+      "note": "Client runtime version differs from installer resource version."
+    }
+  ]
+}
+END_DOWNLOAD_MANIFEST_JSON
+
+APPENDIX B. COMPLETE 106-PAGE OFFICIAL SITE INDEX
+
+Labels and parent IDs come from the official menu preserved with Work Continues:
+https://web.archive.org/web/20100415182134/http://www.aceofangels.com:80/?p=1232
+Each URL corresponds to a successful capture record in the saved CDX inventory.
+Not all 106 page bodies or image assets were read. ROOT means no parent in this menu.
+These labels are page-title metadata, not excerpts of the lore text.
+
+Page ID | Parent ID | Menu label | Successful capture URL
+2 | ROOT | About AoA | https://web.archive.org/web/20090228130821/http://www.aceofangels.com:80/?page_id=2
+48 | 2 | Screenshots | https://web.archive.org/web/20090228130849/http://www.aceofangels.com:80/?page_id=48
+85 | 2 | System Requirements | https://web.archive.org/web/20090228130854/http://www.aceofangels.com:80/?page_id=85
+423 | 2 | F.A.Q | https://web.archive.org/web/20090228131156/http://www.aceofangels.com:80/?page_id=423
+426 | 2 | Credits | https://web.archive.org/web/20090228130842/http://www.aceofangels.com:80/?page_id=426
+111 | ROOT | Forgotten Suns Universe | https://web.archive.org/web/20090228131017/http://www.aceofangels.com:80/?page_id=111
+307 | 111 | History | https://web.archive.org/web/20090228130831/http://www.aceofangels.com:80/?page_id=307
+988 | 111 | Coalitions | https://web.archive.org/web/20090228130902/http://www.aceofangels.com:80/?page_id=988
+991 | 988 | Jindal Supremacy | https://web.archive.org/web/20090228130907/http://www.aceofangels.com:80/?page_id=991
+993 | 988 | Union of Stars | https://web.archive.org/web/20090228130912/http://www.aceofangels.com:80/?page_id=993
+257 | 111 | Races | https://web.archive.org/web/20090228130826/http://www.aceofangels.com:80/?page_id=257
+1011 | 257 | Blood Hunters | https://web.archive.org/web/20090228173914/http://www.aceofangels.com:80/?page_id=1011
+968 | 257 | Humans | https://web.archive.org/web/20090228173809/http://www.aceofangels.com:80/?page_id=968
+986 | 968 | Earth Authority | https://web.archive.org/web/20090228173817/http://www.aceofangels.com:80/?page_id=986
+984 | 968 | Wellspring Alliance | https://web.archive.org/web/20090228174029/http://www.aceofangels.com:80/?page_id=984
+1001 | 257 | Ik’yak & Ge’ars | https://web.archive.org/web/20090228173210/http://www.aceofangels.com:80/?page_id=1001
+1003 | 257 | Jindal | https://web.archive.org/web/20090228173557/http://www.aceofangels.com:80/?page_id=1003
+1008 | 257 | Lyndara | https://web.archive.org/web/20090228173602/http://www.aceofangels.com:80/?page_id=1008
+999 | 257 | Quar | https://web.archive.org/web/20090228174043/http://www.aceofangels.com:80/?page_id=999
+1006 | 257 | The Brynn | https://web.archive.org/web/20090228174122/http://www.aceofangels.com:80/?page_id=1006
+312 | 111 | Technology | https://web.archive.org/web/20090228131025/http://www.aceofangels.com:80/?page_id=312
+346 | ROOT | The Known Sphere – Campaign | https://web.archive.org/web/20090228131034/http://www.aceofangels.com:80/?page_id=346
+404 | 346 | History | https://web.archive.org/web/20090228131133/http://www.aceofangels.com:80/?page_id=404
+428 | 404 | Chronology | https://web.archive.org/web/20090228173235/http://www.aceofangels.com:80/?page_id=428
+433 | 404 | The Long Look Down | https://web.archive.org/web/20090228173633/http://www.aceofangels.com:80/?page_id=433
+435 | 404 | Intelligent Life | https://web.archive.org/web/20090228174133/http://www.aceofangels.com:80/?page_id=435
+436 | 404 | N-Field’s Effect on the History of Warfare | https://web.archive.org/web/20090228174138/http://www.aceofangels.com:80/?page_id=436
+439 | 404 | Stories of the Known Sphere | https://web.archive.org/web/20090228174143/http://www.aceofangels.com:80/?page_id=439
+440 | 439 | Attack on Zapalniach | https://web.archive.org/web/20090228174148/http://www.aceofangels.com:80/?page_id=440
+354 | 346 | Nations | https://web.archive.org/web/20090228131037/http://www.aceofangels.com:80/?page_id=354
+395 | 354 | Colonial Republic | https://web.archive.org/web/20090228173229/http://www.aceofangels.com:80/?page_id=395
+397 | 354 | Confederacy | https://web.archive.org/web/20090228173628/http://www.aceofangels.com:80/?page_id=397
+401 | 354 | Drake | https://web.archive.org/web/20090228173924/http://www.aceofangels.com:80/?page_id=401
+384 | 354 | Greater Imperium | https://web.archive.org/web/20090228173919/http://www.aceofangels.com:80/?page_id=384
+388 | 354 | Hashir Alliance | https://web.archive.org/web/20090228173623/http://www.aceofangels.com:80/?page_id=388
+381 | 354 | Imperial League | https://web.archive.org/web/20090228173219/http://www.aceofangels.com:80/?page_id=381
+376 | 354 | Irrosa Homeworld Federation | https://web.archive.org/web/20090228173214/http://www.aceofangels.com:80/?page_id=376
+399 | 354 | Sho`tahl Republic | https://web.archive.org/web/20090506034705/http://www.aceofangels.com:80/?page_id=399
+390 | 354 | Sildatha Alliance | https://web.archive.org/web/20090506132152/http://www.aceofangels.com:80/?page_id=390
+393 | 354 | United Zethi Commonwealth | https://web.archive.org/web/20090228173224/http://www.aceofangels.com:80/?page_id=393
+386 | 354 | Vosha Monarchy | https://web.archive.org/web/20090228173618/http://www.aceofangels.com:80/?page_id=386
+406 | 346 | Technology | https://web.archive.org/web/20090228130837/http://www.aceofangels.com:80/?page_id=406
+516 | 406 | Ship Classes | https://web.archive.org/web/20090228174206/http://www.aceofangels.com:80/?page_id=516
+448 | 406 | Ship Descriptions | https://web.archive.org/web/20090228173240/http://www.aceofangels.com:80/?page_id=448
+450 | 406 | Ship Designations | https://web.archive.org/web/20090228173638/http://www.aceofangels.com:80/?page_id=450
+152 | 406 | History of Fighter Development | https://web.archive.org/web/20090228173607/http://www.aceofangels.com:80/?page_id=152
+635 | 152 | Colonial Republic | https://web.archive.org/web/20090228173712/http://www.aceofangels.com:80/?page_id=635
+651 | 635 | Sturum | https://web.archive.org/web/20090228173305/http://www.aceofangels.com:80/?page_id=651
+653 | 635 | R’yena A1 | https://web.archive.org/web/20090228173307/http://www.aceofangels.com:80/?page_id=653
+655 | 635 | R’yena B1 | https://web.archive.org/web/20090228173313/http://www.aceofangels.com:80/?page_id=655
+657 | 635 | Kulyat | https://web.archive.org/web/20090228173950/http://www.aceofangels.com:80/?page_id=657
+659 | 635 | Stalant | https://web.archive.org/web/20090228173318/http://www.aceofangels.com:80/?page_id=659
+661 | 635 | Naroch | https://web.archive.org/web/20090228173955/http://www.aceofangels.com:80/?page_id=661
+542 | 152 | Confederacy | https://web.archive.org/web/20090228174211/http://www.aceofangels.com:80/?page_id=542
+546 | 542 | Tasmanian Devil | https://web.archive.org/web/20090228173701/http://www.aceofangels.com:80/?page_id=546
+550 | 542 | Shrike | https://web.archive.org/web/20090228173244/http://www.aceofangels.com:80/?page_id=550
+553 | 542 | Razorback | https://web.archive.org/web/20090228173706/http://www.aceofangels.com:80/?page_id=553
+557 | 542 | Eagle | https://web.archive.org/web/20090228173934/http://www.aceofangels.com:80/?page_id=557
+562 | 542 | Wolverine | https://web.archive.org/web/20090228173250/http://www.aceofangels.com:80/?page_id=562
+641 | 152 | Greater Imperium | https://web.archive.org/web/20090228173947/http://www.aceofangels.com:80/?page_id=641
+674 | 641 | Vermok | https://web.archive.org/web/20090228173722/http://www.aceofangels.com:80/?page_id=674
+677 | 641 | Saksatar | https://web.archive.org/web/20090228174000/http://www.aceofangels.com:80/?page_id=677
+679 | 641 | Jormondur | https://web.archive.org/web/20090228173728/http://www.aceofangels.com:80/?page_id=679
+681 | 641 | Desah | https://web.archive.org/web/20090228174009/http://www.aceofangels.com:80/?page_id=681
+684 | 641 | Jvala | https://web.archive.org/web/20090228174231/http://www.aceofangels.com:80/?page_id=684
+687 | 641 | Rasi | https://web.archive.org/web/20090228174237/http://www.aceofangels.com:80/?page_id=687
+689 | 641 | Sokal | https://web.archive.org/web/20090228174242/http://www.aceofangels.com:80/?page_id=689
+637 | 152 | Hashir Alliance | https://web.archive.org/web/20090228173716/http://www.aceofangels.com:80/?page_id=637
+744 | 637 | Rchat | https://web.archive.org/web/20090228173733/http://www.aceofangels.com:80/?page_id=744
+749 | 637 | Grathven | https://web.archive.org/web/20090228174247/http://www.aceofangels.com:80/?page_id=749
+755 | 637 | Foushar | https://web.archive.org/web/20090228173738/http://www.aceofangels.com:80/?page_id=755
+760 | 637 | Vrak Stat | https://web.archive.org/web/20090228174252/http://www.aceofangels.com:80/?page_id=760
+592 | 152 | Irrosa Homeword Federation | https://web.archive.org/web/20090228173939/http://www.aceofangels.com:80/?page_id=592
+818 | 592 | Yakutam | https://web.archive.org/web/20090228174302/http://www.aceofangels.com:80/?page_id=818
+823 | 592 | Mkulat | https://web.archive.org/web/20090228174013/http://www.aceofangels.com:80/?page_id=823
+829 | 592 | Yagari | https://web.archive.org/web/20090228173744/http://www.aceofangels.com:80/?page_id=829
+159 | 592 | Dafusha | https://web.archive.org/web/20090228173612/http://www.aceofangels.com:80/?page_id=159
+831 | 592 | Ummra Viazyem | https://web.archive.org/web/20090228173749/http://www.aceofangels.com:80/?page_id=831
+833 | 592 | N’Goc | https://web.archive.org/web/20090228174307/http://www.aceofangels.com:80/?page_id=833
+847 | 592 | N’Goc Torpedo | https://web.archive.org/web/20090228174316/http://www.aceofangels.com:80/?page_id=847
+643 | 152 | Sho’tahl Republic | https://web.archive.org/web/20090228173256/http://www.aceofangels.com:80/?page_id=643
+853 | 643 | Hartra | https://web.archive.org/web/20090228174321/http://www.aceofangels.com:80/?page_id=853
+855 | 643 | Vagym | https://web.archive.org/web/20090506030628/http://www.aceofangels.com:80/?page_id=855
+857 | 643 | Ym Khtat | https://web.archive.org/web/20090228174326/http://www.aceofangels.com:80/?page_id=857
+859 | 643 | Zkole | https://web.archive.org/web/20090228173323/http://www.aceofangels.com:80/?page_id=859
+645 | 152 | Sildatha Aliance | https://web.archive.org/web/20090228174221/http://www.aceofangels.com:80/?page_id=645
+881 | 645 | Illgokuthin | https://web.archive.org/web/20090228173754/http://www.aceofangels.com:80/?page_id=881
+887 | 645 | Etat’Illraku | https://web.archive.org/web/20090228174331/http://www.aceofangels.com:80/?page_id=887
+893 | 645 | Natak’Illraku | https://web.archive.org/web/20090228174020/http://www.aceofangels.com:80/?page_id=893
+624 | 152 | United Zethi Commonwealth | https://web.archive.org/web/20090228174216/http://www.aceofangels.com:80/?page_id=624
+192 | 624 | Dasibaz | https://web.archive.org/web/20090228174128/http://www.aceofangels.com:80/?page_id=192
+208 | 624 | Kafic | https://web.archive.org/web/20090506030527/http://www.aceofangels.com:80/?page_id=208
+900 | 624 | Tekan | https://web.archive.org/web/20090228173328/http://www.aceofangels.com:80/?page_id=900
+906 | 624 | Janha Vari | https://web.archive.org/web/20090228173334/http://www.aceofangels.com:80/?page_id=906
+916 | 624 | Meskvak Su | https://web.archive.org/web/20090228174339/http://www.aceofangels.com:80/?page_id=916
+647 | 152 | Vosha Monarchy | https://web.archive.org/web/20090228174226/http://www.aceofangels.com:80/?page_id=647
+922 | 647 | Gotom | https://web.archive.org/web/20090228173759/http://www.aceofangels.com:80/?page_id=922
+927 | 647 | Vasa Chovo | https://web.archive.org/web/20090228173804/http://www.aceofangels.com:80/?page_id=927
+933 | 647 | Plovatom | https://web.archive.org/web/20090228174355/http://www.aceofangels.com:80/?page_id=933
+939 | 647 | Prativa | https://web.archive.org/web/20090228174413/http://www.aceofangels.com:80/?page_id=939
+474 | 406 | Movement in Normal Space | https://web.archive.org/web/20090228174153/http://www.aceofangels.com:80/?page_id=474
+476 | 406 | Movement in Hyperspace | https://web.archive.org/web/20090228174158/http://www.aceofangels.com:80/?page_id=476
+478 | 406 | Scanners | https://web.archive.org/web/20090228173643/http://www.aceofangels.com:80/?page_id=478
+484 | 406 | Weapons and Shields | https://web.archive.org/web/20090228173655/http://www.aceofangels.com:80/?page_id=484
+482 | 406 | Campaign Terms | https://web.archive.org/web/20090228173930/http://www.aceofangels.com:80/?page_id=482
+480 | 406 | Technical Lexicon | https://web.archive.org/web/20090228173648/http://www.aceofangels.com:80/?page_id=480
+
+APPENDIX C. COMPLETE INSTALLER MEMBER INVENTORIES
+
+Generated from the actual five recovered ZIP/SFX payloads while assembling this
+handoff. Sizes below are uncompressed member bytes; CRC32 is the stored ZIP value.
+The full-payload and embedded-client SHA-256 values were rechecked against Appendix A.
+
+CLIENT VERSION 2.0.0: 17 members
+Member name | Uncompressed bytes | ZIP CRC32
+scripts.aoa | 3638 | dbd25765
+AoAContact.txt | 236 | 3f8bfa2d
+AoALogo.bmp | 145256 | 3cb5ed45
+AoANotes.txt | 2085 | 4b10eff8
+AoAObjects.odb | 1023050 | 0f4f81c4
+AoATutorial.txt | 5636 | 0eaf1946
+data.aoa | 3813150 | 1456de30
+hud.aoa | 1556290 | b54a5175
+jrmap.trn | 38516 | 070c1478
+music.wav | 7676574 | 8bdfaf50
+NotifySound.wav | 2876 | 15eed1ee
+renexe.exe | 32768 | 98ca261c
+AoAClient.exe | 1253376 | 56814d08
+scrty.bin | 256 | 4e19ac1d
+sounds.aoa | 1859928 | 8a32f562
+terrain.aoa | 24813 | 9e2e7ad1
+textures.aoa | 2082986 | d215701c
+
+CLIENT VERSION 2.7.1: 38 members
+Member name | Uncompressed bytes | ZIP CRC32
+FILE0010.DAT | 479 | 04fdd811
+PROGRESS.DLL | 31232 | b43944e8
+OCXREG32.EXE | 2560 | 858b906d
+WISE0001.DLL | 160256 | b0b25b81
+W32INST.DLL | 9728 | 6494cab1
+AOANOTES.TXT | 3259 | c1ffbdd1
+FLYINGROCKEULA.TXT | 10859 | fb04188c
+FILE0001.DAT | 16882 | 340a814d
+FILE0002.DAT | 4460 | cdc43c33
+FILE0003.DAT | 704 | 6845df66
+FILE0004.DAT | 1410 | 88079753
+FILE0005.DAT | 496 | f476a23f
+FILE0006.DAT | 516 | 2d6540d4
+UNWISE32.EXE | 149504 | 30fdd633
+FILE0007.DAT | 49082 | e6e99c9a
+AOACLIENT.EXE | 3899392 | 58f66aa3
+AOACONTACT.TXT | 217 | 9383613e
+AOADEFAULTS.PRF | 5712 | 6fa6d9c1
+AOALOGO.BMP | 145256 | 3cb5ed45
+AOANOTES.TXT | 3259 | c1ffbdd1
+AOAOBJECTS.ODB | 2012162 | a79330d7
+AOATUTORIAL.TXT | 4363 | 78eee290
+ACTIVESKIN.OCX | 352256 | 34386313
+DATA.AOA | 1690796 | 828266f1
+HUD.AOA | 1865056 | e9040744
+JRMAP.TRN | 38516 | 070c1478
+RENEXE.EXE | 69632 | c9a963d7
+SCRIPTS.AOA | 4157 | 21c02d0b
+SCHK.DAT | 1718 | ea407da6
+SCRTY.BIN | 256 | 4e19ac1d
+SOUNDS.AOA | 1230636 | c6b2bc33
+TEXTURES.AOA | 7569082 | c8caab10
+IMAGES.AOA | 733160 | 0d06d0a7
+MUSIC.MP3 | 5385951 | b9890be6
+REGSVR32.EXE | 37136 | 446bb011
+AS_CHK.BIN | 0 | 00000000
+FILE0008.DAT | 16882 | 340a814d
+FILE0009.DAT | 645 | f46dff8e
+
+CLIENT VERSION 2.8.0: 40 members
+Member name | Uncompressed bytes | ZIP CRC32
+FILE0010.DAT | 479 | 04fdd811
+PROGRESS.DLL | 31232 | b43944e8
+OCXREG32.EXE | 2560 | 858b906d
+WISE0001.DLL | 160256 | b0b25b81
+W32INST.DLL | 9728 | 6494cab1
+AOANOTES.TXT | 3259 | c1ffbdd1
+FLYINGROCKEULA.TXT | 10833 | c72f6dc5
+FILE0001.DAT | 16882 | 340a814d
+FILE0002.DAT | 4460 | cdc43c33
+FILE0003.DAT | 704 | 6845df66
+FILE0004.DAT | 1410 | 88079753
+FILE0005.DAT | 496 | f476a23f
+FILE0006.DAT | 516 | 2d6540d4
+UNWISE32.EXE | 149504 | 30fdd633
+FILE0007.DAT | 145252 | 65a11514
+AOACLIENT.EXE | 2691072 | 6ddbbd8b
+AOACONTACT.TXT | 217 | 9383613e
+AOADEFAULTS.PRF | 5712 | 6fa6d9c1
+AOALOGO.BMP | 145256 | 3cb5ed45
+AOANOTES.TXT | 3259 | c1ffbdd1
+AOAOBJECTS.ODB | 2920075 | bde19651
+AOATUTORIAL.TXT | 4363 | 78eee290
+ACTIVESKIN.OCX | 352256 | 34386313
+DATA.AOA | 1690796 | 828266f1
+HUD.AOA | 1922618 | 23b9c712
+JRMAP.TRN | 38516 | 070c1478
+RENEXE.EXE | 106496 | c5708fe0
+SCRIPTS.AOA | 4157 | 21c02d0b
+SCHK.DAT | 1718 | 768865a6
+SCRTY.BIN | 256 | 4e19ac1d
+SOUNDS.AOA | 1230636 | c6b2bc33
+TEXTURES.AOA | 12509136 | 7e215c52
+IMAGES.AOA | 733160 | 0d06d0a7
+MUSIC.MP3 | 5385951 | b9890be6
+REGSVR32.EXE | 37136 | 446bb011
+AS_CHK.BIN | 1 | d202ef8d
+FX.AOA | 10571 | e4767744
+SCENARIOS.AOA | 1489 | 9ad051e3
+FILE0008.DAT | 16882 | 340a814d
+FILE0009.DAT | 645 | f46dff8e
+
+CLIENT VERSION 2.8.2: 40 members
+Member name | Uncompressed bytes | ZIP CRC32
+FILE0010.DAT | 479 | 04fdd811
+PROGRESS.DLL | 31232 | b43944e8
+OCXREG32.EXE | 2560 | 858b906d
+WISE0001.DLL | 160256 | b0b25b81
+W32INST.DLL | 9728 | 6494cab1
+AOANOTES.TXT | 3259 | c1ffbdd1
+FLYINGROCKEULA.TXT | 10833 | c72f6dc5
+FILE0001.DAT | 16882 | 340a814d
+FILE0002.DAT | 4464 | eb9ddba5
+FILE0003.DAT | 704 | 6845df66
+FILE0004.DAT | 1410 | 88079753
+FILE0005.DAT | 496 | f476a23f
+FILE0006.DAT | 516 | 2d6540d4
+UNWISE32.EXE | 149504 | 30fdd633
+FILE0007.DAT | 145252 | 65a11514
+AOACLIENT.EXE | 2830336 | f28c95e5
+AOACONTACT.TXT | 217 | 9383613e
+AOADEFAULTS.PRF | 6021 | fe92b778
+AOALOGO.BMP | 145256 | 3cb5ed45
+AOANOTES.TXT | 3259 | c1ffbdd1
+AOAOBJECTS.ODB | 2920147 | 865ef670
+AOATUTORIAL.TXT | 4363 | 78eee290
+ACTIVESKIN.OCX | 352256 | 34386313
+DATA.AOA | 1690796 | 828266f1
+HUD.AOA | 1919596 | 92681ec6
+JRMAP.TRN | 38516 | 070c1478
+RENEXE.EXE | 81920 | 83ea8be4
+SCRIPTS.AOA | 4157 | 21c02d0b
+SCHK.DAT | 1713 | 54cc7c45
+SCRTY.BIN | 256 | 4e19ac1d
+SOUNDS.AOA | 1230636 | 2d26d853
+TEXTURES.AOA | 12576779 | 1a27bbf3
+IMAGES.AOA | 733160 | 0d06d0a7
+MUSIC.MP3 | 5385951 | b9890be6
+REGSVR32.EXE | 37136 | 446bb011
+AS_CHK.BIN | 1 | d202ef8d
+FX.AOA | 13011 | ee922b29
+SCENARIOS.AOA | 1489 | 9ad051e3
+FILE0008.DAT | 16882 | 340a814d
+FILE0009.DAT | 645 | f46dff8e
+
+CLIENT VERSION 2.9.2: 41 members
+Member name | Uncompressed bytes | ZIP CRC32
+FILE0010.DAT | 479 | 04fdd811
+PROGRESS.DLL | 31232 | b43944e8
+OCXREG32.EXE | 2560 | 858b906d
+WISE0001.DLL | 160256 | b0b25b81
+W32INST.DLL | 9728 | 6494cab1
+AOANOTES.TXT | 3259 | c1ffbdd1
+FLYINGROCKEULA.TXT | 10833 | c72f6dc5
+FILE0001.DAT | 16882 | 340a814d
+FILE0002.DAT | 4464 | eb9ddba5
+FILE0003.DAT | 704 | 6845df66
+FILE0004.DAT | 1410 | 88079753
+FILE0005.DAT | 496 | f476a23f
+FILE0006.DAT | 516 | 2d6540d4
+UNWISE32.EXE | 149504 | 30fdd633
+FILE0007.DAT | 145252 | 65a11514
+AOACLIENT.EXE | 2916352 | 86363c48
+AOACONTACT.TXT | 217 | 9383613e
+AOADEFAULTS.PRF | 6021 | fe92b778
+AOALOGO.BMP | 145256 | 3cb5ed45
+AOANOTES.TXT | 3259 | c1ffbdd1
+AOAOBJECTS.ODB | 5041075 | cdb6f9dc
+AOATUTORIAL.TXT | 5094 | 5cc36b43
+ACTIVESKIN.OCX | 352256 | 34386313
+DATA.AOA | 1690796 | 828266f1
+HUD.AOA | 1958597 | 80e3f03b
+JRMAP.TRN | 38516 | 070c1478
+RENEXE.EXE | 81920 | 8e30f1ec
+SCRIPTS.AOA | 4157 | 21c02d0b
+SCHK.DAT | 1713 | 54cc7c45
+SCRTY.BIN | 256 | 4e19ac1d
+SOUNDS.AOA | 1230636 | 2d26d853
+TEXTURES.AOA | 17817070 | 06125a6c
+IMAGES.AOA | 733160 | 0d06d0a7
+MUSIC.MP3 | 5385951 | b9890be6
+REGSVR32.EXE | 37136 | 446bb011
+AS_CHK.BIN | 1 | d202ef8d
+FX.AOA | 14186 | 18c11f7a
+SCENARIOS.AOA | 1489 | 9ad051e3
+KEYMAP.PDF | 70445 | 945d4fe4
+FILE0008.DAT | 16882 | 340a814d
+FILE0009.DAT | 645 | f46dff8e
+
+END OF HANDOFF

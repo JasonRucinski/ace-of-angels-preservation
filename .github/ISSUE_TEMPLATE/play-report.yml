@@ -1,0 +1,54 @@
+name: Play report
+description: How setup, offline play or a multiplayer session went, good or bad
+title: "Play report: "
+labels: [play-report]
+body:
+  - type: dropdown
+    id: mode
+    attributes:
+      label: What did you try?
+      options:
+        - Setup only
+        - Offline mission or tutorial
+        - Multiplayer on one PC
+        - LAN dogfight
+        - VPN dogfight
+    validations:
+      required: true
+  - type: textarea
+    id: result
+    attributes:
+      label: What happened?
+      description: What worked, what didn't, and the exact error text if any.
+    validations:
+      required: true
+  - type: input
+    id: players
+    attributes:
+      label: Number of players and PCs
+  - type: input
+    id: system
+    attributes:
+      label: Windows version and GPU
+      placeholder: Windows 11 23H2, AMD Radeon 780M
+    validations:
+      required: true
+  - type: dropdown
+    id: wrapper
+    attributes:
+      label: Graphics
+      options:
+        - dgVoodoo2 2.87.5 (default)
+        - Native DirectX 7
+  - type: textarea
+    id: check
+    attributes:
+      label: Output of the client check
+      description: '`.venv\Scripts\python.exe -I tools\prepare_client.py check game\2.9.2\AOACLIENT.EXE`'
+      render: text
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: For crashes, the newest file in `game\2.9.2\Logs\`. For hosting, the host window's log.
+      render: text
