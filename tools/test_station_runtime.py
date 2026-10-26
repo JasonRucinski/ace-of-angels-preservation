@@ -2,7 +2,9 @@
 import contextlib
 import io
 import json
+import os
 import queue
+import signal
 import socket
 import struct
 import subprocess
@@ -47,6 +49,51 @@ def test_responder(request, address):
 
 
 class RuntimeTests(unittest.TestCase):
+    @unittest.skipUnless(os.name == "posix", "requires POSIX SIGINT delivery")
+    def test_service_stop_flushes_logs(self):
+        # Real headless child process, no game assets or third-party modules.
+        # Match the service's SIGINT shutdown with isolated loopback sockets.
+        with tempfile.TemporaryDirectory() as tmp:
+            folder = Path(tmp)
+            key = bytes(range(256))
+            (folder / "key").write_bytes(key)
+            status = folder / "status.json"
+            with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as probe:
+                probe.bind(("127.0.0.1", 0))
+                station_port = probe.getsockname()[1]
+            proc = subprocess.Popen(
+                [sys.executable, "-I", "-u", str(Path(stub.__file__)),
+                 str(folder / "key"), str(folder / "log"), "--profile", "local-guests",
+                 "--sustained-delivery", "--port", str(station_port), "--arena-port", "0", "--tcp", "0",
+                 "--status-file", str(status)],
+                stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+            try:
+                deadline = time.monotonic() + 10
+                while not status.exists():
+                    if proc.poll() is not None:
+                        stdout, stderr = proc.communicate(timeout=2)
+                        self.fail(f"host exited before status: {stdout}\n{stderr}")
+                    self.assertLess(time.monotonic(), deadline, "host did not become ready")
+                    time.sleep(0.05)
+                self.assertEqual(json.loads(status.read_text())["players"], [])
+                with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as client:
+                    client.settimeout(2)
+                    client.sendto(aoanet.encode(0x0A, request(), key), ("127.0.0.1", station_port))
+                    self.assertTrue(client.recv(512), "host did not answer the Station handshake")
+                proc.send_signal(signal.SIGINT)
+                stdout, stderr = proc.communicate(timeout=10)
+                self.assertEqual(proc.returncode, 0, stderr)
+                self.assertIn("Host stopped", stdout)
+                self.assertIn("traffic:", stdout)
+                self.assertIn("writer_failed=False", stdout)
+                self.assertNotIn("Traceback", stderr)
+                records = [json.loads(line) for line in (folder / "log").read_text().splitlines()]
+                self.assertTrue(any(record.get("event") == "udp_packet" for record in records))
+            finally:
+                if proc.poll() is None:
+                    proc.kill()
+                proc.communicate(timeout=5)
+
     def test_configuration(self):
         base = ["key", "log"]
         diagnostic = parse_args(base)
@@ -144,7 +191,9 @@ class RuntimeTests(unittest.TestCase):
                     unknown.sendall(job_request(255))
                     self.assertEqual(read_reply(unknown), b"")
                 with socket.create_connection(endpoint, timeout=2) as reset:
-                    reset.setsockopt(socket.SOL_SOCKET, socket.SO_LINGER, struct.pack("HH", 1, 0))
+                    # Winsock uses two unsigned shorts; POSIX uses two ints.
+                    linger_format = "HH" if os.name == "nt" else "ii"
+                    reset.setsockopt(socket.SOL_SOCKET, socket.SO_LINGER, struct.pack(linger_format, 1, 0))
                     reset.sendall(job_request())
                 # Exhausted notifications must not block the worker. The reset
                 # client's complete request may or may not have been answered

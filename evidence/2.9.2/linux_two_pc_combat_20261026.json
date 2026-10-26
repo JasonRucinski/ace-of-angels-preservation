@@ -1,0 +1,116 @@
+{
+  "schema": 1,
+  "observed_utc": "2026-10-26T18:10:55.483136+00:00",
+  "scope": "Read-only audit of the deployed Linux host following user-reported combat between two separate Windows PCs on the LAN. Earlier synthetic checks are excluded by the final deployment restart timestamp.",
+  "user_report": "i connected two separate windows pcs and fought bothtogether. got some damage and destruction.",
+  "service": {
+    "MainPID": "803",
+    "Result": "success",
+    "NRestarts": "0",
+    "ExecMainStartTimestamp": "Mon 2026-10-26 17:49:48 UTC",
+    "ExecMainStatus": "0",
+    "MemoryCurrent": "15474688",
+    "User": "aoa",
+    "ActiveState": "active",
+    "SubState": "running"
+  },
+  "enabled_at_boot": true,
+  "configuration": {
+    "profile": "vpn-dogfight",
+    "max_players": 2,
+    "sustained_delivery": true,
+    "impairment": null,
+    "listeners_verified": [
+      "UDP 5031",
+      "UDP 5033",
+      "TCP 5034"
+    ],
+    "listener_scope": "Configured private LAN address only"
+  },
+  "integrity": {
+    "deployed_manifest_files_verified": 140,
+    "runtime_and_config_files_matching_current_checkout": 138,
+    "systemd_unit_matches": true,
+    "game_key_matches_pinned_2_9_2_hash": true
+  },
+  "reviewed_log": {
+    "captured_copy_sha256": "1528368d7b9b0e39524113e36d1f5f450d3e26e84acf5631f939bff0586aad51",
+    "excluded_before_utc": "2026-10-26T17:49:48+00:00",
+    "first_record_utc": "2026-10-26T17:54:25.660000+00:00",
+    "last_record_utc": "2026-10-26T18:08:21.137000+00:00",
+    "event_counts": {
+      "udp_packet": 4282,
+      "tcp_job": 110,
+      "ship_change": 1,
+      "arena_departure": 3,
+      "station_departure": 4,
+      "tcp_close": 3,
+      "player_died": 2,
+      "missile_launch": 13,
+      "missile_impact": 25
+    },
+    "invalid_udp_records": 0,
+    "player_deaths": [
+      {
+        "utc": "2026-10-26T18:02:47.173000+00:00",
+        "event": "player_died",
+        "slot": 2,
+        "reason": "killed"
+      },
+      {
+        "utc": "2026-10-26T18:06:02.886000+00:00",
+        "event": "player_died",
+        "slot": 3,
+        "reason": "killed"
+      }
+    ],
+    "arena_departures": [
+      {
+        "utc": "2026-10-26T17:56:59.547000+00:00",
+        "event": "arena_departure",
+        "slot": 1,
+        "reason": "client quit"
+      },
+      {
+        "utc": "2026-10-26T18:06:09.166000+00:00",
+        "event": "arena_departure",
+        "slot": 2,
+        "reason": "client quit"
+      },
+      {
+        "utc": "2026-10-26T18:06:10.290000+00:00",
+        "event": "arena_departure",
+        "slot": 3,
+        "reason": "client quit"
+      }
+    ],
+    "tcp_jobs_complete": 110
+  },
+  "health": {
+    "status_updated_utc": "2026-10-26T18:10:55+00:00",
+    "uptime_s": 1266,
+    "active_arena_players": 0,
+    "arena_joins_used": 3,
+    "arena_joins_limit": 49,
+    "station_admissions_used": 5,
+    "station_admissions_limit": 64,
+    "reliable_pending": 0,
+    "events_expired": 0,
+    "journal_entries_after_start": 0,
+    "disk_available_at_check": "6.8 GiB",
+    "vm_memory_available_at_check": "approximately 1.6 GiB"
+  },
+  "interpretation": [
+    "Both fighting slots reported missile activity and each recorded one accepted death with a valid opposing killer.",
+    "The audited DeathLedger increments the victim death and valid killer kill counters before player_died is logged; this supports correct server-side kill accounting.",
+    "Arena departures were explicit client quits; no arena timeout, delivery failure or crash was recorded during this session."
+  ],
+  "limits": [
+    "Client health/damage calculations are trusted by the relay; exact damage values are not recorded.",
+    "Missile event counts are received reports, not unique accepted hits: the default log omits the accepted field and projectile tags.",
+    "The log redacts source addresses, so the two-physical-PC arrangement is user-reported.",
+    "Client scoreboard display and visible respawn on both PCs were not independently observed.",
+    "Internet/VPN access remains untested."
+  ],
+  "server_changes_during_audit": false
+}

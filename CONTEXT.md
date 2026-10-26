@@ -16,12 +16,63 @@ a search-engine summary only.
 
 ## 2. Status
 
+Unattended Linux host (26 Oct 2026): deployed `tools/dedicated_host.py` under
+systemd. User-selected limits are first pilot to 10 kills or 15 minutes;
+playlist is CTF_arena → CTF_arena_b → ast_fld_a, with native terrain enabled,
+a 30-second warning and 5-second intermission. Each transition uses a fresh
+game process; extra recycling occurs at 40 arena / 56 Station admissions or
+after 5 minutes with no arena players in a used session. A 30-second stale
+status watchdog stops a hung child, then systemd applies bounded crash recovery.
+Only map position and completed-session count persist; players must relaunch
+and rejoin between maps. Linux TCP listeners now permit safe POSIX rebinding
+after a session closes. The existing network-loss test also needed a console
+initialization barrier and explicit fixture shutdown to avoid timing races.
+Verified: all 16 suites (Linux 94 passed / 11 skipped; Windows 103 passed /
+2 POSIX-only skips, with local game assets now available), a live 10-kill
+Windows-to-VM transition, combat on the next map, deliberate SIGSTOP watchdog
+recovery and guest reboot preserving CTF_arena_b / one completed session.
+The timer path was tested with an accelerated limit; production is set to 900 s.
+Real-client terrain/rejoin acceptance and internet access remain separate.
+See [rotation verification](evidence/2.9.2/linux_rotation_20261026.json) and
+[operation/configuration](docs/linux-host.md#5-unattended-rotation-and-recovery).
+
+Minimal Linux host deployed (26 Oct 2026): a separate Ubuntu Server 24.04.4
+VM on the existing network Proxmox host, with 1 vCPU, 2 GiB RAM and a 12 GiB
+disk. The unprivileged systemd service starts at boot, survives SSH disconnects,
+restarts after a crash, and exits cleanly on SIGINT after socket/log cleanup.
+Verified actual guest reboot and crash recovery, plus two synthetic Windows
+clients over the LAN: Station login/listing, arena entry, remote players,
+missile launches/impacts and death/respawn, repeated after reboot.
+All 15 game-free suites passed with third-party packages disabled (`-I -S`):
+Linux 87 passed / 11 skipped; Windows 86 passed / 12 skipped. Fixed the TCP
+reset test's Windows-only `SO_LINGER` layout for Linux. CI now includes Ubuntu
+24.04, but the hosted CI job itself has not been run in this session.
+The original 2.9.2 installer was downloaded and hash-verified again; its
+256-byte `SCRTY.BIN` matches the pinned client configuration and is installed
+privately in the guest. No game files are committed.
+See the [Linux runbook](docs/linux-host.md) and
+[verification record](evidence/2.9.2/linux_host_20261026.json); local connection
+details are in ignored `work/proxmox/README.md`. Reserve the DHCP address before
+depending on indefinite unattended operation. Later on 26 Oct, the user
+confirmed connecting from their Windows PC, entering the arena and flying
+around on this Linux host, then fought using two separate Windows PCs with
+visible damage and destruction. A read-only server audit corroborated the
+session: slots 2 and 3 exchanged missile reports and each recorded a death
+with a valid opposing killer. Both left by explicit client quit. The expected
+runtime/configuration and game key were deployed; the service had no restarts,
+invalid logged packets or expired reliable events during the session.
+See the [two-PC combat audit](evidence/2.9.2/linux_two_pc_combat_20261026.json).
+Exact client damage values, displayed scoreboard and visible respawns were not
+independently observed. VPN installation and internet acceptance remain pending.
+Admission limits and temporary pilots/scores still apply.
+
 Internet play (22 Oct 2026): friends on other connections play through a private
 VPN with the `vpn-dogfight` profile ([runbook](docs/vpn-dogfight.md)). Sustained
 reliable delivery replaces the 30-message lifetime cap without a client patch,
 crashed players can rejoin, and the host has status/kick/ban, crash restarts and
 a lag/loss test mode ([findings 9.33](docs/findings.md#933-sustained-reliable-delivery-without-a-client-patch-22-october-2026)).
-Loopback-verified only; separate-connection acceptance is pending.
+Internet impairment/delivery tests use loopback; LAN acceptance is recorded
+above. Separate-internet-connection acceptance is pending.
 
 Implementation roadmaps (21 Oct 2026):
 [Internet server, maps and performance](docs/internet-server-todo.md) and

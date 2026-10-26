@@ -14,7 +14,11 @@ permissions:
 
 jobs:
   server:
-    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-24.04]
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
@@ -22,6 +26,11 @@ jobs:
         with:
           python-version: "3.12"
       - run: python -m pip install -r requirements.txt
+        if: runner.os == 'Windows'
+      # Linux deliberately has no pip dependencies: the host is standard-library-only.
+      - name: Validate Linux service definition
+        if: runner.os == 'Linux'
+        run: systemd-analyze verify deploy/linux/aoa-host.service
       - name: Run game-free suites
         shell: pwsh
         run: |
@@ -30,7 +39,7 @@ jobs:
             "test_station_runtime", "test_station_sessions", "test_station_stub",
             "test_guest_admission", "test_combat_delivery", "test_client_extensions",
             "test_lan_dogfight", "test_internet_play", "test_powerups",
-            "test_target_ships", "test_host_control", "test_prepare_client"
+            "test_target_ships", "test_host_control", "test_prepare_client", "test_dedicated_host"
           )
           $failed = @()
           foreach ($suite in $suites) {

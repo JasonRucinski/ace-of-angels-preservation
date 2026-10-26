@@ -13,6 +13,7 @@ Newest results are in [findings.md](findings.md) and the status section of
 | [play.md](play.md) | **Start here.** From nothing to flying offline, then with friends |
 | [lan-dogfight.md](lan-dogfight.md) | Hosting and joining on one home network |
 | [vpn-dogfight.md](vpn-dogfight.md) | Playing over the internet through a private VPN, host console, lag testing |
+| [linux-host.md](linux-host.md) | Minimal Linux host with a systemd service, LAN checks and a VPN path |
 | [host-control.md](host-control.md) | The host window: players, scores, kick/ban, map switching |
 | [map-viewer.md](map-viewer.md) | Loading any of the 20 recovered maps in the client |
 | [running-on-windows-11.md](running-on-windows-11.md) | Why the client crashed on modern Windows and how it was fixed |

@@ -1,0 +1,12 @@
+{
+  "maps": ["CTF_arena", "CTF_arena_b", "ast_fld_a"],
+  "kill_limit": 10,
+  "time_limit_seconds": 900,
+  "restart_warning_seconds": 30,
+  "intermission_seconds": 5,
+  "idle_recycle_seconds": 300,
+  "recycle_arena_joins": 40,
+  "recycle_station_admissions": 56,
+  "health_timeout_seconds": 30,
+  "terrain": true
+}

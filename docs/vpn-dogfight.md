@@ -51,6 +51,9 @@ A real internet session between separate connections has
 
 ## Host setup
 
+For a dedicated Linux machine, use [Minimal Linux host](linux-host.md).
+The instructions below run the host on Windows.
+
 1. Install your VPN on the host and sign in. Note the host's VPN IPv4 address.
    With Tailscale, run `tailscale ip -4`.
 2. Give each player access to the host only. With Tailscale, share the host

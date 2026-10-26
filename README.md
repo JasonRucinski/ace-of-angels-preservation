@@ -21,6 +21,7 @@
 <p align="center">
   <a href="docs/play.md"><b>Play it</b></a> ·
   <a href="docs/play.md#play-with-friends"><b>Host a game</b></a> ·
+  <a href="docs/linux-host.md"><b>Linux server</b></a> ·
   <a href="CONTEXT.md"><b>Research record</b></a> ·
   <a href="docs/README.md"><b>Docs</b></a> ·
   <a href="CONTRIBUTING.md"><b>Contribute</b></a>
@@ -82,6 +83,7 @@ Its servers went dark, and the company was dissolved in 2011.
 | 📦 **Builds** | Six client versions recovered, hashed and versioned: full installers 2.0.0, 2.7.1, 2.8.0, 2.8.2 and 2.9.2, plus a 2.3.1 replacement client. Sources and hashes: [`manifest/downloads.json`](manifest/downloads.json). |
 | 🎮 **Playable today** | The 2.9.2 client runs on Windows 10/11 with crash, timing and display fixes. The offline training mission plays. |
 | 🌐 **Multiplayer** | A new stand-in server, written from reverse engineering, lets friends dogfight over a LAN or a private VPN: guns, missiles, kills, scoreboard, ship changes, 20 maps, power-ups and a host control window. |
+| 🐧 **Dedicated Linux host** | An unattended systemd service with automatic map rotation, kill/time limits, admission recycling, a stalled-process watchdog and rotation state that survives reboot. [Setup and operation](docs/linux-host.md). |
 | 📜 **History** | Magazine coverage, company records, trademarks, the old website and forums (restored from the Wayback Machine), and the state of revival attempts. |
 
 No game files are in this repository. The tools download the original
@@ -91,9 +93,15 @@ See [NOTICE.md](NOTICE.md).
 ### Honest status
 
 > [!IMPORTANT]
-> - Multiplayer is tested with real clients on one PC and with simulated players.
->   **A session between separate PCs has not been recorded yet.** If you try one,
->   please [report how it went](../../issues).
+>
+> - **Two separate Windows PCs have fought through the Linux host over LAN.**
+>   The operator reported damage and destruction; server logs confirm two valid
+>   player deaths, one per player. [Session verification](evidence/2.9.2/linux_two_pc_combat_20261026.json).
+> - Automatic rotation, watchdog recovery and reboot persistence were checked
+>   on the Linux VM. Map-transition tests used simulated Windows clients;
+>   visual terrain loading after real-client rejoin still needs acceptance.
+> - Internet/VPN play remains unverified between separate connections.
+>   Players must quit/relaunch and rejoin between maps; transitions are not seamless.
 > - This is a trusted-friends relay, not a public server. There are no accounts,
 >   and the original clients decide hits and damage.
 > - No CTF rules, AI missions or persistent pilots yet. Practice target ships
@@ -105,9 +113,35 @@ See [NOTICE.md](NOTICE.md).
 |---|---|
 | Play it on Windows 10/11 | [docs/play.md](docs/play.md) |
 | Host a game for friends | [docs/play.md#play-with-friends](docs/play.md#play-with-friends) |
+| Run an unattended Linux server | [docs/linux-host.md](docs/linux-host.md) |
 | Read the history and what was found | [CONTEXT.md](CONTEXT.md), then [docs/](docs/README.md) |
 | Help reverse-engineer the client or server protocol | [docs/README.md](docs/README.md#how-the-game-works) and [docs/findings.md](docs/findings.md) |
 | Help find missing builds or old material | [CONTRIBUTING.md](CONTRIBUTING.md#leads-and-old-material) |
+
+## 🐧 Dedicated Linux host
+
+The host runs on Ubuntu Server 24.04 with Python 3.12 and no pip dependencies,
+GPU or desktop session. The first deployment uses **1 vCPU, 2 GiB RAM and a
+12 GiB disk** in a Proxmox VM. Start on a trusted LAN, then follow the VPN
+runbook when ready to test internet access.
+
+| Default | Behavior |
+|---|---|
+| Map rotation | `CTF_arena` → `CTF_arena_b` → `ast_fld_a` → repeat |
+| Match limit | First pilot to **10 kills**, or **15 minutes** from flight entry |
+| Map change | **30-second warning**, followed by a **5-second intermission** |
+| Admission recycling | Fresh process before the lifetime join limits, plus cleanup of used empty sessions |
+| Recovery | Status watchdog and bounded crash restarts; current map resumes after a VM reboot |
+
+The server handles those transitions automatically. **Players must relaunch
+and rejoin after each map change**, using the prepared client with native
+terrain support. Map position and completed-session count persist; pilots,
+scores and bans reset with each new game process.
+
+Follow the [Linux setup and operating guide](docs/linux-host.md). Match limits
+and maps are configured in `/etc/ace-of-angels/rotation.json`; the repository
+includes an [example configuration](deploy/linux/rotation.json.example) and a
+[deployment verification record](evidence/2.9.2/linux_rotation_20261026.json).
 
 ## ⚡ Quick start
 
@@ -130,6 +164,7 @@ and follow [docs/play.md](docs/play.md) from step 3.
 |---|---|
 | [`docs/`](docs/README.md) | Guides, research write-ups, protocol notes and roadmaps, with an index |
 | [`tools/`](tools/README.md) | Player scripts, the stand-in server, client patches, analysis tools and tests, with an index |
+| [`deploy/linux/`](deploy/linux/) | Linux systemd service and example host/rotation configuration |
 | [`CONTEXT.md`](CONTEXT.md) | The research record: builds, sources, what was searched, next steps |
 | `manifest/` | Where each recovered build came from, with hashes |
 | `evidence/` | Machine-readable results behind each claim in the docs |
