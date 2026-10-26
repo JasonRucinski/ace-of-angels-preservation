@@ -1,11 +1,5 @@
-<!--
-  Images on this page are hot-linked from the Wayback Machine's copies of the
-  original aceofangels.com and flyingrockllc.com sites, so no game art is
-  stored in this repository (see NOTICE.md).
--->
-
 <p align="center">
-  <img src="https://web.archive.org/web/20000929090053im_/http://www.flyingrockllc.com:80/Images/aoalogo.jpg"
+  <img src="docs/images/logo.jpg"
        alt="The Ace of Angels logo: a gold A over a ring, with the word Angels" width="150">
 </p>
 
@@ -33,7 +27,7 @@
 </p>
 
 <p align="center">
-  <img src="https://web.archive.org/web/20060522172211im_/http://www.aceofangels.com:80/game/screens/aoa_jan_05.jpg"
+  <img src="docs/images/screenshot-flight.jpg"
        alt="In-game screenshot: a fighter skims a large hull, lit by a blue flare" width="820">
   <br>
   <sub>In flight, from the screenshot gallery on the official site, aceofangels.com.</sub>
@@ -55,27 +49,27 @@ Its servers went dark, and the company was dissolved in 2011.
 
 <table>
   <tr>
-    <td width="50%"><img src="https://web.archive.org/web/20020820230438im_/http://aceofangels.com:80/game/images/sshot04.jpg"
+    <td width="50%"><img src="docs/images/screenshot-asteroids.jpg"
          alt="Screenshot: a fighter among asteroids, with the ship systems and damage panels open"></td>
-    <td width="50%"><img src="https://web.archive.org/web/20010904203026im_/http://aceofangels.com:80/fre/Images/screen02.jpg"
+    <td width="50%"><img src="docs/images/screenshot-asteroid-base.jpg"
          alt="Screenshot: green fighters docked at a station built on an asteroid"></td>
   </tr>
   <tr>
-    <td width="50%"><img src="https://web.archive.org/web/20030519204549im_/http://www.aceofangels.com:80/game/images/sshot11.jpg"
+    <td width="50%"><img src="docs/images/screenshot-strafing.jpg"
          alt="Screenshot: a fighter strafes across an asteroid's surface, with the weapons config panel open"></td>
-    <td width="50%"><img src="https://web.archive.org/web/20031118050726im_/http://www.aceofangels.com:80/game/screens/08.jpg"
+    <td width="50%"><img src="docs/images/screenshot-hangar.jpg"
          alt="Screenshot: a fighter inside a station hangar bay"></td>
   </tr>
 </table>
 
 <p align="center">
-  <img src="https://web.archive.org/web/20010612110514im_/http://www.aceofangels.com:80/universe/fighters/images/shrike/shrike01.jpg"
+  <img src="docs/images/fighter-shrike.jpg"
        alt="Render of the Shrike fighter" height="190">
-  <img src="https://web.archive.org/web/20010618140742im_/http://www.flyingrockllc.com:80/universe/fighters/images/grathven/grathven01.jpg"
+  <img src="docs/images/fighter-grathven.jpg"
        alt="Render of the Grathven fighter" height="190">
-  <img src="https://web.archive.org/web/20020320233432im_/http://aceofangels.com:80/SpotlightImages/zethideepstrikegroup.jpg"
+  <img src="docs/images/spotlight-zethi-deep-strike-group.jpg"
        alt="Promotional art: the Zethi Deep Strike Group" height="190">
-  <img src="https://web.archive.org/web/20070220190651im_/http://aceofangels.com/SpotlightImages/fightersofthecommonwealth.jpg"
+  <img src="docs/images/spotlight-fighters-of-the-commonwealth.jpg"
        alt="Promotional art: Fighters of the Commonwealth" height="190">
   <br>
   <sub>The Shrike and Grathven fighters, and two "Spotlight" features from the universe pages.</sub>
@@ -158,11 +152,10 @@ The code and documentation here are MIT-licensed ([LICENSE](LICENSE)).
 unaffiliated ([NOTICE.md](NOTICE.md)).
 
 <p align="center">
-  <img src="https://web.archive.org/web/20020708104829im_/http://aceofangels.com:80/downloads/images/aoabanner04.jpg"
+  <img src="docs/images/banner.jpg"
        alt="The original aceofangels.com link banner" width="468">
   <br>
-  <sub>Images on this page come from the archived official sites (aceofangels.com and
-  flyingrockllc.com, 2000–2007) and are shown from the
-  <a href="https://web.archive.org/web/2002/http://aceofangels.com/">Wayback Machine</a>.
-  They belong to their owners and are not stored in this repository.</sub>
+  <sub>Images on this page come from the archived official sites, aceofangels.com and
+  flyingrockllc.com (2000–2007), recovered from the Wayback Machine. They belong to
+  their owners; sources are in <a href="docs/images/SOURCES.md">docs/images/SOURCES.md</a>.</sub>
 </p>

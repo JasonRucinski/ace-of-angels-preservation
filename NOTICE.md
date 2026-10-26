@@ -16,6 +16,10 @@ the game being studied.
   from the public archive listings (archive.org, the Wayback Machine,
   Discmaster) recorded in
   [`manifest/downloads.json`](manifest/downloads.json).
+- **A few website images.** The README shows 11 promotional screenshots and
+  art images from the archived official sites (aceofangels.com and
+  flyingrockllc.com), kept in [`docs/images/`](docs/images/SOURCES.md) with
+  their sources. They are not taken from the game files.
 - **Patches are applied locally.** The client fixes in `tools/` change bytes in
   your own copy of the game executable, with an exact undo. They do not ship
   any part of the original program.
