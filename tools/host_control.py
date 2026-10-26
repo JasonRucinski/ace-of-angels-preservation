@@ -54,6 +54,9 @@ def server_args(settings, extra=()):
             "--console", "--status-file", str(status_path(settings))]
     if settings["terrain"]:
         args.append("--experimental-terrain")
+        navigation = ROOT / 'work/2.9.2/export/AOAOBJECTS'
+        if navigation.is_dir() and (navigation.parent / '_export.json').is_file():
+            args += ['--navigation-buoys', str(navigation), '--sustained-delivery']
         _, kind, target, _ = online_terrain.MAPS[online_terrain.MAP_NAMES.index(settings["map"])]
         if kind == online_terrain.TRN:
             # The map's own power-up zones (findings 9.44); layouts have none.

@@ -92,6 +92,35 @@ does not contain it, and its format differs.
 
 ## How it works
 
+### Unfilled-node investigation (26 October 2026)
+
+The export resolver now follows the original graphics lookup's first,
+case-insensitive prefix match, preserving archive order from `_export.json`.
+`HyBase2La0` resolves to `HyBase2Lay`; `outerchange`'s five `ast_fld_10`
+through `ast_fld_14` references resolve to `ast_fld_d`, the first matching
+layout in the archive. Without archive provenance, ambiguous prefixes are
+left unresolved. Object lookup takes precedence over layout lookup.
+
+This restores **60 geometry instances in outerchange and 10 in irrosa01**
+to expanded exports. The former now has 615 resolved object records plus
+one safe zone; the latter has 456 plus one safe zone. These agree with the
+previous live counts of 616 and 457. The original client already resolves
+these references; this change fixes the analysis/export tools, not gameplay.
+
+`tools/audit_map_nodes.py` inventories all 17 node-layout Gobs and writes
+[counts and remaining node classes](../evidence/2.9.2/map_nodes_20261026.json).
+Full records and regenerated OBJ files are local under `work/map-node-review/`.
+Object assets being available does not mean they spawn: ship-only components
+still depend on native controller flags. Turret/flag gameplay, service-marker
+definitions, warp links and helper semantics remain unimplemented or unverified.
+Helper classifications are based on names, not proof of their original behavior.
+
+Verification: all 337 archive entries passed CRC checks; six node tests pass,
+including executing the original prefix-comparison routine in x86 emulation
+with CRT string/uppercase calls stubbed. No live-client changes were made.
+
+### Loader
+
 - Client: `online-terrain-v3` (`tools/online_terrain.py`) hooks the
   flight-entry handler at `0x4306AF`. The server's four-byte 0x2C body
   selects the map: `AR1A` means Arena1a, kept for v1-prepared clients;

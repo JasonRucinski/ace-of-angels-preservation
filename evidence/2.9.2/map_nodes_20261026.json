@@ -1,0 +1,269 @@
+{
+  "scope": "Static asset resolution; no gameplay or live-client changes",
+  "prefix_evidence": [
+    "0x496187 trailing digits",
+    "0x4CDD30 first graphics match",
+    "0x5270C0 query-length case-insensitive comparison"
+  ],
+  "maps": {
+    "newterrain": {
+      "sha256": "cc9fbc2a5d9bf8cc5836472182e27f7bc7e22c14fb76ece7c8cd7a0afd4842f2",
+      "root_records": 368,
+      "expanded_records": 368,
+      "resolution_counts": {
+        "safe_zone": 4,
+        "object_asset_available": 230,
+        "navigation_marker": 10,
+        "flag_marker_no_gameplay": 18,
+        "turret_marker_no_gameplay": 88,
+        "service_marker_definition_missing": 6,
+        "other_category": 12
+      },
+      "recovered_prefix_references": [],
+      "unresolved_references": []
+    },
+    "hy_base_test": {
+      "sha256": "31b81ea6b0a1928a5e517f34326d4cc9177387a627e876ed57d22cdcfcdbc6b5",
+      "root_records": 4,
+      "expanded_records": 4,
+      "resolution_counts": {
+        "safe_zone": 1,
+        "object_asset_available": 2,
+        "turret_marker_no_gameplay": 1
+      },
+      "recovered_prefix_references": [],
+      "unresolved_references": []
+    },
+    "Arena1a": {
+      "sha256": "5d652eaca4972d958eb1dc54b8ef277fdb8ea475be4912f01a5fd8d02afa7886",
+      "root_records": 383,
+      "expanded_records": 394,
+      "resolution_counts": {
+        "safe_zone": 4,
+        "object_asset_available": 236,
+        "navigation_marker": 10,
+        "flag_marker_no_gameplay": 18,
+        "turret_marker_no_gameplay": 80,
+        "service_marker_definition_missing": 18,
+        "helper_marker": 17,
+        "expanded_layout": 1,
+        "other_category": 1,
+        "warp_marker_links_unverified": 9
+      },
+      "recovered_prefix_references": [],
+      "unresolved_references": []
+    },
+    "hy_winga": {
+      "sha256": "82e8bd6c3f197671c2ce23d9d8c888e0a04d0e914525578900f85460142b03ec",
+      "root_records": 15,
+      "expanded_records": 15,
+      "resolution_counts": {
+        "object_asset_available": 15
+      },
+      "recovered_prefix_references": [],
+      "unresolved_references": []
+    },
+    "ze_winga": {
+      "sha256": "3d3dd89f57c99966451f4e77c47b60588ec6e2cab6c25a504d89b6e0412ad3f4",
+      "root_records": 19,
+      "expanded_records": 19,
+      "resolution_counts": {
+        "object_asset_available": 19
+      },
+      "recovered_prefix_references": [],
+      "unresolved_references": []
+    },
+    "HyBase2Lay": {
+      "sha256": "9fa19694e0ced7df7bcaf09af8c386f6e9308e8e3788ae946b09447504eb1ebb",
+      "root_records": 11,
+      "expanded_records": 11,
+      "resolution_counts": {
+        "object_asset_available": 10,
+        "other_category": 1
+      },
+      "recovered_prefix_references": [],
+      "unresolved_references": []
+    },
+    "outerchange": {
+      "sha256": "4525886d931188ca53ce844ccab22e2eaeccfef56feb2a206895c64b648b60a4",
+      "root_records": 89,
+      "expanded_records": 1035,
+      "resolution_counts": {
+        "safe_zone": 1,
+        "helper_marker": 28,
+        "object_asset_available": 615,
+        "service_marker_definition_missing": 92,
+        "expanded_layout": 34,
+        "other_category": 2,
+        "flag_marker_no_gameplay": 44,
+        "turret_marker_no_gameplay": 198,
+        "navigation_marker": 6,
+        "warp_marker_links_unverified": 15
+      },
+      "recovered_prefix_references": [
+        {
+          "node": "HyBase2La0",
+          "layout": "HyBase2Lay"
+        },
+        {
+          "node": "ast_fld_10",
+          "layout": "ast_fld_d"
+        },
+        {
+          "node": "ast_fld_11",
+          "layout": "ast_fld_d"
+        },
+        {
+          "node": "ast_fld_12",
+          "layout": "ast_fld_d"
+        },
+        {
+          "node": "ast_fld_13",
+          "layout": "ast_fld_d"
+        },
+        {
+          "node": "ast_fld_14",
+          "layout": "ast_fld_d"
+        }
+      ],
+      "unresolved_references": []
+    },
+    "irrosa01": {
+      "sha256": "abf86cb5b37e483c5569fa300188762b592be91102a340625978e132afad5430",
+      "root_records": 44,
+      "expanded_records": 775,
+      "resolution_counts": {
+        "safe_zone": 1,
+        "helper_marker": 23,
+        "object_asset_available": 456,
+        "expanded_layout": 21,
+        "other_category": 2,
+        "service_marker_definition_missing": 78,
+        "navigation_marker": 5,
+        "flag_marker_no_gameplay": 32,
+        "turret_marker_no_gameplay": 144,
+        "warp_marker_links_unverified": 13
+      },
+      "recovered_prefix_references": [
+        {
+          "node": "HyBase2La0",
+          "layout": "HyBase2Lay"
+        }
+      ],
+      "unresolved_references": []
+    },
+    "hu_base_b": {
+      "sha256": "ec65caa5d071e6948da4984d5103e8524a72df7fc5bdbba7df832423bb7af90c",
+      "root_records": 33,
+      "expanded_records": 33,
+      "resolution_counts": {
+        "object_asset_available": 2,
+        "navigation_marker": 1,
+        "flag_marker_no_gameplay": 4,
+        "turret_marker_no_gameplay": 18,
+        "service_marker_definition_missing": 6,
+        "helper_marker": 2
+      },
+      "recovered_prefix_references": [],
+      "unresolved_references": []
+    },
+    "hu_base_a": {
+      "sha256": "c6b04fc22d7e952943259881deeaff185c06e141daf1235c0175e542637c1c52",
+      "root_records": 59,
+      "expanded_records": 59,
+      "resolution_counts": {
+        "object_asset_available": 4,
+        "navigation_marker": 1,
+        "flag_marker_no_gameplay": 8,
+        "turret_marker_no_gameplay": 36,
+        "service_marker_definition_missing": 6,
+        "helper_marker": 4
+      },
+      "recovered_prefix_references": [],
+      "unresolved_references": []
+    },
+    "ast_fld_d": {
+      "sha256": "408a0e9f8236606f2cb4d2cb61147a0a5b82bc24e42786a645b74b6a8897c0cc",
+      "root_records": 10,
+      "expanded_records": 10,
+      "resolution_counts": {
+        "object_asset_available": 10
+      },
+      "recovered_prefix_references": [],
+      "unresolved_references": []
+    },
+    "ast_fld_b": {
+      "sha256": "0170adc1d7ab7eb61423e3527ae419e134d6853e94d57f582dd6ed5b097ba24d",
+      "root_records": 55,
+      "expanded_records": 55,
+      "resolution_counts": {
+        "object_asset_available": 49,
+        "service_marker_definition_missing": 6
+      },
+      "recovered_prefix_references": [],
+      "unresolved_references": []
+    },
+    "ast_fld_c": {
+      "sha256": "e667ea6d513ca0ca8648db2bee3ff6ea526812ea150a0fad393242e9cd37e87b",
+      "root_records": 17,
+      "expanded_records": 17,
+      "resolution_counts": {
+        "object_asset_available": 15,
+        "service_marker_definition_missing": 2
+      },
+      "recovered_prefix_references": [],
+      "unresolved_references": []
+    },
+    "ast_fld_a": {
+      "sha256": "afe75708078bf0c1d44f0c42a2f875aa032f24098972240ffb82c1f6879f0a63",
+      "root_records": 30,
+      "expanded_records": 30,
+      "resolution_counts": {
+        "object_asset_available": 27,
+        "service_marker_definition_missing": 3
+      },
+      "recovered_prefix_references": [],
+      "unresolved_references": []
+    },
+    "CTF_base": {
+      "sha256": "ecd27e71c4f1fc220d1613eb4d4e6beaf8aa349867cc7ff507b2fb16b9a9b5b9",
+      "root_records": 32,
+      "expanded_records": 32,
+      "resolution_counts": {
+        "object_asset_available": 1,
+        "flag_marker_no_gameplay": 7,
+        "turret_marker_no_gameplay": 24
+      },
+      "recovered_prefix_references": [],
+      "unresolved_references": []
+    },
+    "CTF_arena": {
+      "sha256": "942b92f5a078579824d9e31df36c6388c1d6fe7087436de7d9eaf0161bb31ae5",
+      "root_records": 119,
+      "expanded_records": 183,
+      "resolution_counts": {
+        "navigation_marker": 1,
+        "object_asset_available": 55,
+        "service_marker_definition_missing": 3,
+        "expanded_layout": 2,
+        "flag_marker_no_gameplay": 26,
+        "turret_marker_no_gameplay": 96
+      },
+      "recovered_prefix_references": [],
+      "unresolved_references": []
+    },
+    "CTF_arena_b": {
+      "sha256": "b89946f1e921f1820c4df4d9e8d1bb03bcdbe40f25640353f098dfc742390a0d",
+      "root_records": 64,
+      "expanded_records": 64,
+      "resolution_counts": {
+        "object_asset_available": 59,
+        "service_marker_definition_missing": 3,
+        "safe_zone": 1,
+        "helper_marker": 1
+      },
+      "recovered_prefix_references": [],
+      "unresolved_references": []
+    }
+  }
+}

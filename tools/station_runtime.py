@@ -101,6 +101,11 @@ def parse_args(argv=None):
     parser.add_argument("--target-ships", type=int, default=0, metavar="N",
                         help="N passive hostile ships ahead of the spawn that the target keys can select "
                              "(0..98); needs the relay")
+    parser.add_argument("--arena1a-buoys", type=Path, metavar="GOB",
+                        help="restore ten native navigation buoys from original Arena1a.Gob; requires Arena1a terrain and sustained delivery")
+    parser.add_argument('--navigation-buoys', type=Path, metavar='EXPORT_DIR',
+                        help='restore the selected map navigation objects from exported AOAOBJECTS, with original archive order')
+    parser.add_argument('--buoy-trn', type=Path, help='original JRMAP.TRN for navigation; defaults beside SCRTY.BIN')
     parser.add_argument("--experimental-reliable-combat", action="store_true",
                         help="ordered combat delivery; retires peers at 30 total essential events")
     parser.add_argument("--experimental-protection-probe", action="store_true",
@@ -138,6 +143,22 @@ def parse_args(argv=None):
         parser.error("--target-ships must be 0..98")
     if args.target_ships and not args.experimental_relay:
         parser.error("--target-ships requires the relay")
+    if args.arena1a_buoys is not None:
+        if not (args.experimental_relay and args.experimental_terrain and args.map == 'Arena1a' and args.sustained_delivery):
+            parser.error('--arena1a-buoys requires relay, Arena1a terrain and --sustained-delivery')
+        if args.target_ships > 88:
+            parser.error('--arena1a-buoys reserves object slots 90..99; at most 88 target ships')
+        if not args.arena1a_buoys.is_file():
+            parser.error('--arena1a-buoys requires an existing original layout file')
+    if args.navigation_buoys is not None:
+        if args.arena1a_buoys:
+            parser.error('choose --navigation-buoys or the legacy --arena1a-buoys option')
+        if not (args.experimental_relay and args.experimental_terrain and args.sustained_delivery):
+            parser.error('--navigation-buoys requires relay, terrain and sustained delivery')
+        if args.target_ships > 88:
+            parser.error('--navigation-buoys reserves slots 90..99; at most 88 target ships')
+        if not args.navigation_buoys.is_dir():
+            parser.error('--navigation-buoys requires an exported AOAOBJECTS directory')
     if args.powerup_zones is not None and not args.powerup_zones.is_file():
         parser.error(f"--powerup-zones: no file {args.powerup_zones}")
     if args.spawn_at is not None:

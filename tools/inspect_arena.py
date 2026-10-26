@@ -71,6 +71,9 @@ def snapshot(pid, include_objects=False, include_render=False):
                 p = data[slot * 0x360:(slot + 1) * 0x360]
                 if p[0x243]:
                     objects.append({"slot": slot,
+                                    "graphics": hex(struct.unpack_from("<I", p, 0x19C)[0]),
+                                    "visible": bool(p[0x2F7]),
+                                    "collidable": bool(p[0x2FB]),
                                     "tag": hex(struct.unpack_from("<I", p, 0x178)[0]),
                                     "kind": struct.unpack_from("<I", p, 0x1F8)[0],
                                     "position": list(struct.unpack_from("<3f", p, 0x30)),
@@ -81,18 +84,31 @@ def snapshot(pid, include_objects=False, include_render=False):
             # Native terrain uses a separate linked list, not the 1000 dynamic
             # object slots above (0x4981D5..0x4981F2).
             controller = struct.unpack("<I", read(world + 0xDF03C, 4))[0]
+            if controller:
+                flags = read(controller, 0x1A)
+                result["terrain_controller_flags"] = {hex(offset): flags[offset] for offset in (4, 5, 0x18, 0x19)}
             terrain, seen = [], set()
             node = struct.unpack("<I", read(controller, 4))[0] if controller else 0
             while node and node not in seen and len(terrain) < 4096:
                 seen.add(node)
                 p = read(node, 0x360)
                 terrain.append({"address": hex(node),
+                                "terrain_kind": struct.unpack_from("<I", p, 0x1F8)[0],
+                                "collidable": bool(p[0x2FB]),
                                 "position": list(struct.unpack_from("<3f", p, 0x30)),
                                 "graphics": hex(struct.unpack_from("<I", p, 0x19C)[0]),
                                 "name": p[0x244:0x284].split(b"\0")[0].decode("ascii", "replace")})
                 node = struct.unpack_from("<I", p, 0x180)[0]
             result["terrain_objects"] = terrain
             result["terrain_list_complete"] = node == 0
+            zone_handler = struct.unpack("<I", read(world + 0xDF06C, 4))[0]
+            zone_node = struct.unpack("<I", read(zone_handler, 4))[0] if zone_handler else 0
+            zone_seen = set()
+            while zone_node and zone_node not in zone_seen and len(zone_seen) < 4096:
+                zone_seen.add(zone_node)
+                zone_node = struct.unpack("<I", read(zone_node + 8, 4))[0]
+            result["safe_zone_count"] = len(zone_seen)
+            result["safe_zone_list_complete"] = zone_node == 0
         if include_render:
             result["frame_tick_start"] = tick_start
             result["frame_tick_end"] = struct.unpack("<I", read(0x5E8E5C, 4))[0]

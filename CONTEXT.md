@@ -16,6 +16,32 @@ a search-engine summary only.
 
 ## 2. Status
 
+Navigation restoration (26 Oct 2026): server opt-in `--navigation-buoys` reads
+original exported assets for the selected map, expanding nested placements;
+JRMAP uses original TRN kind-3 Buoy/Cube objects. All 20 selections handled,
+41 placements across eight maps. Local host-control enables this when the
+export tree exists. Reliable first/late joins and lost-ACK delivery tested;
+live visual acceptance and editor rotations remain pending. See
+[navigation support](docs/arena1a-rebuild.md#all-map-navigation-support).
+
+Arena1a in-game rebuild investigation (26 Oct 2026): user entered the local
+map; live inventory reconciles all 394 expanded records: 235 static placements,
+4 safe zones, 136 absent gameplay markers, absent Cube Home, 17 helpers and one
+nested-layout reference. Missing gameplay markers comprise 80 turrets, 18 flags,
+10 navigation markers, 9 warps and 19 service markers. Twenty-one original-code
+gate probes passed. At the time of this baseline capture, no restoration patch had been applied. See
+[rebuild investigation](docs/arena1a-rebuild.md) and
+`evidence/2.9.2/arena1a_rebuild_20261026.json`.
+
+Map-node investigation (26 Oct 2026): corrected nested-layout resolution to
+use the original client's case-insensitive prefix comparison and archive order.
+Recovered 60 geometry instances in outerchange and 10 in irrosa01 in expanded
+exports. Their resolved object counts plus safe zones match prior live counts
+(616 / 457). Audited all 17 node-layout Gobs; gameplay markers remain separate
+from asset availability. Six tests pass, including original comparison-code
+emulation. See [map-node findings](docs/map-viewer.md#unfilled-node-investigation-26-october-2026)
+and `evidence/2.9.2/map_nodes_20261026.json`. No client/server deployment changed.
+
 Unattended Linux host (26 Oct 2026): deployed `tools/dedicated_host.py` under
 systemd. User-selected limits are first pilot to 10 kills or 15 minutes;
 playlist is CTF_arena → CTF_arena_b → ast_fld_a, with native terrain enabled,

@@ -13,6 +13,62 @@ SOURCE = Path(__file__).resolve().parents[1] / "work/2.9.2/export/AOAOBJECTS"
 
 
 class SceneNodeTests(unittest.TestCase):
+    def test_original_client_prefix_comparison(self):
+        from emulate_codec import Emu, SCRATCH
+        from pe_util import PE
+        from patch_client import PRISTINE_292
+        from unicorn import UC_HOOK_CODE
+        from unicorn.x86_const import UC_X86_REG_EAX, UC_X86_REG_EIP, UC_X86_REG_ESP
+        client = Path(__file__).resolve().parents[1] / 'game/2.9.2/AOACLIENT.EXE.orig'
+        self.assertEqual(hashlib.sha256(client.read_bytes()).hexdigest(), PRISTINE_292)
+        emu = Emu(PE(client))
+
+        def crt(uc, address, size, _):
+            if address not in (0x57D70E, 0x57D59E):
+                return
+            sp = uc.reg_read(UC_X86_REG_ESP)
+            ret, arg = struct.unpack('<II', emu.read(sp, 8))
+            if address == 0x57D59E:
+                value = arg - 32 if 97 <= arg <= 122 else arg
+            else:
+                char = int.from_bytes(emu.read(sp + 8, 4), 'little')
+                data = emu.read(arg, 128).split(b'\0')[0]
+                at = data.find(bytes([char]))
+                value = arg + at if at >= 0 else 0
+            uc.reg_write(UC_X86_REG_EAX, value)
+            uc.reg_write(UC_X86_REG_ESP, sp + 4)
+            uc.reg_write(UC_X86_REG_EIP, ret)
+
+        emu.uc.hook_add(UC_HOOK_CODE, crt)
+        for stored, query, expected in [('HyBase2Lay', 'HyBase2La', True),
+                                         ('ast_fld_d', 'AST_FLD_', True),
+                                         ('ast_fld_a', 'ast_fld_', True),
+                                         ('ast_fld_d', 'ast_fld_a', False),
+                                         ('HyBase2La', 'HyBase2Lay', False)]:
+            emu.write(SCRATCH, struct.pack('<III', SCRATCH + 256, len(stored), 0))
+            emu.write(SCRATCH + 256, stored.encode() + bytes(128))
+            emu.write(SCRATCH + 512, query.encode() + bytes(128))
+            self.assertEqual(bool(emu.thiscall(0x5270C0, SCRATCH, SCRATCH + 512, 0) & 255), expected)
+
+    def test_native_prefix_order_and_ambiguous_unproven_order(self):
+        paths = [Path('ast_fld_d.Gob'), Path('ast_fld_a.Gob')]
+        self.assertEqual(scene2obj.resolve_layout('AST_FLD_', (paths, True)), paths[0])
+        self.assertIsNone(scene2obj.resolve_layout('ast_fld_', (paths, False)))
+        self.assertEqual(scene2obj.resolve_layout('ast_fld_a', (paths, False)), paths[1])
+        self.assertIsNone(scene2obj.resolve_layout('', (paths, True)))
+        self.assertIsNone(scene2obj.resolve_layout('absent', (paths, True)))
+
+    def test_recovered_truncated_layout_references(self):
+        outer = list(scene2obj.expanded_nodes(SOURCE, 'outerchange', True))
+        self.assertEqual(len(outer), 1035)
+        truncated = [n for n in outer if n.get('layout_lookup') == 'ast_fld_']
+        self.assertEqual(len(truncated), 5)
+        self.assertTrue(all(n['nested_layout'] == 'ast_fld_d' for n in truncated))
+        bases = [n for n in outer if n.get('layout_lookup') == 'HyBase2La']
+        self.assertEqual(len(bases), 1)
+        self.assertEqual(bases[0]['nested_layout'], 'HyBase2Lay')
+        self.assertEqual(len(list(scene2obj.expanded_nodes(SOURCE, 'irrosa01', True))), 775)
+
     def test_arena1a_records_including_exporter_text(self):
         data = (SOURCE / "Arena1a.Gob").read_bytes()
         self.assertEqual(hashlib.sha256(data).hexdigest(), "5d652eaca4972d958eb1dc54b8ef277fdb8ea475be4912f01a5fd8d02afa7886")
