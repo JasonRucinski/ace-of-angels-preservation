@@ -61,6 +61,7 @@ from reliable_window import WindowedReliable
 import online_terrain
 import decode_trn
 import vessel_combat
+import navigation_buoys
 from station_runtime import DatagramBudget, EventLog, StationTCPServer, parse_args
 
 NUL = bytes(1)
@@ -1112,6 +1113,10 @@ def main():
 
 
 def run(args, key, log, resources):
+    buoys = navigation_buoys.loads(navigation_buoys.placements(args.arena1a_buoys)) if args.arena1a_buoys else []
+    if args.navigation_buoys:
+        buoys = navigation_buoys.loads(navigation_buoys.map_placements(
+            args.navigation_buoys, args.map, args.buoy_trn or args.key.parent / 'JRMAP.TRN'))
     port, seconds, peer_timeout = args.port, args.seconds, args.peer_timeout
     reply, pilot = args.ack, args.pilot
     notifications = queue.Queue(maxsize=1024)
@@ -1187,6 +1192,8 @@ def run(args, key, log, resources):
                                                                    dropped_out=meter.dropped_out)), flush=True))
     deaths = DeathLedger()
     targets = TargetShips(args.target_ships, args.spawn_origin) if args.target_ships else None
+    if buoys:
+        print(f'{args.map} navigation buoys: {len(buoys)}', flush=True)
     if targets is not None:
         print(f"target ships: {len(targets.ships)}", flush=True)
     missiles = MissileLedger(map(TargetShips.tag, targets.ships) if targets is not None else ())
@@ -1405,6 +1412,7 @@ def run(args, key, log, resources):
                 "station_sessions": len(station.peers), "station_admissions_used": station.next_id - 1,
                 "station_admissions_limit": station.CAPACITY, "banned_ips": len(banned_ips),
                 "sustained_delivery": args.sustained_delivery,
+                "navigation_buoys": len(buoys),
                 "powerups": None if powerups is None else {"placed": len(powerups.items), "taken": powerups.taken},
                 "target_ships": None if targets is None else {"placed": len(targets.ships),
                                                               "destroyed": targets.destroyed},
@@ -1581,6 +1589,8 @@ def run(args, key, log, resources):
                 if targets is not None:
                     for packet in targets.loads():
                         deliver(peer, packet, True)
+                for packet in buoys:
+                    deliver(peer, packet, True)
                 del bootstrap_due[peer]
                 ping_due[peer] = time.monotonic()
                 if args.experimental_protection_probe:

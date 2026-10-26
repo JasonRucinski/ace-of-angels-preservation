@@ -1,0 +1,27 @@
+{
+  "scope": "Original-asset inventory and packet generation; not live visual acceptance",
+  "counts": {
+    "Arena1a": 10,
+    "CTF_arena": 1,
+    "CTF_arena_b": 0,
+    "newterrain": 10,
+    "outerchange": 6,
+    "ast_fld_a": 0,
+    "ast_fld_b": 0,
+    "ast_fld_c": 0,
+    "ast_fld_d": 0,
+    "CTF_base": 0,
+    "hu_base_a": 1,
+    "hu_base_b": 1,
+    "hy_base_test": 0,
+    "hy_winga": 0,
+    "HyBase2Lay": 0,
+    "irrosa01": 5,
+    "ze_winga": 0,
+    "ze_wingb": 0,
+    "Hittest": 0,
+    "JRMAP": 7
+  },
+  "total_placements": 41,
+  "editor_rotations_restored": false
+}

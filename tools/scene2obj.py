@@ -100,10 +100,40 @@ def compose(child, parent):
     return result
 
 
-def expanded_nodes(src, name, expand, ancestors=(), parent=None, path=""):
+def layout_catalog(src):
+    """Preserve archive order for the client's first prefix match.
+
+    export_assets records that order in _export.json. Without provenance,
+    ambiguous prefixes must remain unresolved rather than depend on glob order.
+    """
+    paths = {p.name.casefold(): p for p in src.glob('*.[Gg]ob')}
+    manifest = src.parent / '_export.json'
+    ordered = []
+    if manifest.exists():
+        for entry in json.loads(manifest.read_text(encoding='utf-8')):
+            if entry['archive'].casefold() == src.name.casefold():
+                p = paths.get(Path(entry['out']).name.casefold())
+                if p is not None and p not in ordered:
+                    ordered.append(p)
+    proven = len(ordered) == len(paths)
+    ordered.extend(p for p in paths.values() if p not in ordered)
+    return [p for p in ordered if is_scene(p.read_bytes())], proven
+
+
+def resolve_layout(token, catalog):
+    # 0x4CDD30 calls CString comparison 0x5270C0: case-insensitive,
+    # query-length prefix comparison, first database match (not longest).
+    paths, ordered = catalog
+    matches = [p for p in paths if token and p.stem.casefold().startswith(token.casefold())]
+    return matches[0] if matches and (ordered or len(matches) == 1) else None
+
+
+def expanded_nodes(src, name, expand, ancestors=(), parent=None, path="", _catalog=None, _objects=None):
     if name.casefold() in ancestors or len(ancestors) >= 8:
         raise ValueError("cyclic or excessive nested layout")
     source = next(p for p in src.glob("*.[Gg]ob") if p.stem.casefold() == name.casefold())
+    catalog = _catalog if _catalog is not None else layout_catalog(src) if expand else ([], False)
+    objects = _objects if _objects is not None else sco_models(src)
     for node in read_nodes(source.read_bytes()):
         node["source_scene"] = source.stem
         node["node_path"] = path + node["name"]
@@ -112,14 +142,15 @@ def expanded_nodes(src, name, expand, ancestors=(), parent=None, path=""):
             node["position"] = node["matrix"][12:15]
         # Native category 9 tries a named graphics layout after object lookup.
         target = re.sub(r"[0-9]+$", "", node["name"].split()[0])
-        nested = next((p for p in src.glob("*.[Gg]ob") if p.stem.casefold() == target.casefold()), None)
-        nested = nested if expand and node["category"] == 9 and nested and is_scene(nested.read_bytes()) else None
+        object_match = any(o.startswith(target.casefold()) for o in objects) if target else False
+        nested = resolve_layout(target, catalog) if expand and node["category"] == 9 and not object_match else None
         if nested:
             node["nested_layout"] = nested.stem
+            node["layout_lookup"] = target
         yield node
         if nested:
             yield from expanded_nodes(src, nested.stem, True, ancestors + (name.casefold(),),
-                                      node["matrix"], node["node_path"] + "/")
+                                      node["matrix"], node["node_path"] + "/", catalog, objects)
 
 
 def export(src, name, out_dir, tex_dir, objects, cache, expand_layouts=False):

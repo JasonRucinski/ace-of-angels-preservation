@@ -39,12 +39,13 @@ import aoacrypt  # noqa: E402
 
 BUILTIN_KEY_VA = {  # per client build; located by content search in 2.9.2
     "b179c3c22e6426d55de52d57476aaa53b7e92622009daf754c5153be0b7503a7": 0x6A0128,
+    # Original 2.9.2 static cipher wrappers at 0x52B128 / 0x52B148.
+    "4b6c35e2b3ab473bd98c0afa6538079ee78678d85c28406c07bc27a08cc78c7e": 0x5DE678,
 }
 
 
 def builtin_key(client_path):
-    """Return the client's 256-byte built-in key. For 2.7.1 it is read at its
-    known VA; for other builds the 2.7.1 key bytes are searched for."""
+    """Return the built-in key only for a hash-pinned original client."""
     from pe_util import PE
     pe = PE(client_path)
     sha = hashlib.sha256(pe.data).hexdigest()
