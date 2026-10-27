@@ -235,7 +235,7 @@ Close the client first, then run from the repository root:
 The input must already have a recorded client preparation. The exact prior
 executable is retained as `.EXE.before-object-persistence`. The new mode
 composes with the older asteroid-only, solid-world, station-detail and
-world-detail modes. Normal preparation preserves it. Patch version 20 also
+world-detail modes. Normal preparation preserves it. Patch version 22 also
 accepts `prepare --distant-objects` and `prepare --no-distant-objects`; it
 remains off for fresh preparations unless explicitly selected.
 

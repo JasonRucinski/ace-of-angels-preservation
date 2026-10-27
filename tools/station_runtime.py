@@ -101,6 +101,8 @@ def parse_args(argv=None):
     parser.add_argument("--target-ships", type=int, default=0, metavar="N",
                         help="N passive hostile ships ahead of the spawn that the target keys can select "
                              "(0..98); needs the relay")
+    parser.add_argument("--start-vessel", default="Ym Khtat", metavar="NAME",
+                        help="fighter every pilot starts in until they pick another (default Ym Khtat); needs the relay")
     parser.add_argument("--arena1a-buoys", type=Path, metavar="GOB",
                         help="restore ten native navigation buoys from original Arena1a.Gob; requires Arena1a terrain and sustained delivery")
     parser.add_argument('--navigation-buoys', type=Path, metavar='EXPORT_DIR',
@@ -109,7 +111,7 @@ def parse_args(argv=None):
     parser.add_argument('--turret-trial', type=Path, metavar='EXPORT_DIR',
                         help='inactive five-turret Arena1a placement trial; model assignment is provisional and orientation is zero')
     parser.add_argument('--warp-trial', type=Path, metavar='EXPORT_DIR',
-                        help='single native Arena1a warp gate on loopback; local client transit, editor orientation not restored')
+                        help='nine native Arena1a warp gates on loopback; local client transit, editor orientation not restored')
     parser.add_argument("--experimental-reliable-combat", action="store_true",
                         help="ordered combat delivery; retires peers at 30 total essential events")
     parser.add_argument("--experimental-protection-probe", action="store_true",
@@ -147,12 +149,14 @@ def parse_args(argv=None):
         parser.error("--target-ships must be 0..98")
     if args.target_ships and not args.experimental_relay:
         parser.error("--target-ships requires the relay")
+    if args.start_vessel != "Ym Khtat" and not args.experimental_relay:
+        parser.error("--start-vessel requires the relay")
     if args.warp_trial is not None:
         if not (args.profile in ('local-relay', 'local-guests') and args.experimental_relay
                 and args.experimental_terrain and args.sustained_delivery and args.map == 'Arena1a'):
             parser.error('--warp-trial requires a loopback relay, Arena1a terrain and sustained delivery')
-        if args.target_ships > 83:
-            parser.error('--warp-trial reserves slot 85; at most 83 target ships')
+        if args.target_ships > 69:
+            parser.error('--warp-trial reserves slots 71..79; at most 69 target ships')
         if not args.warp_trial.is_dir():
             parser.error('--warp-trial requires an original exported AOAOBJECTS directory')
     if args.turret_trial is not None:

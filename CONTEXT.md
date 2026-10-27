@@ -24,12 +24,32 @@ visibility and child LOD selection are adjusted together, retaining the lowest
 authored selection at distance and the existing near selections. Seven tests
 cover complete original-code group execution, all 154 parsed mesh models,
 cutoffs/FPU precisions, optional rendering composition, hook state and exact
-undo/corruption checks. Patch version 20 recognizes and preserves this opt-in
+undo/corruption checks. Patch version 22 recognizes and preserves this opt-in
 mode. Installed in the normal client and active Arena1a trial copy; both
 pass asset/setup and exact layer-backup checks. All nine focused suites pass
 (58 tests); [verification record](evidence/2.9.2/object_persistence_20261027.json).
 Visual acceptance and GPU performance remain pending. See
 [rendering notes](docs/asteroid-rendering.md#distant-object-persistence-27-october-2026).
+
+Highlight reel (27 Oct 2026): a 48.9 s video from scripted recordings of the
+real 2.9.2 client, nine shots on six maps (irrosa01, ast_fld_a/b,
+outerchange, CTF_arena_b, JRMAP) with eleven fighters, in the cockpit, chase and
+orbit views. Scripted pilots, camera and velocity held in memory, a new host
+option `--start-vessel`, Windows Graphics Capture through ffmpeg. The first cut
+showed orbit-view flicker (fixed in patch version 21) and untextured Tholfus
+wingmen (original data; replaced). Re-cut the same day with six re-filmed
+shots on version 21 and short punchy title cards (48.95 s). Output stays
+in ignored `work/reel/`. See [hype-reel.md](docs/hype-reel.md).
+
+Nine-gate expansion (27 Oct 2026): `--warp-trial` and the host checkbox now
+restore all nine Arena1a warp gates, adding eight placements. Slots 71–79
+replace the old single slot 85; maximum practice targets becomes 69. Original
+names/destinations and duplicate Home_Rail labels retain separate tags. Native
+headless checks cover coexistence, duplicate loads, 54 transit vectors and
+486 exit/gate overlap checks using fixture bounds. Actual UDP checks cover
+all nine routes with lost-update recovery, late join and reconnect. Still
+loopback-only and opt-in; orientation/real collision geometry/live acceptance
+remain unverified. See [warp trial](docs/arena1a-rebuild.md#arena1a-warp-gate-trial).
 
 Headless warp validation (26 Oct 2026): user deferred manual playtesting.
 Three additional tests pass: complete original LoadObject receiver with explicit
@@ -49,7 +69,7 @@ with buoys/turrets, gate ACK loss/retransmission and verifier rejection cases.
 Isolated host prepared at 127.0.0.2; live entry remains pending because both
 UI interfaces fail on the pilot dialog. Editor orientation is not restored;
 transit is handled by the original local client, not authorized by the host.
-See [single-gate trial](docs/arena1a-rebuild.md#single-gate-local-trial).
+See [warp trial](docs/arena1a-rebuild.md#arena1a-warp-gate-trial).
 
 Warp investigation (26 Oct 2026): user deferred flags/control points. Recovered
 all nine Arena1a gate-to-child destination links, including four `Dummy` nodes.
@@ -364,6 +384,16 @@ taken power-up never re-enables its model. Patch version 19
 live with no memory writes: 22 pickups in a row, one every 5 s, and the HUD
 showed "Shield +5". The user confirmed it on JRMAP's own zones with
 `game/2.9.2` at version 19. A second player watching is untested.
+Orbit camera (26 Oct 2026, [findings 9.47](docs/findings.md)): patch version 20
+(`third-person-camera-v2`, replaces v1, upgrades in place) adds **F4**, a
+camera that circles your ship once per 24 s at the chase distance. It turns
+the renderer's own forward and right copies (`0x43B367`) and the culling copy
+together. Seen live through a full lap of F5 captures; the F4 read was
+forced on in memory because the test window had no focus, so a real F4
+press is still unconfirmed. Patch version 21 (`third-person-camera-v3`,
+27 Oct) fixes orbit-view objects blinking: culling used the orbit camera
+only when the millisecond clock had not moved ([findings 9.48](docs/findings.md)).
+Plain F2 turned out to be bound by default ("Toggle Mentor"); plain F4 is free.
 Ship changes (24 Oct 2026, [findings 9.40](docs/findings.md)): **fixed in the
 relay.** The in-flight fighter menu needs a config list (TCP job 4, one
 `_all` entry) and an answer to its `0xA0` request. The relay sent neither,

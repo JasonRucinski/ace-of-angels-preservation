@@ -38,7 +38,7 @@ DEFAULTS = {"mode": "This PC only", "address": "127.0.0.1", "map": "Arena1a", "t
             "navigation_buoys": True, "turret_trial": False, "warp_trial": False}
 NODE_LABELS = {"navigation_buoys": "Navigation buoys",
                "turret_trial": "Turret trial (5 turrets, firing disabled; Arena1a)",
-               "warp_trial": "Warp gate trial (1 gate; Arena1a, this PC only)"}
+               "warp_trial": "Warp gates trial (9 gates; Arena1a, this PC only)"}
 NO_WINDOW = getattr(subprocess, "CREATE_NO_WINDOW", 0)
 RESTARTS_PER_10_MIN = 3
 

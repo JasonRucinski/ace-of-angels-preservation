@@ -60,7 +60,9 @@ mission (waves of six enemies, with three AI wingmen you command), or
 **Tutorial Mode**. The key map is `game\2.9.2\KEYMAP.PDF`.
 
 Useful keys added or fixed by this project: **F2** toggles a chase camera,
-**T / G / J** cycle and pick targets, **Alt+Q** leaves the arena.
+**F4** an orbit camera that circles your ship (for showing off the visuals;
+**F5** saves a screenshot to `Capture Images\`), **T / G / J** cycle and
+pick targets, **Alt+Q** leaves the arena.
 
 Optional: [texture-pack.md](texture-pack.md) makes sharper, 32-bit ship and
 station skins from your own copy.

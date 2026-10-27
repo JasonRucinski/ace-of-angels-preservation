@@ -1115,7 +1115,8 @@ def main():
 
 
 def run(args, key, log, resources):
-    warp = warp_trial.loads(warp_trial.placement(args.warp_trial)) if args.warp_trial else []
+    warp_gates = warp_trial.placements(args.warp_trial) if args.warp_trial else []
+    warp = warp_trial.loads(warp_gates)
     trial = turret_trial.loads(turret_trial.placements(args.turret_trial)) if args.turret_trial else []
     buoys = navigation_buoys.loads(navigation_buoys.placements(args.arena1a_buoys)) if args.arena1a_buoys else []
     if args.navigation_buoys:
@@ -1177,6 +1178,9 @@ def run(args, key, log, resources):
     arena_connections = {}
     arena_pilots = {}
     arena_vessels = {}  # addr -> vessel chosen in the fighter menu
+    start_vessel = args.start_vessel
+    if start_vessel not in SELECTABLE_VESSELS:
+        raise ValueError(f"unknown --start-vessel {start_vessel!r}")
     arena_reported = {}  # addr -> (rating, score) from the client's own stats
     arena_motion = {}
     ping_due = {}
@@ -1417,8 +1421,10 @@ def run(args, key, log, resources):
                 "station_admissions_limit": station.CAPACITY, "banned_ips": len(banned_ips),
                 "sustained_delivery": args.sustained_delivery,
                 "navigation_buoys": len(buoys),
-                "warp_trial": {"objects": len(warp), "gate": warp_trial.GATE,
-                               "destination_node": "WarpTgt01", "model": "WarpGate / WarpA",
+                "warp_trial": {"objects": len(warp),
+                               "routes": [{"gate": g['name'], "destination_node": g['destination_node'],
+                                           "tag": hex(warp_trial.tag(g))} for g in warp_gates],
+                               "model": "WarpGate / WarpA",
                                "orientation_restored": False, "host_authorized_transit": False} if warp else None,
                 "turret_trial": {"objects": len(trial) // 2, "enabled": False,
                                  "model_assignment": "provisional TurretA", "orientation_restored": False} if trial else None,
@@ -1570,13 +1576,13 @@ def run(args, key, log, resources):
                         own_id = struct.unpack_from("<I", arena_connections[peer], 0x1F + 0x7B)[0]
                         deliver(peer, load_player(slot, arena_motion[other][0x40], arena_pilots.get(other),
                                                   ffa_team(slot) if args.experimental_teams else None,
-                                                  arena_vessels.get(other, DEFAULT_VESSEL),
+                                                  arena_vessels.get(other, start_vessel),
                                                   own_id if other == peer else None), True)
                         if other != peer:
                             deliver(other, load_player(arena_players[peer], arena_motion[peer][0x40],
                                                        arena_pilots.get(peer),
                                                        ffa_team(arena_players[peer]) if args.experimental_teams
-                                                       else None, arena_vessels.get(peer, DEFAULT_VESSEL)), True)
+                                                       else None, arena_vessels.get(peer, start_vessel)), True)
                     for other, slot in arena_players.items():
                         if other != peer and other not in bootstrap_due:
                             arena.sendto(aoanet.encode(0x1F, relay_motion.snapshot(
@@ -1584,7 +1590,7 @@ def run(args, key, log, resources):
                 position = arena_motion[peer][0x40] if peer in arena_motion else None
                 for packet in flight_bootstrap(position, online_terrain.marker(args.map)
                                                if args.experimental_terrain else None,
-                                               arena_vessels.get(peer, DEFAULT_VESSEL)):
+                                               arena_vessels.get(peer, start_vessel)):
                     deliver(peer, packet, True)
                 if args.experimental_teams:
                     slot = arena_players[peer]
@@ -1825,7 +1831,7 @@ def run(args, key, log, resources):
                                     hits = relay_motion.perceived_damage(payload, len(p), raw_mask)
                                 except ValueError:
                                     hits = []
-                                destroy_targets(targets.gun_hits(arena_vessels.get(addr, DEFAULT_VESSEL), hits,
+                                destroy_targets(targets.gun_hits(arena_vessels.get(addr, start_vessel), hits,
                                                                 time.monotonic()), arena_players[addr])
                         p = relay_motion.snapshot(arena_players[addr], state, include_control=0x400 in present,
                                                   stats=player_stats(addr))
