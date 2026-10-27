@@ -75,7 +75,8 @@ class NativeWarp:
             self.emu.write(self.gate, bytes(0x360))
             self.emu.write(self.gate + 0x178, struct.pack('<I', tag))
             self.emu.write(self.gate + 0x243, b'\1')
-            self.emu.write(self.WORLD + 0xdef5a, struct.pack('<H', index + 1))
+            high_water = struct.unpack('<H', self.emu.read(self.WORLD + 0xdef5a, 2))[0]
+            self.emu.write(self.WORLD + 0xdef5a, struct.pack('<H', max(high_water, index + 1)))
             self.allocations += 1
             self._return(12, self.gate)
         elif address == 0x4bda80:
@@ -113,7 +114,9 @@ class NativeWarp:
         self.emu.write(SCRATCH, packet)
         result = self.emu.thiscall(0x4a66a0, self.WORLD, SCRATCH)
         assert self.emu.uc.reg_read(UC_X86_REG_EIP) == STOP
-        assert result == self.gate
+        tag = struct.unpack_from('<I', packet, 96)[0]
+        assert result == self.WORLD + 0x4c + (tag & 0xffff) * 0x360
+        self.gate = result
         return self.fields()
 
     def fields(self):
