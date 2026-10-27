@@ -106,6 +106,10 @@ def parse_args(argv=None):
     parser.add_argument('--navigation-buoys', type=Path, metavar='EXPORT_DIR',
                         help='restore the selected map navigation objects from exported AOAOBJECTS, with original archive order')
     parser.add_argument('--buoy-trn', type=Path, help='original JRMAP.TRN for navigation; defaults beside SCRTY.BIN')
+    parser.add_argument('--turret-trial', type=Path, metavar='EXPORT_DIR',
+                        help='inactive five-turret Arena1a placement trial; model assignment is provisional and orientation is zero')
+    parser.add_argument('--warp-trial', type=Path, metavar='EXPORT_DIR',
+                        help='single native Arena1a warp gate on loopback; local client transit, editor orientation not restored')
     parser.add_argument("--experimental-reliable-combat", action="store_true",
                         help="ordered combat delivery; retires peers at 30 total essential events")
     parser.add_argument("--experimental-protection-probe", action="store_true",
@@ -135,7 +139,7 @@ def parse_args(argv=None):
         args.sustained_delivery = args.profile == "vpn-dogfight"
     if args.experimental_terrain and not (
             args.profile in DOGFIGHT_PROFILES or
-            (args.bind_address == "127.0.0.1" and args.profile in ("local-relay", "local-guests"))):
+            args.profile in ("local-relay", "local-guests")):
         parser.error("experimental terrain requires a dogfight or loopback relay/guest profile")
     if args.powerup_zones is not None and not args.experimental_relay:
         parser.error("--powerup-zones requires the relay")
@@ -143,6 +147,21 @@ def parse_args(argv=None):
         parser.error("--target-ships must be 0..98")
     if args.target_ships and not args.experimental_relay:
         parser.error("--target-ships requires the relay")
+    if args.warp_trial is not None:
+        if not (args.profile in ('local-relay', 'local-guests') and args.experimental_relay
+                and args.experimental_terrain and args.sustained_delivery and args.map == 'Arena1a'):
+            parser.error('--warp-trial requires a loopback relay, Arena1a terrain and sustained delivery')
+        if args.target_ships > 83:
+            parser.error('--warp-trial reserves slot 85; at most 83 target ships')
+        if not args.warp_trial.is_dir():
+            parser.error('--warp-trial requires an original exported AOAOBJECTS directory')
+    if args.turret_trial is not None:
+        if not (args.experimental_relay and args.experimental_terrain and args.sustained_delivery and args.map == 'Arena1a'):
+            parser.error('--turret-trial requires relay, Arena1a terrain and sustained delivery')
+        if args.target_ships > 78:
+            parser.error('--turret-trial reserves slots 80..84; at most 78 target ships')
+        if not args.turret_trial.is_dir():
+            parser.error('--turret-trial requires an original exported AOAOBJECTS directory')
     if args.arena1a_buoys is not None:
         if not (args.experimental_relay and args.experimental_terrain and args.map == 'Arena1a' and args.sustained_delivery):
             parser.error('--arena1a-buoys requires relay, Arena1a terrain and --sustained-delivery')
@@ -187,8 +206,8 @@ def parse_args(argv=None):
             parser.error(f"{args.profile} does not enable experimental combat delivery, protection, objects or teams")
         if args.max_players > 8:
             parser.error(f"{args.profile} supports at most eight configured players; tested capacity may be lower")
-    elif args.bind_address != "127.0.0.1":
-        parser.error("existing diagnostic/local profiles bind only 127.0.0.1; use lan-dogfight or vpn-dogfight")
+    elif not bind.is_loopback:
+        parser.error("diagnostic/local profiles require IPv4 loopback; use lan-dogfight or vpn-dogfight")
     if any(port is not None and not 0 <= port <= 65535 for port in (args.port, args.arena_port, args.tcp)):
         parser.error("ports must be 0..65535 (0 selects an ephemeral test port)")
     if args.arena and args.port != 0 and args.port == args.arena_port:

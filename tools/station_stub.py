@@ -62,6 +62,8 @@ import online_terrain
 import decode_trn
 import vessel_combat
 import navigation_buoys
+import turret_trial
+import warp_trial
 from station_runtime import DatagramBudget, EventLog, StationTCPServer, parse_args
 
 NUL = bytes(1)
@@ -1113,6 +1115,8 @@ def main():
 
 
 def run(args, key, log, resources):
+    warp = warp_trial.loads(warp_trial.placement(args.warp_trial)) if args.warp_trial else []
+    trial = turret_trial.loads(turret_trial.placements(args.turret_trial)) if args.turret_trial else []
     buoys = navigation_buoys.loads(navigation_buoys.placements(args.arena1a_buoys)) if args.arena1a_buoys else []
     if args.navigation_buoys:
         buoys = navigation_buoys.loads(navigation_buoys.map_placements(
@@ -1413,6 +1417,11 @@ def run(args, key, log, resources):
                 "station_admissions_limit": station.CAPACITY, "banned_ips": len(banned_ips),
                 "sustained_delivery": args.sustained_delivery,
                 "navigation_buoys": len(buoys),
+                "warp_trial": {"objects": len(warp), "gate": warp_trial.GATE,
+                               "destination_node": "WarpTgt01", "model": "WarpGate / WarpA",
+                               "orientation_restored": False, "host_authorized_transit": False} if warp else None,
+                "turret_trial": {"objects": len(trial) // 2, "enabled": False,
+                                 "model_assignment": "provisional TurretA", "orientation_restored": False} if trial else None,
                 "powerups": None if powerups is None else {"placed": len(powerups.items), "taken": powerups.taken},
                 "target_ships": None if targets is None else {"placed": len(targets.ships),
                                                               "destroyed": targets.destroyed},
@@ -1590,6 +1599,10 @@ def run(args, key, log, resources):
                     for packet in targets.loads():
                         deliver(peer, packet, True)
                 for packet in buoys:
+                    deliver(peer, packet, True)
+                for packet in trial:
+                    deliver(peer, packet, True)
+                for packet in warp:
                     deliver(peer, packet, True)
                 del bootstrap_due[peer]
                 ping_due[peer] = time.monotonic()

@@ -1,0 +1,213 @@
+{
+  "scope": "Hierarchy and native transform verification; no objects spawned",
+  "client_sha256": "4b6c35e2b3ab473bd98c0afa6538079ee78678d85c28406c07bc27a08cc78c7e",
+  "map_sha256": "5d652eaca4972d958eb1dc54b8ef277fdb8ea475be4912f01a5fd8d02afa7886",
+  "turrets": 80,
+  "groups": [
+    {
+      "flag": "Flag ND1-C",
+      "parent": "NavRing2",
+      "turrets": [
+        "Turret ND-",
+        "Turret ND0",
+        "Turret ND1",
+        "Turret ND2",
+        "Turret ND3"
+      ]
+    },
+    {
+      "flag": "Flag ND1-D",
+      "parent": "NavRing2",
+      "turrets": [
+        "Turret I-2",
+        "Turret I-0",
+        "Turret I-1",
+        "Turret ND4"
+      ]
+    },
+    {
+      "flag": "Flag ND1-B",
+      "parent": "NavRing2",
+      "turrets": [
+        "Turret I-3",
+        "Turret ND5",
+        "Turret ND6",
+        "Turret I-4"
+      ]
+    },
+    {
+      "flag": "Flag ND1-A",
+      "parent": "NavRing2",
+      "turrets": [
+        "Turret ND7",
+        "Turret ND8",
+        "Turret ND9",
+        "Turret N10",
+        "Turret I-5"
+      ]
+    },
+    {
+      "flag": "Flag ND1-E",
+      "parent": "NavRing1",
+      "turrets": [
+        "Turret N11",
+        "Turret N12",
+        "Turret N13",
+        "Turret N14",
+        "Turret N15"
+      ]
+    },
+    {
+      "flag": "Flag ND1-F",
+      "parent": "NavRing1",
+      "turrets": [
+        "Turret N16",
+        "Turret I-6",
+        "Turret I-7",
+        "Turret I-8"
+      ]
+    },
+    {
+      "flag": "Flag ND1-G",
+      "parent": "NavRing1",
+      "turrets": [
+        "Turret N17",
+        "Turret N18",
+        "Turret N19",
+        "Turret N20",
+        "Turret N21"
+      ]
+    },
+    {
+      "flag": "Flag ND1-H",
+      "parent": "NavRing1",
+      "turrets": [
+        "Turret I-9",
+        "Turret I10",
+        "Turret N22",
+        "Turret I11"
+      ]
+    },
+    {
+      "flag": "Flag Safe2",
+      "parent": "NavSafe2",
+      "turrets": [
+        "Turret F2a",
+        "Turret F2c",
+        "Turret F2b",
+        "Turret F2d"
+      ]
+    },
+    {
+      "flag": "Flag Safe1",
+      "parent": "NavSafe1",
+      "turrets": [
+        "Turret F1a",
+        "Turret F1c",
+        "Turret F20",
+        "Turret F21"
+      ]
+    },
+    {
+      "flag": "Flag ND1-0",
+      "parent": "NavDock1",
+      "turrets": [
+        "Turret N23",
+        "Turret N24",
+        "Turret N25",
+        "Turret N26",
+        "Turret I12"
+      ]
+    },
+    {
+      "flag": "Flag ND1-1",
+      "parent": "NavDock1",
+      "turrets": [
+        "Turret I13",
+        "Turret N27",
+        "Turret N28",
+        "Turret I14"
+      ]
+    },
+    {
+      "flag": "Flag ND1-2",
+      "parent": "NavDock1",
+      "turrets": [
+        "Turret N29",
+        "Turret N30",
+        "Turret N31",
+        "Turret N32",
+        "Turret N33"
+      ]
+    },
+    {
+      "flag": "Flag ND1-3",
+      "parent": "NavDock1",
+      "turrets": [
+        "Turret I15",
+        "Turret I16",
+        "Turret I17",
+        "Turret N34"
+      ]
+    },
+    {
+      "flag": "Flag ND1-4",
+      "parent": "NavDock2",
+      "turrets": [
+        "Turret N35",
+        "Turret N36",
+        "Turret N37",
+        "Turret N38",
+        "Turret N39"
+      ]
+    },
+    {
+      "flag": "Flag ND1-5",
+      "parent": "NavDock2",
+      "turrets": [
+        "Turret I18",
+        "Turret N40",
+        "Turret I19",
+        "Turret I20"
+      ]
+    },
+    {
+      "flag": "Flag ND1-6",
+      "parent": "NavDock2",
+      "turrets": [
+        "Turret N41",
+        "Turret N42",
+        "Turret N43",
+        "Turret N44",
+        "Turret N45"
+      ]
+    },
+    {
+      "flag": "Flag ND1-7",
+      "parent": "NavDock2",
+      "turrets": [
+        "Turret I21",
+        "Turret I22",
+        "Turret N46",
+        "Turret I23"
+      ]
+    }
+  ],
+  "group_size_histogram": {
+    "5": 8,
+    "4": 10
+  },
+  "native_checks": {
+    "parent_id_writer": "passed",
+    "native_world_transforms": 383,
+    "maximum_matrix_error": 0.04824942070990801,
+    "load_object_turret_kind": 1
+  },
+  "remaining": [
+    "Per-marker model choice",
+    "Initial ownership and capture rules",
+    "Orientation delivery",
+    "Single-authority aiming/firing and damage",
+    "Live visual and multiplayer acceptance"
+  ]
+}

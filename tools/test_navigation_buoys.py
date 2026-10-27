@@ -84,10 +84,12 @@ class BuoyTests(unittest.TestCase):
             with self.subTest(map=map_name):
                 self.check_delivery(map_name)
 
-    def check_delivery(self, map_name):
+    def check_delivery(self, map_name, extra=(), expected=None, drop_ack_tag=None):
         key = bytes(range(256))
         trn = Path(__file__).resolve().parents[1] / 'game/2.9.2/JRMAP.TRN'
-        expected = buoys.loads(buoys.map_placements(SOURCE.parent, map_name, trn))
+        if expected is None:
+            expected = buoys.loads(buoys.map_placements(SOURCE.parent, map_name, trn))
+        watched = {kind for kind, _ in expected} | {0x25}
         with tempfile.TemporaryDirectory() as tmp:
             folder = Path(tmp)
             (folder / 'key').write_bytes(key)
@@ -98,17 +100,19 @@ class BuoyTests(unittest.TestCase):
                 str(folder / 'key'), str(folder / 'log'), '--profile', 'local-relay',
                 '--port', '0', '--tcp', '0', '--arena-port', str(endpoint[1]),
                 '--map', map_name, '--experimental-terrain', '--sustained-delivery', '--navigation-buoys', str(SOURCE.parent), '--buoy-trn', str(trn),
-                '--peer-timeout', '15', '--seconds', '30'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                '--peer-timeout', '15', '--seconds', '30', *extra], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             peers = [socket.socket(socket.AF_INET, socket.SOCK_DGRAM) for _ in range(2)]
             records = {p: [] for p in peers}
             seen = {p: set() for p in peers}
             missed_ack = False
+            missed_event = None
+            retransmitted = False
 
             def send(peer, kind, payload):
                 peer.sendto(aoanet.encode(kind, payload, key), endpoint)
 
             def pump(seconds):
-                nonlocal missed_ack
+                nonlocal missed_ack, missed_event, retransmitted
                 deadline = time.monotonic() + seconds
                 while time.monotonic() < deadline:
                     ready, _, _ = select.select(peers, [], [], min(.05, max(0, deadline - time.monotonic())))
@@ -124,11 +128,15 @@ class BuoyTests(unittest.TestCase):
                         if kind == 0x1B:
                             seq, inner = struct.unpack_from('<IB', body, len(body) - 5)
                             # Lose one ACK to exercise retransmit/dedup.
-                            if inner == 0x25 and not missed_ack:
+                            if (inner == 0x25 and not missed_ack and
+                                    (drop_ack_tag is None or struct.unpack_from('<I', body, 96)[0] == drop_ack_tag)):
                                 missed_ack = True
+                                missed_event = (peer, seq)
                             else:
                                 send(peer, 0x0F, struct.pack('<I', seq))
                             if seq in seen[peer]:
+                                if (peer, seq) == missed_event:
+                                    retransmitted = True
                                 continue
                             seen[peer].add(seq)
                             kind, body = inner, body[:-5]
@@ -145,14 +153,19 @@ class BuoyTests(unittest.TestCase):
                         self.assertIsNone(process.poll())
                     deadline = time.monotonic() + 10
                     while (not any(k == 0x2C for k, _ in records[peer]) or
-                           len([k for k, _ in records[peer] if k == 0x25]) < len(expected)):
+                           len([k for k, _ in records[peer] if k in watched]) < len(expected)):
                         pump(.1)
                         self.assertLess(time.monotonic(), deadline)
-                    actual = [body for kind, body in records[peer] if kind == 0x25]
-                    self.assertEqual(actual, [p for _, p in expected])
+                    actual = [(kind, body) for kind, body in records[peer] if kind in watched]
+                    self.assertEqual(actual, expected)
                     kinds = [k for k, _ in records[peer]]
                     if expected:
                         self.assertLess(kinds.index(0x2C), kinds.index(0x25))
+                    if drop_ack_tag is not None and peer is peers[0]:
+                        deadline = time.monotonic() + 10
+                        while not retransmitted:
+                            pump(.1)
+                            self.assertLess(time.monotonic(), deadline, 'gate was not retransmitted after ACK loss')
                 self.assertEqual(missed_ack, bool(expected))
             finally:
                 for peer in peers: peer.close()

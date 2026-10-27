@@ -76,7 +76,10 @@ def snapshot(pid, include_objects=False, include_render=False):
                                     "collidable": bool(p[0x2FB]),
                                     "tag": hex(struct.unpack_from("<I", p, 0x178)[0]),
                                     "kind": struct.unpack_from("<I", p, 0x1F8)[0],
+                                    "turret_activation": struct.unpack_from("<i", p, 0x1DC)[0],
+                                    "ai": hex(struct.unpack_from("<I", p, 0x30C)[0]),
                                     "position": list(struct.unpack_from("<3f", p, 0x30)),
+                                    "target_position": list(struct.unpack_from("<3f", p, 0x70)),
                                     "name": p[0x244:0x284].split(b"\0")[0].decode("ascii", "replace"),
                                     "velocity": list(struct.unpack_from("<3f", p, 0x54)),
                                     **(render_fields(p) if include_render else {})})
