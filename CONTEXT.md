@@ -16,6 +16,16 @@ a search-engine summary only.
 
 ## 2. Status
 
+Highlight reel (27 Oct 2026): a 48.9 s video from scripted recordings of the
+real 2.9.2 client, nine shots on six maps (irrosa01, ast_fld_a/b,
+outerchange, CTF_arena_b, JRMAP) with eleven fighters, in the cockpit, chase and
+orbit views. Scripted pilots, camera and velocity held in memory, a new host
+option `--start-vessel`, Windows Graphics Capture through ffmpeg. The first cut
+showed orbit-view flicker (fixed in patch version 21) and untextured Tholfus
+wingmen (original data; replaced). Re-cut the same day with six re-filmed
+shots on version 21 and short punchy title cards (48.95 s). Output stays
+in ignored `work/reel/`. See [hype-reel.md](docs/hype-reel.md).
+
 Headless warp validation (26 Oct 2026): user deferred manual playtesting.
 Three additional tests pass: complete original LoadObject receiver with explicit
 allocation/model/team/event service fixtures, duplicate-load suppression,
@@ -355,7 +365,9 @@ camera that circles your ship once per 24 s at the chase distance. It turns
 the renderer's own forward and right copies (`0x43B367`) and the culling copy
 together. Seen live through a full lap of F5 captures; the F4 read was
 forced on in memory because the test window had no focus, so a real F4
-press is still unconfirmed.
+press is still unconfirmed. Patch version 21 (`third-person-camera-v3`,
+27 Oct) fixes orbit-view objects blinking: culling used the orbit camera
+only when the millisecond clock had not moved ([findings 9.48](docs/findings.md)).
 Plain F2 turned out to be bound by default ("Toggle Mentor"); plain F4 is free.
 Ship changes (24 Oct 2026, [findings 9.40](docs/findings.md)): **fixed in the
 relay.** The in-flight fighter menu needs a config list (TCP job 4, one

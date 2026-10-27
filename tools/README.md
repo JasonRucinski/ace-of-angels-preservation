@@ -24,6 +24,7 @@ executable accept only known, hash-checked builds and record an exact undo.
 | `make_install.py` / `install_wrapper.py` | The extract and wrapper steps of `setup_game.ps1` |
 | `build_texture_pack.py GAME_DIR` | Builds the 2x skin pack from your own archives with Real-ESRGAN ([texture-pack.md](../docs/texture-pack.md)) |
 | `texture_pack.py` | Installs or removes replacement TGA skins in a game folder |
+| `reel/record.py SHOTS` / `reel/edit.py EDIT` | Films scripted shots of the real client and cuts them into the highlight reel ([hype-reel.md](../docs/hype-reel.md)) |
 
 ## Server internals
 

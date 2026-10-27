@@ -16,6 +16,7 @@ Newest results are in [findings.md](findings.md) and the status section of
 | [linux-host.md](linux-host.md) | Minimal Linux host with a systemd service, LAN checks and a VPN path |
 | [host-control.md](host-control.md) | The host window: players, scores, kick/ban, map switching |
 | [map-viewer.md](map-viewer.md) | Loading any of the 20 recovered maps in the client |
+| [hype-reel.md](hype-reel.md) | Filming scripted shots of the real client and cutting the highlight reel |
 | [texture-pack.md](texture-pack.md) | Optional sharper ship and station skins, built from your own copy |
 | [running-on-windows-11.md](running-on-windows-11.md) | Why the client crashed on modern Windows and how it was fixed |
 | [client-setup.md](client-setup.md) | Every client patch, its address, the undo and the checks |

@@ -2940,3 +2940,50 @@ committed):
   HUD brackets with the view turned away from the ship's nose; the light
   and sky pass after the view, which takes the stock forward and right
   (`0x43B4D0`); and the F7 spectate view.
+
+### 9.48 Orbit view: objects blinked because culling used the stock camera (27 October 2026)
+
+Found in the highlight reel ([hype-reel.md](hype-reel.md)): in the F4 orbit
+view, asteroids around CTF_arena_b appeared for a single frame and vanished
+again while the ship and background stayed steady. Across 343 unique frames
+of one orbit clip, 17 frames had screen blocks that changed and changed
+back; chase and cockpit clips had none.
+
+**Cause.** Cave B (culling, `0x49BCB8`) used cave A's turned camera record
+only when the game clock (`0x5E8E5C`) still equalled the tick cave A stored.
+That is the check 9.47 already replaced in cave R: with `frame-clock-v1`'s
+millisecond clock, the clock often advances between cave A and the cull.
+Those frames were culled from the stock cockpit record facing the ship's
+nose, so objects visible only from the orbit angle were dropped. In chase
+view the stock record sits 420 units away from the real eye, too little to
+show.
+
+**Experiment.** In a running client the cave B `jne` after the tick
+comparison (`0x58BD99`, v2) was replaced by two NOPs. Orbit F5 captures
+then taken at the same lap angles (3, 5, 7 and 9 s after enabling orbit)
+showed the full asteroid group at 5 s; with the check in place most of it
+was missing.
+
+**third-person-camera-v3** (patch version 21): cave B accepts cave A's
+record for up to `CULL_WINDOW` = 250 ms of game clock (unsigned
+`tick - TICK`, so a clock that goes backwards also falls back). Spectate
+frames (cave A not run) return to the original record once the window has
+passed; the first 250 ms of a spectate view can still cull from the last
+flight camera. The cave grew to 0x1F0 bytes, still before `0x58BE00`.
+v1 and v2 clients are recognized and upgraded in place.
+
+**Verification:**
+- **Emulation:** `tools/test_third_person.py` (19 tests). The culling test
+  now checks that FAKE is used at +16 ms and +250 ms, and the original
+  record at +251 ms, +300 ms and −1 ms. The v2 → v3 upgrade and exact undo
+  are tested beside v1 → v3. `test_prepare_client` passes.
+- **Live:** the user's client was upgraded to version 21 (`c56d9b8d…`). F5
+  captures at the same four lap angles match the experiment, with the full
+  asteroid group at 5 s.
+
+**Also from the reel: Tholfus is untextured in every build.** Tholfus and
+Saksatar use the AlphaFighter model, which has no skin (already noted in
+[client-setup.md](client-setup.md)), so they draw flat orange, in flight and
+in the target displays. The same `AlphaFighter.Gob` and `.Sco` files ship in
+2.0.0 through 2.9.2. This is original data, not a patch bug; the reel
+uses textured hulls instead.

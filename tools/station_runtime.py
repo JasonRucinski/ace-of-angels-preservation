@@ -101,6 +101,8 @@ def parse_args(argv=None):
     parser.add_argument("--target-ships", type=int, default=0, metavar="N",
                         help="N passive hostile ships ahead of the spawn that the target keys can select "
                              "(0..98); needs the relay")
+    parser.add_argument("--start-vessel", default="Ym Khtat", metavar="NAME",
+                        help="fighter every pilot starts in until they pick another (default Ym Khtat); needs the relay")
     parser.add_argument("--arena1a-buoys", type=Path, metavar="GOB",
                         help="restore ten native navigation buoys from original Arena1a.Gob; requires Arena1a terrain and sustained delivery")
     parser.add_argument('--navigation-buoys', type=Path, metavar='EXPORT_DIR',
@@ -147,6 +149,8 @@ def parse_args(argv=None):
         parser.error("--target-ships must be 0..98")
     if args.target_ships and not args.experimental_relay:
         parser.error("--target-ships requires the relay")
+    if args.start_vessel != "Ym Khtat" and not args.experimental_relay:
+        parser.error("--start-vessel requires the relay")
     if args.warp_trial is not None:
         if not (args.profile in ('local-relay', 'local-guests') and args.experimental_relay
                 and args.experimental_terrain and args.sustained_delivery and args.map == 'Arena1a'):

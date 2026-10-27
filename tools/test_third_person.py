@@ -1,4 +1,4 @@
-"""third-person-camera-v2: all three caves run in Unicorn on the prepared client image."""
+"""third-person-camera-v3: all three caves run in Unicorn on the prepared client image."""
 import math
 import struct
 import sys
@@ -313,9 +313,16 @@ class ThirdPersonTests(unittest.TestCase):
         # Null node: original arithmetic.
         u.mem_write(other + 0x19C, struct.pack("<I", 0))
         self.assertEqual(run_site_b(u, other), 0x2C)
-        # A later tick without cave A (a spectate frame): original record.
+        # The millisecond clock moving on before the cull (most frames): still FAKE.
         u.mem_write(tp.GAME_TICK, struct.pack("<I", 5016))
-        self.assertEqual(run_site_b(u), NODE + 0x2C)
+        self.assertEqual(run_site_b(u), tp.FAKE)
+        u.mem_write(tp.GAME_TICK, struct.pack("<I", 5000 + tp.CULL_WINDOW))
+        self.assertEqual(run_site_b(u), tp.FAKE)
+        # Past the window without cave A (a spectate view), or a clock that
+        # went backwards: the original record.
+        for tick in (5000 + tp.CULL_WINDOW + 1, 5300, 4999):
+            u.mem_write(tp.GAME_TICK, struct.pack("<I", tick))
+            self.assertEqual(run_site_b(u), NODE + 0x2C)
 
     def test_preparation_applies_and_undoes_exactly(self):
         on = self.prepared
@@ -338,13 +345,22 @@ class ThirdPersonTests(unittest.TestCase):
                 tp.state(bytes(partial))
         # A client prepared with the v1 cave (chase only, patch versions 15-19) upgrades in place.
         v1 = bytearray(tp.configure(on, False))
-        for o, old, new in tp.regions(legacy=True):
+        for o, old, new in tp.regions("v1"):
             v1[o:o + len(old)] = new
         v1 = bytes(v1)
         self.assertIs(tp.state(v1), True)
         self.assertIn(tp.NAME, prepare_client.inspect(v1)["patches"])
         self.assertEqual(prepare_client.configure(v1), on)
         self.assertEqual(tp.configure(v1, False), tp.configure(on, False))
+        # So does v2 (patch version 20: orbit, same-tick cull check).
+        v2 = bytearray(tp.configure(on, False))
+        for o, old, new in tp.regions("v2"):
+            v2[o:o + len(old)] = new
+        v2 = bytes(v2)
+        self.assertNotEqual(v2, on)
+        self.assertIs(tp.state(v2), True)
+        self.assertEqual(prepare_client.configure(v2), on)
+        self.assertEqual(tp.configure(v2, False), tp.configure(on, False))
         self.assertEqual(on[tp.SITE_R - 0x400000:][:len(tp.ORIGINAL_R)][:1], b"\xe9")
         self.assertEqual(v1[tp.SITE_R - 0x400000:][:len(tp.ORIGINAL_R)], tp.ORIGINAL_R)
         # Coexists with every optional rendering patch.
