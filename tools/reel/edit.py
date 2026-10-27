@@ -5,8 +5,10 @@
 
 edit.json:
   "segments": list of {"clip": "01_name", "in": s, "dur": s} or
-              {"card": ["line", ...], "dur": s, "logo": true?, "kicker"?}; an
-              empty card is a black beat. Each joins the previous one with a
+              {"card": ["line", ...], "dur": s, "logo": true?, "push"?, "kicker"?};
+              an empty card is a black beat, or the logo alone with "logo".
+              The logo is the game's AOALOGO.BMP; "push" grows it by that
+              fraction over the card. Each joins the previous one with a
               dissolve of "dissolve" seconds (default 0.6; "cut": true makes
               it a two-frame cut).
   "titles":   text drawn over the footage: {"text", "sub"?, "kicker"?, "at", "dur",
@@ -78,20 +80,33 @@ def drawtext(work, text, size, y, font="title", color="white", start=None, end=N
     return "drawtext=" + ":".join(parts)
 
 
+def logo_file():
+    """The game's own logo (AOALOGO.BMP, 220x220) when a game folder exists, else
+    the 2000 website logo kept in the repository."""
+    game = ROOT / "game/2.9.2/AOALOGO.BMP"
+    return game if game.exists() else ROOT / "docs/images/logo.jpg"
+
+
 def punch_card(work, seg, i, inputs):
     """A black card in the punch style; appends the logo input when asked."""
     dur, lines = seg["dur"], seg["card"]
     filters = [f"color=c=black:s={W}x{H}:r={FPS}:d={dur}"]
     if seg.get("logo"):
-        inputs += ["-loop", "1", "-framerate", str(FPS), "-t", str(dur), "-i", str(ROOT / "docs/images/logo.jpg")]
+        inputs += ["-loop", "1", "-framerate", str(FPS), "-t", str(dur), "-i", str(logo_file())]
         index = sum(1 for a in inputs if a == "-i") - 1
         for n, line in enumerate(lines):
             first = n == 0
             filters.append(drawtext(work, (line if "/" in line else tracked(line, 3 if first else 1)), 84 if first else 38, 640 + n * 74 + (0 if first else 30),
                                     "heavy" if first else "bold", "white" if first else GOLD, 0, dur, 0.2))
-        return (f"[{index}:v]scale=-1:420:flags=lanczos,colorlevels=rimin=0.07:gimin=0.07:bimin=0.07,"
-                f"format=yuv420p[logo{i}];" + ",".join(filters) + f",format=yuv420p[bg{i}];"
-                f"[bg{i}][logo{i}]overlay=(W-w)/2:150,setsar=1")
+        # Alone, the logo is larger and centred; "push" grows it slowly over the card.
+        size = 420 if lines else 560
+        top = "150" if lines else "(H-h)/2"
+        grow = seg.get("push", 0)
+        height = f"'{size}*(1+{grow}*t/{dur})'" if grow else str(size)
+        return (f"[{index}:v]scale=-2:{height}:flags=lanczos:eval=frame,"
+                f"colorlevels=rimin=0.07:gimin=0.07:bimin=0.07,format=yuva420p[logo{i}];"
+                + ",".join(filters) + f",format=yuv420p[bg{i}];"
+                f"[bg{i}][logo{i}]overlay=(W-w)/2:{top}:eval=frame,format=yuv420p,setsar=1")
     if seg.get("kicker"):
         filters.append(drawtext(work, tracked(seg["kicker"], 4), 64, H // 2 - 150, "bold", GOLD, 0, dur, 0.1, 10))
     for line in lines:

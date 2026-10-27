@@ -1,29 +1,139 @@
 {
  "style": "punch",
  "dissolve": 0.5,
- "music": {"file": "game/2.9.2/MUSIC.MP3", "start": "auto"},
+ "music": {
+  "file": "game/2.9.2/MUSIC.MP3",
+  "start": "auto"
+ },
  "segments": [
-  {"kicker": "2002", "card": ["Award winner."], "dur": 1.6},
-  {"kicker": "2006", "card": ["Gone."], "dur": 1.4, "cut": true},
-  {"card": ["2026"], "dur": 1.1, "cut": true},
-  {"card": [], "dur": 0.45, "cut": true},
-  {"clip": "01_opening_orbit", "in": 0.75, "dur": 5.6, "cut": true},
-  {"clip": "02_formation_flyby", "in": 2.8, "dur": 4.4, "cut": true},
-  {"clip": "05_overtake_chase", "in": 1.0, "dur": 3.8, "cut": true},
-  {"clip": "04_outerchange_orbit", "in": 2.4, "dur": 4.4, "cut": true},
-  {"clip": "03_chase_asteroids", "in": 2.0, "dur": 3.4, "cut": true},
-  {"clip": "06_gunfire", "in": 6.4, "dur": 5.4, "cut": true},
-  {"clip": "07_jrmap_station", "in": 0.5, "dur": 5.0, "cut": true},
-  {"clip": "08_base_run", "in": 3.0, "dur": 3.0, "cut": true},
-  {"clip": "09_closer_orbit", "in": 0.5, "dur": 5.6, "cut": true},
-  {"card": ["Ace of Angels", "Preservation project", "github.com/JasonRucinski/ace-of-angels-preservation"],
-   "dur": 5.0, "logo": true, "dissolve": 0.8}
+  {
+   "card": [],
+   "logo": true,
+   "push": 0.06,
+   "dur": 2.6
+  },
+  {
+   "kicker": "2002",
+   "card": [
+    "Award winner."
+   ],
+   "dur": 1.6,
+   "dissolve": 0.5
+  },
+  {
+   "kicker": "2006",
+   "card": [
+    "Gone."
+   ],
+   "dur": 1.4,
+   "cut": true
+  },
+  {
+   "card": [
+    "2026"
+   ],
+   "dur": 1.1,
+   "cut": true
+  },
+  {
+   "card": [],
+   "dur": 0.45,
+   "cut": true
+  },
+  {
+   "clip": "01_opening_orbit",
+   "in": 0.75,
+   "dur": 5.6,
+   "cut": true
+  },
+  {
+   "clip": "02_formation_flyby",
+   "in": 2.8,
+   "dur": 4.4,
+   "cut": true
+  },
+  {
+   "clip": "05_overtake_chase",
+   "in": 1.0,
+   "dur": 3.8,
+   "cut": true
+  },
+  {
+   "clip": "04_outerchange_orbit",
+   "in": 2.4,
+   "dur": 4.4,
+   "cut": true
+  },
+  {
+   "clip": "03_chase_asteroids",
+   "in": 2.0,
+   "dur": 3.4,
+   "cut": true
+  },
+  {
+   "clip": "06_gunfire",
+   "in": 6.4,
+   "dur": 5.4,
+   "cut": true
+  },
+  {
+   "clip": "07_jrmap_station",
+   "in": 0.5,
+   "dur": 5.0,
+   "cut": true
+  },
+  {
+   "clip": "08_base_run",
+   "in": 3.0,
+   "dur": 3.0,
+   "cut": true
+  },
+  {
+   "clip": "09_closer_orbit",
+   "in": 0.5,
+   "dur": 5.6,
+   "cut": true
+  },
+  {
+   "card": [
+    "Ace of Angels",
+    "Preservation project",
+    "github.com/JasonRucinski/ace-of-angels-preservation"
+   ],
+   "dur": 5.0,
+   "logo": true,
+   "dissolve": 0.8,
+   "push": 0.04
+  }
  ],
  "titles": [
-  {"text": "Back.", "at": "@4", "dur": 1.3, "size": 190},
-  {"text": "Ace of Angels", "at": "@4+2.0", "dur": 3.4, "size": 130},
-  {"text": "Real dogfights.", "at": "@9+1.4", "dur": 2.6},
-  {"text": "New cameras.", "at": "@10+1.0", "dur": 2.6},
-  {"text": "Come fly.", "at": "@12+2.2", "dur": 2.6, "size": 170}
+  {
+   "text": "Back.",
+   "at": "@5",
+   "dur": 1.3,
+   "size": 190
+  },
+  {
+   "text": "Ace of Angels",
+   "at": "@5+2.0",
+   "dur": 3.4,
+   "size": 130
+  },
+  {
+   "text": "Real dogfights.",
+   "at": "@10+1.4",
+   "dur": 2.6
+  },
+  {
+   "text": "New cameras.",
+   "at": "@11+1.0",
+   "dur": 2.6
+  },
+  {
+   "text": "Come fly.",
+   "at": "@13+2.2",
+   "dur": 2.6,
+   "size": 170
+  }
  ]
 }
