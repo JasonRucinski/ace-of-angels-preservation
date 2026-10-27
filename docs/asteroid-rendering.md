@@ -194,3 +194,75 @@ boundaries, the measured four-dock threshold split, retained small-object
 culling, FPU/integer state, migration from station-only mode, idempotence,
 exact rollback, byte scope, partial/corrupt edits, and backup rejection.
 Flight confirmation of brightness consistency remains pending.
+
+## Distant object persistence (27 October 2026)
+
+`tools/object_persistence.py` adds a separate optional visibility patch,
+`distant-world-objects-v1`. It extends the mesh surface-distance cutoff from
+61,000 to **4,500,000 world units**, and the cached-world-image horizon from
+900,000 to the same limit. The shared model visibility check now accepts
+projected sizes above **0.5**, instead of above 5. For an object limited by
+screen size, that permits visibility ten times farther away at the same
+viewport and object radius. Actual distance still depends on object size,
+camera direction and the renderer's other clipping rules.
+
+Simply lowering the screen-size check would leave many models without a
+selected mesh. The group update also lowers its root visibility minimum to
+0.5 and saves the original authored minimum in an unused stack local. Child
+selection uses the greater of actual projected size and that saved minimum.
+This keeps the lowest authored LOD available beyond its original range,
+including models such as `newdock` whose authored minimum is 200. The real
+projected size stays unchanged. Existing near LOD transitions and textures
+remain in use; this patch does not force the most detailed meshes at distance.
+
+The hook sites are `0x546BB3` (root range) and `0x546BEA` (child selection),
+with 128 bytes of padding at `0x58BB80..0x58BBFF`. This is separate from the
+station-detail and third-person caves. The distance constants have one code
+reference each in the original image: `0x543222` and `0x4ED36A`. The size
+comparison at `0x54326A` uses the existing 0.5 constant; the shared 5.0 constant
+is unchanged. No changes are made to the server, physics, authored transforms
+or intentional sprites/particles.
+
+Close the client first, then run from the repository root:
+
+```powershell
+.venv\Scripts\python.exe -I tools/object_persistence.py game/2.9.2/AOACLIENT.EXE
+# Exact rollback of this layer:
+.venv\Scripts\python.exe -I tools/object_persistence.py game/2.9.2/AOACLIENT.EXE --undo
+.venv\Scripts\python.exe -I tools/test_object_persistence.py
+```
+
+The input must already have a recorded client preparation. The exact prior
+executable is retained as `.EXE.before-object-persistence`. The new mode
+composes with the older asteroid-only, solid-world, station-detail and
+world-detail modes. Normal preparation preserves it. Patch version 20 also
+accepts `prepare --distant-objects` and `prepare --no-distant-objects`; it
+remains off for fresh preparations unless explicitly selected.
+
+Seven regression tests execute the original model-group range setup,
+visibility calculation and child selection together. They cover the old
+and new distance boundaries at three FPU precisions, the tenfold screen-size
+range, all 154 parsed models' distant and near mesh selections, hidden and
+behind-camera objects, hook ABI, optional-mode composition, exact rollback,
+installation preferences, byte scope and rejection of partial/corrupt edits.
+These are CPU and installation checks. In-flight visual acceptance and GPU
+performance remain unmeasured; additional distant draws can cost frame time.
+
+Installed on 27 October in both the normal `game/2.9.2` folder and the active
+`work/arena1a-game-trial` copy after the user closed the client. Both pass the
+asset/setup check, with exact prior-image backups verified. Nine focused
+suites pass (58 tests), plus CLI enable/preserve/disable checks. See the
+[verification record](../evidence/2.9.2/object_persistence_20261027.json).
+
+Independent review on the same date reran the seven new tests and added two
+pipeline tests in `test_object_persistence_pipeline.py`. Those execute the
+whole model-group function through its return, including the relative-motion
+calculations after the original tests' stop point. Reused trees exercise
+recursive child visibility and the renderer's drawable predicate through
+near/far, hidden and reappearance transitions at three FPU precisions. Saved
+registers, stack cleanup, x87 stack depth and relative-motion outputs pass.
+The original terrain clip-range accumulator and projection setter also accept
+the new horizon: the initial 65,000-unit projection is replaced by the dynamic
+mesh-pass range, not a fixed cap. No executable correction was needed.
+These checks still do not exercise a real Direct3D device or establish frame
+rate, image quality or absence of visible pop-in.

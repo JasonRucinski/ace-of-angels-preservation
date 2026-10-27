@@ -52,6 +52,7 @@ Details and addresses are in [client-setup.md](../docs/client-setup.md).
 | `online_terrain.py` | Server-chosen maps, safe-zone cubes |
 | `powerup_pickup.py` | Picking up server-placed power-ups |
 | `texture32.py`, `world_detail.py`, `station_detail.py`, `solid_world_render.py`, `asteroid_render.py` | Optional rendering quality |
+| `object_persistence.py` | Optional 4,500,000-unit world visibility, smaller screen-size cutoff and retained distant LODs; exact undo |
 | `local_station.py`, `explicit_protection.py` | Station hostname; protection setter prototype |
 
 ## Finding builds and history

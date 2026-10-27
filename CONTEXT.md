@@ -16,6 +16,21 @@ a search-engine summary only.
 
 ## 2. Status
 
+Distant object visibility (27 Oct 2026): optional `distant-world-objects-v1`
+extends the mesh surface-distance limit from 61,000 to 4,500,000 units and
+the cached-world-image horizon from 900,000 to 4,500,000. The minimum projected
+size drops from 5 to 0.5 (ten times farther for size-limited objects). Group
+visibility and child LOD selection are adjusted together, retaining the lowest
+authored selection at distance and the existing near selections. Seven tests
+cover complete original-code group execution, all 154 parsed mesh models,
+cutoffs/FPU precisions, optional rendering composition, hook state and exact
+undo/corruption checks. Patch version 20 recognizes and preserves this opt-in
+mode. Installed in the normal client and active Arena1a trial copy; both
+pass asset/setup and exact layer-backup checks. All nine focused suites pass
+(58 tests); [verification record](evidence/2.9.2/object_persistence_20261027.json).
+Visual acceptance and GPU performance remain pending. See
+[rendering notes](docs/asteroid-rendering.md#distant-object-persistence-27-october-2026).
+
 Headless warp validation (26 Oct 2026): user deferred manual playtesting.
 Three additional tests pass: complete original LoadObject receiver with explicit
 allocation/model/team/event service fixtures, duplicate-load suppression,

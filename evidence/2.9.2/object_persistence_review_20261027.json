@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "reviewed_utc": "2026-10-27T10:59:16.416109+00:00",
+  "purpose": "Independent review requested by user",
+  "production_patch_changed": false,
+  "tests_rerun": {
+    "test_object_persistence.py": {
+      "tests": 7,
+      "passed": true
+    }
+  },
+  "new_tests": {
+    "test_object_persistence_pipeline.py": {
+      "tests": 2,
+      "passed": true
+    }
+  },
+  "additional_coverage": [
+    "Complete 0x546B20 return, callee-saved registers, stack cleanup and x87 depth",
+    "Reused parent/child trees, recursive visibility, drawable predicate and near/far/behind/reappearance transitions",
+    "Original relative-motion outputs unchanged",
+    "Original terrain clip-range accumulation and mesh-pass projection at 4,500,000 units"
+  ],
+  "installed_clients": {
+    "normal": {
+      "sha256": "fc0878ebf5314c3157977bcdff0241b4128b27137755f7633c5d886757e92625",
+      "exact_backup_match": true,
+      "worktree_check": "passed",
+      "main_checkout_check": "passed"
+    },
+    "trial": {
+      "sha256": "fc0878ebf5314c3157977bcdff0241b4128b27137755f7633c5d886757e92625",
+      "exact_backup_match": true,
+      "worktree_check": "passed",
+      "main_checkout_check": "passed"
+    }
+  },
+  "main_checkout_observation": "Initial read-only check failed; source files changed during review and fresh checks now pass. No main-checkout files were edited by this review.",
+  "conclusion": "No remaining defect found in the reviewed machine-code hooks or installation bytes.",
+  "limitations": [
+    "No real Direct3D/GPU draw",
+    "No flight visual acceptance",
+    "No frame-rate benchmark",
+    "This review reran the seven patch-specific tests, not all 58 tests from the original implementation report."
+  ]
+}

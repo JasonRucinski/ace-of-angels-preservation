@@ -32,9 +32,10 @@ import own_ship_model
 import own_ship_menu
 import powerup_pickup
 import world_detail
+import object_persistence
 from local_station import OFFSET, ORIGINAL, STABLE_SHA256
 
-PATCH_VERSION = 19
+PATCH_VERSION = 20
 # Wakeup-timer callback 0x446E70: `jne` at 0x446EAF skips the frame while the
 # window is inactive if the graphics layer reports exclusive mode (+0x24C5).
 # The client always requests exclusive mode, so an inactive flying client
@@ -75,6 +76,8 @@ def background_site(data, enabled):
 def inspect(data):
     if sha(data) == patch_client.PRISTINE_292:
         return {"source": "original-2.9.2", "host": "aoahost.com", "patches": []}
+    distant = object_persistence.state(data)
+    data = object_persistence.configure(data, False)
     pickup = powerup_pickup.state(data)
     data = powerup_pickup.configure(data, False)
     chase = third_person.state(data)
@@ -132,6 +135,7 @@ def inspect(data):
             + ([solid_world_render.NAME] if solids else [])
             + ([station_detail.NAME] if detail else [])
             + ([world_detail.NAME] if world_lod else [])
+            + ([object_persistence.NAME] if distant else [])
             + ([texture32.NAME] if tex32 else [])
             + ([frame_clock.NAME] if clock else [])
             + ([visibility_fix.NAME] if visibility else [])
@@ -142,9 +146,11 @@ def inspect(data):
             + ([explicit_protection.NAME] if protection else [])}
 
 
-def configure(data, host="localhost", experimental_protection=None, experimental_asteroids=None, experimental_solids=None, experimental_station_detail=None, experimental_world_detail=None, experimental_texture32=None, smooth_frame_clock=True, bounded_visibility=True, chase_camera=True, powerup_pickups=True):
+def configure(data, host="localhost", experimental_protection=None, experimental_asteroids=None, experimental_solids=None, experimental_station_detail=None, experimental_world_detail=None, experimental_texture32=None, smooth_frame_clock=True, bounded_visibility=True, chase_camera=True, powerup_pickups=True, distant_objects=None):
     field = host_field(host)
     state = inspect(data)
+    distant = object_persistence.NAME in state["patches"] if distant_objects is None else distant_objects
+    data = object_persistence.configure(data, False)
     data = own_ship_menu.configure(own_ship_model.configure(third_person.configure(data, False), False), False)
     data = powerup_pickup.configure(data, False)
     data = visibility_fix.configure(frame_clock.configure(data, False), False)
@@ -190,6 +196,7 @@ def configure(data, host="localhost", experimental_protection=None, experimental
     result = own_ship_model.configure(result, chase_camera)
     result = own_ship_menu.configure(result, chase_camera)
     result = powerup_pickup.configure(result, powerup_pickups)
+    result = object_persistence.configure(result, distant)
     inspect(result)
     return result
 
@@ -259,7 +266,7 @@ def load_record(record_path, backup, current):
     return record
 
 
-def prepare(exe, host="localhost", undo=False, experimental_protection=None, experimental_asteroids=None, experimental_solids=None, experimental_station_detail=None, experimental_world_detail=None, experimental_texture32=None, smooth_frame_clock=True, bounded_visibility=True, chase_camera=True, powerup_pickups=True):
+def prepare(exe, host="localhost", undo=False, experimental_protection=None, experimental_asteroids=None, experimental_solids=None, experimental_station_detail=None, experimental_world_detail=None, experimental_texture32=None, smooth_frame_clock=True, bounded_visibility=True, chase_camera=True, powerup_pickups=True, distant_objects=None):
     exe, backup, record_path = paths(exe)
     current = exe.read_bytes()
     inspect(current)
@@ -271,7 +278,7 @@ def prepare(exe, host="localhost", undo=False, experimental_protection=None, exp
         result = backup.read_bytes()
         inspect(result)
     else:
-        result = configure(current, host, experimental_protection, experimental_asteroids, experimental_solids, experimental_station_detail, experimental_world_detail, experimental_texture32, smooth_frame_clock, bounded_visibility, chase_camera, powerup_pickups)
+        result = configure(current, host, experimental_protection, experimental_asteroids, experimental_solids, experimental_station_detail, experimental_world_detail, experimental_texture32, smooth_frame_clock, bounded_visibility, chase_camera, powerup_pickups, distant_objects)
         if old is None:
             # Exclusive creation: never replace an unrelated backup. A prior
             # interruption before recording is recoverable only if bytes match.
@@ -327,9 +334,13 @@ def main():
                         help="F2 toggles a chase camera behind your ship (third-person-camera-v1, own-ship-model-v1, own-ship-menu-model-v1); prepare only")
     parser.add_argument("--powerup-pickup", action=argparse.BooleanOptionalAction, default=True,
                         help="server-placed power-ups can be picked up and reappear (powerup-pickup-v1); prepare only")
+    parser.add_argument("--distant-objects", action=argparse.BooleanOptionalAction, default=None,
+                        help="extend world-object visibility to 4,500,000 units and 0.5 projected size; preserve installed choice by default; prepare only")
     args = parser.parse_args()
     if args.experimental_protection is not None and args.action != "prepare":
         parser.error("--experimental-protection applies only to prepare")
+    if args.distant_objects is not None and args.action != "prepare":
+        parser.error("--distant-objects applies only to prepare")
     try:
         if args.action in ("prepare", "undo"):
             result = prepare(args.exe, args.station, undo=args.action == "undo",
@@ -337,7 +348,8 @@ def main():
                              smooth_frame_clock=args.frame_clock,
                              bounded_visibility=args.visibility_math,
                              chase_camera=args.third_person,
-                             powerup_pickups=args.powerup_pickup)
+                             powerup_pickups=args.powerup_pickup,
+                             distant_objects=args.distant_objects)
         else:
             result = check(args.exe)
             if args.action == "launch":
