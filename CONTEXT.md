@@ -349,6 +349,14 @@ taken power-up never re-enables its model. Patch version 19
 live with no memory writes: 22 pickups in a row, one every 5 s, and the HUD
 showed "Shield +5". The user confirmed it on JRMAP's own zones with
 `game/2.9.2` at version 19. A second player watching is untested.
+Orbit camera (26 Oct 2026, [findings 9.47](docs/findings.md)): patch version 20
+(`third-person-camera-v2`, replaces v1, upgrades in place) adds **F4**, a
+camera that circles your ship once per 24 s at the chase distance. It turns
+the renderer's own forward and right copies (`0x43B367`) and the culling copy
+together. Seen live through a full lap of F5 captures; the F4 read was
+forced on in memory because the test window had no focus, so a real F4
+press is still unconfirmed.
+Plain F2 turned out to be bound by default ("Toggle Mentor"); plain F4 is free.
 Ship changes (24 Oct 2026, [findings 9.40](docs/findings.md)): **fixed in the
 relay.** The in-flight fighter menu needs a config list (TCP job 4, one
 `_all` entry) and an answer to its `0xA0` request. The relay sent neither,
