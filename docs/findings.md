@@ -2081,7 +2081,8 @@ default; `--no-third-person` opts out):
   as the camera record. This happens only for the node cave A used, in the
   same game tick (`0x5E8E5C`), so spectate frames and other camera objects
   are unaffected.
-- F2 is unbound in the default key map. The toggle bit flips on every press,
+- F2 is unbound in the default key map (wrong: plain F2 is "Toggle Mentor"; see
+  [9.47](#947-an-orbit-camera-on-f4-f2-was-never-unbound-26-october-2026)). The toggle bit flips on every press,
   so no state is kept beyond the key state itself.
 
 **Verification:**
@@ -2831,3 +2832,111 @@ table):
 A second client simulates the shooter's gunshots from the relayed fire state
 and so damages its own copy too. That copy is never destroyed either, and it
 is removed and reloaded with everyone else's.
+
+### 9.47 An orbit camera on F4; F2 was never unbound (26–27 October 2026)
+
+User request: an orbiting or chase camera to show off the visuals. F2's
+chase camera (9.37) already existed; this adds an orbit view.
+
+**Where the renderer gets its view.** `0x43B1D0` is called once, from
+`0x44A643`, with the camera object. It does not use the matrix that
+`0x553810` copies to graphics `+0x2510`; that setter is a plain 64-byte
+copy. The renderer reads the object's position (`+0x58`) and three vectors
+through vtable slots: forward (`+0xAC`), right (`+0xB0`, kept in `edi`) and
+up (`+0xB4`). It keeps its own copies in the graphics object: eye at
+`+0x2620`, forward at `+0x262C` (`esi` in the chase branch), and right at
+`+0x2638`, copied from `[edi]` at `0x43B431`.
+`0x569880(out, eye, forward, right, 0)` derives up with cross products and
+builds the view matrix. That matrix goes to `SetTransform(D3DTS_VIEW)`
+through the device at `+0x188`. The chase branch at `0x43B367` computes the
+eye from the `+0x262C` copy. So turning forward and right there moves the
+eye *and* turns the view, using the renderer's own arithmetic. Only
+`0x43B1D0` writes `+0x262C`.
+
+**The default key map.** The client registers its defaults through
+`0x4B8500(command, name, vk, modifiers)`, 158 calls. Plain **F2** is
+command `0xB1`, "Toggle Mentor" (`0x44F464`, modifiers `edi` = 0), and plain
+**F3** is `0xB2`, "Toggle Joystick Curve window" (`0x44F47C`). So 9.37's
+"F2 is unbound" was wrong: F2 has toggled Mentor along with the chase
+camera all along. Plain **F4** has no binding. F4 does appear with
+modifiers: Shift+F4 is "Movement cue grid visible toggle" (`0x4F`), and
+modifier sets `0x16` and `0x10` save and recall keymap 4. `GetKeyState`'s
+toggle bit flips on those combinations too.
+
+**third-person-camera-v2** (`tools/third_person.py`, patch version 20,
+replaces v1; on by default with `--third-person`):
+- **Cave A** also reads F4's toggle bit into `ORBIT` (`0x60D3F0`). When the
+  bit changes it stores the game tick in `START` (`0x60D3F4`), and it sets
+  `CHASE_FLAG` to F2 | F4.
+- With orbit on, after copying the camera record to `FAKE`, cave A takes
+  the angle θ = 2π × ((tick − START) mod 24000) / 24000. It then turns the
+  copy's right and forward rows about the ship's up row:
+  *forward′ = cos θ · forward + sin θ · right*,
+  *right′ = cos θ · right − sin θ · forward*.
+  The chase eye is computed from forward′, and `ARMED` (`0x60D3F8`) is set.
+  Cave A clears `ARMED` on every other frame. The ship's node is not
+  changed.
+- **Cave R** (`0x43B367`, the chase branch's first 8 bytes, at the end of
+  the `0x58BC00` cave) runs only when `ARMED` is set, and clears it. It
+  copies forward′ from `FAKE+0x70` into the renderer's copy at `[esi]`, and
+  points `edi` at right′ (`FAKE+0x50`). A spectate frame does not run
+  cave A, so it keeps the stock view.
+- Cave B is unchanged, so culling uses the turned copy. The cave grew from
+  0x114 to 0x1EB bytes, still inside `0x58BC00..0x58BE00`.
+- A v1 client is recognized and upgraded in place by `prepare_client.py`.
+
+One lap takes 24 s. It starts directly behind the ship (θ = 0, the F2 view)
+when F4 is pressed. The ship stays where the chase view puts it on screen,
+420 ahead of the eye and 100 below it. Releasing F4 returns to whatever F2
+says.
+
+**Two bugs the first live run found** (the first v2 draft, never
+committed):
+- Cave R turned only the forward copy. The renderer then rebuilt the view
+  from forward′ and the *stock* right vector, which is not perpendicular to
+  it, so the view matrix was a skew rather than a rotation. At 30° its rows
+  read [1, 0, 0.126], [0, 0.992, 0], [0, 0, 0.992]. On screen, the ship
+  stayed seen from behind at 108°, was drawn upside down at the top at
+  186°, and was off screen at 264°. The emulation then stopped at
+  `0x43B418`, before the view was built, so it missed this.
+- Cave R checked the game tick against cave A's, as cave B does. With
+  `frame-clock-v1`'s millisecond clock, the tick often advanced between
+  cave A and the render. Fast sampling saw the stock forward on about half
+  of the frames. `ARMED` replaced the tick check.
+
+**Verification:**
+- **Emulation:** `tools/test_third_person.py` (19 tests). The orbit test
+  runs cave A on two frames, at three orientations and five lap times. The
+  turned rows, up and eye match the formula, `START` is kept, and the node
+  is enabled with F4 alone. The clock then advances 1 ms, and the test
+  runs the renderer from `0x43B367` through `0x569880` (`0x43B560`,
+  `0x542A90` and `0x5697A0` included). In the resulting view matrix, the
+  ship is at (0, −100, 420) and the rotation rows are orthonormal, for the
+  F2 view and every orbit angle. The renderer's eye equals the culling eye.
+  A second render without cave A keeps the stock view. Releasing F4
+  restores the stock chase rows. The key map test decodes all
+  registrations. The v1 → v2 upgrade and exact undo are also tested. Gate:
+  every suite that prepares a client passes, and `test_prepare_client`
+  passes with a full `game/2.9.2`.
+- **Live** (Claude, 27 Oct 2026; [orbit_camera_20261027.json](../evidence/2.9.2/orbit_camera_20261027.json)):
+  - **Setup:** a copy of the user's patch-version-19 client, upgraded in
+    place by `prepare_client.py`, flying the offline training mission.
+    The game window never had focus, so `GetKeyState` saw no key as
+    toggled; posted F4 messages and `SetKeyboardState` did not reach it
+    either. For the test, the running process's `and al,1` after the F4 read
+    (`0x58BC1B`) was rewritten to `mov al,1`, and then restored to turn
+    orbit off. The file on disk was not changed.
+  - **Memory reads** at 9°, 28° and 48°: renderer eye = culling eye, and
+    renderer forward = forward′. The view matrix was a rotation with
+    translation (0, −100, 420).
+  - **Fast sampling:** about 150,000 samples in 3 s, all with the turned
+    forward.
+  - **Six F5 captures, a full lap:** your ship held its screen position,
+    seen from behind, both flanks and the front quarters, while the
+    nebula, station and asteroids swung behind it. Orbit off returned to
+    the normal view.
+- **Not verified:** a real F4 key press in a focused window; that is the
+  same `GetKeyState` path F2 has used since v1. Also untested: aiming and
+  HUD brackets with the view turned away from the ship's nose; the light
+  and sky pass after the view, which takes the stock forward and right
+  (`0x43B4D0`); and the F7 spectate view.

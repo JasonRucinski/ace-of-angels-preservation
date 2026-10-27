@@ -47,7 +47,7 @@ Details and addresses are in [client-setup.md](../docs/client-setup.md).
 | `visibility_fix.py` | Invalid trigonometry in visibility culling |
 | `cursor_warp.py` | Dragged panels jumping to the corner |
 | `menu_aspect.py` | Ship-selection framing on wide screens |
-| `third_person.py` | F2 chase camera |
+| `third_person.py` | F2 chase camera and F4 orbit camera |
 | `own_ship_model.py` / `own_ship_menu.py` | Drawing your own ship in the chase camera and after a ship change |
 | `online_terrain.py` | Server-chosen maps, safe-zone cubes |
 | `powerup_pickup.py` | Picking up server-placed power-ups |

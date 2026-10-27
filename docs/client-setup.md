@@ -85,8 +85,20 @@ model and keeps it visible with F2 on; without it the camera moved but
 nothing was drawn ([findings 9.39](findings.md)). Patch version 17 adds
 `own-ship-menu-model-v1`: after switching ships through the in-flight fighter
 menu, the menu's preview had hidden that model's parts, so the new hull did
-not show ([findings 9.41](findings.md)). F2 has no default binding. Confirmed
-on screen for the Ym Khtat and for a Zkole picked from the fighter menu.
+not show ([findings 9.41](findings.md)). Confirmed on screen for the Ym Khtat
+and for a Zkole picked from the fighter menu. Plain F2 is also the default
+key for "Toggle Mentor", so that toggles too.
+
+Orbit view (patch version 20, `third-person-camera-v2`, replaces v1; same
+option): **press F4 in flight** and the camera circles your ship once
+every 24 seconds. It starts from the F2 position behind you and keeps the
+same distance and height. Press F4 again to stop; you go back to the chase
+camera if F2 is on, otherwise to the cockpit. You keep flying normally while
+it turns, and **F5** saves a screenshot to `Capture Images\`. Plain F4 has no
+default binding (Shift+F4, the movement cue grid, flips the same toggle).
+Clients prepared at versions 15–19 upgrade in place. Seen on screen
+through a full lap in the training mission, with your ship held in place
+while the scene turns behind it ([findings 9.47](findings.md)).
 
 Power-up pickups (`powerup-pickup-v1`, patch version 19, on by default; opt
 out with `--no-powerup-pickup`) let you pick up the power-ups a host places

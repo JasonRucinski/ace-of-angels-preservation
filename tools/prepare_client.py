@@ -34,7 +34,7 @@ import powerup_pickup
 import world_detail
 from local_station import OFFSET, ORIGINAL, STABLE_SHA256
 
-PATCH_VERSION = 19
+PATCH_VERSION = 20
 # Wakeup-timer callback 0x446E70: `jne` at 0x446EAF skips the frame while the
 # window is inactive if the graphics layer reports exclusive mode (+0x24C5).
 # The client always requests exclusive mode, so an inactive flying client
@@ -324,7 +324,7 @@ def main():
     parser.add_argument("--visibility-math", action=argparse.BooleanOptionalAction, default=True,
                         help="bounded acos/asin inputs in object visibility (visibility-math-v1); prepare only")
     parser.add_argument("--third-person", action=argparse.BooleanOptionalAction, default=True,
-                        help="F2 toggles a chase camera behind your ship (third-person-camera-v1, own-ship-model-v1, own-ship-menu-model-v1); prepare only")
+                        help="F2 toggles a chase camera behind your ship, F4 one that orbits it (third-person-camera-v2, own-ship-model-v1, own-ship-menu-model-v1); prepare only")
     parser.add_argument("--powerup-pickup", action=argparse.BooleanOptionalAction, default=True,
                         help="server-placed power-ups can be picked up and reappear (powerup-pickup-v1); prepare only")
     args = parser.parse_args()

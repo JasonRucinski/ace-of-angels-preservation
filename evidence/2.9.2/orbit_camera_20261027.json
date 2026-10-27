@@ -1,0 +1,191 @@
+{
+  "schema": 1,
+  "recorded_utc": "2026-10-27T11:19:28.650678+00:00",
+  "scope": "third-person-camera-v2 orbit view, live in the 2.9.2 client: offline training mission on this PC, window unfocused. The F4 read was forced on in the running process only (0x58BC1B and al,1 -> mov al,1, later restored); the EXE on disk was not modified.",
+  "client": {
+    "input_sha256": "88ffd5f7e775c63baa1ed113940d50cf47f2be89c31f0915e8d739540ad678bc",
+    "input_patch_version": 19,
+    "tested_sha256": "8676c1b0c414437eaa521e0f043dcd546619af034bb8b869e81a04b472b07d18",
+    "tested_patch_version": 20,
+    "prepared_by": "tools/prepare_client.py prepare (in-place v1 -> v2 upgrade)"
+  },
+  "source_sha256": {
+    "tools/third_person.py": "25c82144621db7de5ae1ad513bf9ed9ad6eebb2a9ab3a93612dece19415ec0a5",
+    "tools/test_third_person.py": "4fb9c6231d613b1c0ea4f4ededb830714374e75b012559cadd302de590598b44",
+    "tools/prepare_client.py": "bc1b50a058593988f232f4da9c65edbf12b270a3a758927f39203e95a0d10b02"
+  },
+  "first_draft_failures": {
+    "skewed_view": {
+      "angle_deg": 30,
+      "view_rows": [
+        [
+          1.0,
+          0.0,
+          0.126
+        ],
+        [
+          0.0,
+          0.992,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.992
+        ]
+      ],
+      "renderer_right_copy": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "on_screen": "ship stayed seen from behind at 108 deg, upside down at the top at 186 deg, off screen at 264 deg"
+    },
+    "tick_check": "fast sampling showed the stock forward on about half of the frames; the game tick often advanced between cave A and the render"
+  },
+  "fixed_memory_reads": [
+    {
+      "angle_deg": 9,
+      "eye": [
+        -63.856,
+        100.0,
+        -415.117
+      ],
+      "forward": [
+        0.152,
+        0.0,
+        0.988
+      ],
+      "right": [
+        0.988,
+        0.0,
+        -0.152
+      ],
+      "view_rows": [
+        [
+          0.988,
+          0.0,
+          0.152
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          -0.152,
+          0.0,
+          0.988
+        ]
+      ],
+      "view_translation": [
+        0.0,
+        -100.0,
+        420.0
+      ]
+    },
+    {
+      "angle_deg": 28,
+      "eye": [
+        -197.89,
+        100.0,
+        -370.459
+      ],
+      "forward": [
+        0.471,
+        0.0,
+        0.882
+      ],
+      "right": [
+        0.882,
+        0.0,
+        -0.471
+      ],
+      "view_rows": [
+        [
+          0.882,
+          0.0,
+          0.471
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          -0.471,
+          0.0,
+          0.882
+        ]
+      ],
+      "view_translation": [
+        0.0,
+        -100.0,
+        420.0
+      ]
+    },
+    {
+      "angle_deg": 48,
+      "eye": [
+        -310.201,
+        100.0,
+        -283.153
+      ],
+      "forward": [
+        0.739,
+        0.0,
+        0.674
+      ],
+      "right": [
+        0.674,
+        0.0,
+        -0.739
+      ],
+      "view_rows": [
+        [
+          0.674,
+          0.0,
+          0.739
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          -0.739,
+          0.0,
+          0.674
+        ]
+      ],
+      "view_translation": [
+        0.0,
+        -100.0,
+        420.0
+      ]
+    }
+  ],
+  "fixed_fast_sampling": {
+    "duration_s": 3,
+    "samples": 147706,
+    "stock_forward_samples": 0,
+    "note": "renderer culling eye equals renderer eye in every point read"
+  },
+  "captures": {
+    "method": "in-game F5 (command 0xB4) posted as WM_KEYDOWN; Capture Images/AoAImg20-26.tga (not kept in the repository)",
+    "orbit_angles_deg": [
+      355,
+      73,
+      152,
+      230,
+      308
+    ],
+    "result": "ship held its screen position (bottom centre) seen from behind, both flanks and the front quarters; background swung behind it; orbit off returned to the stock view"
+  },
+  "not_verified": [
+    "a real F4 key press in a focused window",
+    "aiming and HUD brackets with the view turned",
+    "light/sky pass after the view (0x43B4D0) uses the stock forward and right",
+    "F7 spectate view"
+  ]
+}
