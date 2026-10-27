@@ -230,32 +230,31 @@ The audit pins the original client and map hashes. Full coordinates remain in
 the ignored local report; names, checks and limitations are recorded in
 [warp evidence](../evidence/2.9.2/warp_gates_20261026.json).
 
-## Single-gate local trial
+## Arena1a warp gate trial
 
-`--warp-trial EXPORT_DIR` restores only **HyBase1_Rail → WarpTgt01**. It
-validates the original exported asset inventory and map, emits one native
-kind-7 LoadObject with the recovered destination, and reserves dynamic slot 85
-(tag `0x40010055`). The native model assignment is WarpGate / WarpA. The display
-label uses the layout's second token, as the original layout path does.
+Expanded on 27 October 2026: `--warp-trial EXPORT_DIR` restores **all nine gates**,
+adding eight to the original HyBase1_Rail trial. It validates the original
+exported asset inventory and map, then emits native kind-7 LoadObject packets
+with the recovered destinations. Slots **71–79** (tags `0x40010047` through
+`0x4001004F`) replace the earlier single slot 85. Turrets retain slots 80–84;
+buoys retain slots 90–99. The native model assignment is WarpGate / WarpA.
+Display labels use the layout's second token, as the original path does;
+the two Home_Rail labels remain separate objects with different tags and targets.
 
 The option requires a local relay/guest profile, Arena1a terrain and sustained
-ordered delivery. It rejects target-ship counts above 83, so passive targets
-cannot occupy the gate slot. The gate loads after buoys and optional turrets,
-for each first or late joiner. Host-control does not enable it automatically.
+ordered delivery. It rejects target-ship counts above 69, so passive targets
+cannot occupy gate slots. All nine gates load after buoys and optional turrets,
+for each first or late joiner. In the host window, select **Warp gates trial
+(9 gates; Arena1a, this PC only)** and start/restart the host. It remains off by
+default. Players must rejoin; this is not an in-flight object toggle.
 
-Four focused tests pass: configuration/packet fields, original-client kind-7
-destination receipt, first/late socket joins with ten buoys and five disabled
-turrets (including a lost gate ACK and observed retransmission), and live
-verifier rejection cases. The four navigation tests and seven runtime tests
-also passed; the POSIX-specific runtime shutdown test is skipped on Windows.
-The standard-library-only host configuration entry point still works.
+Six focused tests cover configuration/packet fields, reserved slots, all nine
+routes, original-client kind-7 destination receipt, first/late socket joins
+with ten buoys and five disabled turrets (including the last gate's lost ACK
+and observed retransmission), and live verifier rejection cases for each gate.
 
-**Live acceptance is pending.** The isolated host was started at 127.0.0.2
-and the existing prepared client opened. The UI tool cannot capture the pilot
-dialog (`window capture timed out`) and its editable-field action fails
-(`Cannot set a value for an element that is not settable`). Manual flight
-entry was requested for this technical limitation. No live gate spawn or
-transit is claimed yet.
+**Live acceptance is pending.** The user deferred manual playtesting; checks
+below run without the game UI. No live gate spawn or transit is claimed yet.
 
 Editor orientation is not restored by this LoadObject trial. The original
 client performs local collision transit; the rebuilt host does not authorize
@@ -273,7 +272,7 @@ press Play. The spawn is 6,000 units behind the gate along +Z. Once flying:
 .venv/Scripts/python.exe -I tools/verify_warp_trial.py <PID> work/2.9.2/export/AOAOBJECTS work/warp-research/live-verification.json
 ```
 
-The verifier checks one matching gate, kind, name, position, destination,
+The verifier checks all nine matching gates, kinds, names, positions, destinations,
 graphics/visibility/collision flags and the unchanged 239-object terrain
 baseline. It rejects a lobby snapshot or non-finite coordinates. Passing it
 is memory acceptance, not proof of rendered appearance or successful travel.
@@ -284,16 +283,23 @@ The user deferred manual playtesting. The trial can now be checked without
 opening the game UI:
 
 ```powershell
-.venv/Scripts/python.exe -I tools/test_warp_headless.py --report evidence/2.9.2/warp_headless_20261026.json
+.venv/Scripts/python.exe -I tools/test_warp_headless.py --report evidence/2.9.2/warp_headless_20261027.json
 ```
 
-All three tests passed. `emulate_warp_trial.py` executes the complete original
+All four tests pass. `emulate_warp_trial.py` executes the complete original
 LoadObject receiver (`0x4A66A0`) through its return, including the native name,
 position, kind, relation and destination handling. Three duplicate loads take
 the original already-present-object path: one allocation and one model request.
 Allocation, model loading, scene registration, AI cleanup, team services, event
 queue availability and two CRT calls are explicit fixture substitutes. This
 does not claim that the real renderer loaded the model.
+
+The expanded test loads all nine gates in one emulated world, then replays them
+in reverse order and checks that duplicate labels do not merge objects. It
+checks six transit velocities per gate (54 cases), then checks every resulting
+exit against every gate (486 overlap checks): none immediately retriggers with
+the fixture radii. Exactly nine allocations, model requests and registrations
+occur despite replay. These are service fixtures, not native allocation/rendering.
 
 The original overlap/dispatch path (`0x4B3013` onward) and transit routine run
 against supplied render positions and sphere radii. Eight cases check outside,
@@ -303,23 +309,23 @@ transit. Velocity remains unchanged; checking overlap again at the remote exit
 does not retrigger the same gate. These fixtures use radii 10 and 100, not
 recovered ship/gate model bounds. Sound and outgoing game calls are not run.
 
-The socket test starts the actual host on temporary loopback ports. Its gate
-packet is consumed by the original receiver in the emulator. A synthetic pilot
+The socket test starts the actual host on temporary loopback ports. All nine gate
+packets are consumed by the original receiver in the emulator. A synthetic pilot
 then enters the emulated overlap path, and the test uploads the resulting
 native-computed position and preserved velocity through the existing movement
 format. The host's output movement prefix is decoded with the original
 `0x495330` routine. Four synthetic peer connections verify:
 
-- A connected observer receives the warped position and preserved velocity.
-- Dropping the first post-warp update recovers on the host's periodic refresh,
+- A connected observer receives the warped position and preserved velocity for each of the nine routes.
+- Dropping each route's first post-warp update recovers on the host's periodic refresh,
   without requiring a second pilot upload.
 - A late join receives the post-warp position in LoadPlayer and the movement
-  seed, plus the same gate.
-- A reconnecting observer receives one gate and the current pilot state.
+  seed, plus all nine gates.
+- A reconnecting observer receives all nine gates and the current pilot state.
 
 The tests clean up their temporary hosts and sockets. They do not change the
 regular host or require a running client. Results and fixture boundaries are
-recorded in [headless evidence](../evidence/2.9.2/warp_headless_20261026.json).
+recorded in [headless evidence](../evidence/2.9.2/warp_headless_20261027.json).
 
 Remaining acceptance is specifically the real model's orientation/bounds,
 full game-loop collision entry, actual clients on two PCs and map-change

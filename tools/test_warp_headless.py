@@ -37,6 +37,45 @@ class HeadlessWarpTests(unittest.TestCase):
         cls.native_type = NativeWarp
         cls.gate = warp_trial.placement(SOURCE)
         cls.packet = warp_trial.loads(cls.gate)[0][1]
+        cls.gates = warp_trial.placements(SOURCE)
+        cls.packets = [p for _, p in warp_trial.loads(cls.gates)]
+
+    def test_all_gates_coexist_replay_and_transit(self):
+        native = self.native_type(CLIENT)
+        fields = [native.load(packet) for packet in self.packets]
+        self.assertEqual(len({f['tag'] for f in fields}), 9)
+        self.assertEqual(fields[2]['name'], fields[3]['name'])
+        velocities = ((0., 0., 0.), (100., 0., 0.), (0., -100., 0.),
+                      (0., 0., 100.), (3., 4., 12.), (.01, 0., 0.))
+        exits = []
+        for index in reversed(range(9)):
+            with self.subTest(gate=self.gates[index]['name']):
+                field = native.load(self.packets[index])
+                self.assertEqual(field, fields[index])
+                self.assertEqual(field['tag'], warp_trial.tag(self.gates[index]))
+                self.assertEqual(field['position'], struct.unpack_from('<3f', self.packets[index], 146))
+                self.assertEqual(field['destination'], struct.unpack_from('<3f', self.packets[index], 158))
+                self.assertEqual(field['kind'], 7)
+                self.assertTrue(field['active'] and field['collidable'])
+                for velocity in velocities:
+                    result = native.overlap(field['position'], velocity)
+                    expected = tuple(p + v / max(math.sqrt(sum(c*c for c in velocity)), 100.) * 1000.
+                                     for p, v in zip(field['destination'], velocity))
+                    self.assertTrue(result['warped'])
+                    self.assertLess(math.dist(result['position'], expected), .1)
+                    self.assertEqual(result['velocity'], velocity)
+                    self.assertFalse(native.overlap(result['position'], velocity)['warped'])
+                    exits.append((result['position'], velocity))
+        for packet in self.packets:
+            native.load(packet)
+            for position, velocity in exits:
+                self.assertFalse(native.overlap(position, velocity)['warped'])
+        self.assertEqual((native.allocations, native.registrations, native.model_requests), (9, 9, 9))
+        RESULTS['all_gates'] = {'coexisting_gates': 9, 'reverse_order_duplicate_loads': 9,
+                                'duplicate_labels_have_distinct_tags': True,
+                                'native_transit_cases': 54, 'same_gate_exit_checks': 54,
+                                'all_gate_exit_overlap_checks': 486,
+                                'scope': 'Fixture render radii; actual model geometry unverified'}
 
     def test_complete_load_receiver_and_replay(self):
         native = self.native_type(CLIENT)
@@ -142,7 +181,7 @@ class HeadlessWarpTests(unittest.TestCase):
                         body = body[:-5]
                     records[peer].append((kind, body))
                     if kind == 0x25:
-                        self.assertEqual(body, self.packet)
+                        self.assertIn(body, self.packets)
                         gate_clients[peer].load(body)
                     if kind == 0x1f and struct.unpack_from('<H', body, 2)[0] == 1:
                         filtered = station_stub.movement_update(body, 1)
@@ -170,26 +209,27 @@ class HeadlessWarpTests(unittest.TestCase):
                     self.assertLess(time.monotonic(), deadline)
                 ack = next(body for kind, body in records[peer] if kind == 11)
                 self.assertEqual(struct.unpack_from('<I', ack, 2)[0], station_stub.player_tag(slots[peer]))
-                until(lambda: gate_clients[peer].gate is not None)
+                until(lambda: gate_clients[peer].allocations == 9)
                 self.assertTrue(any(kind == 0x2c for kind, _ in records[peer]))
 
             try:
                 join(pilot)
                 join(observer)
-                origin = gate_clients[pilot].fields()['position']
                 velocity = (0., 0., 100.)
-                send(pilot, *station_stub.motion_snapshot(1, (origin, velocity)))
-                until(lambda: states[observer][0x40] == origin)
-                transit = gate_clients[pilot].overlap(origin, velocity)
-                self.assertTrue(transit['warped'])
-                drop_position = transit['position']
-                send(pilot, *station_stub.motion_snapshot(1, (drop_position, velocity)))
-                until(lambda: dropped)
-                self.assertEqual(states[observer][0x40], origin)
-                # No additional upload: the host's periodic absolute refresh
-                # must recover the observer after the dropped warp update.
-                until(lambda: states[observer][0x40] == drop_position, timeout=3)
-                self.assertEqual(states[observer][1], velocity)
+                for packet in self.packets:
+                    origin = gate_clients[pilot].load(packet)['position']
+                    send(pilot, *station_stub.motion_snapshot(1, (origin, velocity)))
+                    until(lambda: states[observer][0x40] == origin)
+                    transit = gate_clients[pilot].overlap(origin, velocity)
+                    self.assertTrue(transit['warped'])
+                    drop_position = transit['position']
+                    dropped = False
+                    send(pilot, *station_stub.motion_snapshot(1, (drop_position, velocity)))
+                    until(lambda: dropped)
+                    self.assertEqual(states[observer][0x40], origin)
+                    # No second upload: periodic absolute refresh recovers loss.
+                    until(lambda: states[observer][0x40] == drop_position, timeout=3)
+                    self.assertEqual(states[observer][1], velocity)
                 join(late)
                 until(lambda: states[late][0x40] == drop_position)
                 loads = [body for kind, body in records[late] if kind == 0x26 and
@@ -198,17 +238,18 @@ class HeadlessWarpTests(unittest.TestCase):
                 self.assertEqual(struct.unpack_from('<3f', loads[-1], 0x1a4), drop_position)
                 self.assertEqual(states[late][1], velocity)
                 # An observer reconnects with a fresh peer/session and receives
-                # exactly one gate plus the already-warped pilot's latest state.
+                # all nine gates plus the already-warped pilot's latest state.
                 send(observer, 0x4e, b'\0')
                 join(rejoined)
                 until(lambda: states[rejoined][0x40] == drop_position)
                 for peer in peers:
-                    self.assertEqual(gate_clients[peer].allocations, 1)
+                    self.assertEqual(gate_clients[peer].allocations, 9)
                 RESULTS['udp_chain'] = {
                     'native_load_and_transit_to_real_host_to_native_movement_decoder': 'passed',
                     'observer_recovers_without_second_upload': True,
                     'late_join_uses_post_warp_position_and_velocity': True,
-                    'observer_reconnect_has_one_gate_and_current_pilot_position': True,
+                    'observer_reconnect_has_nine_gates_and_current_pilot_position': True,
+                    'gate_routes_with_native_transit_and_lost_update_recovery': 9,
                     'synthetic_peer_connections': 4,
                     'scope': 'Movement prefix decoded natively; stats/rendering/full client loop not tested'}
             finally:

@@ -26,6 +26,16 @@ wingmen (original data; replaced). Re-cut the same day with six re-filmed
 shots on version 21 and short punchy title cards (48.95 s). Output stays
 in ignored `work/reel/`. See [hype-reel.md](docs/hype-reel.md).
 
+Nine-gate expansion (27 Oct 2026): `--warp-trial` and the host checkbox now
+restore all nine Arena1a warp gates, adding eight placements. Slots 71–79
+replace the old single slot 85; maximum practice targets becomes 69. Original
+names/destinations and duplicate Home_Rail labels retain separate tags. Native
+headless checks cover coexistence, duplicate loads, 54 transit vectors and
+486 exit/gate overlap checks using fixture bounds. Actual UDP checks cover
+all nine routes with lost-update recovery, late join and reconnect. Still
+loopback-only and opt-in; orientation/real collision geometry/live acceptance
+remain unverified. See [warp trial](docs/arena1a-rebuild.md#arena1a-warp-gate-trial).
+
 Headless warp validation (26 Oct 2026): user deferred manual playtesting.
 Three additional tests pass: complete original LoadObject receiver with explicit
 allocation/model/team/event service fixtures, duplicate-load suppression,
@@ -44,7 +54,7 @@ with buoys/turrets, gate ACK loss/retransmission and verifier rejection cases.
 Isolated host prepared at 127.0.0.2; live entry remains pending because both
 UI interfaces fail on the pilot dialog. Editor orientation is not restored;
 transit is handled by the original local client, not authorized by the host.
-See [single-gate trial](docs/arena1a-rebuild.md#single-gate-local-trial).
+See [warp trial](docs/arena1a-rebuild.md#arena1a-warp-gate-trial).
 
 Warp investigation (26 Oct 2026): user deferred flags/control points. Recovered
 all nine Arena1a gate-to-child destination links, including four `Dummy` nodes.
