@@ -34,9 +34,24 @@ ALIASES = {"lan-dogfight": "aoalan", "vpn-dogfight": "aoavpn"}
 BACKDROPS = ("spacebkgd", "spacebkgd2", "spacebkgd3", "spacebkgd5", "spacebkgd6")
 DEFAULTS = {"mode": "This PC only", "address": "127.0.0.1", "map": "Arena1a", "terrain": True,
             "backdrop": "spacebkgd3", "max_players": 4, "kill_limit": 20, "time_limit_min": 10,
-            "target_ships": 4, "game": "game/2.9.2"}
+            "target_ships": 4, "game": "game/2.9.2",
+            "navigation_buoys": True, "turret_trial": False, "warp_trial": False}
+NODE_LABELS = {"navigation_buoys": "Navigation buoys",
+               "turret_trial": "Turret trial (5 turrets, firing disabled; Arena1a)",
+               "warp_trial": "Warp gate trial (1 gate; Arena1a, this PC only)"}
 NO_WINDOW = getattr(subprocess, "CREATE_NO_WINDOW", 0)
 RESTARTS_PER_10_MIN = 3
+
+
+def node_availability(settings):
+    """Explain unavailable options consistently in the UI and launch arguments."""
+    source = ROOT / 'work/2.9.2/export/AOAOBJECTS'
+    common = ("Turn on Build map terrain." if not settings["terrain"] else
+              "Original exported map assets are missing." if not (
+                  source.is_dir() and (source.parent / '_export.json').is_file()) else "")
+    arena = common or ("Select Arena1a." if settings["map"] != "Arena1a" else "")
+    return {"navigation_buoys": common, "turret_trial": arena,
+            "warp_trial": arena or ("Select This PC only mode." if settings["mode"] != "This PC only" else "")}
 
 
 def server_args(settings, extra=()):
@@ -54,9 +69,13 @@ def server_args(settings, extra=()):
             "--console", "--status-file", str(status_path(settings))]
     if settings["terrain"]:
         args.append("--experimental-terrain")
-        navigation = ROOT / 'work/2.9.2/export/AOAOBJECTS'
-        if navigation.is_dir() and (navigation.parent / '_export.json').is_file():
-            args += ['--navigation-buoys', str(navigation), '--sustained-delivery']
+        source = ROOT / 'work/2.9.2/export/AOAOBJECTS'
+        enabled = [key for key, reason in node_availability(settings).items()
+                   if not reason and settings.get(key, DEFAULTS[key])]
+        for key in enabled:
+            args += ['--' + key.replace('_', '-'), str(source)]
+        if enabled:
+            args.append('--sustained-delivery')
         _, kind, target, _ = online_terrain.MAPS[online_terrain.MAP_NAMES.index(settings["map"])]
         if kind == online_terrain.TRN:
             # The map's own power-up zones (findings 9.44); layouts have none.
@@ -189,6 +208,7 @@ def gui(autostart=False, run=True):
          "kill_limit": tk.IntVar(value=saved["kill_limit"]), "time_limit_min": tk.DoubleVar(value=saved["time_limit_min"]),
          "target_ships": tk.IntVar(value=saved["target_ships"]),
          "game": tk.StringVar(value=saved["game"])}
+    v.update({key: tk.BooleanVar(value=saved[key]) for key in NODE_LABELS})
     restarts = []
 
     def settings():
@@ -252,6 +272,17 @@ def gui(autostart=False, run=True):
     hint = ttk.Label(box, foreground="#555", wraplength=820, justify="left")
     hint.grid(row=row + 1, column=0, columnspan=6, sticky="w", pady=(6, 0))
 
+    nodes_box = ttk.LabelFrame(root, text="Map objects", padding=8)
+    nodes_box.pack(fill="x", padx=8, pady=4)
+    node_checks = {}
+    for key, label in NODE_LABELS.items():
+        node_checks[key] = ttk.Checkbutton(nodes_box, text=label, variable=v[key])
+        node_checks[key].pack(anchor="w")
+    ttk.Label(nodes_box, text="Apply with Start host or Load map (restart). Players must rejoin.",
+              foreground="#555").pack(anchor="w", pady=(4, 0))
+    node_hint = ttk.Label(nodes_box, foreground="#555", wraplength=820, justify="left")
+    node_hint.pack(anchor="w")
+
     # Live status
     info = ttk.LabelFrame(root, text="Status", padding=8)
     info.pack(fill="x", padx=8, pady=4)
@@ -311,6 +342,14 @@ def gui(autostart=False, run=True):
         for b in (stop_b, load_b, end_b, say_b, kick_b, ban_b):
             b.state(["!disabled"] if running else ["disabled"])
         profile = MODES[v["mode"].get()]
+        availability = node_availability({key: v[key].get() for key in ("terrain", "map", "mode")})
+        for key, reason in availability.items():
+            node_checks[key].state(["disabled"] if reason else ["!disabled"])
+            if reason:
+                v[key].set(False)
+        reasons = list(dict.fromkeys(reason for reason in availability.values() if reason))
+        node_hint.configure(text="Unavailable options: " + " ".join(reasons) if reasons else
+                            "Trials are experimental; turret firing stays disabled.")
         address.state(["disabled"] if profile == "local-relay" else ["!disabled"])
         if profile == "local-relay":
             hint.configure(text="Only clients on this PC can join: log in to 127.0.0.1. "
@@ -393,6 +432,8 @@ def gui(autostart=False, run=True):
     say_entry.bind("<Return>", do_say)
     mode.bind("<<ComboboxSelected>>", lambda _e: refresh_controls())
     address.bind("<<ComboboxSelected>>", lambda _e: refresh_controls())
+    for key in ("mode", "map", "terrain"):
+        v[key].trace_add("write", lambda *_args: refresh_controls())
 
     def poll_output():
         while True:
@@ -438,6 +479,10 @@ def gui(autostart=False, run=True):
                 f"Banned IPs {data.get('banned_ips')}   "
                 + "   ".join(f"{k} {v}" for k, v in traffic.items() if isinstance(v, (int, float)))
                 + ("   TEST IMPAIRMENT ON" if data.get("impairment") else ""))
+            detail_text.set(detail_text.get() +
+                            f"\nMap objects: {data.get('navigation_buoys', 0)} buoys, "
+                            f"{(data.get('turret_trial') or {}).get('objects', 0)} trial turrets (firing disabled), "
+                            f"{(data.get('warp_trial') or {}).get('objects', 0)} trial warp gates")
         if data is not None:
             chosen = table.selection()
             chosen = table.item(chosen[0])["values"][0] if chosen else None
@@ -468,7 +513,7 @@ def gui(autostart=False, run=True):
     if not run:  # tests drive the real widgets; the caller pumps root.update()
         return {"root": root, "host": host, "vars": v, "table": table, "log": log, "status": status_text,
                 "buttons": {"start": start_b, "load": load_b, "stop": stop_b, "kick": kick_b, "ban": ban_b,
-                            "end": end_b, "say": say_b}, "say_text": say_text}
+                            "end": end_b, "say": say_b}, "say_text": say_text, "node_checks": node_checks}
     root.mainloop()
 
 
