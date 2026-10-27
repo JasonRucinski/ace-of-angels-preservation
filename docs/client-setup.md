@@ -130,6 +130,16 @@ already installed; `--no-experimental-protection` removes only this patch.
 It changes `0x81` wire semantics and has not passed the manual client gate.
 See [client-extension-gate.md](client-extension-gate.md) before using it.
 
+Optional distant objects (`distant-world-objects-v1`, patch version 22) extend
+the world-model horizon to 4,500,000 units and lower the projected-size cutoff
+from 5 to 0.5. Enable with `prepare --distant-objects`; disable with
+`prepare --no-distant-objects`. Ordinary preparation preserves the installed
+choice. The original authored distant LOD remains available below its usual
+minimum, so groups have a mesh to draw. More distant draws can cost frame
+time; in-flight acceptance and GPU performance are still pending. See
+[the rendering notes](asteroid-rendering.md#distant-object-persistence-27-october-2026)
+for the exact-undo tool, scope and original-code verification.
+
 `check` verifies the executable, setup record, backup, wrapper and ten static
 dependencies against [the pinned manifest](../config/client-2.9.2.json).
 That manifest was checked against the hash-pinned original installer.

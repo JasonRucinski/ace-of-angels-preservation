@@ -16,6 +16,21 @@ a search-engine summary only.
 
 ## 2. Status
 
+Distant object visibility (27 Oct 2026): optional `distant-world-objects-v1`
+extends the mesh surface-distance limit from 61,000 to 4,500,000 units and
+the cached-world-image horizon from 900,000 to 4,500,000. The minimum projected
+size drops from 5 to 0.5 (ten times farther for size-limited objects). Group
+visibility and child LOD selection are adjusted together, retaining the lowest
+authored selection at distance and the existing near selections. Seven tests
+cover complete original-code group execution, all 154 parsed mesh models,
+cutoffs/FPU precisions, optional rendering composition, hook state and exact
+undo/corruption checks. Patch version 22 recognizes and preserves this opt-in
+mode. Installed in the normal client and active Arena1a trial copy; both
+pass asset/setup and exact layer-backup checks. All nine focused suites pass
+(58 tests); [verification record](evidence/2.9.2/object_persistence_20261027.json).
+Visual acceptance and GPU performance remain pending. See
+[rendering notes](docs/asteroid-rendering.md#distant-object-persistence-27-october-2026).
+
 Highlight reel (27 Oct 2026): a 48.9 s video from scripted recordings of the
 real 2.9.2 client, nine shots on six maps (irrosa01, ast_fld_a/b,
 outerchange, CTF_arena_b, JRMAP) with eleven fighters, in the cockpit, chase and

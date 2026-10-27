@@ -1,0 +1,72 @@
+{
+  "schema": 1,
+  "checked_utc": "2026-10-27T10:52:08.203496+00:00",
+  "patch": "distant-world-objects-v1",
+  "scope": "Original x86 model-group visibility and LOD execution, temporary-file installation/rollback, and local client asset/setup checks; no GPU rendering or frame-rate benchmark.",
+  "limits": {
+    "mesh_surface_distance_before": 61000,
+    "cached_world_image_horizon_before": 900000,
+    "horizon_after": 4500000.0,
+    "minimum_projected_size_before": 5,
+    "minimum_projected_size_after": 0.5
+  },
+  "regression_suites": {
+    "test_object_persistence.py": {
+      "tests": 7,
+      "passed": true
+    },
+    "test_prepare_client.py": {
+      "tests": 8,
+      "passed": true
+    },
+    "test_solid_world_render.py": {
+      "tests": 5,
+      "passed": true
+    },
+    "test_world_detail.py": {
+      "tests": 5,
+      "passed": true
+    },
+    "test_asteroid_render.py": {
+      "tests": 5,
+      "passed": true
+    },
+    "test_station_detail.py": {
+      "tests": 5,
+      "passed": true
+    },
+    "test_visibility_fix.py": {
+      "tests": 5,
+      "passed": true
+    },
+    "test_object_lod.py": {
+      "tests": 4,
+      "passed": true
+    },
+    "test_third_person.py": {
+      "tests": 14,
+      "passed": true
+    }
+  },
+  "regression_tests": 58,
+  "models_checked": 154,
+  "cli_enable_preserve_disable_passed": true,
+  "installed_clients": {
+    "game/2.9.2/AOACLIENT.EXE": {
+      "sha256": "fc0878ebf5314c3157977bcdff0241b4128b27137755f7633c5d886757e92625",
+      "undo_sha256": "197ba1e2d7dd463a878bf11e9fe67da0745c6c30ab8e4bae6c0d4b958c5f6791",
+      "setup_version": 20,
+      "status": "ready",
+      "exact_layer_backup_verified": true
+    },
+    "work/arena1a-game-trial/AOACLIENT.EXE": {
+      "sha256": "fc0878ebf5314c3157977bcdff0241b4128b27137755f7633c5d886757e92625",
+      "undo_sha256": "197ba1e2d7dd463a878bf11e9fe67da0745c6c30ab8e4bae6c0d4b958c5f6791",
+      "setup_version": 20,
+      "status": "ready",
+      "exact_layer_backup_verified": true
+    }
+  },
+  "visual_acceptance": "pending",
+  "performance_benchmark": "not run"
+}
