@@ -324,9 +324,39 @@ entry is decoded back with the client's overflow limit before writing.
 
 ```powershell
 # Close the client first:
-.venv\Scripts\python.exe -I tools/texture_pack.py game/2.9.2 --from-dir work/texture-pack/fighters/tga
+.venv\Scripts\python.exe -I tools/build_texture_pack.py game/2.9.2
+.venv\Scripts\python.exe -I tools/texture_pack.py game/2.9.2 --from-dir work/texture-pack/build
 .venv\Scripts\python.exe -I tools/texture_pack.py game/2.9.2 --undo
 ```
+
+Player instructions are in [texture-pack.md](texture-pack.md). No upscaled
+image is committed, because they derive from FRE art (see
+[NOTICE.md](../NOTICE.md)). Instead, `tools/build_texture_pack.py` makes the
+pack on each player's PC:
+- It reads the skins named in
+  [`config/texture-pack.json`](../config/texture-pack.json) from that
+  player's pinned original archives. The archive key comes from their own
+  2.9.2 client, at VA `0x5DE678`, accepted only if it matches the pinned
+  SHA-256.
+- It runs the hash-checked Real-ESRGAN release, extracting only the program
+  and the one model it needs.
+- It uses one method for all 104 skins: 16 px wrap padding, separate RGB and
+  alpha passes, and Pillow Lanczos to 2x.
+- Colour and alpha are resized separately. An RGBA resize premultiplies, which
+  blackened the colour under transparent pixels and would fringe cutout edges.
+
+`tools/test_build_texture_pack.py` is game-free and runs in CI. It checks:
+- header, ID field, footer and row order for both TGA origins;
+- alpha kept, including the colour under transparent pixels;
+- wrap padding;
+- rejection of compressed and truncated sources;
+- the zip hash check.
+
+End-to-end (26 October 2026): a clean build of all 104 skins took 23 minutes
+on this PC (AMD integrated graphics). Deleting the 30 32-bit outputs and
+rerunning rebuilt only those, in 7 minutes. Compared with the hand-built
+sets below, the new outputs give PSNR 55 dB (`dock1a`) and 55 dB (`zcs_c`).
+`ymkhtat` gives 42 dB, the difference being the added padding.
 
 Installed pack (23 October 2026): the close-up skins of all 31 armed fighter
 objects in `.Sco` (faction, engine, guns, hull ≤ 200), 26 skins in total:
@@ -352,12 +382,8 @@ Second pack (25 October 2026): 78 more close-up model skins. These cover
 capital ships, docks, stations, asteroids, turrets, tugs, flags, launch bays,
 window strips and faction logos (55 24-bit, 23 32-bit with alpha); 70 are in
 `TEXTURES.AOA` and 8 in `DATA.AOA`. The installed pack now replaces 104
-skins: 96 in `TEXTURES.AOA` (54.6 MB) and 8 in `DATA.AOA`. Install both sets
-together, because each install replaces the previous pack:
-
-```powershell
-.venv\Scripts\python.exe -I tools/texture_pack.py game/2.9.2 --from-dir work/texture-pack/fighters/tga --from-dir work/texture-pack/others/tga
-```
+skins: 96 in `TEXTURES.AOA` (54.6 MB) and 8 in `DATA.AOA`. These hand-built
+sets were later replaced by the `build_texture_pack.py` output above.
 
 The second set wraps 16 source pixels of padding around each image before
 upscaling and crops it afterwards, so repeating textures keep seamless edges.

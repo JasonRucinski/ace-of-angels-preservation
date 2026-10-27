@@ -22,6 +22,7 @@ executable accept only known, hash-checked builds and record an exact undo.
 | `station_stub.py` | The stand-in Station and arena server that all of the above run |
 | `register_activeskin.ps1` | Registers the game's dialog skin control for the current user (no admin) |
 | `make_install.py` / `install_wrapper.py` | The extract and wrapper steps of `setup_game.ps1` |
+| `build_texture_pack.py GAME_DIR` | Builds the 2x skin pack from your own archives with Real-ESRGAN ([texture-pack.md](../docs/texture-pack.md)) |
 | `texture_pack.py` | Installs or removes replacement TGA skins in a game folder |
 
 ## Server internals

@@ -27,7 +27,6 @@ import prepare_client
 ARCHIVES = ("TEXTURES.AOA", "DATA.AOA")
 SUFFIX = ".before-texture-pack"
 RECORD = "_texture_pack.json"
-KEY_CLIENT = Path(__file__).resolve().parents[1] / "work/2.7.1/members/15_AOACLIENT.EXE"
 
 
 def sha(data):
@@ -99,7 +98,7 @@ def install(folder, replacements):
         verified(folder)
     elif any((folder / (n + SUFFIX)).exists() and sha((folder / n).read_bytes()) != pinned(n) for n in ARCHIVES):
         raise ValueError("an archive differs from its backup with no pack record")
-    key0 = aoapack.builtin_key(KEY_CLIENT)
+    key0 = aoapack.builtin_key(folder / "AOACLIENT.EXE")  # the archive key, verified by hash
     plan = resolve(folder, key0, replacements)
     outputs, record = {}, {"schema": 2, "visual_acceptance": "pending", "archives": {}}
     for name in ARCHIVES:

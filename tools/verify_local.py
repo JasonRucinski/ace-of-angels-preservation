@@ -21,7 +21,7 @@ SUITES = ("test_network_bounds.py", "test_relay_motion.py", "test_prepare_client
           "test_station_detail.py", "test_world_detail.py", "test_internet_play.py", "test_cursor_warp.py",
           "test_texture32.py", "test_aoapack_write.py", "test_frame_clock.py",
           "test_visibility_fix.py", "test_render_culling.py", "test_third_person.py", "test_powerups.py",
-          "test_powerup_pickup.py", "test_target_ships.py")
+          "test_powerup_pickup.py", "test_target_ships.py", "test_build_texture_pack.py")
 EMULATORS = ("emulate_station_request.py", "emulate_station_aliases.py", "emulate_reliable_history.py",
              "emulate_movement.py", "emulate_motion_state.py",
              "emulate_archive_terminator.py", "emulate_client_extensions.py",

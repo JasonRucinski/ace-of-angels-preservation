@@ -41,6 +41,9 @@ jobs:
             "test_lan_dogfight", "test_internet_play", "test_powerups",
             "test_target_ships", "test_host_control", "test_prepare_client", "test_dedicated_host"
           )
+          # The texture pack builder is a Windows player tool that needs Pillow
+          # from requirements.txt, which only the Windows job installs.
+          if ($env:RUNNER_OS -eq "Windows") { $suites += "test_build_texture_pack" }
           $failed = @()
           foreach ($suite in $suites) {
             Write-Host "::group::$suite"

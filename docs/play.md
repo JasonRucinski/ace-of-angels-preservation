@@ -62,6 +62,9 @@ mission (waves of six enemies, with three AI wingmen you command), or
 Useful keys added or fixed by this project: **F2** toggles a chase camera,
 **T / G / J** cycle and pick targets, **Alt+Q** leaves the arena.
 
+Optional: [texture-pack.md](texture-pack.md) makes sharper, 32-bit ship and
+station skins from your own copy.
+
 ## 5. Multiplayer on one PC
 
 To try online play before involving anyone else:

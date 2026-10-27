@@ -44,14 +44,29 @@ BUILTIN_KEY_VA = {  # per client build; located by content search in 2.9.2
 }
 
 
+# Prepared (patched) clients keep the key at the original VA. Accepted only
+# when the bytes there hash to the known key.
+KEY_SHA256 = "be6c7b5bd00207ee73b391008c6ebf7448199a889ff3440216ea714a955d62dd"
+KEY_VA_CANDIDATES = (0x6A0128, 0x5DE678)  # 2.7.1, 2.9.2
+
+
 def builtin_key(client_path):
-    """Return the built-in key only for a hash-pinned original client."""
+    """Return the built-in key: at the pinned VA for a known original client,
+    otherwise at a candidate VA whose bytes match KEY_SHA256 (for example a
+    2.9.2 client after prepare_client.py)."""
     from pe_util import PE
     pe = PE(client_path)
     sha = hashlib.sha256(pe.data).hexdigest()
     if sha in BUILTIN_KEY_VA:
         return pe.read_va(BUILTIN_KEY_VA[sha], 256)
-    raise KeyError("unknown client build; pass the 2.7.1 client to obtain the key")
+    for va in KEY_VA_CANDIDATES:
+        try:
+            key = pe.read_va(va, 256)
+        except (ValueError, IndexError, KeyError):
+            continue
+        if hashlib.sha256(key).hexdigest() == KEY_SHA256:
+            return key
+    raise KeyError("archive key not found; use a 2.7.1 or 2.9.2 client")
 
 
 def crc16_xmodem(data: bytes, crc: int = 0) -> int:
