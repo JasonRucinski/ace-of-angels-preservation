@@ -64,7 +64,7 @@ class ClientPreparationTests(unittest.TestCase):
             exe = Path(tmp) / "AOACLIENT.EXE"
             exe.write_bytes(self.original)
             record = setup.prepare(exe, experimental_protection=True)
-            self.assertEqual(record["patch_version"], 20)
+            self.assertEqual(record["patch_version"], 21)
             self.assertIn(explicit_protection.NAME, setup.check(exe, require_assets=False)["patches"])
             setup.prepare(exe, experimental_protection=False)
             self.assertEqual(exe.read_bytes(), normal)

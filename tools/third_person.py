@@ -33,10 +33,13 @@ enabled gate), and culls every object in 0x49BC90 against the camera record
     sets it on an orbit frame.
   * cave B (replaces `mov edx,[eax+0x19C]; add edx,0x2C` at 0x49BCB8) hands
     the culling routine FAKE instead of the real camera record when the
-    camera object's node is the one cave A just used, in the same game
-    tick (0x5E8E5C). Your ship is then ~430 units from the eye and visible.
-    The tick check keeps spectate frames (0x449B37 path, cave A not run)
-    on the original record.
+    camera object's node is the one cave A just used, at most CULL_WINDOW ms
+    of game clock (0x5E8E5C) later. Your ship is then ~430 units from the
+    eye and visible. The window keeps spectate frames (0x449B37 path, cave A
+    not run) on the original record once it has passed. v2 required the
+    same millisecond: with frame-clock-v1 the clock usually advances between
+    cave A and the cull, so most orbit frames were culled from the stock
+    view and objects seen only from the orbit angle blinked in and out.
   * cave R (replaces `mov eax,[esp+0x38]; push ecx; fld [eax+8]` at
     0x43B367, the first instructions of the renderer's chase branch) runs
     only when ARMED is set and clears it, so it serves the render that
@@ -52,11 +55,13 @@ enabled gate), and culls every object in 0x49BC90 against the camera record
 F2 and F3 are bound in the default key map (Toggle Mentor, Toggle Joystick
 Curve window, registered at 0x44F464 and 0x44F47C); plain F4 is not.
 
-Known limit: CHASE_FLAG is only updated in flight frames, so with F2 or F4
+Known limits: CHASE_FLAG is only updated in flight frames, so with F2 or F4
 on, a spectate view (F7) is also pulled back by the renderer's offset (not
-orbited).
+orbited). The first CULL_WINDOW ms of a spectate view can still cull from
+the last flight camera.
 
-A v1 client (chase only, before cave R) is recognized and upgraded in place.
+Older clients are recognized and upgraded in place: v1 (chase only, before
+cave R) and v2 (orbit with the same-tick cull check).
 
 Library use only (prepare_client.py composes it); no file is written here.
 """
@@ -68,7 +73,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from patch_client import Asm, jmp_patch  # noqa: E402
 
-NAME = "third-person-camera-v2"
+NAME = "third-person-camera-v3"
 VK_TOGGLE = 0x71                 # F2: chase; bound by default only to Toggle Mentor
 VK_ORBIT = 0x73                  # F4: orbit; unbound in the default key map
 IAT_GETKEYSTATE = 0x58C4A0
@@ -79,6 +84,8 @@ CHASE_UP = 0x5900BC              # 100.0
 SET_MAIN_CAMERA = 0x553810       # thiscall(matrix*, tick), ret 8
 SET_ENABLED = 0x542A90           # thiscall(bool): node+0x150 = arg
 ORBIT_PERIOD = 24000             # ms per lap
+CULL_WINDOW = 250                # ms after cave A that cave B may still use FAKE
+VARIANTS = ("v3", "v2", "v1")    # current first; older ones only for upgrade
 
 SITE_A = 0x44A091                # push eax ; call 0x553810
 ORIGINAL_A = bytes.fromhex("50e879971000")
@@ -106,8 +113,9 @@ def d32(value):
     return struct.pack("<I", value)
 
 
-def code(legacy=False):
-    """legacy=True rebuilds the v1 cave (chase only) for recognition and upgrade."""
+def code(variant="v3"):
+    """The cave for a variant; v1 (chase only) and v2 are rebuilt for upgrade."""
+    legacy = variant == "v1"
     a = Asm(CAVE)
     # Cave A. eax = node+0x7C matrix (or 0), edi = player node, ecx = graphics,
     # tick already pushed. Must end by calling 0x553810 with one more push.
@@ -188,8 +196,13 @@ def code(legacy=False):
     a.rel8(0x74, "original")
     a.emit(b"\x3b\x15", d32(NODE))
     a.rel8(0x75, "original")
-    a.emit(0xA1, d32(GAME_TICK), b"\x3b\x05", d32(TICK))
-    a.rel8(0x75, "original")
+    if variant == "v3":
+        a.emit(0xA1, d32(GAME_TICK), b"\x2b\x05", d32(TICK))    # eax = tick - TICK
+        a.emit(0x3D, d32(CULL_WINDOW))                          # cmp eax, window
+        a.rel8(0x77, "original")                                # ja (unsigned: also a reset clock)
+    else:
+        a.emit(0xA1, d32(GAME_TICK), b"\x3b\x05", d32(TICK))
+        a.rel8(0x75, "original")
     a.emit(0xBA, d32(FAKE))
     a.rel32(0xE9, RESUME_B)
     a.label("original")
@@ -218,9 +231,10 @@ def code(legacy=False):
     return bytes(body), a.labels
 
 
-def regions(legacy=False):
+def regions(variant="v3"):
     """(file offset, original bytes, patched bytes); image base 0x400000."""
-    body, labels = code(legacy)
+    legacy = variant == "v1"
+    body, labels = code(variant)
     assert CAVE + len(body) <= CAVE_END
     out = [(CAVE - 0x400000, bytes(len(body)), body),
            (SITE_A - 0x400000, ORIGINAL_A, jmp_patch(SITE_A, labels["cave_a"], len(ORIGINAL_A))),
@@ -230,10 +244,10 @@ def regions(legacy=False):
     return out
 
 
-def matches(data, legacy):
+def matches(data, variant):
     """True/False if every region is patched/original for this variant, else None."""
     found = set()
-    for offset, old, new in regions(legacy):
+    for offset, old, new in regions(variant):
         actual = data[offset:offset + len(old)]
         if actual == old:
             found.add(False)
@@ -245,9 +259,9 @@ def matches(data, legacy):
 
 
 def state(data):
-    """True if applied (v2 or the v1 chase-only cave), False if absent; raises otherwise."""
-    for legacy in (False, True):
-        found = matches(data, legacy)
+    """True if any variant is applied, False if absent; raises otherwise."""
+    for variant in VARIANTS:
+        found = matches(data, variant)
         if found is not None:
             return found
     raise ValueError("unexpected or partial third-person camera patch")
@@ -256,9 +270,10 @@ def state(data):
 def configure(data, enabled=True):
     state(data)
     out = bytearray(data)
-    if matches(data, True):                    # remove the v1 cave before applying
-        for offset, old, new in regions(True):
-            out[offset:offset + len(old)] = old
+    for variant in VARIANTS[1:]:               # remove an older cave before applying
+        if matches(data, variant):
+            for offset, old, new in regions(variant):
+                out[offset:offset + len(old)] = old
     for offset, old, new in regions():
         out[offset:offset + len(old)] = new if enabled else old
     return bytes(out)

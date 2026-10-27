@@ -100,6 +100,12 @@ Clients prepared at versions 15–19 upgrade in place. Seen on screen
 through a full lap in the training mission, with your ship held in place
 while the scene turns behind it ([findings 9.47](findings.md)).
 
+Patch version 21 (`third-person-camera-v3`, same option) fixes objects
+blinking in and out in the orbit view: culling now uses the orbit camera
+for the whole frame, not only when the game clock has not moved since the
+camera was set ([findings 9.48](findings.md)). Clients at versions 15–20
+upgrade in place.
+
 Power-up pickups (`powerup-pickup-v1`, patch version 19, on by default; opt
 out with `--no-powerup-pickup`) let you pick up the power-ups a host places
 with `--powerup-zones` (JRMAP's zones; [findings 9.44](findings.md)). 2.9.2
