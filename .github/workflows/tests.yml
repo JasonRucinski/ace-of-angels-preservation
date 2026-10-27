@@ -39,7 +39,8 @@ jobs:
             "test_station_runtime", "test_station_sessions", "test_station_stub",
             "test_guest_admission", "test_combat_delivery", "test_client_extensions",
             "test_lan_dogfight", "test_internet_play", "test_powerups",
-            "test_target_ships", "test_host_control", "test_prepare_client", "test_dedicated_host"
+            "test_target_ships", "test_host_control", "test_prepare_client", "test_dedicated_host",
+            "test_build_texture_pack"
           )
           $failed = @()
           foreach ($suite in $suites) {

@@ -98,5 +98,32 @@
     },
     "review": "contact sheet of all 78; crops of grid.tga, astr3.tga, dock1a.tga tiled 2x2, zcs_c.tga alpha over magenta",
     "client_status": "prepare_client check ready; not yet seen in a live session"
+  },
+  "reproducible_build_20261026": {
+    "tool": "tools/build_texture_pack.py with config/texture-pack.json (104 entries: fighters 26, world 78)",
+    "method": "same for all 104: 16 px wrap padding, Real-ESRGAN x4plus RGB and alpha passes, Pillow 11.0.0 Lanczos to 2x with colour and alpha resized separately",
+    "fix": "RGBA resize premultiplied alpha and blackened colour under transparent pixels; now resized per channel",
+    "clean_build_seconds": 1358,
+    "rebuild_32bit_only_seconds": 437,
+    "install_seconds": 180,
+    "psnr_vs_hand_built_db": {
+      "dock1a.tga": 55.5,
+      "zcs_c.tga": 54.7,
+      "ymkhtat.tga": 42.3
+    },
+    "installed_archives": {
+      "TEXTURES.AOA": {
+        "entries": 96,
+        "bytes": 55499893,
+        "sha256": "9b9fa673b01843943ce18b1e682e499554a912db2c2b6921ead906dfbbc52275"
+      },
+      "DATA.AOA": {
+        "entries": 8,
+        "bytes": 6061087,
+        "sha256": "0a2be972033e5fb7d21b43e143700406f696e1b7d33c0c031833c4149913d7cb"
+      }
+    },
+    "client_status": "prepare_client check ready; this build not yet seen in a live session",
+    "distribution": "no image committed; each player builds from their own pinned archives (NOTICE.md)"
   }
 }

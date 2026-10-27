@@ -91,6 +91,7 @@ class ArchiveWriteTests(unittest.TestCase):
             folder = Path(folder)
             for name in texture_pack.ARCHIVES:
                 shutil.copyfile(original(name), folder / name)
+            shutil.copyfile(GAME / 'AOACLIENT.EXE.orig', folder / 'AOACLIENT.EXE')  # archive key
             (folder / 'a.tga').write_bytes(tex_tga)
             (folder / 'b.tga').write_bytes(dat_tga)
             pack = {tex['name'].upper(): folder / 'a.tga', 'data.aoa:' + dat['name']: folder / 'b.tga'}

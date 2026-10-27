@@ -113,6 +113,7 @@ See [NOTICE.md](NOTICE.md).
 |---|---|
 | Play it on Windows 10/11 | [docs/play.md](docs/play.md) |
 | Host a game for friends | [docs/play.md#play-with-friends](docs/play.md#play-with-friends) |
+| Get sharper ship and station skins | [docs/texture-pack.md](docs/texture-pack.md) |
 | Run an unattended Linux server | [docs/linux-host.md](docs/linux-host.md) |
 | Read the history and what was found | [CONTEXT.md](CONTEXT.md), then [docs/](docs/README.md) |
 | Help reverse-engineer the client or server protocol | [docs/README.md](docs/README.md#how-the-game-works) and [docs/findings.md](docs/findings.md) |
