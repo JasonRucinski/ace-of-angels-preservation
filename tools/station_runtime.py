@@ -109,7 +109,7 @@ def parse_args(argv=None):
     parser.add_argument('--turret-trial', type=Path, metavar='EXPORT_DIR',
                         help='inactive five-turret Arena1a placement trial; model assignment is provisional and orientation is zero')
     parser.add_argument('--warp-trial', type=Path, metavar='EXPORT_DIR',
-                        help='single native Arena1a warp gate on loopback; local client transit, editor orientation not restored')
+                        help='nine native Arena1a warp gates on loopback; local client transit, editor orientation not restored')
     parser.add_argument("--experimental-reliable-combat", action="store_true",
                         help="ordered combat delivery; retires peers at 30 total essential events")
     parser.add_argument("--experimental-protection-probe", action="store_true",
@@ -151,8 +151,8 @@ def parse_args(argv=None):
         if not (args.profile in ('local-relay', 'local-guests') and args.experimental_relay
                 and args.experimental_terrain and args.sustained_delivery and args.map == 'Arena1a'):
             parser.error('--warp-trial requires a loopback relay, Arena1a terrain and sustained delivery')
-        if args.target_ships > 83:
-            parser.error('--warp-trial reserves slot 85; at most 83 target ships')
+        if args.target_ships > 69:
+            parser.error('--warp-trial reserves slots 71..79; at most 69 target ships')
         if not args.warp_trial.is_dir():
             parser.error('--warp-trial requires an original exported AOAOBJECTS directory')
     if args.turret_trial is not None:

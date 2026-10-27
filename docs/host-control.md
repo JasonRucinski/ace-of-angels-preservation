@@ -28,7 +28,7 @@ window opens. Settings are remembered in `work/host/host_control.json`.
 | Build map terrain | Sends the map so clients build it on flight entry. Clients need patch version 11 or later; without it they still join, in empty space |
 | Navigation buoys | Restore navigation markers for the selected map. Initially checked, preserving the previous automatic behavior when exported assets are available |
 | Turret trial | Restore five Arena1a turrets with firing disabled. Initially unchecked; this does not enable turret combat |
-| Warp gate trial | Restore one Arena1a gate to WarpTgt01. Initially unchecked; available only in **This PC only** mode |
+| Warp gates trial | Restore all nine Arena1a gates with their original destinations. Initially unchecked; available only in **This PC only** mode |
 | Backdrop, max players, kill limit, time limit | Passed straight to the server; 0 turns a limit off |
 | Target ships | Passive hostile ships 12,000 units ahead of the spawn that T, J and missiles can target (`--target-ships`, [findings 9.45](findings.md)); 0 turns them off. Guns and missiles destroy them, the server keeping score of the damage ([findings 9.46](findings.md)), and they return after 15 s |
 | Game folder | Where `SCRTY.BIN` (and, for JRMAP, `jrmap292.trn`) is read from. With terrain on, JRMAP's power-up zones are passed to the host (`--powerup-zones`, [findings 9.44](findings.md)); clients need patch version 19 to pick them up |

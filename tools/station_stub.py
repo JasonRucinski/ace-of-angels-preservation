@@ -1115,7 +1115,8 @@ def main():
 
 
 def run(args, key, log, resources):
-    warp = warp_trial.loads(warp_trial.placement(args.warp_trial)) if args.warp_trial else []
+    warp_gates = warp_trial.placements(args.warp_trial) if args.warp_trial else []
+    warp = warp_trial.loads(warp_gates)
     trial = turret_trial.loads(turret_trial.placements(args.turret_trial)) if args.turret_trial else []
     buoys = navigation_buoys.loads(navigation_buoys.placements(args.arena1a_buoys)) if args.arena1a_buoys else []
     if args.navigation_buoys:
@@ -1417,8 +1418,10 @@ def run(args, key, log, resources):
                 "station_admissions_limit": station.CAPACITY, "banned_ips": len(banned_ips),
                 "sustained_delivery": args.sustained_delivery,
                 "navigation_buoys": len(buoys),
-                "warp_trial": {"objects": len(warp), "gate": warp_trial.GATE,
-                               "destination_node": "WarpTgt01", "model": "WarpGate / WarpA",
+                "warp_trial": {"objects": len(warp),
+                               "routes": [{"gate": g['name'], "destination_node": g['destination_node'],
+                                           "tag": hex(warp_trial.tag(g))} for g in warp_gates],
+                               "model": "WarpGate / WarpA",
                                "orientation_restored": False, "host_authorized_transit": False} if warp else None,
                 "turret_trial": {"objects": len(trial) // 2, "enabled": False,
                                  "model_assignment": "provisional TurretA", "orientation_restored": False} if trial else None,

@@ -1,0 +1,54 @@
+{
+  "scope": "Headless native-code and real-host socket checks; no live game acceptance",
+  "tests_passed": 4,
+  "checks": {
+    "all_gates": {
+      "coexisting_gates": 9,
+      "reverse_order_duplicate_loads": 9,
+      "duplicate_labels_have_distinct_tags": true,
+      "native_transit_cases": 54,
+      "same_gate_exit_checks": 54,
+      "all_gate_exit_overlap_checks": 486,
+      "scope": "Fixture render radii; actual model geometry unverified"
+    },
+    "load_receiver": {
+      "native_function_returned": true,
+      "duplicate_loads": 3,
+      "allocations": 1,
+      "model_requests": 1,
+      "fixture_services": [
+        "AI cleanup",
+        "CRT lowercase",
+        "CRT sprintf",
+        "event queue availability",
+        "model loading",
+        "scene registration",
+        "team creation",
+        "team lookup",
+        "world slot allocation"
+      ]
+    },
+    "overlap_and_transit": {
+      "branch_cases": 8,
+      "velocity_cases": 6,
+      "exit_does_not_retrigger_same_gate": true,
+      "render_bounds": "fixture spheres of radius 10 and 100; not actual model bounds",
+      "sound_and_send_calls": "stopped before these calls"
+    },
+    "udp_chain": {
+      "native_load_and_transit_to_real_host_to_native_movement_decoder": "passed",
+      "observer_recovers_without_second_upload": true,
+      "late_join_uses_post_warp_position_and_velocity": true,
+      "observer_reconnect_has_nine_gates_and_current_pilot_position": true,
+      "gate_routes_with_native_transit_and_lost_update_recovery": 9,
+      "synthetic_peer_connections": 4,
+      "scope": "Movement prefix decoded natively; stats/rendering/full client loop not tested"
+    }
+  },
+  "remaining": [
+    "Real model bounds and rendered orientation",
+    "Full game-loop collision entry",
+    "Actual clients on two PCs",
+    "Map-change cleanup and host-authorized transit"
+  ]
+}

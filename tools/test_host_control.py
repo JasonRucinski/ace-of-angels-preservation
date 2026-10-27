@@ -172,7 +172,7 @@ class HostProcessTests(unittest.TestCase):
                     data, _ = self.wait_status()
                     self.assertEqual(data['navigation_buoys'], 10 if enabled else 0)
                     self.assertEqual((data['turret_trial'] or {}).get('objects', 0), 5 if enabled else 0)
-                    self.assertEqual((data['warp_trial'] or {}).get('objects', 0), 1 if enabled else 0)
+                    self.assertEqual((data['warp_trial'] or {}).get('objects', 0), 9 if enabled else 0)
                     if enabled:
                         self.assertFalse(data['turret_trial']['enabled'])
                 finally:
