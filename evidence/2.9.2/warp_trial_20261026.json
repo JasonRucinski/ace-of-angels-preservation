@@ -1,0 +1,33 @@
+{
+  "scope": "Single-gate implementation and offline/socket validation; live acceptance pending",
+  "map": "Arena1a",
+  "gate": "Rail_Hy1 HyBase1_Rail",
+  "display_name": "HyBase1_Rail",
+  "destination_node": "WarpTgt01",
+  "tag": "0x40010055",
+  "model_object": "WarpGate",
+  "model_gob": "WarpA",
+  "packet_kind": 7,
+  "load_opcode": "0x25",
+  "body_bytes": 191,
+  "gate_destination_offset": "0x9e",
+  "tests": {
+    "test_warp_trial": {"passed": 4},
+    "test_navigation_buoys": {"passed": 4},
+    "test_station_runtime": {"passed": 7, "skipped": 1, "skip_reason": "POSIX SIGINT test on Windows"},
+    "native_trial_destination_receiver": "passed",
+    "first_and_late_socket_joins": "passed",
+    "lost_gate_ack_and_observed_retransmission": "passed",
+    "coexistence": {"navigation_buoys": 10, "disabled_turrets": 5},
+    "stdlib_only_host_config": "passed"
+  },
+  "live": {
+    "status": "manual playtest deferred by user; headless checks passed separately",
+    "headless_evidence": "warp_headless_20261026.json",
+    "ui_capture": "window capture timed out: timed out waiting on channel",
+    "ui_set_value": "Cannot set a value for an element that is not settable"
+  },
+  "editor_orientation_restored": false,
+  "host_authorized_transit": false,
+  "linux_deployment_changed": false
+}

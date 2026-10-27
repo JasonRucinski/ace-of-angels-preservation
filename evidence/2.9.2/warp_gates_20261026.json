@@ -1,0 +1,92 @@
+{
+  "scope": "Offline original-code research; no live gates spawned or transit tested",
+  "client_sha256": "4b6c35e2b3ab473bd98c0afa6538079ee78678d85c28406c07bc27a08cc78c7e",
+  "map_sha256": "5d652eaca4972d958eb1dc54b8ef277fdb8ea475be4912f01a5fd8d02afa7886",
+  "gates": [
+    {
+      "name": "Rail_Hy1 HyBase1_Rail",
+      "node_id": 397,
+      "destination_node": "WarpTgt01",
+      "destination_id": 398
+    },
+    {
+      "name": "Rail_Hy2 HyBase2_Rail",
+      "node_id": 399,
+      "destination_node": "WarpTgt02",
+      "destination_id": 400
+    },
+    {
+      "name": "Rail_Home1 Home_Rail",
+      "node_id": 401,
+      "destination_node": "WarpTgt03",
+      "destination_id": 402
+    },
+    {
+      "name": "Rail_Home2 Home_Rail",
+      "node_id": 403,
+      "destination_node": "WarpTgt04",
+      "destination_id": 404
+    },
+    {
+      "name": "Rail_Hy_k1 Rail_Hy1a",
+      "node_id": 405,
+      "destination_node": "Dummy04",
+      "destination_id": 406
+    },
+    {
+      "name": "Rail_Hy_J1 Rail_SSa",
+      "node_id": 407,
+      "destination_node": "Dummy01",
+      "destination_id": 408
+    },
+    {
+      "name": "Rail_Hy_J2 Rail_SSb",
+      "node_id": 409,
+      "destination_node": "Dummy02",
+      "destination_id": 410
+    },
+    {
+      "name": "Rail_Hy_J3 RailSSc",
+      "node_id": 411,
+      "destination_node": "Dummy03",
+      "destination_id": 412
+    },
+    {
+      "name": "Rail_Hy_k2 Rail_Hy1b",
+      "node_id": 413,
+      "destination_node": "WarpTgt05",
+      "destination_id": 414
+    }
+  ],
+  "native_checks": {
+    "layout_destinations": 9,
+    "maximum_destination_error": 0.05367374655136267,
+    "layout_rejections": [
+      "controller disabled",
+      "no child",
+      "wrong child type",
+      "null child"
+    ],
+    "native_destination_field_round_trips": 9,
+    "collision_vectors": 6,
+    "maximum_collision_error": 2.4414062522737368e-05,
+    "exit_offset": 1000.0,
+    "speed_floor": 100.0,
+    "kind_7_collidable_and_node_collision_dispatch": true,
+    "local_player_and_busy_guard_cases": 3
+  },
+  "model_object": "WarpGate",
+  "model_gob": "WarpA",
+  "model_config_and_geometry_hashes_match_archive": true,
+  "relay_checks": {
+    "destination_jumps_through_movement_codecs": 9,
+    "scope": "Synthetic codec checks, not socket or live two-client tests",
+    "host_authorizes_gate_transit": false
+  },
+  "remaining": [
+    "Rendered gate orientation and trigger geometry",
+    "Live single-gate transit and re-entry behavior",
+    "Host movement validation and two-client synchronization",
+    "Late join, map changes and cleanup"
+  ]
+}

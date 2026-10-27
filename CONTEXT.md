@@ -16,6 +16,52 @@ a search-engine summary only.
 
 ## 2. Status
 
+Headless warp validation (26 Oct 2026): user deferred manual playtesting.
+Three additional tests pass: complete original LoadObject receiver with explicit
+allocation/model/team/event service fixtures, duplicate-load suppression,
+eight original overlap/guard cases, six transit velocities and no same-gate
+retrigger at the remote exit. Actual UDP host with four synthetic connections
+passes native-transit -> relay -> original movement decoder, lost-update
+recovery without a second upload, late join and observer reconnect. No UI
+needed. Real model bounds, orientation and full game-loop acceptance remain
+deferred. See [headless checks](docs/arena1a-rebuild.md#headless-warp-validation).
+
+Single warp trial (26 Oct 2026): opt-in `--warp-trial EXPORT_DIR` loads
+HyBase1_Rail / WarpTgt01 in slot 85, using native kind 7 and WarpGate/WarpA.
+Loopback-only, Arena1a terrain and sustained delivery required. Four focused
+tests pass, including native destination receipt, exact ordered first/late joins
+with buoys/turrets, gate ACK loss/retransmission and verifier rejection cases.
+Isolated host prepared at 127.0.0.2; live entry remains pending because both
+UI interfaces fail on the pilot dialog. Editor orientation is not restored;
+transit is handled by the original local client, not authorized by the host.
+See [single-gate trial](docs/arena1a-rebuild.md#single-gate-local-trial).
+
+Warp investigation (26 Oct 2026): user deferred flags/control points. Recovered
+all nine Arena1a gate-to-child destination links, including four `Dummy` nodes.
+Original-code probes verify world destinations, kind-7 network fields and local
+collision transit. Native model is WarpGate / WarpA. Transit preserves velocity
+and uses destination + velocity/max(speed,100)*1000. Existing relay codecs accept
+all nine destination jumps; gate authorization and live synchronization remain
+unverified. No gates enabled. See [warp recovery](docs/arena1a-rebuild.md#warp-gate-recovery--26-october-2026).
+
+Turret placement trial (26 Oct 2026): opt-in `--turret-trial` loads the five
+Flag ND1-C children with neutral relations and immediately disables each.
+TurretA is a provisional model choice; rotations remain zero. Original-code
+checks confirm the disabled AI firing gate, and synthetic first/late joins
+pass with buoys and ACK loss. Separate 127.0.0.2 loopback host prepared;
+live acceptance still awaits flight entry. No automatic host-control enable
+or Linux deployment. See [trial](docs/arena1a-rebuild.md#inactive-five-turret-placement-trial).
+
+Turret hierarchy recovery (26 Oct 2026): all 80 Arena1a turret markers link
+to 18 flag parents (eight groups of five, ten of four). Their saved transforms
+are local; original-code execution verified all 383 root-node world transforms
+within 0.05 units. Native LoadObject kind 1 attaches turret AI; embedded model
+turrets use the same script/constructor through a separate enumeration path.
+Added a bounded turret-group status codec and original-client disable tests
+(0/1/5/50 objects). No turrets spawned; model selection, ownership, orientation,
+firing/damage and live acceptance remain unresolved. See
+[turret recovery](docs/arena1a-rebuild.md#turret-group-recovery--26-october-2026).
+
 Navigation restoration (26 Oct 2026): server opt-in `--navigation-buoys` reads
 original exported assets for the selected map, expanding nested placements;
 JRMAP uses original TRN kind-3 Buoy/Cube objects. All 20 selections handled,
