@@ -36,6 +36,45 @@ glow **0.06**, and glow threshold **0.78**. The glow uses two quarter-resolution
 targets; sharpening is capped at 0.015 per channel to limit halos. These are
 conservative starting values, not visually approved settings.
 
+## Capture an exact before/after comparison
+
+The preset now configures **Print Screen** to save two PNGs from the **same
+rendered frame**, before and after the filter, under the experiment's
+`comparison-captures` folder. Effects must be enabled and Split preview off.
+The ReShade overlay is excluded and a copy of the capture preset is saved.
+This avoids camera or animation changes between separate screenshots.
+
+To automatically build a comparison whenever a pair is captured, run this
+before starting the experiment (requires Pillow from `requirements.txt`):
+
+```powershell
+python -I tools\compare_classic_capture.py game\classic-enhanced --configure
+```
+
+This sets a local ReShade screenshot callback to run the comparison script
+with the current Python executable. The previous configuration is backed up as
+`ReShade.ini.before-auto-comparison`. If the renderer is already running,
+restart the experiment to load these settings. After entering flight, press
+Print Screen. The resulting report is written to
+`work/classic-enhanced/AOA_<capture timestamp and count>/index.html`.
+
+The report includes side-by-side full-frame images and a movable comparison
+divider. `original.png` and `enhanced.png` are byte-for-byte copies of the
+captures; no image retouching or simulated filter is used. `comparison.json`
+records image hashes, dimensions, pixel-change measurements, and preset values.
+The helper rejects identical frames, mismatched dimensions, missing presets,
+disabled Classic Enhanced, and captures with Split preview enabled.
+
+To build a report from the latest existing pair manually:
+
+```powershell
+python -I tools\compare_classic_capture.py game\classic-enhanced\comparison-captures
+```
+
+Automatic report generation was checked with labeled synthetic fixtures;
+this does not establish that a live game capture has succeeded. The game
+must have entered its 3D renderer before ReShade can capture a frame.
+
 ## Prepare on another machine
 
 Close the source game before copying. Use a prepared 2.9.2 folder with the
