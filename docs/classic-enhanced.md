@@ -34,7 +34,13 @@ dark, highlights retain their color, and turning/firing remains smooth.
 The dramatic defaults are vibrance **0.95**, contrast **0.30**, shadow lift
 **0.75**, exposure **+0.35 stops**, color grade **0.65**, vignette **0.18**,
 sharpening **0.22**, glow **0.65**, threshold **0.40**, and glow spread **2.5**.
-The glow uses two quarter-resolution targets; sharpening stays capped at
+Radiant lights defaults to **2.2**, with light halo color **0.8**. This separate
+half-resolution layer retains tiny bright source pixels and gives them a
+tighter, more colorful halo over the existing wide bloom. Set Radiant lights
+to **0** to restore the preceding dramatic look. It also affects bright HUD
+text and highlights on reflective surfaces; it cannot identify actual lamps.
+The glow uses two quarter-resolution and two half-resolution targets;
+sharpening stays capped at
 0.015 per channel to limit halos. Exact black stays black before bloom.
 
 The original restrained look is preserved in `Subtle.ini`. Select that preset
@@ -132,6 +138,20 @@ previous setup, close the experiment and launch your original game folder.
 Pilots/settings changed in the experiment are not synchronized back.
 
 ## Verification status — 28 October 2026
+
+### Radiant lights revision
+
+The new light layer compiled without warnings in the live offline renderer.
+Three new 1920 × 1200 same-frame pairs were captured at 08:42:45, 08:42:51,
+and 08:42:57. Visual inspection shows brighter blue-white station lights and
+halos on ship highlights. HUD text is readable in the inspected view but has
+more glow. Two extra half-resolution passes have not been performance benchmarked.
+
+`work/classic-enhanced/radiant-lights/index.html` compares the previous dramatic
+capture with the radiant-light capture. These are separate runs of the same
+camera view, so minor animation differences are possible. The page also links
+to the new exact same-frame original/filtered comparison. Captures are unedited.
+See [light-glow evidence](../evidence/2.9.2/classic_enhanced_lights_20261028.json).
 
 ### Dramatic revision
 

@@ -1,0 +1,92 @@
+{
+  "date": "2026-10-28",
+  "revision": "Radiant lights",
+  "shader_sha256": "d20362efa5d5f7700ba853bb31532a715f97711acf534cea87a499e48a06a8f9",
+  "live_shader_compile": "succeeded without warnings",
+  "pairs": [
+    {
+      "capture": "AOA_2026-10-28_08-42-45_0",
+      "method": "ReShade before/after processing of the same rendered frame",
+      "width": 1920,
+      "height": 1200,
+      "changed_pixels_percent": 71.531,
+      "mean_absolute_channel_difference_0_255": 17.2447,
+      "before_sha256": "748612862a767c67c0a6c17b5be351a11391e633dc965a6604e3526039736d9f",
+      "after_sha256": "a05b073f43c772fdcf96e0962fe9ce55fef2a291805dcdc2c4978aa6cc373e40",
+      "preset": {
+        "vibrance": "0.950000",
+        "contrast": "0.300000",
+        "shadowlift": "0.750000",
+        "exposure": "0.350000",
+        "colorgrade": "0.650000",
+        "vignette": "0.180000",
+        "sharpen": "0.220000",
+        "bloom": "0.650000",
+        "bloomthreshold": "0.400000",
+        "bloomradius": "2.500000",
+        "lightglow": "2.200000",
+        "lightcolor": "0.800000",
+        "splitpreview": "0"
+      }
+    },
+    {
+      "capture": "AOA_2026-10-28_08-42-51_0",
+      "method": "ReShade before/after processing of the same rendered frame",
+      "width": 1920,
+      "height": 1200,
+      "changed_pixels_percent": 71.031,
+      "mean_absolute_channel_difference_0_255": 17.1425,
+      "before_sha256": "00a469a2006ad3cb200ab6786a66e1ec2947cfdfb16dc2af7dc66b9e50612fa4",
+      "after_sha256": "2d5f711317ec3f9307bbec0898209ed5265428fcd28eb8c721edb0a8976de545",
+      "preset": {
+        "vibrance": "0.950000",
+        "contrast": "0.300000",
+        "shadowlift": "0.750000",
+        "exposure": "0.350000",
+        "colorgrade": "0.650000",
+        "vignette": "0.180000",
+        "sharpen": "0.220000",
+        "bloom": "0.650000",
+        "bloomthreshold": "0.400000",
+        "bloomradius": "2.500000",
+        "lightglow": "2.200000",
+        "lightcolor": "0.800000",
+        "splitpreview": "0"
+      }
+    },
+    {
+      "capture": "AOA_2026-10-28_08-42-57_0",
+      "method": "ReShade before/after processing of the same rendered frame",
+      "width": 1920,
+      "height": 1200,
+      "changed_pixels_percent": 71.033,
+      "mean_absolute_channel_difference_0_255": 17.1391,
+      "before_sha256": "42fd00549ebfc59e9e037ebfa0af460f98014eaab425522bc58e7e2fc9048a58",
+      "after_sha256": "995ce145838407c79121ef3bf120fc40dd2dcbd66745c14c05241b294449d758",
+      "preset": {
+        "vibrance": "0.950000",
+        "contrast": "0.300000",
+        "shadowlift": "0.750000",
+        "exposure": "0.350000",
+        "colorgrade": "0.650000",
+        "vignette": "0.180000",
+        "sharpen": "0.220000",
+        "bloom": "0.650000",
+        "bloomthreshold": "0.400000",
+        "bloomradius": "2.500000",
+        "lightglow": "2.200000",
+        "lightcolor": "0.800000",
+        "splitpreview": "0"
+      }
+    }
+  ],
+  "incremental_report": "work\\classic-enhanced\\radiant-lights\\index.html",
+  "incremental_method": "Unedited enhanced screenshots from two separate runs; not same-frame. New raw/filtered pairs are same-frame.",
+  "previous_capture": "AOA_2026-10-28_08-30-34_0",
+  "visual_review": "Brighter blue-white station lights, glowing ship highlights and brighter HUD halos; text readable in first inspected view",
+  "limitations": [
+    "Bright HUD and reflective surfaces also glow",
+    "No frame-time benchmark",
+    "One camera view"
+  ]
+}

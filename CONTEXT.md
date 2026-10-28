@@ -33,6 +33,10 @@ shadows and exposure, increases vibrance/bloom, and adds teal/warm grading and
 a mild vignette. Three new live same-frame pairs captured at 1920x1200 and
 inspected; station/nebula visibility and color change are obvious. Old look is
 preserved as Subtle.ini. Performance remains unbenchmarked.
+Next refinement adds a half-resolution radiant-light layer for brighter,
+more colorful halos on tiny bright pixels. Live compilation and three further
+capture pairs verified; HUD also glows. Radiant lights = 0 restores the previous
+dramatic look. Incremental comparison: work/classic-enhanced/radiant-lights/index.html.
 
 Nine-gate expansion (27 Oct 2026): `--warp-trial` and the host checkbox now
 restore all nine Arena1a warp gates, adding eight placements. Slots 71–79

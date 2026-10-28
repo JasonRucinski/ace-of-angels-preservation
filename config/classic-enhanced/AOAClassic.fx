@@ -20,6 +20,10 @@ uniform float BloomThreshold < ui_type = "slider"; ui_min = 0.2; ui_max = 0.95;
     ui_label = "Glow threshold"; > = 0.40;
 uniform float BloomRadius < ui_type = "slider"; ui_min = 1.0; ui_max = 4.0;
     ui_label = "Glow spread"; > = 2.5;
+uniform float LightGlow < ui_type = "slider"; ui_min = 0.0; ui_max = 4.0;
+    ui_label = "Radiant lights"; > = 2.2;
+uniform float LightColor < ui_type = "slider"; ui_min = 0.0; ui_max = 1.5;
+    ui_label = "Light halo color"; > = 0.8;
 uniform bool SplitPreview < ui_label = "Compare: original left / enhanced right"; > = false;
 
 texture BackBuffer : COLOR;
@@ -28,6 +32,11 @@ texture GlowA { Width = BUFFER_WIDTH / 4; Height = BUFFER_HEIGHT / 4; Format = R
 texture GlowB { Width = BUFFER_WIDTH / 4; Height = BUFFER_HEIGHT / 4; Format = RGBA16F; };
 sampler GlowASampler { Texture = GlowA; AddressU = CLAMP; AddressV = CLAMP; };
 sampler GlowBSampler { Texture = GlowB; AddressU = CLAMP; AddressV = CLAMP; };
+// Half-resolution light layer retains tiny station windows lost in wide bloom.
+texture LightA { Width = BUFFER_WIDTH / 2; Height = BUFFER_HEIGHT / 2; Format = RGBA16F; };
+texture LightB { Width = BUFFER_WIDTH / 2; Height = BUFFER_HEIGHT / 2; Format = RGBA16F; };
+sampler LightASampler { Texture = LightA; AddressU = CLAMP; AddressV = CLAMP; };
+sampler LightBSampler { Texture = LightB; AddressU = CLAMP; AddressV = CLAMP; };
 
 void FullscreenVS(uint id : SV_VertexID, out float4 position : SV_Position, out float2 uv : TEXCOORD)
 {
@@ -62,6 +71,36 @@ float4 BlurPS(float4 position : SV_Position, float2 uv : TEXCOORD) : SV_Target
     return float4(c, 1.0);
 }
 
+float3 BrightLight(float2 uv)
+{
+    float3 c = tex2D(Scene, uv).rgb;
+    float peak = max(c.r, max(c.g, c.b));
+    // Only bright source pixels seed the extra glow; shadow lift cannot seed it.
+    float3 hue = pow(saturate(c / max(peak, 0.0001)), (1.0 + LightColor).xxx);
+    return hue * peak * smoothstep(0.60, 0.95, peak);
+}
+
+float4 LightExtractPS(float4 position : SV_Position, float2 uv : TEXCOORD) : SV_Target
+{
+    float2 p = float2(BUFFER_RCP_WIDTH, BUFFER_RCP_HEIGHT) * 0.5;
+    // Peak pooling preserves sub-pixel lights before the soft blur.
+    float3 c = max(max(BrightLight(uv + p), BrightLight(uv - p)),
+                   max(BrightLight(uv + p * float2(1, -1)),
+                       BrightLight(uv + p * float2(-1, 1))));
+    return float4(c, 1.0);
+}
+
+float4 LightBlurPS(float4 position : SV_Position, float2 uv : TEXCOORD) : SV_Target
+{
+    float2 p = float2(2.0 * BUFFER_RCP_WIDTH, 0.0);
+    float3 c = tex2D(LightASampler, uv).rgb * 0.227027;
+    c += (tex2D(LightASampler, uv + p * 1.384615).rgb
+        + tex2D(LightASampler, uv - p * 1.384615).rgb) * 0.316216;
+    c += (tex2D(LightASampler, uv + p * 3.230769).rgb
+        + tex2D(LightASampler, uv - p * 3.230769).rgb) * 0.070270;
+    return float4(c, 1.0);
+}
+
 float4 FinishPS(float4 position : SV_Position, float2 uv : TEXCOORD) : SV_Target
 {
     float4 original = tex2D(Scene, uv);
@@ -90,6 +129,14 @@ float4 FinishPS(float4 position : SV_Position, float2 uv : TEXCOORD) : SV_Target
     glow += (tex2D(GlowBSampler, uv + stepUV * 3.230769).rgb
         + tex2D(GlowBSampler, uv - stepUV * 3.230769).rgb) * 0.070270;
     c = 1.0 - (1.0 - c) * (1.0 - saturate(glow * Bloom));
+    float2 lightStep = float2(0.0, 2.0 * BUFFER_RCP_HEIGHT);
+    float3 light = tex2D(LightBSampler, uv).rgb * 0.227027;
+    light += (tex2D(LightBSampler, uv + lightStep * 1.384615).rgb
+        + tex2D(LightBSampler, uv - lightStep * 1.384615).rgb) * 0.316216;
+    light += (tex2D(LightBSampler, uv + lightStep * 3.230769).rgb
+        + tex2D(LightBSampler, uv - lightStep * 3.230769).rgb) * 0.070270;
+    // Exponential screen blend rolls off smoothly rather than clipping halos.
+    c = 1.0 - (1.0 - c) * exp(-light * LightGlow);
     float2 edge = uv * 2.0 - 1.0;
     c *= 1.0 - Vignette * smoothstep(0.25, 1.5, dot(edge, edge));
     return float4(c, original.a);
@@ -100,5 +147,7 @@ technique ClassicEnhanced < ui_label = "AOA Classic Enhanced";
 {
     pass Extract { VertexShader = FullscreenVS; PixelShader = ExtractPS; RenderTarget = GlowA; }
     pass Blur { VertexShader = FullscreenVS; PixelShader = BlurPS; RenderTarget = GlowB; }
+    pass LightExtract { VertexShader = FullscreenVS; PixelShader = LightExtractPS; RenderTarget = LightA; }
+    pass LightBlur { VertexShader = FullscreenVS; PixelShader = LightBlurPS; RenderTarget = LightB; }
     pass Finish { VertexShader = FullscreenVS; PixelShader = FinishPS; }
 }
