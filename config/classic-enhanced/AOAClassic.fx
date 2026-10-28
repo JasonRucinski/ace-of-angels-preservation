@@ -1,7 +1,9 @@
 // Ace of Angels: Classic Enhanced. Original project shader, MIT licensed.
-// Uses dgVoodoo2 2.87.5 depth to protect the sky; no client code hooks.
+// Standard depth protects the sky; the optional UI add-on runs this before HUD drawing.
 uniform bool ProtectSky < ui_label = "Preserve original sky colors"; > = true;
 uniform bool DepthAvailable < source = "bufready_depth"; >;
+// Set by classic_ui_addon, never stored as a user preference.
+uniform bool PreUIActive < source = "aoa_pre_ui"; > = false;
 uniform float Vibrance < ui_type = "slider"; ui_min = 0.0; ui_max = 1.5;
     ui_label = "Color vibrance"; > = 0.95;
 uniform float Contrast < ui_type = "slider"; ui_min = 0.0; ui_max = 0.6;
@@ -31,6 +33,9 @@ uniform bool SplitPreview < ui_label = "Compare: original left / enhanced right"
 texture BackBuffer : COLOR;
 sampler Scene { Texture = BackBuffer; AddressU = CLAMP; AddressV = CLAMP; };
 texture SceneDepth : DEPTH;
+texture WorldDepth : AOA_WORLD_DEPTH;
+sampler WorldDepthSampler { Texture = WorldDepth; MinFilter = POINT; MagFilter = POINT;
+    MipFilter = POINT; AddressU = CLAMP; AddressV = CLAMP; };
 sampler DepthSampler { Texture = SceneDepth; MinFilter = POINT; MagFilter = POINT;
     MipFilter = POINT; AddressU = CLAMP; AddressV = CLAMP; };
 texture GlowA { Width = BUFFER_WIDTH / 4; Height = BUFFER_HEIGHT / 4; Format = RGBA16F; };
@@ -52,6 +57,8 @@ void FullscreenVS(uint id : SV_VertexID, out float4 position : SV_Position, out 
 float Foreground(float2 uv)
 {
     if (!ProtectSky) return 1.0;
+    // The pre-HUD add-on supplies the actual typed D16 view, before UI depth clears.
+    if (PreUIActive) return tex2D(WorldDepthSampler, uv).r < 0.999999 ? 1.0 : 0.0;
     if (!DepthAvailable) return 0.0;
     // This pinned dgVoodoo D3D11 path exposes packed depth through a float SRV.
     // Numeric float comparisons see NaNs in the far scene. Compare the bits.

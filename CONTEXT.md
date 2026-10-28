@@ -43,6 +43,17 @@ depth before clears with its default selection heuristic. Sky base colors stay o
 foreground light spill remains. Neutral-dark guard prevents briefing-panel
 depth silhouettes. Depthless sprites/HUD may bypass grading; only one view
 verified so far. Comparison: work/classic-enhanced/sky-preserved/index.html.
+UI preservation follow-up: the experiment now has an optional original add-on
+that applies the effect at native world/HUD boundary 0044B3C7, before panels,
+radar and target previews are drawn. This uses full-add-on ReShade 6.8.0 and a
+signature-checked in-memory hook; the executable on disk stays unchanged.
+Typed D16 world depth preserves the sky. Live consecutive off/on captures show
+exactly unchanged briefing text/background, damage/systems panels, radar, and
+two nebula regions while ship/station lighting changes remain dramatic.
+World-space labels still receive the effect. Build/install/restore/capture:
+tools/classic_ui.py; guide: docs/classic-enhanced.md. Main isolated experiment
+upgraded; normal source game remains untouched. Local comparison:
+work/classic-enhanced/ui-preserved-verified/index.html. Four installer tests pass.
 
 Nine-gate expansion (27 Oct 2026): `--warp-trial` and the host checkbox now
 restore all nine Arena1a warp gates, adding eight placements. Slots 71–79

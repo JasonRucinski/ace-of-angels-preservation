@@ -1,0 +1,129 @@
+{
+  "date": "2026-10-28",
+  "revision": "World effect before HUD draw",
+  "method": "Consecutive real live frames; animations may differ. PNG bytes unmodified.",
+  "hook": "0044B3C7, original bytes 8b8e98010000; memory only",
+  "source_client_sha256": "fc0878ebf5314c3157977bcdff0241b4128b27137755f7633c5d886757e92625",
+  "shader_sha256": "54252f528c919fe4a7cb538fa71c9744e75a70c4e8cd91aba08eda273ed62010",
+  "addon_source_sha256": "82ca860fd15e10cab5143b1a5080d97190cc68dc076bb6726955e771e9028d5a",
+  "report": "work\\classic-enhanced\\ui-preserved-verified\\index.html",
+  "capture": {
+    "capture": "AOA_2026-10-28_10-07-31_0_UIOriginal.png",
+    "method": "Consecutive live frames with effects off/on and HUD present; moving objects may differ",
+    "width": 1920,
+    "height": 1200,
+    "changed_pixels_percent": 16.609,
+    "mean_absolute_channel_difference_0_255": 3.7204,
+    "before_sha256": "2190a5f0ef11ccdbc12a519a33117130290f1c2077f01a139c89655ea305f43d",
+    "after_sha256": "0cd46cad526e94ddb8114b99c984ccf774b22cd17b5c6730573be0bf2b5cd5a1",
+    "preset": {
+      "protectsky": "1",
+      "vibrance": "0.950000",
+      "contrast": "0.300000",
+      "shadowlift": "0.750000",
+      "exposure": "0.350000",
+      "colorgrade": "0.650000",
+      "vignette": "0.180000",
+      "sharpen": "0.220000",
+      "bloom": "0.650000",
+      "bloomthreshold": "0.400000",
+      "bloomradius": "2.500000",
+      "lightglow": "2.200000",
+      "lightcolor": "0.800000",
+      "splitpreview": "0"
+    }
+  },
+  "regions": {
+    "briefing_interior": {
+      "rectangle": [
+        815,
+        425,
+        1100,
+        785
+      ],
+      "mean_absolute_channel_difference": 0.0,
+      "max_channel_difference": 0
+    },
+    "damage_panel": {
+      "rectangle": [
+        10,
+        170,
+        245,
+        347
+      ],
+      "mean_absolute_channel_difference": 0.0,
+      "max_channel_difference": 0
+    },
+    "systems_panel": {
+      "rectangle": [
+        1660,
+        0,
+        1908,
+        205
+      ],
+      "mean_absolute_channel_difference": 0.0,
+      "max_channel_difference": 0
+    },
+    "radar": {
+      "rectangle": [
+        900,
+        1110,
+        1040,
+        1170
+      ],
+      "mean_absolute_channel_difference": 0.0,
+      "max_channel_difference": 0
+    },
+    "left_nebula": {
+      "rectangle": [
+        10,
+        680,
+        180,
+        840
+      ],
+      "mean_absolute_channel_difference": 0.0,
+      "max_channel_difference": 0
+    },
+    "right_nebula": {
+      "rectangle": [
+        1550,
+        300,
+        1850,
+        700
+      ],
+      "mean_absolute_channel_difference": 0.0,
+      "max_channel_difference": 0
+    },
+    "station_hull": {
+      "rectangle": [
+        300,
+        480,
+        700,
+        550
+      ],
+      "mean_absolute_channel_difference": 18.92925,
+      "max_channel_difference": 155
+    },
+    "own_ship": {
+      "rectangle": [
+        840,
+        830,
+        1080,
+        920
+      ],
+      "mean_absolute_channel_difference": 40.11717592592593,
+      "max_channel_difference": 145
+    }
+  },
+  "checks": [
+    "live shader compilation",
+    "solid-color boundary probe removed before final capture",
+    "4 installer/restore tests passed",
+    "main experiment check passed; source executable unchanged"
+  ],
+  "limitations": [
+    "World-space labels remain in the world effect",
+    "Transparent panels show enhanced world behind them",
+    "Offline mission only; performance not benchmarked"
+  ]
+}

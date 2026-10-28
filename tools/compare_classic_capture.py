@@ -28,10 +28,12 @@ def latest_pair(folder):
     return max(pairs, key=lambda pair: pair[1].stat().st_mtime_ns)
 
 
-def build(before, after, output):
+def build(before, after, output, *, sequential_ui=False):
     if output.exists():
         raise ValueError("output already exists; select a new folder to preserve earlier captures")
-    if before.name.removesuffix("_Before.png") != after.name.removesuffix("_After.png"):
+    if sequential_ui and not (before.name.endswith("_UIOriginal.png") and after.name.endswith("_UIProtected.png")):
+        raise ValueError("expected the UI add-on's original/protected captures")
+    if not sequential_ui and before.name.removesuffix("_Before.png") != after.name.removesuffix("_After.png"):
         raise ValueError("the two files are not a matching same-frame capture pair")
     with Image.open(before) as source, Image.open(after) as enhanced:
         source.load()
@@ -58,7 +60,8 @@ def build(before, after, output):
         raise ValueError("split preview was enabled; disable it before capturing a full-frame comparison")
     record = {
         "capture": before.name.removesuffix("_Before.png"),
-        "method": "ReShade before/after processing of the same rendered frame",
+        "method": ("Consecutive live frames with effects off/on and HUD present; moving objects may differ"
+                   if sequential_ui else "ReShade before/after processing of the same rendered frame"),
         "width": width, "height": height,
         "changed_pixels_percent": round(changed * 100 / (width * height), 3),
         "mean_absolute_channel_difference_0_255": round(mean_difference, 4),
@@ -98,6 +101,10 @@ document.getElementById('split').addEventListener('input', e => {
 document.getElementById('after').style.clipPath = `inset(0 0 0 ${e.target.value}%)`;
 document.getElementById('line').style.left = e.target.value + '%';
 });</script></html>'''
+    if sequential_ui:
+        page = page.replace("Original and enhanced captures of the same frame.",
+                            "Consecutive live captures with the UI preserved. Moving objects may differ.")
+        page = page.replace("Same game frame with Classic Enhanced", "Next game frame with Classic Enhanced")
     caption = f"{width} × {height} · {record['changed_pixels_percent']}% of pixels changed · {record['capture']}"
     page = page.replace("__CAPTION__", html.escape(caption)).replace("__RECORD__", html.escape(json.dumps(record, indent=2)))
     (output / "index.html").write_text(page, encoding="utf-8")
@@ -109,6 +116,8 @@ def configure(folder):
     folder = folder.resolve()
     if not (folder / "_classic_enhanced.json").is_file():
         raise ValueError("configure requires the isolated Classic Enhanced game folder")
+    if (folder / "ClassicUI.addon32").is_file():
+        raise ValueError("UI mode captures through tools/classic_ui.py capture; final-screen pairs do not include the pre-HUD effect")
     path = folder / "ReShade.ini"
     config = configparser.ConfigParser(interpolation=None)
     config.optionxform = str

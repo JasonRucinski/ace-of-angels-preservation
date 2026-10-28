@@ -99,6 +99,10 @@ def check(folder):
     present = [name for name in (ACTIVE, DISABLED) if (folder / name).exists()]
     if len(present) != 1 or digest(folder / present[0]) != record["runtime_sha256"]:
         raise ValueError("runtime missing, ambiguous, or changed")
+    if "ui_addon_sha256" in record:
+        addon = folder / "ClassicUI.addon32"
+        if not addon.is_file() or digest(addon) != record["ui_addon_sha256"]:
+            raise ValueError("UI preservation add-on is missing or changed")
     for name in ("ReShade.ini", "ClassicEnhanced.ini", "classic-enhanced-shaders/AOAClassic.fx"):
         if not (folder / name).is_file():
             raise ValueError(f"missing experiment file: {name}")

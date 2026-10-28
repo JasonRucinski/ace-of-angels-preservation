@@ -11,8 +11,10 @@ The experiment uses the standard 32-bit ReShade 6.8.0 runtime after dgVoodoo2.
 Our self-contained shader needs no shader packs or third-party add-ons.
 Sky protection uses ReShade's built-in depth access with the pinned dgVoodoo2
 2.87.5 D3D11 configuration.
-It affects the final image, **including the HUD**. It cannot distinguish a
-bright HUD label from an engine light; lower Highlight glow if text looks hazy.
+The standard shader affects the final image, including HUD pixels over geometry.
+The prepared local experiment now has the optional **UI preservation mode** below:
+it applies the effect before the HUD is drawn, keeping panels, text, radar, and
+target previews in their original colors.
 
 ## Try the prepared experiment
 
@@ -41,8 +43,9 @@ sharpening **0.22**, glow **0.65**, threshold **0.40**, and glow spread **2.5**.
 Radiant lights defaults to **2.2**, with light halo color **0.8**. This separate
 half-resolution layer retains tiny bright source pixels and gives them a
 tighter, more colorful halo over the existing wide bloom. Set Radiant lights
-to **0** to restore the preceding dramatic look. It also affects bright HUD
-text and highlights on reflective surfaces; it cannot identify actual lamps.
+to **0** to restore the preceding dramatic look. It affects highlights on
+reflective surfaces; it cannot identify actual lamps. The standard mode also
+affects bright HUD text; UI preservation mode excludes the later HUD draw calls.
 The glow uses two quarter-resolution and two half-resolution targets;
 sharpening stays capped at
 0.015 per channel to limit halos. Exact black stays black before bloom.
@@ -72,14 +75,64 @@ hid the far-scene geometry; bit-pattern inspection revealed it.
 and the pinned runtime's `examples/09-depth/generic_depth_addon.cpp` describe
 the underlying texture binding and selection configuration.
 
-Depthless sprites and HUD drawn over the sky can also bypass grading. HUD over
+In standard mode, depthless sprites and HUD drawn over the sky can bypass grading. HUD over
 geometry can still receive the filter. A neutral-dark tone guard keeps flat
 briefing-panel backgrounds from showing the underlying depth silhouette; it
 also reduces lifting of similarly dark neutral object pixels. This is not a
 complete HUD mask. Other scenes, distant billboards, camera motion, and wrapper
 versions need further validation; performance has not been benchmarked.
 
+## Preserve the UI
+
+`game/classic-enhanced` now uses the optional `ClassicUI.addon32` built from
+our original `tools/classic_ui_addon.cpp`. It requires the official full-add-on
+ReShade 6.8.0 runtime. The source game and copied executable remain unchanged
+on disk. A signature-checked, six-byte in-memory hook at `0044B3C7` applies
+the effect after world rendering (`43CCF0`) and before HUD/target-preview drawing.
+The hook preserves CPU registers, flags, x87/SSE state, and the D3D11 context.
+Unknown signatures, missing depth, or unsupported targets skip the effect.
+Menus also skip the effect. Exiting unloads the hook; unloading only restores
+the instruction when the bytes still match our own patch.
+
+Sky protection uses the native typed D16 view at this stage, through the
+separate `AOA_WORLD_DEPTH` binding. This avoids dependence on ReShade's final
+depth selection. No fixed screen rectangles or UI color heuristics are used.
+Transparent UI areas naturally show the enhanced world behind them. Labels
+rendered as part of the world (for example a station name) still receive the
+world effect. Tested in the offline mission, not network play or every menu.
+
+Build with Python containing `ziglang==0.16.0`, using the official
+[v6.8.0 source archive](https://github.com/crosire/reshade/archive/refs/tags/v6.8.0.zip).
+Download the [full-add-on installer](https://reshade.me/downloads/ReShade_Setup_6.8.0_Addon.exe)
+without running it. Both archives are hash-pinned in `classic_ui.py`.
+
+```powershell
+.venv\Scripts\python.exe tools\classic_ui.py build builds\classic-ui\ClassicUI.addon32 --sdk builds\reshade-capture-sdk-6.8.0\source.zip
+python -I tools\classic_ui.py install game\classic-enhanced --setup builds\reshade-6.8.0-capture-review\ReShade_Setup_6.8.0_Addon.exe --addon builds\classic-ui\ClassicUI.addon32
+```
+
+Close the game before installing/restoring. The install command saves the
+previous runtime, shader, settings, and manifest under `_classic_ui_backup`.
+To restore the previous standard mode, use `classic_ui.py restore
+game\classic-enhanced`. The backup is retained under a timestamped name.
+The usual `classic_enhanced.py off/on` still disables/enables the entire effect.
+
+For an automatic **complete-UI comparison**, enter flight with effects enabled,
+then run:
+
+```powershell
+python -I tools\classic_ui.py capture game\classic-enhanced
+```
+
+The add-on captures one live frame with effects off, restores the prior toggle,
+and captures the following frame with effects on. The report explicitly labels
+these as consecutive frames: animation and moving objects can differ. Original
+PNG bytes are preserved. This replaces the final-screen Print Screen pair in
+UI mode; that older method cannot show a pre-HUD effect correctly.
+
 ## Capture an exact before/after comparison
+
+This section applies to **standard mode only**. Use the command above in UI mode.
 
 The preset now configures **Print Screen** to save two PNGs from the **same
 rendered frame**, before and after the filter, under the experiment's
@@ -169,6 +222,21 @@ previous setup, close the experiment and launch your original game folder.
 Pilots/settings changed in the experiment are not synchronized back.
 
 ## Verification status — 28 October 2026
+
+### UI preservation revision
+
+The full-add-on shader compiled and ran in the offline mission at 1920 × 1200.
+A solid-red diagnostic established the world/HUD boundary, then was removed.
+The final live captures at 10:05:20 and 10:07:31 include the original interface.
+Damage, systems, radar, and two sky regions match exactly between the off/on
+frames; the station and ship retain substantial color/light changes. The
+briefing's opaque interior is unchanged. Transparent HUD backgrounds can show
+changes in the world beneath them. Target models can animate between captures.
+Four installer tests cover archive/add-on/signature rejection and byte-exact
+restore. Runtime hooks and rendering were checked live rather than emulated.
+
+Local report: `work/classic-enhanced/ui-preserved-verified/index.html`.
+See [UI evidence](../evidence/2.9.2/classic_enhanced_ui_20261028.json).
 
 ### Sky preservation revision
 
