@@ -19,18 +19,20 @@ target previews in their original colors.
 ## Engine exhaust experiment
 
 The optional UI add-on projects blue-white engine plumes from named `TrailNN`
-and `tailNN` model attachments. It now covers nearby AI and player fighters in
+and `tailNN` model attachments, including underscore variants such as `TRAIL_01`.
+It covers nearby AI and player fighters in
 the native pilot table, in both cockpit and chase views. Your own engines stay
 limited to **F2 chase view**. **Engine exhaust** controls overall strength
-(default 1.6); **Nearby ship exhaust** controls the other fighters' contribution
+(default 1.6); **Nearby ship exhaust** controls the other ships' contribution
 (default 1.0; set 0 to keep only your own exhaust).
 
-Each fighter has independent smoothed forward-motion response. Plume length
+Each ship has independent smoothed forward-motion response. Standard fighter plume length
 ranges from 40 to 105 world units; this measures rendered movement rather than
 reading throttle or afterburner state. Inactive/reused pilot slots reset their
 motion history. Invisible, behind-camera and off-screen emitters are skipped.
 The budget is 64 plumes, up to four per fighter, with your own engines first
-and other ships ordered by view distance, capped at 20,000 world units.
+and other ships ordered by view distance, capped at 20,000 world units for
+fighters and 250,000 for explicitly supported capitals.
 
 The renderer draws a small quad around each projected plume into one RGBA16F
 layer, then blends it in the existing finishing pass. It avoids a fullscreen
@@ -40,10 +42,17 @@ exhaust light. No physics or game assets are modified. This needs the updated
 add-on as well as the shader; standard ReShade alone has no engine positions.
 
 Scope: the native 50-slot pilot table includes human pilots and AI fighters.
-Station, capital-ship and HUD-preview objects use a different table and are
-excluded. Models without numbered Trail/tail anchors are skipped. Verified
-live on Ym Khtat and three Zkole wingmen, including a close moving pass with
-chase disabled. Multiplayer and the newer cinematic-camera patch have not
+The separate 1,000-slot object table admits only the named capital profiles:
+ZCS, Tug1, ZCVS and ztugcargo. Stations and HUD-preview objects stay excluded.
+Eagle, Janha Vari and Vermok also have fallback profiles when no named anchors
+exist. These model-specific outlets are **new experimental art placements**
+based on inspected Gob geometry, not recovered original hardpoints. There is
+no generic bounding-box fallback. Profiles scale plume radius and length for
+the hull; the same motion response and depth occlusion apply.
+
+Verified live on Ym Khtat, three Zkole wingmen and the ZCS capital ship,
+including moving fighter/capital captures. The other retrofit profiles were
+geometry-inspected but have not each been flight-tested. Multiplayer and the newer cinematic-camera patch have not
 been validated. The observed FPS counter stayed at 60 during captured flight;
 this is not a controlled performance benchmark.
 
@@ -63,6 +72,12 @@ three wingmen with your own exhaust retained; `fleet-cockpit/index.html` in
 the same parent directory shows a close wingman pass with chase disabled.
 The stationary `fleet-ui-first` pair confirms unchanged sampled HUD and sky
 regions. See [fleet verification evidence](../evidence/2.9.2/classic_enhanced_fleet_20261028.json).
+
+Capital extension reports: `work/classic-enhanced/capitals-first/index.html`
+isolates the distant ZCS plume in a stationary scene; `capitals-motion` shows
+fighter and capital exhaust together. `capitals-ui` confirms all six sampled
+HUD/sky regions remain pixel-identical. See
+[capital verification evidence](../evidence/2.9.2/classic_enhanced_capitals_20261028.json).
 
 ## Try the prepared experiment
 

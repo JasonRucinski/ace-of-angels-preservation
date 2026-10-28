@@ -16,7 +16,15 @@ a search-engine summary only.
 
 ## 2. Status
 
-Latest visual experiment (28 Oct): exhaust now covers nearby AI/player
+Latest visual extension (28 Oct): exhaust now supports explicitly profiled
+capital models (ZCS, Tug1, ZCVS, ztugcargo), fallback fighter outlets (Eagle,
+Janha Vari, Vermok), and underscore-style Trail/tail anchors. Retrofit outlets
+are new art placements based on inspected geometry. ZCS verified live beside
+moving Zkole fighters; other profiles not individually flight-tested. Six
+sampled HUD/sky regions unchanged. Stations/HUD previews excluded. Evidence:
+evidence/2.9.2/classic_enhanced_capitals_20261028.json.
+
+Previous visual experiment (28 Oct): exhaust now covers nearby AI/player
 fighters in the native 50-slot pilot table, plus own ship in F2 chase. Named
 TrailNN/tailNN anchors, per-ship movement response, depth-tested emitter quads,
 64-plume budget (up to four per ship), and 20,000-unit view-distance limit.

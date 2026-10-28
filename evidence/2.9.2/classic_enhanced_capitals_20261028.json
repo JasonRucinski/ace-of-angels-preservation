@@ -1,0 +1,192 @@
+{
+  "date": "2026-10-28",
+  "revision": "Capital and anchorless-model exhaust extension",
+  "hashes": {
+    "tools/classic_ui_addon.cpp": "309521dc710413a9b098e388317a734454e47dbc168060475d59e965ff6d12f8",
+    "config/classic-enhanced/AOAClassic.fx": "ff490a0db58feda26cda18644999daec99d75ded6efe93aba597aefc1a6439a8",
+    "builds/classic-ui/ClassicUI.addon32": "c1058f05228a755a727f1ad0c20da64c61ed7c1661aca25e5c9ad6fac821be11"
+  },
+  "captures": {
+    "capitals-first": {
+      "capture": "AOA_2026-10-28_13-17-50_0_FleetBefore.png",
+      "method": "Consecutive live frames with nearby ship exhaust off/on; own exhaust, other effects and HUD retained",
+      "width": 1920,
+      "height": 1200,
+      "changed_pixels_percent": 0.014,
+      "mean_absolute_channel_difference_0_255": 0.0037,
+      "before_sha256": "9248c739e9f9f33ffaed9209bff57dd5e136893d27a33576e95d6c5dc624a23c",
+      "after_sha256": "39fd484957bef37d232d8751626663a7c5d43dad92be195b4b8b71235078a514",
+      "preset": {
+        "protectsky": "1",
+        "vibrance": "0.950000",
+        "contrast": "0.300000",
+        "shadowlift": "0.750000",
+        "exposure": "0.350000",
+        "colorgrade": "0.650000",
+        "vignette": "0.180000",
+        "sharpen": "0.220000",
+        "bloom": "0.650000",
+        "bloomthreshold": "0.400000",
+        "bloomradius": "2.500000",
+        "lightglow": "2.200000",
+        "lightcolor": "0.800000",
+        "lightstreaks": "2.200000",
+        "streaklength": "64.000000",
+        "streakthreshold": "0.720000",
+        "engineglow": "1.600000",
+        "nearbyengineglow": "1.000000",
+        "splitpreview": "0"
+      }
+    },
+    "capitals-motion": {
+      "capture": "AOA_2026-10-28_13-18-23_0_FleetBefore.png",
+      "method": "Consecutive live frames with nearby ship exhaust off/on; own exhaust, other effects and HUD retained",
+      "width": 1920,
+      "height": 1200,
+      "changed_pixels_percent": 46.529,
+      "mean_absolute_channel_difference_0_255": 2.7777,
+      "before_sha256": "bb8bacf26eb61459035d6c897ae3398546ddafe98b95a7106d80b5d8c265f1c2",
+      "after_sha256": "538d602794a87b870b4429bd22210485cf44e5d06c5c4826c64b5680c70d8f52",
+      "preset": {
+        "protectsky": "1",
+        "vibrance": "0.950000",
+        "contrast": "0.300000",
+        "shadowlift": "0.750000",
+        "exposure": "0.350000",
+        "colorgrade": "0.650000",
+        "vignette": "0.180000",
+        "sharpen": "0.220000",
+        "bloom": "0.650000",
+        "bloomthreshold": "0.400000",
+        "bloomradius": "2.500000",
+        "lightglow": "2.200000",
+        "lightcolor": "0.800000",
+        "lightstreaks": "2.200000",
+        "streaklength": "64.000000",
+        "streakthreshold": "0.720000",
+        "engineglow": "1.600000",
+        "nearbyengineglow": "1.000000",
+        "splitpreview": "0"
+      }
+    },
+    "capitals-ui": {
+      "capture": "AOA_2026-10-28_13-18-09_0_UIOriginal.png",
+      "method": "Consecutive live frames with effects off/on and HUD present; moving objects may differ",
+      "width": 1920,
+      "height": 1200,
+      "changed_pixels_percent": 16.743,
+      "mean_absolute_channel_difference_0_255": 3.8259,
+      "before_sha256": "3355829bafadb8035c04f4e2383543739a2d3f83d81defa933f0711e0d23446e",
+      "after_sha256": "fcff7663a590cbb453935aea5fdf2f40bde162202dab3dd6f99570cd3f7e196f",
+      "preset": {
+        "protectsky": "1",
+        "vibrance": "0.950000",
+        "contrast": "0.300000",
+        "shadowlift": "0.750000",
+        "exposure": "0.350000",
+        "colorgrade": "0.650000",
+        "vignette": "0.180000",
+        "sharpen": "0.220000",
+        "bloom": "0.650000",
+        "bloomthreshold": "0.400000",
+        "bloomradius": "2.500000",
+        "lightglow": "2.200000",
+        "lightcolor": "0.800000",
+        "lightstreaks": "2.200000",
+        "streaklength": "64.000000",
+        "streakthreshold": "0.720000",
+        "engineglow": "1.600000",
+        "nearbyengineglow": "1.000000",
+        "splitpreview": "0"
+      }
+    }
+  },
+  "preserved_regions": {
+    "briefing": {
+      "rectangle": [
+        815,
+        425,
+        1100,
+        785
+      ],
+      "maximum_channel_difference": 0
+    },
+    "damage": {
+      "rectangle": [
+        10,
+        170,
+        245,
+        347
+      ],
+      "maximum_channel_difference": 0
+    },
+    "systems": {
+      "rectangle": [
+        1660,
+        0,
+        1908,
+        205
+      ],
+      "maximum_channel_difference": 0
+    },
+    "radar": {
+      "rectangle": [
+        900,
+        1110,
+        1040,
+        1170
+      ],
+      "maximum_channel_difference": 0
+    },
+    "left_nebula": {
+      "rectangle": [
+        10,
+        680,
+        180,
+        840
+      ],
+      "maximum_channel_difference": 0
+    },
+    "right_nebula": {
+      "rectangle": [
+        1550,
+        300,
+        1850,
+        700
+      ],
+      "maximum_channel_difference": 0
+    }
+  },
+  "capture_diagnostics": [
+    "exhaust slot=57 own=0 engines=1 distance=82027.0 power=0.00 uv=0.771,0.398 profile=ZCS fallback=1",
+    "exhaust total ships=1 emitters=1 player_emitters=0",
+    "exhaust slot=57 own=0 engines=1 distance=82027.0 power=0.00 uv=0.771,0.398 profile=ZCS fallback=1",
+    "exhaust total ships=1 emitters=1 player_emitters=0",
+    "exhaust slot=2 own=0 engines=2 distance=1967.9 power=0.71 uv=0.516,0.502 profile=native fallback=0",
+    "exhaust slot=3 own=0 engines=2 distance=2196.6 power=0.71 uv=0.510,0.040 profile=native fallback=0",
+    "exhaust slot=57 own=0 engines=1 distance=80393.8 power=0.00 uv=0.764,0.661 profile=ZCS fallback=1",
+    "exhaust total ships=3 emitters=5 player_emitters=0",
+    "exhaust slot=2 own=0 engines=2 distance=1979.4 power=0.73 uv=0.515,0.502 profile=native fallback=0",
+    "exhaust slot=3 own=0 engines=2 distance=2202.6 power=0.73 uv=0.510,0.041 profile=native fallback=0",
+    "exhaust slot=57 own=0 engines=1 distance=80438.4 power=0.00 uv=0.763,0.655 profile=ZCS fallback=1",
+    "exhaust total ships=3 emitters=5 player_emitters=0"
+  ],
+  "validation": [
+    "Add-on built with pinned ReShade 6.8.0 SDK and loaded in offline flight.",
+    "Stationary capture: one ZCS capital emitter at view distance 82027; visually inspected native before/after images.",
+    "Moving capture: two Zkole wingmen (four emitters) and one ZCS capital emitter together.",
+    "All six sampled UI and sky rectangles have maximum channel difference zero.",
+    "Four installer/restore tests passed; main experiment check reports enabled with unchanged client executable.",
+    "Main experiment add-on upgraded; incremental .before-capitals backups retained."
+  ],
+  "limits": [
+    "Fallback points are new model-specific art placements based on original Gob geometry, not original engine hardpoints.",
+    "ZCS flight-tested; Tug1, ZCVS, ztugcargo, Eagle, Janha Vari and Vermok placements inspected in geometry only.",
+    "Underscore numbered anchor support covers names like TRAIL_01; Ummra Viazyem not live-tested.",
+    "Only whitelisted capital models admitted from dynamic objects; stations and HUD-preview objects excluded.",
+    "64 emitters total, up to four per ship; fighters capped at 20000 view units and capitals at 250000.",
+    "Motion response measures forward rendered movement, not throttle or afterburner.",
+    "Moving comparisons contain scenery movement; pixel difference percentage is not effect strength.",
+    "Multiplayer and newer cinematic camera remain unverified."
+  ]
+}

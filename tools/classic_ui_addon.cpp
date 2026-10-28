@@ -19,7 +19,7 @@ static ID3D11ShaderResourceView *world_depth=nullptr;
 static const unsigned char original[6]={0x8b,0x8e,0x98,0x01,0x00,0x00};
 static void log(const char *s){FILE*f=fopen("classic-ui.log","a");if(f){fprintf(f,"%s\n",s);fclose(f);}}
 // Only read native state. No physics, asset, or input changes.
-static constexpr unsigned max_engines=64, max_ships=50;
+static constexpr unsigned max_engines=64, pilot_slots=50, object_slots=1000, max_ships=pilot_slots+object_slots;
 static float engine_start[max_engines][4]={}, engine_end[max_engines][4]={};
 static unsigned engine_count=0, player_engine_count=0;
 struct MotionState {uintptr_t node=0;uint32_t tag=0;float position[3]={},power=0;DWORD time=0;};
@@ -28,20 +28,39 @@ static bool read_native(uintptr_t address,void *out,size_t count){
  SIZE_T got=0;return address && ReadProcessMemory(GetCurrentProcess(),(void*)address,out,count,&got) && got==count;
 }
 static uintptr_t pointer(uintptr_t address){uintptr_t p=0;read_native(address,&p,sizeof(p));return p;}
-static void project_point(const float *p,const float *view,const float *proj,float *out){
+static void project_point(const float *p,const float *view,const float *proj,float *out,float radius=4.5f){
  float q[4]={},c[4]={};
  for(int j=0;j<4;++j)q[j]=p[0]*view[j]+p[1]*view[4+j]+p[2]*view[8+j]+view[12+j];
  for(int j=0;j<4;++j)for(int k=0;k<4;++k)c[j]+=q[k]*proj[k*4+j];
- if(c[3]<=1 || !std::isfinite(c[3])){out[3]=0;return;}
- out[0]=0.5f+0.5f*c[0]/c[3];out[1]=0.5f-0.5f*c[1]/c[3];out[2]=c[2]/c[3];out[3]=fabsf(proj[5]*4.5f/c[3]);
+ if(c[3]<=1 || !std::isfinite(c[3]) || !std::isfinite(c[0]) || !std::isfinite(c[1]) || c[2]<0 || c[2]>c[3]){out[3]=0;return;}
+ out[0]=0.5f+0.5f*c[0]/c[3];out[1]=0.5f-0.5f*c[1]/c[3];out[2]=c[2]/c[3];out[3]=fabsf(proj[5]*radius/c[3]);
 }
 static bool exhaust_name(const char *name){
  const char *suffix=nullptr;
  if(_strnicmp(name,"trail",5)==0)suffix=name+5;
  else if(_strnicmp(name,"tail",4)==0)suffix=name+4;
+ if(suffix && *suffix=='_')++suffix;
  if(!suffix || !*suffix)return false;
  for(;*suffix;++suffix)if(*suffix<'0' || *suffix>'9')return false;
  return true;
+}
+// Experimental retrofit outlets for models without native exhaust anchors.
+// Positions are in original Gob coordinates, behind inspected rear hull surfaces.
+// These are new art placements, not recovered original engine hardpoints.
+struct ExhaustProfile {const char *model;bool capital;float radius,length;unsigned count;float points[4][3];};
+static const ExhaustProfile exhaust_profiles[]={
+ {"Eagle",false,3.5f,40,2,{{-18,8,-67},{18,8,-67}}},
+ {"Janha Vari",false,2.5f,35,1,{{0,2,-80}}},
+ {"Vermok",false,3.0f,40,1,{{-10,-2,-49}}},
+ {"ZCS",true,100,1500,1,{{-58.6f,-65.9f,-4520}}},
+ {"Tug1",true,65,600,2,{{-210,-35,-1660},{210,-35,-1660}}},
+ {"ZCVS",true,150,1800,2,{{-1118,-575,-5740},{1118,-575,-5740}}},
+ {"ztugcargo",true,45,500,2,{{-242,-96,-1190},{242,-96,-1190}}},
+};
+static const ExhaustProfile *exhaust_profile(uintptr_t node){
+ char model[64]={};if(!read_native(pointer(node+0x20),model,63))return nullptr;
+ for(const auto &profile:exhaust_profiles)if(_stricmp(model,profile.model)==0)return &profile;
+ return nullptr;
 }
 static void update_engines(){
  engine_count=player_engine_count=0;
@@ -55,17 +74,20 @@ static void update_engines(){
  auto get_transform=(GetTransform)((void**)*(void***)device)[12];
  float view[16],proj[16];
  if(FAILED(get_transform(device,2,view)) || FAILED(get_transform(device,3,proj)))return;
- // This native table holds human pilots AND AI fighters. It excludes HUD preview
- // objects and stations. Read it in one bounded copy, not 50 syscall sequences.
- unsigned char pilots[max_ships*0x3b0];
- if(!read_native(world+0xd32ac,pilots,sizeof(pilots)))return;
- struct Candidate {uintptr_t node;unsigned slot;float matrix[16],distance;bool own;};
- Candidate candidates[max_ships];unsigned total=0;DWORD now=GetTickCount();
+ // Pilot and dynamic-object tables are read in bounded copies. Only explicitly
+ // profiled capital models are admitted from the latter; HUD previews stay out.
+ static unsigned char pilots[pilot_slots*0x3b0],objects[object_slots*0x360];
+ if(!read_native(world+0xd32ac,pilots,sizeof(pilots)) || !read_native(world+0x4c,objects,sizeof(objects)))return;
+ struct Candidate {uintptr_t node;unsigned slot;float matrix[16],distance;bool own;const ExhaustProfile *profile;};
+ static Candidate candidates[max_ships];unsigned total=0;DWORD now=GetTickCount();
  for(unsigned slot=0;slot<max_ships;++slot){
-  auto record=pilots+slot*0x3b0;uintptr_t node=0;uint32_t tag=0;
+  bool dynamic=slot>=pilot_slots;
+  auto record=dynamic?objects+(slot-pilot_slots)*0x360:pilots+slot*0x3b0;uintptr_t node=0;uint32_t tag=0;
   memcpy(&node,record+0x19c,4);memcpy(&tag,record+0x178,4);
   auto &motion=ship_motion[slot];
   if(!record[0x243] || !node){motion={};continue;}
+  const auto *profile=exhaust_profile(node);
+  if(dynamic && (!profile || !profile->capital)){motion={};continue;}
   float m[16];if(!read_native(node+0x7c,m,sizeof(m))){motion={};continue;}
   bool finite=true;for(float value:m)finite=finite && std::isfinite(value);
   if(!finite){motion={};continue;}
@@ -80,22 +102,28 @@ static void update_engines(){
   if(own){if(node!=pointer(0x60d3e0) || uint32_t(pointer(0x5e8e5c)-pointer(0x60d3e4))>100)continue;}
   else if(!flags[0] || !flags[1])continue;
   float distance=m[12]*view[2]+m[13]*view[6]+m[14]*view[10]+view[14];
-  if(!std::isfinite(distance) || distance<1 || distance>20000)continue;
-  auto &c=candidates[total++];c.node=node;c.slot=slot;c.distance=distance;c.own=own;memcpy(c.matrix,m,sizeof(m));
+  if(!std::isfinite(distance) || distance<1 || distance>(profile && profile->capital?250000:20000))continue;
+  auto &c=candidates[total++];c.node=node;c.slot=slot;c.distance=distance;c.own=own;c.profile=profile;memcpy(c.matrix,m,sizeof(m));
  }
  // Own engines first; when the budget fills, retain the nearest visible fighters.
  std::sort(candidates,candidates+total,[](const Candidate&a,const Candidate&b){return a.own!=b.own?a.own:a.distance<b.distance;});
  unsigned ships=0;
  for(unsigned i=0;i<total && engine_count<max_engines;++i){
   const auto &c=candidates[i];const float *m=c.matrix;unsigned first=engine_count,per_ship=0;
-  uintptr_t link=pointer(c.node+0x244);
-  for(unsigned limit=0;link && limit<128 && per_ship<4 && engine_count<max_engines;++limit,link=pointer(link+8)){
+  float anchors[4][3]={};unsigned anchors_found=0;uintptr_t link=pointer(c.node+0x244);
+  for(unsigned limit=0;link && limit<128 && anchors_found<4;++limit,link=pointer(link+8)){
    uintptr_t child=pointer(link+0x10);char name[24]={};
    if(!read_native(pointer(child+0x20),name,23) || !exhaust_name(name))continue;
-   float local[3],a[3],b[3],start[4]={},end[4]={};if(!read_native(child+0xac,local,sizeof(local)))continue;
+   if(read_native(child+0xac,anchors[anchors_found],12))++anchors_found;
+  }
+  bool fallback=anchors_found==0 && c.profile;
+  if(fallback){anchors_found=c.profile->count;memcpy(anchors,c.profile->points,sizeof(anchors));}
+  float radius=c.profile?c.profile->radius:4.5f,base_length=c.profile?c.profile->length:40.0f;
+  for(unsigned anchor=0;anchor<anchors_found && engine_count<max_engines;++anchor){
+   const float *local=anchors[anchor];float a[3],b[3],start[4]={},end[4]={};
    if(!std::isfinite(local[0]) || !std::isfinite(local[1]) || !std::isfinite(local[2]))continue;
-   for(int j=0;j<3;++j){a[j]=m[12+j]+local[0]*m[j]+local[1]*m[4+j]+local[2]*m[8+j];b[j]=a[j]-m[8+j]*(40+65*ship_motion[c.slot].power);}
-   project_point(a,view,proj,start);project_point(b,view,proj,end);
+   for(int j=0;j<3;++j){a[j]=m[12+j]+local[0]*m[j]+local[1]*m[4+j]+local[2]*m[8+j];b[j]=a[j]-m[8+j]*base_length*(1+1.625f*ship_motion[c.slot].power);}
+   project_point(a,view,proj,start,radius);project_point(b,view,proj,end,radius);
    if(start[3]<=0 || end[3]<=0)continue;
    float margin=3.5f*fmaxf(start[3],end[3]);
    if(fmaxf(start[0],end[0])+margin<0 || fminf(start[0],end[0])-margin>1 ||
@@ -103,7 +131,7 @@ static void update_engines(){
    memcpy(engine_start[engine_count],start,sizeof(start));memcpy(engine_end[engine_count],end,sizeof(end));++engine_count;++per_ship;
   }
   if(c.own)player_engine_count=engine_count;
-  if(engine_count>first){++ships;if(engine_capture_step){char line[180];sprintf(line,"exhaust slot=%u own=%d engines=%u distance=%.1f power=%.2f uv=%.3f,%.3f",c.slot,c.own,engine_count-first,c.distance,ship_motion[c.slot].power,engine_start[first][0],engine_start[first][1]);log(line);}}
+  if(engine_count>first){++ships;if(engine_capture_step){char line[240];sprintf(line,"exhaust slot=%u own=%d engines=%u distance=%.1f power=%.2f uv=%.3f,%.3f profile=%s fallback=%d",c.slot,c.own,engine_count-first,c.distance,ship_motion[c.slot].power,engine_start[first][0],engine_start[first][1],c.profile?c.profile->model:"native",fallback);log(line);}}
  }
  if(engine_capture_step){char line[100];sprintf(line,"exhaust total ships=%u emitters=%u player_emitters=%u",ships,engine_count,player_engine_count);log(line);}
 }
