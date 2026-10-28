@@ -16,6 +16,14 @@ a search-engine summary only.
 
 ## 2. Status
 
+Classic Enhanced visual experiment (28 Oct 2026): opt-in ReShade 6.8.0 shader
+and preset prepared in a separate game copy, with vibrance, gentle contrast,
+bounded sharpening, and faint bloom. Source files verified unchanged; no
+client executable patch. Original shader compiled in a 32-bit D3D11 GPU smoke
+harness and presented 240 frames. Experiment client opened to startup, but
+in-flight injection, HUD/color acceptance, and performance remain unverified.
+See [experiment guide](docs/classic-enhanced.md). Not enabled in normal setup.
+
 Nine-gate expansion (27 Oct 2026): `--warp-trial` and the host checkbox now
 restore all nine Arena1a warp gates, adding eight placements. Slots 71–79
 replace the old single slot 85; maximum practice targets becomes 69. Original

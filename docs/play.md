@@ -65,6 +65,9 @@ Useful keys added or fixed by this project: **F2** toggles a chase camera,
 Optional: [texture-pack.md](texture-pack.md) makes sharper, 32-bit ship and
 station skins from your own copy.
 
+Experimental: [Classic Enhanced](classic-enhanced.md) adds subtle color,
+contrast, sharpening, and glow in a separate game copy, with a comparison toggle.
+
 ## 5. Multiplayer on one PC
 
 To try online play before involving anyone else:

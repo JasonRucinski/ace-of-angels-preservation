@@ -1,0 +1,37 @@
+{
+  "date": "2026-10-28",
+  "source_files_unchanged": true,
+  "source_files_checked": 95,
+  "copied_executable_sha256": "fc0878ebf5314c3157977bcdff0241b4128b27137755f7633c5d886757e92625",
+  "setup_sha256": "207aea16205fbf952bc8fe1879966672454cf04002e7ad34237c7990a5b3c0b4",
+  "runtime_sha256": "538998f66c0197adcdeadfe8e5ea19dd6ca3253e40399476d291f385ce518b88",
+  "shader_sha256": "acfe84c95aee33d89e5c5d951b55bc36e5b158aeb67267e00cc4b4eb43c000bb",
+  "checks_passed": [
+    "isolated preparation and copy hashes",
+    "disable/enable idempotence and exact runtime hash",
+    "refuse source/existing/nested destination",
+    "bad installer leaves destination absent",
+    "modified runtime rejected before rename",
+    "shader compilation and 240 D3D11 frames"
+  ],
+  "gpu_smoke": {
+    "api": "D3D11",
+    "architecture": "x86",
+    "feature_level": "11.0",
+    "resolution": [
+      1280,
+      720
+    ],
+    "gpu": "NVIDIA Quadro RTX 4000",
+    "frames": 240,
+    "compilation": "passed",
+    "scope": "synthetic color surface; not the game or dgVoodoo renderer"
+  },
+  "game_startup": "client opened to startup dialog; screenshot capture timed out",
+  "pending": [
+    "in-flight dgVoodoo/ReShade injection",
+    "live toggle and split preview",
+    "color and HUD acceptance",
+    "frame-time impact"
+  ]
+}

@@ -17,6 +17,7 @@ Newest results are in [findings.md](findings.md) and the status section of
 | [host-control.md](host-control.md) | The host window: players, scores, kick/ban, map switching |
 | [map-viewer.md](map-viewer.md) | Loading any of the 20 recovered maps in the client |
 | [texture-pack.md](texture-pack.md) | Optional sharper ship and station skins, built from your own copy |
+| [classic-enhanced.md](classic-enhanced.md) | Experimental color, contrast, sharpening, and glow in a separate game copy |
 | [running-on-windows-11.md](running-on-windows-11.md) | Why the client crashed on modern Windows and how it was fixed |
 | [client-setup.md](client-setup.md) | Every client patch, its address, the undo and the checks |
 
