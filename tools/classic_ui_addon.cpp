@@ -6,18 +6,24 @@
 #include <cstdio>
 #include <cstring>
 #include <cmath>
+#include <algorithm>
 
 static reshade::api::effect_runtime *runtime=nullptr;
 static bool installed=false, in_effect=false, applied=false;
 static unsigned frames=0, calls=0, capture_step=0;
 static bool capture_enabled=false;
 static unsigned engine_capture_step=0;
+static bool fleet_capture=false;
 static unsigned char patch[6];
 static ID3D11ShaderResourceView *world_depth=nullptr;
 static const unsigned char original[6]={0x8b,0x8e,0x98,0x01,0x00,0x00};
 static void log(const char *s){FILE*f=fopen("classic-ui.log","a");if(f){fprintf(f,"%s\n",s);fclose(f);}}
 // Only read native state. No physics, asset, or input changes.
-static float engine_start[2][4]={}, engine_end[2][4]={};
+static constexpr unsigned max_engines=64, max_ships=50;
+static float engine_start[max_engines][4]={}, engine_end[max_engines][4]={};
+static unsigned engine_count=0, player_engine_count=0;
+struct MotionState {uintptr_t node=0;uint32_t tag=0;float position[3]={},power=0;DWORD time=0;};
+static MotionState ship_motion[max_ships];
 static bool read_native(uintptr_t address,void *out,size_t count){
  SIZE_T got=0;return address && ReadProcessMemory(GetCurrentProcess(),(void*)address,out,count,&got) && got==count;
 }
@@ -29,14 +35,19 @@ static void project_point(const float *p,const float *view,const float *proj,flo
  if(c[3]<=1 || !std::isfinite(c[3])){out[3]=0;return;}
  out[0]=0.5f+0.5f*c[0]/c[3];out[1]=0.5f-0.5f*c[1]/c[3];out[2]=c[2]/c[3];out[3]=fabsf(proj[5]*4.5f/c[3]);
 }
+static bool exhaust_name(const char *name){
+ const char *suffix=nullptr;
+ if(_strnicmp(name,"trail",5)==0)suffix=name+5;
+ else if(_strnicmp(name,"tail",4)==0)suffix=name+4;
+ if(!suffix || !*suffix)return false;
+ for(;*suffix;++suffix)if(*suffix<'0' || *suffix>'9')return false;
+ return true;
+}
 static void update_engines(){
+ engine_count=player_engine_count=0;
  memset(engine_start,0,sizeof(engine_start));memset(engine_end,0,sizeof(engine_end));
- uintptr_t app=pointer(0x5e6e58),world=pointer(0x5e7728),node=pointer(world+0xd3448);
- bool probe=engine_capture_step!=0;
- if(probe){char line[160];sprintf(line,"engine capture node=%lx cached=%lx tick=%u cachedtick=%u",(unsigned long)node,(unsigned long)pointer(0x60d3e0),(unsigned)pointer(0x5e8e5c),(unsigned)pointer(0x60d3e4));log(line);}
- // The native clock advances during a moving frame (observed 1-2 ms).
- // Accept its fresh chase record; reject stale spectator/menu records.
- if(!node || node!=pointer(0x60d3e0) || uint32_t(pointer(0x5e8e5c)-pointer(0x60d3e4))>100)return;
+ uintptr_t app=pointer(0x5e6e58),world=pointer(0x5e7728),player=pointer(world+0xd3448);
+ if(!app || !world || pointer(app+0x20)!=0x44afd0)return;
  uintptr_t gfx=pointer(app+0x138);auto device=(void*)pointer(gfx+0x188);
  if(!device)return;
  // IDirect3DDevice7::GetTransform is vtable slot 12 (legacy d3d.h).
@@ -44,35 +55,69 @@ static void update_engines(){
  auto get_transform=(GetTransform)((void**)*(void***)device)[12];
  float view[16],proj[16];
  if(FAILED(get_transform(device,2,view)) || FAILED(get_transform(device,3,proj)))return;
- float m[16];if(!read_native(node+0x7c,m,sizeof(m)))return;
- if(probe){char line[240];sprintf(line,"engine coordinates pos=%g,%g,%g viewpos=%g,%g,%g",m[12],m[13],m[14],view[12],view[13],view[14]);log(line);}
- // Motion response uses rendered position; it does not pretend to read throttle.
- static uintptr_t last_node=0;static float previous[3]={},power=0;static DWORD last_time=0;
- DWORD now=GetTickCount();float dt=(now-last_time)*0.001f;
- if(node==last_node && dt>0 && dt<0.25f){float speed=0;for(int i=0;i<3;++i)speed+=(m[12+i]-previous[i])*m[8+i]/dt;
-  float target=fminf(fabsf(speed)/250.0f,1.0f);power+=(target-power)*fminf(dt*4.0f,1.0f);
- }else power=0;
- last_node=node;last_time=now;memcpy(previous,m+12,12);
- uintptr_t link=pointer(node+0x244);int count=0;
- for(int limit=0;link && limit<64 && count<2;++limit,link=pointer(link+8)){
-  uintptr_t child=pointer(link+0x10);char name[8]={};
-  if(!read_native(pointer(child+0x20),name,7) || _strnicmp(name,"trail",5)!=0)continue;
-  float local[3],a[3],b[3];if(!read_native(child+0xac,local,sizeof(local)))continue;
-  for(int j=0;j<3;++j){a[j]=m[12+j]+local[0]*m[j]+local[1]*m[4+j]+local[2]*m[8+j];b[j]=a[j]-m[8+j]*(40.0f+65.0f*power);}
-  // The native view matrix already includes the absolute camera translation.
-  project_point(a,(float*)&view,(float*)&proj,engine_start[count]);
-  project_point(b,(float*)&view,(float*)&proj,engine_end[count]);
-  if(calls<3 || probe){char line[180];sprintf(line,"engine %d uv %.3f %.3f z %.6f radius %.4f end %.3f %.3f",count,engine_start[count][0],engine_start[count][1],engine_start[count][2],engine_start[count][3],engine_end[count][0],engine_end[count][1]);log(line);}
-  ++count;
+ // This native table holds human pilots AND AI fighters. It excludes HUD preview
+ // objects and stations. Read it in one bounded copy, not 50 syscall sequences.
+ unsigned char pilots[max_ships*0x3b0];
+ if(!read_native(world+0xd32ac,pilots,sizeof(pilots)))return;
+ struct Candidate {uintptr_t node;unsigned slot;float matrix[16],distance;bool own;};
+ Candidate candidates[max_ships];unsigned total=0;DWORD now=GetTickCount();
+ for(unsigned slot=0;slot<max_ships;++slot){
+  auto record=pilots+slot*0x3b0;uintptr_t node=0;uint32_t tag=0;
+  memcpy(&node,record+0x19c,4);memcpy(&tag,record+0x178,4);
+  auto &motion=ship_motion[slot];
+  if(!record[0x243] || !node){motion={};continue;}
+  float m[16];if(!read_native(node+0x7c,m,sizeof(m))){motion={};continue;}
+  bool finite=true;for(float value:m)finite=finite && std::isfinite(value);
+  if(!finite){motion={};continue;}
+  float dt=(now-motion.time)*0.001f;
+  if(motion.node==node && motion.tag==tag && dt>0 && dt<0.25f){
+   float speed=0;for(int j=0;j<3;++j)speed+=(m[12+j]-motion.position[j])*m[8+j]/dt;
+   motion.power+=(fminf(fabsf(speed)/250.0f,1.0f)-motion.power)*fminf(dt*4.0f,1.0f);
+  }else motion.power=0;
+  motion.node=node;motion.tag=tag;motion.time=now;memcpy(motion.position,m+12,12);
+  bool own=node==player;unsigned char flags[2]={};read_native(node+0x150,flags,2);
+  // Native clock can advance inside a frame. Keep own-ship chase data only while fresh.
+  if(own){if(node!=pointer(0x60d3e0) || uint32_t(pointer(0x5e8e5c)-pointer(0x60d3e4))>100)continue;}
+  else if(!flags[0] || !flags[1])continue;
+  float distance=m[12]*view[2]+m[13]*view[6]+m[14]*view[10]+view[14];
+  if(!std::isfinite(distance) || distance<1 || distance>20000)continue;
+  auto &c=candidates[total++];c.node=node;c.slot=slot;c.distance=distance;c.own=own;memcpy(c.matrix,m,sizeof(m));
  }
+ // Own engines first; when the budget fills, retain the nearest visible fighters.
+ std::sort(candidates,candidates+total,[](const Candidate&a,const Candidate&b){return a.own!=b.own?a.own:a.distance<b.distance;});
+ unsigned ships=0;
+ for(unsigned i=0;i<total && engine_count<max_engines;++i){
+  const auto &c=candidates[i];const float *m=c.matrix;unsigned first=engine_count,per_ship=0;
+  uintptr_t link=pointer(c.node+0x244);
+  for(unsigned limit=0;link && limit<128 && per_ship<4 && engine_count<max_engines;++limit,link=pointer(link+8)){
+   uintptr_t child=pointer(link+0x10);char name[24]={};
+   if(!read_native(pointer(child+0x20),name,23) || !exhaust_name(name))continue;
+   float local[3],a[3],b[3],start[4]={},end[4]={};if(!read_native(child+0xac,local,sizeof(local)))continue;
+   if(!std::isfinite(local[0]) || !std::isfinite(local[1]) || !std::isfinite(local[2]))continue;
+   for(int j=0;j<3;++j){a[j]=m[12+j]+local[0]*m[j]+local[1]*m[4+j]+local[2]*m[8+j];b[j]=a[j]-m[8+j]*(40+65*ship_motion[c.slot].power);}
+   project_point(a,view,proj,start);project_point(b,view,proj,end);
+   if(start[3]<=0 || end[3]<=0)continue;
+   float margin=3.5f*fmaxf(start[3],end[3]);
+   if(fmaxf(start[0],end[0])+margin<0 || fminf(start[0],end[0])-margin>1 ||
+      fmaxf(start[1],end[1])+margin<0 || fminf(start[1],end[1])-margin>1)continue;
+   memcpy(engine_start[engine_count],start,sizeof(start));memcpy(engine_end[engine_count],end,sizeof(end));++engine_count;++per_ship;
+  }
+  if(c.own)player_engine_count=engine_count;
+  if(engine_count>first){++ships;if(engine_capture_step){char line[180];sprintf(line,"exhaust slot=%u own=%d engines=%u distance=%.1f power=%.2f uv=%.3f,%.3f",c.slot,c.own,engine_count-first,c.distance,ship_motion[c.slot].power,engine_start[first][0],engine_start[first][1]);log(line);}}
+ }
+ if(engine_capture_step){char line[100];sprintf(line,"exhaust total ships=%u emitters=%u player_emitters=%u",ships,engine_count,player_engine_count);log(line);}
 }
 static void update_uniforms(){
- runtime->enumerate_uniform_variables("AOAClassic.fx",[](reshade::api::effect_runtime *rt,reshade::api::effect_uniform_variable v){char name[80];rt->get_uniform_variable_name(v,name);if(strcmp(name,"PreUIActive")==0)rt->set_uniform_value_bool(v,true);
- else if(strcmp(name,"EngineCaptureOff")==0)rt->set_uniform_value_bool(v,engine_capture_step==1);
- else if(strcmp(name,"EngineStart0")==0)rt->set_uniform_value_float(v,engine_start[0],4);
- else if(strcmp(name,"EngineStart1")==0)rt->set_uniform_value_float(v,engine_start[1],4);
- else if(strcmp(name,"EngineEnd0")==0)rt->set_uniform_value_float(v,engine_end[0],4);
- else if(strcmp(name,"EngineEnd1")==0)rt->set_uniform_value_float(v,engine_end[1],4);});
+ runtime->enumerate_uniform_variables("AOAClassic.fx",[](reshade::api::effect_runtime *rt,reshade::api::effect_uniform_variable v){
+ char name[80];rt->get_uniform_variable_name(v,name);
+ if(strcmp(name,"PreUIActive")==0)rt->set_uniform_value_bool(v,true);
+ else if(strcmp(name,"EngineCaptureOff")==0)rt->set_uniform_value_bool(v,engine_capture_step==1 && !fleet_capture);
+ else if(strcmp(name,"FleetCaptureOff")==0)rt->set_uniform_value_bool(v,engine_capture_step==1 && fleet_capture);
+ else if(strcmp(name,"EngineCount")==0)rt->set_uniform_value_uint(v,engine_count);
+ else if(strcmp(name,"PlayerEngineCount")==0)rt->set_uniform_value_uint(v,player_engine_count);
+ else if(strcmp(name,"EngineStarts")==0)rt->set_uniform_value_float(v,&engine_start[0][0],max_engines*4);
+ else if(strcmp(name,"EngineEnds")==0)rt->set_uniform_value_float(v,&engine_end[0][0],max_engines*4);
+ });
 }
 extern "C" void before_hud(){
  if(!runtime || in_effect || applied)return;
@@ -141,10 +186,13 @@ static void presenting(reshade::api::command_queue *q,reshade::api::swapchain *s
 }
 static void presented(reshade::api::effect_runtime *r){
  runtime=r;++frames;
- if(engine_capture_step==1){r->save_screenshot("EngineBefore");engine_capture_step=2;}
- else if(engine_capture_step==2){r->save_screenshot("EngineAfter");engine_capture_step=0;}
+ if(engine_capture_step==1){r->save_screenshot(fleet_capture?"FleetBefore":"EngineBefore");engine_capture_step=2;}
+ else if(engine_capture_step==2){r->save_screenshot(fleet_capture?"FleetAfter":"EngineAfter");engine_capture_step=0;}
+ else if(capture_step==0 && GetFileAttributesA("classic-fleet-capture.flag")!=INVALID_FILE_ATTRIBUTES){
+  DeleteFileA("classic-fleet-capture.flag");fleet_capture=true;engine_capture_step=1;
+ }
  else if(capture_step==0 && GetFileAttributesA("classic-engine-capture.flag")!=INVALID_FILE_ATTRIBUTES){
-  DeleteFileA("classic-engine-capture.flag");engine_capture_step=1;
+  DeleteFileA("classic-engine-capture.flag");fleet_capture=false;engine_capture_step=1;
  }
  // Explicit opt-in capture: two full frames, with the HUD present in both.
  // They are sequential frames, not a same-frame simulation.

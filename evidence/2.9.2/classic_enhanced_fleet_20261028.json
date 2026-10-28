@@ -1,0 +1,225 @@
+{
+  "date": "2026-10-28",
+  "revision": "Nearby fighter exhaust",
+  "hashes": {
+    "tools/classic_ui_addon.cpp": "2d92cbb3c79e0c9c104afc4b0af2a25ebb69bd8f85678e1bd1070221745d5840",
+    "config/classic-enhanced/AOAClassic.fx": "ff490a0db58feda26cda18644999daec99d75ded6efe93aba597aefc1a6439a8",
+    "builds/classic-ui/ClassicUI.addon32": "f2df58a75f29a190a534e37af6cf4118d1c726ee2b6f59d61bd05dc1e5d996ef"
+  },
+  "captures": {
+    "fleet-first": {
+      "capture": "AOA_2026-10-28_13-01-00_0_FleetBefore.png",
+      "method": "Consecutive live frames with nearby ship exhaust off/on; own exhaust, other effects and HUD retained",
+      "width": 1920,
+      "height": 1200,
+      "changed_pixels_percent": 25.885,
+      "mean_absolute_channel_difference_0_255": 1.1467,
+      "before_sha256": "bc11b0b111d0126770e46e6ed8d3cce9c648c666e2d6808213b579d10d309d4a",
+      "after_sha256": "e803ef3aa9b4e711e74f04959ec767b40c44cd31070772cbad03e837b2eb587a",
+      "preset": {
+        "protectsky": "1",
+        "vibrance": "0.950000",
+        "contrast": "0.300000",
+        "shadowlift": "0.750000",
+        "exposure": "0.350000",
+        "colorgrade": "0.650000",
+        "vignette": "0.180000",
+        "sharpen": "0.220000",
+        "bloom": "0.650000",
+        "bloomthreshold": "0.400000",
+        "bloomradius": "2.500000",
+        "lightglow": "2.200000",
+        "lightcolor": "0.800000",
+        "lightstreaks": "2.200000",
+        "streaklength": "64.000000",
+        "streakthreshold": "0.720000",
+        "engineglow": "1.600000",
+        "nearbyengineglow": "1.000000",
+        "splitpreview": "0"
+      }
+    },
+    "fleet-cockpit": {
+      "capture": "AOA_2026-10-28_13-01-15_0_FleetBefore.png",
+      "method": "Consecutive live frames with nearby ship exhaust off/on; own exhaust, other effects and HUD retained",
+      "width": 1920,
+      "height": 1200,
+      "changed_pixels_percent": 16.259,
+      "mean_absolute_channel_difference_0_255": 1.4972,
+      "before_sha256": "92f30964d61eaa9e1a0498839f3f48a62b79fd03a8a90f9527a2d84596808c9d",
+      "after_sha256": "25db22754c0820f58053c716cab2a0c8d4839df252e45bd9d41bb2334c8ee2ae",
+      "preset": {
+        "protectsky": "1",
+        "vibrance": "0.950000",
+        "contrast": "0.300000",
+        "shadowlift": "0.750000",
+        "exposure": "0.350000",
+        "colorgrade": "0.650000",
+        "vignette": "0.180000",
+        "sharpen": "0.220000",
+        "bloom": "0.650000",
+        "bloomthreshold": "0.400000",
+        "bloomradius": "2.500000",
+        "lightglow": "2.200000",
+        "lightcolor": "0.800000",
+        "lightstreaks": "2.200000",
+        "streaklength": "64.000000",
+        "streakthreshold": "0.720000",
+        "engineglow": "1.600000",
+        "nearbyengineglow": "1.000000",
+        "splitpreview": "0"
+      }
+    },
+    "fleet-later": {
+      "capture": "AOA_2026-10-28_13-02-03_0_FleetBefore.png",
+      "method": "Consecutive live frames with nearby ship exhaust off/on; own exhaust, other effects and HUD retained",
+      "width": 1920,
+      "height": 1200,
+      "changed_pixels_percent": 96.196,
+      "mean_absolute_channel_difference_0_255": 1.7057,
+      "before_sha256": "5fe05f9ec1d42bdc8d64231006c1f9f72e4d6439d03afa1c4f6950c65162eacc",
+      "after_sha256": "3f32dd80918f03b8a54bd55a7cf43b783afe6cd7fac82d57a543c2b03239ec61",
+      "preset": {
+        "protectsky": "1",
+        "vibrance": "0.950000",
+        "contrast": "0.300000",
+        "shadowlift": "0.750000",
+        "exposure": "0.350000",
+        "colorgrade": "0.650000",
+        "vignette": "0.180000",
+        "sharpen": "0.220000",
+        "bloom": "0.650000",
+        "bloomthreshold": "0.400000",
+        "bloomradius": "2.500000",
+        "lightglow": "2.200000",
+        "lightcolor": "0.800000",
+        "lightstreaks": "2.200000",
+        "streaklength": "64.000000",
+        "streakthreshold": "0.720000",
+        "engineglow": "1.600000",
+        "nearbyengineglow": "1.000000",
+        "splitpreview": "0"
+      }
+    },
+    "fleet-ui-first": {
+      "capture": "AOA_2026-10-28_13-00-44_0_UIOriginal.png",
+      "method": "Consecutive live frames with effects off/on and HUD present; moving objects may differ",
+      "width": 1920,
+      "height": 1200,
+      "changed_pixels_percent": 16.61,
+      "mean_absolute_channel_difference_0_255": 4.2322,
+      "before_sha256": "ed81b0b8d5513fcd37cdac8218d83c235e0a31d1e22aa918a9134ab3cc1cf489",
+      "after_sha256": "ec930475d233b47bea0f50f929d9dbd5c61276582e8d2642c6530882e1bb4390",
+      "preset": {
+        "protectsky": "1",
+        "vibrance": "0.950000",
+        "contrast": "0.300000",
+        "shadowlift": "0.750000",
+        "exposure": "0.350000",
+        "colorgrade": "0.650000",
+        "vignette": "0.180000",
+        "sharpen": "0.220000",
+        "bloom": "0.650000",
+        "bloomthreshold": "0.400000",
+        "bloomradius": "2.500000",
+        "lightglow": "2.200000",
+        "lightcolor": "0.800000",
+        "lightstreaks": "2.200000",
+        "streaklength": "64.000000",
+        "streakthreshold": "0.720000",
+        "engineglow": "1.600000",
+        "nearbyengineglow": "1.000000",
+        "splitpreview": "0"
+      }
+    }
+  },
+  "preserved_regions": {
+    "briefing": {
+      "rectangle": [
+        815,
+        425,
+        1100,
+        785
+      ],
+      "maximum_channel_difference": 0
+    },
+    "damage": {
+      "rectangle": [
+        10,
+        170,
+        245,
+        347
+      ],
+      "maximum_channel_difference": 0
+    },
+    "systems": {
+      "rectangle": [
+        1660,
+        0,
+        1908,
+        205
+      ],
+      "maximum_channel_difference": 0
+    },
+    "radar": {
+      "rectangle": [
+        900,
+        1110,
+        1040,
+        1170
+      ],
+      "maximum_channel_difference": 0
+    },
+    "left_nebula": {
+      "rectangle": [
+        10,
+        680,
+        180,
+        840
+      ],
+      "maximum_channel_difference": 0
+    },
+    "right_nebula": {
+      "rectangle": [
+        1550,
+        300,
+        1850,
+        700
+      ],
+      "maximum_channel_difference": 0
+    }
+  },
+  "capture_diagnostics": [
+    "exhaust slot=0 own=1 engines=2 distance=420.0 power=0.28 uv=0.541,0.773",
+    "exhaust slot=1 own=0 engines=2 distance=3234.3 power=0.28 uv=0.529,0.887",
+    "exhaust slot=2 own=0 engines=2 distance=3341.4 power=0.28 uv=0.509,0.529",
+    "exhaust slot=3 own=0 engines=2 distance=3442.4 power=0.28 uv=0.506,0.235",
+    "exhaust total ships=4 emitters=8 player_emitters=2",
+    "exhaust slot=0 own=1 engines=2 distance=420.0 power=0.32 uv=0.541,0.773",
+    "exhaust slot=1 own=0 engines=2 distance=3249.3 power=0.32 uv=0.529,0.886",
+    "exhaust slot=2 own=0 engines=2 distance=3355.7 power=0.32 uv=0.509,0.529",
+    "exhaust slot=3 own=0 engines=2 distance=3456.0 power=0.32 uv=0.506,0.236",
+    "exhaust total ships=4 emitters=8 player_emitters=2",
+    "exhaust slot=2 own=0 engines=2 distance=375.8 power=0.67 uv=0.592,0.502",
+    "exhaust total ships=1 emitters=2 player_emitters=0",
+    "exhaust slot=2 own=0 engines=2 distance=375.4 power=0.69 uv=0.592,0.502",
+    "exhaust total ships=1 emitters=2 player_emitters=0",
+    "exhaust total ships=0 emitters=0 player_emitters=0",
+    "exhaust total ships=0 emitters=0 player_emitters=0"
+  ],
+  "validation": [
+    "Shader and add-on built and loaded successfully.",
+    "Chase capture: four ships, eight emitters, two own emitters. Three Zkole AI wingmen have tail02/tail03 attachments.",
+    "Cockpit capture: nearby wingman at view distance approximately 375 units, two emitters, zero own emitters.",
+    "Later moving capture: zero visible eligible ships, zero emitters; emitter layer clears each frame.",
+    "Captured FPS counter 60; not a performance benchmark.",
+    "Four existing installer and exact-restore tests passed. Main experiment check: enabled, unchanged client executable."
+  ],
+  "limits": [
+    "Only the native 50-slot human/AI fighter table; excludes separate station/capital/HUD-preview objects.",
+    "Numbered Trail/tail anchors required; no invented fallback.",
+    "Up to four emitters per fighter, 64 total, view distance below 20000 world units.",
+    "Motion-based length, not direct throttle/afterburner state.",
+    "Moving comparisons include scenery motion; do not interpret overall pixel differences as effect size.",
+    "Multiplayer, other models and newer cinematic-camera patch not live-tested."
+  ]
+}

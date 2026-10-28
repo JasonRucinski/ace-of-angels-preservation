@@ -18,37 +18,51 @@ target previews in their original colors.
 
 ## Engine exhaust experiment
 
-The optional UI add-on now projects two blue-white engine plumes from the
-player model's named `Trail` attachment points. In **F2 chase view**, the
-plumes have a white core, blue flame and soft halo. **Engine exhaust** controls
-strength (default 1.6; 0 disables it). This needs the updated add-on as well
-as the shader; standard ReShade alone has no engine-position data.
+The optional UI add-on projects blue-white engine plumes from named `TrailNN`
+and `tailNN` model attachments. It now covers nearby AI and player fighters in
+the native pilot table, in both cockpit and chase views. Your own engines stay
+limited to **F2 chase view**. **Engine exhaust** controls overall strength
+(default 1.6); **Nearby ship exhaust** controls the other fighters' contribution
+(default 1.0; set 0 to keep only your own exhaust).
 
-The first version covers up to two engines on the player ship. Length ranges
-from 40 to 105 world units with smoothed forward speed measured from rendered
-positions. This is a motion response, not a direct throttle/afterburner read.
-Models without named attachments get no invented engine placement. The
-existing chase-camera patch must supply a current player node; cockpit,
-spectator and unsupported camera paths fail closed. New cinematic-camera
-patches have not been validated with this experiment.
+Each fighter has independent smoothed forward-motion response. Plume length
+ranges from 40 to 105 world units; this measures rendered movement rather than
+reading throttle or afterburner state. Inactive/reused pilot slots reset their
+motion history. Invisible, behind-camera and off-screen emitters are skipped.
+The budget is 64 plumes, up to four per fighter, with your own engines first
+and other ships ordered by view distance, capped at 20,000 world units.
 
-The add-on reads model attachments and the native world/view/projection transforms;
-it does not modify physics or assets. The shader tests against world depth
-and runs before HUD rendering. Sky colors remain unchanged; exhaust light can
-occupy a small area of sky immediately around an engine.
+The renderer draws a small quad around each projected plume into one RGBA16F
+layer, then blends it in the existing finishing pass. It avoids a fullscreen
+loop over every engine. World-depth masking and pre-HUD rendering preserve
+occlusion and UI colors; the sky keeps its original colors apart from local
+exhaust light. No physics or game assets are modified. This needs the updated
+add-on as well as the shader; standard ReShade alone has no engine positions.
 
-Capture only this effect while retaining all earlier lighting:
+Scope: the native 50-slot pilot table includes human pilots and AI fighters.
+Station, capital-ship and HUD-preview objects use a different table and are
+excluded. Models without numbered Trail/tail anchors are skipped. Verified
+live on Ym Khtat and three Zkole wingmen, including a close moving pass with
+chase disabled. Multiplayer and the newer cinematic-camera patch have not
+been validated. The observed FPS counter stayed at 60 during captured flight;
+this is not a controlled performance benchmark.
+
+Capture only other ships' exhaust, retaining your own exhaust and all earlier
+lighting:
 
 ```powershell
-python -I tools/classic_ui.py capture game/classic-capture --engines --output work/classic-enhanced/engine-review
+python -I tools/classic_ui.py capture game/classic-capture --fleet --output work/classic-enhanced/fleet-review
 ```
 
-Enter F2 chase view with effects enabled first. Captures are consecutive live
-frames, so moving scenery may differ. The initial paused briefing comparison
-isolates exhaust cleanly. Original PNG bytes are retained in the report. The verified local reports are
-`work/classic-enhanced/engine-verified/index.html` (isolated idle comparison)
-and `work/classic-enhanced/engine-motion-verified/index.html` (moving flight).
-See [engine verification evidence](../evidence/2.9.2/classic_enhanced_engines_20261028.json).
+Use `--engines` instead for all exhaust off/on, or neither switch for all
+effects off/on. Captures are consecutive live frames, so moving scenery can
+differ. The unmodified PNG bytes are retained in each report.
+
+Verified local reports: `work/classic-enhanced/fleet-first/index.html` shows
+three wingmen with your own exhaust retained; `fleet-cockpit/index.html` in
+the same parent directory shows a close wingman pass with chase disabled.
+The stationary `fleet-ui-first` pair confirms unchanged sampled HUD and sky
+regions. See [fleet verification evidence](../evidence/2.9.2/classic_enhanced_fleet_20261028.json).
 
 ## Try the prepared experiment
 

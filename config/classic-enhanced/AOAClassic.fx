@@ -37,10 +37,13 @@ uniform float StreakThreshold < ui_type = "slider"; ui_min = 0.5; ui_max = 0.95;
 uniform bool EngineCaptureOff < source = "aoa_engine_capture"; > = false;
 uniform float EngineGlow < ui_type = "slider"; ui_min = 0.0; ui_max = 3.0;
     ui_label = "Engine exhaust"; > = 1.6;
-uniform float4 EngineStart0 < source = "aoa_engine"; > = 0.0;
-uniform float4 EngineStart1 < source = "aoa_engine"; > = 0.0;
-uniform float4 EngineEnd0 < source = "aoa_engine"; > = 0.0;
-uniform float4 EngineEnd1 < source = "aoa_engine"; > = 0.0;
+uniform float NearbyEngineGlow < ui_type = "slider"; ui_min = 0.0; ui_max = 2.0;
+    ui_label = "Nearby ship exhaust"; > = 1.0;
+uniform bool FleetCaptureOff < source = "aoa_engine_capture"; > = false;
+uniform uint EngineCount < source = "aoa_engine"; > = 0;
+uniform uint PlayerEngineCount < source = "aoa_engine"; > = 0;
+uniform float4 EngineStarts[64] < source = "aoa_engine"; >;
+uniform float4 EngineEnds[64] < source = "aoa_engine"; >;
 uniform bool SplitPreview < ui_label = "Compare: original left / enhanced right"; > = false;
 
 texture BackBuffer : COLOR;
@@ -64,6 +67,9 @@ texture StreakA { Width = BUFFER_WIDTH / 4; Height = BUFFER_HEIGHT / 2; Format =
 texture StreakB { Width = BUFFER_WIDTH / 4; Height = BUFFER_HEIGHT / 2; Format = RGBA16F; };
 sampler StreakASampler { Texture = StreakA; AddressU = BORDER; AddressV = BORDER; };
 sampler StreakBSampler { Texture = StreakB; AddressU = BORDER; AddressV = BORDER; };
+
+texture EngineLayer { Width = BUFFER_WIDTH; Height = BUFFER_HEIGHT; Format = RGBA16F; };
+sampler EngineSampler { Texture = EngineLayer; AddressU = CLAMP; AddressV = CLAMP; };
 
 void FullscreenVS(uint id : SV_VertexID, out float4 position : SV_Position, out float2 uv : TEXCOORD)
 {
@@ -201,6 +207,27 @@ float3 EnginePlume(float2 uv, float4 start, float4 end)
         + flame * float3(0.04, 0.42, 1.0) + halo * float3(0.01, 0.08, 0.32));
 }
 
+// One tightly bounded quad per emitter, rather than a fullscreen loop over ships.
+void EngineVS(uint id : SV_VertexID, out float4 position : SV_Position,
+              out float2 uv : TEXCOORD0, out nointerpolation uint emitter : TEXCOORD1)
+{
+    emitter = id / 6;
+    uv = 0.0; position = float4(-2.0, -2.0, 0.0, 1.0);
+    if (!PreUIActive || EngineCaptureOff || EngineGlow <= 0.0 || emitter >= EngineCount) return;
+    if (emitter >= PlayerEngineCount && (FleetCaptureOff || NearbyEngineGlow <= 0.0)) return;
+    float4 start = EngineStarts[emitter], end = EngineEnds[emitter];
+    float2 corners[6] = {float2(0,0),float2(1,0),float2(0,1),float2(0,1),float2(1,0),float2(1,1)};
+    float2 radius = 3.5 * max(start.w, end.w) * float2(float(BUFFER_HEIGHT)/float(BUFFER_WIDTH), 1.0);
+    uv = lerp(min(start.xy,end.xy)-radius, max(start.xy,end.xy)+radius, corners[id % 6]);
+    position = float4(uv * float2(2.0,-2.0) + float2(-1.0,1.0), 0.0, 1.0);
+}
+float4 EnginePS(float4 position : SV_Position, float2 uv : TEXCOORD0,
+                nointerpolation uint emitter : TEXCOORD1) : SV_Target
+{
+    float strength = emitter < PlayerEngineCount ? 1.0 : NearbyEngineGlow;
+    return float4(EnginePlume(uv, EngineStarts[emitter], EngineEnds[emitter]) * strength, 0.0);
+}
+
 float4 FinishPS(float4 position : SV_Position, float2 uv : TEXCOORD) : SV_Target
 {
     float4 original = tex2D(Scene, uv);
@@ -257,7 +284,7 @@ float4 FinishPS(float4 position : SV_Position, float2 uv : TEXCOORD) : SV_Target
             + tex2D(StreakBSampler, uv - streakStep).rgb) * 0.25;
         c = 1.0 - (1.0 - c) * exp(-streak * LightStreaks);
     }
-    float3 exhaust = EnginePlume(uv, EngineStart0, EngineEnd0) + EnginePlume(uv, EngineStart1, EngineEnd1);
+    float3 exhaust = tex2D(EngineSampler, uv).rgb;
     c = 1.0 - (1.0 - c) * exp(-exhaust);
     return float4(c, original.a);
 }
@@ -271,5 +298,8 @@ technique ClassicEnhanced < ui_label = "AOA Classic Enhanced";
     pass LightBlur { VertexShader = FullscreenVS; PixelShader = LightBlurPS; RenderTarget = LightB; }
     pass StreakExtract { VertexShader = FullscreenVS; PixelShader = StreakExtractPS; RenderTarget = StreakA; }
     pass StreakBlur { VertexShader = FullscreenVS; PixelShader = StreakBlurPS; RenderTarget = StreakB; }
+    pass Engines { VertexShader = EngineVS; PixelShader = EnginePS; VertexCount = 384;
+        RenderTarget = EngineLayer; ClearRenderTargets = true;
+        BlendEnable = true; SrcBlend = ONE; DestBlend = ONE; BlendOp = ADD; }
     pass Finish { VertexShader = FullscreenVS; PixelShader = FinishPS; }
 }

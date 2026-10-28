@@ -16,13 +16,14 @@ a search-engine summary only.
 
 ## 2. Status
 
-Latest visual experiment (28 Oct): player engine exhaust added to the optional
-pre-HUD add-on and shader. Blue-white tapered plumes use named model anchors,
-native world/view/projection transforms and typed world-depth occlusion. Limited to
-two engines in the existing F2 chase path; measured forward motion controls
-length, not direct throttle. `classic_ui.py capture --engines` isolates exhaust
-while retaining earlier lighting. See docs/classic-enhanced.md for scope.
-
+Latest visual experiment (28 Oct): exhaust now covers nearby AI/player
+fighters in the native 50-slot pilot table, plus own ship in F2 chase. Named
+TrailNN/tailNN anchors, per-ship movement response, depth-tested emitter quads,
+64-plume budget (up to four per ship), and 20,000-unit view-distance limit.
+`classic_ui.py capture --fleet` isolates other fighters' exhaust. Live verified
+on three wingmen, a close cockpit-view pass, and no-visible-ship cleanup.
+Capital/station objects and models without anchors are excluded; multiplayer
+and the newer cinematic camera remain unverified. See docs/classic-enhanced.md.
 
 Classic Enhanced visual experiment (28 Oct 2026): opt-in ReShade 6.8.0 shader
 and preset prepared in a separate game copy, with vibrance, gentle contrast,
