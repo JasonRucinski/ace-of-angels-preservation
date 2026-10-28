@@ -37,6 +37,12 @@ Next refinement adds a half-resolution radiant-light layer for brighter,
 more colorful halos on tiny bright pixels. Live compilation and three further
 capture pairs verified; HUD also glows. Radiant lights = 0 restores the previous
 dramatic look. Incremental comparison: work/classic-enhanced/radiant-lights/index.html.
+Sky preservation now enabled by default: point-sampled packed dgVoodoo depth
+separates sky from foreground (sky high 24 bits 0xffffe0). ReShade preserves
+depth before clears with its default selection heuristic. Sky base colors stay original;
+foreground light spill remains. Neutral-dark guard prevents briefing-panel
+depth silhouettes. Depthless sprites/HUD may bypass grading; only one view
+verified so far. Comparison: work/classic-enhanced/sky-preserved/index.html.
 
 Nine-gate expansion (27 Oct 2026): `--warp-trial` and the host checkbox now
 restore all nine Arena1a warp gates, adding eight placements. Slots 71–79

@@ -3,10 +3,14 @@
 An opt-in color filter for Ace of Angels 2.9.2. The default now targets a
 dramatic cinematic look: lifted shadow detail, stronger color and contrast,
 teal shadows / warm highlights, wider bloom, and a light edge vignette.
+The sky keeps its original colors by default; foreground lights can still
+cast a soft halo across it.
 This is an SDR experiment; it does not add HDR lighting or new texture detail.
 
 The experiment uses the standard 32-bit ReShade 6.8.0 runtime after dgVoodoo2.
-Our self-contained shader needs no shader packs, depth access, or add-ons.
+Our self-contained shader needs no shader packs or third-party add-ons.
+Sky protection uses ReShade's built-in depth access with the pinned dgVoodoo2
+2.87.5 D3D11 configuration.
 It affects the final image, **including the HUD**. It cannot distinguish a
 bright HUD label from an engine light; lower Highlight glow if text looks hazy.
 
@@ -47,6 +51,33 @@ The original restrained look is preserved in `Subtle.ini`. Select that preset
 in the ReShade overlay, or copy it over `ClassicEnhanced.ini` while the game
 is closed. The new shadow, exposure, grade, and vignette controls are disabled
 in that preset, and the original glow radius is restored.
+
+## Preserve the sky
+
+**Preserve original sky colors** is enabled in the dramatic preset. The depth
+mask excludes background pixels from exposure, shadow lift, vibrance, color
+grading, sharpening, vignette, and bloom generation. Bloom from foreground
+lights can still spread over the sky, preserving a natural halo at silhouettes.
+Disabling the option restores full-frame grading. If depth is unavailable,
+protection leaves the frame ungraded instead of recoloring the sky.
+
+This is specific to the verified dgVoodoo2 2.87.5 / D3D11 path. Its sampled
+depth values cannot be compared as ordinary floats: far-scene values appear
+as NaNs. A live bit-pattern probe showed sky high bits `0xffffe0` and geometry
+below that range. The shader compares the packed bits with point sampling.
+ReShade `[DEPTH]` uses `DepthCopyBeforeClears=1` and the default
+`DrawStatsHeuristic=0` to retain the scene depth. Numeric float comparisons
+hid the far-scene geometry; bit-pattern inspection revealed it.
+[ReShade depth texture semantics](https://github.com/crosire/reshade-shaders/blob/slim/REFERENCE.md)
+and the pinned runtime's `examples/09-depth/generic_depth_addon.cpp` describe
+the underlying texture binding and selection configuration.
+
+Depthless sprites and HUD drawn over the sky can also bypass grading. HUD over
+geometry can still receive the filter. A neutral-dark tone guard keeps flat
+briefing-panel backgrounds from showing the underlying depth silhouette; it
+also reduces lifting of similarly dark neutral object pixels. This is not a
+complete HUD mask. Other scenes, distant billboards, camera motion, and wrapper
+versions need further validation; performance has not been benchmarked.
 
 ## Capture an exact before/after comparison
 
@@ -138,6 +169,17 @@ previous setup, close the experiment and launch your original game folder.
 Pilots/settings changed in the experiment are not synchronized back.
 
 ## Verification status — 28 October 2026
+
+### Sky preservation revision
+
+Three new live same-frame pairs were captured at 09:15:06, 09:15:12, and
+09:15:18 after the shader compiled without warnings. Two nebula regions were
+checked against their same-frame originals while foreground ship/station
+regions retained substantial changes. The final first pair was visually
+inspected, including the briefing panel. Local incremental report:
+`work/classic-enhanced/sky-preserved/index.html`; exact original/filtered report:
+`work/classic-enhanced/AOA_2026-10-28_09-15-06_0/index.html`.
+See [sky-preservation evidence](../evidence/2.9.2/classic_enhanced_sky_20261028.json).
 
 ### Radiant lights revision
 

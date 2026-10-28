@@ -1,5 +1,7 @@
 // Ace of Angels: Classic Enhanced. Original project shader, MIT licensed.
-// Color-only effect: no depth buffer, game hooks, or external shader packages.
+// Uses dgVoodoo2 2.87.5 depth to protect the sky; no client code hooks.
+uniform bool ProtectSky < ui_label = "Preserve original sky colors"; > = true;
+uniform bool DepthAvailable < source = "bufready_depth"; >;
 uniform float Vibrance < ui_type = "slider"; ui_min = 0.0; ui_max = 1.5;
     ui_label = "Color vibrance"; > = 0.95;
 uniform float Contrast < ui_type = "slider"; ui_min = 0.0; ui_max = 0.6;
@@ -28,6 +30,9 @@ uniform bool SplitPreview < ui_label = "Compare: original left / enhanced right"
 
 texture BackBuffer : COLOR;
 sampler Scene { Texture = BackBuffer; AddressU = CLAMP; AddressV = CLAMP; };
+texture SceneDepth : DEPTH;
+sampler DepthSampler { Texture = SceneDepth; MinFilter = POINT; MagFilter = POINT;
+    MipFilter = POINT; AddressU = CLAMP; AddressV = CLAMP; };
 texture GlowA { Width = BUFFER_WIDTH / 4; Height = BUFFER_HEIGHT / 4; Format = RGBA16F; };
 texture GlowB { Width = BUFFER_WIDTH / 4; Height = BUFFER_HEIGHT / 4; Format = RGBA16F; };
 sampler GlowASampler { Texture = GlowA; AddressU = CLAMP; AddressV = CLAMP; };
@@ -44,12 +49,23 @@ void FullscreenVS(uint id : SV_VertexID, out float4 position : SV_Position, out 
     position = float4(uv * float2(2.0, -2.0) + float2(-1.0, 1.0), 0.0, 1.0);
 }
 
+float Foreground(float2 uv)
+{
+    if (!ProtectSky) return 1.0;
+    if (!DepthAvailable) return 0.0;
+    // This pinned dgVoodoo D3D11 path exposes packed depth through a float SRV.
+    // Numeric float comparisons see NaNs in the far scene. Compare the bits.
+    // Live probe: sky's high 24 bits = 0xffffe0; geometry is below that range.
+    uint packedDepth = asuint(tex2D(DepthSampler, uv).r);
+    return packedDepth < 0xffffe000 ? 1.0 : 0.0;
+}
+
 float3 Highlights(float2 uv)
 {
     float3 c = tex2D(Scene, uv).rgb;
     // Maximum channel catches saturated engine/weapon light, not only white.
     float peak = max(c.r, max(c.g, c.b));
-    return c * smoothstep(BloomThreshold, 1.0, peak);
+    return c * smoothstep(BloomThreshold, 1.0, peak) * Foreground(uv);
 }
 
 float4 ExtractPS(float4 position : SV_Position, float2 uv : TEXCOORD) : SV_Target
@@ -77,7 +93,7 @@ float3 BrightLight(float2 uv)
     float peak = max(c.r, max(c.g, c.b));
     // Only bright source pixels seed the extra glow; shadow lift cannot seed it.
     float3 hue = pow(saturate(c / max(peak, 0.0001)), (1.0 + LightColor).xxx);
-    return hue * peak * smoothstep(0.60, 0.95, peak);
+    return hue * peak * smoothstep(0.60, 0.95, peak) * Foreground(uv);
 }
 
 float4 LightExtractPS(float4 position : SV_Position, float2 uv : TEXCOORD) : SV_Target
@@ -122,6 +138,18 @@ float4 FinishPS(float4 position : SV_Position, float2 uv : TEXCOORD) : SV_Target
     float3 tint = lerp(float3(0.72, 1.03, 1.22), float3(1.16, 1.04, 0.85),
                       smoothstep(0.12, 0.75, luma));
     c = saturate(c * lerp(1.0.xxx, tint, ColorGrade));
+    float foreground = Foreground(uv);
+    // Flat neutral-black UI panels have no depth of their own. Preserve their
+    // base tone so underlying geometry cannot emboss a silhouette into them.
+    float rawPeak = max(original.r, max(original.g, original.b));
+    float rawChroma = rawPeak - min(original.r, min(original.g, original.b));
+    float neutralShadow = (1.0 - smoothstep(0.002, 0.012, rawChroma))
+                        * (1.0 - smoothstep(0.045, 0.075, rawPeak));
+    if (ProtectSky) foreground *= 1.0 - neutralShadow;
+    float2 edge = uv * 2.0 - 1.0;
+    c *= 1.0 - Vignette * smoothstep(0.25, 1.5, dot(edge, edge));
+    // Sky skips color/brightness/detail/vignette. Only nearby light spill remains.
+    c = lerp(original.rgb, c, foreground);
     float2 stepUV = float2(0.0, 4.0 * BUFFER_RCP_HEIGHT * BloomRadius);
     float3 glow = tex2D(GlowBSampler, uv).rgb * 0.227027;
     glow += (tex2D(GlowBSampler, uv + stepUV * 1.384615).rgb
@@ -137,8 +165,6 @@ float4 FinishPS(float4 position : SV_Position, float2 uv : TEXCOORD) : SV_Target
         + tex2D(LightBSampler, uv - lightStep * 3.230769).rgb) * 0.070270;
     // Exponential screen blend rolls off smoothly rather than clipping halos.
     c = 1.0 - (1.0 - c) * exp(-light * LightGlow);
-    float2 edge = uv * 2.0 - 1.0;
-    c *= 1.0 - Vignette * smoothstep(0.25, 1.5, dot(edge, edge));
     return float4(c, original.a);
 }
 

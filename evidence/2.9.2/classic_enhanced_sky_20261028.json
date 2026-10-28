@@ -1,0 +1,471 @@
+{
+  "date": "2026-10-28",
+  "revision": "Depth-based sky protection",
+  "shader_sha256": "77c4753ab92dba1ee70bffb89930352e94789588a31e4e5070276d890d5a40d7",
+  "depth_probe_capture": "AOA_2026-10-28_09-09-35_0",
+  "depth_sky_high24_bits": "0xffffe0",
+  "depth_settings": {
+    "DepthCopyBeforeClears": 1,
+    "DrawStatsHeuristic": 0
+  },
+  "pairs": [
+    {
+      "capture": "AOA_2026-10-28_09-15-06_0",
+      "method": "ReShade before/after processing of the same rendered frame",
+      "width": 1920,
+      "height": 1200,
+      "changed_pixels_percent": 18.383,
+      "mean_absolute_channel_difference_0_255": 4.3937,
+      "before_sha256": "64501803450ee1640d612150c5bc5a97838ddf54bde94d5b92dba761e855b048",
+      "after_sha256": "9a00f11219e21753f8597fc41e10ee26957ebb9d301589676382f154168f472b",
+      "preset": {
+        "protectsky": "1",
+        "vibrance": "0.950000",
+        "contrast": "0.300000",
+        "shadowlift": "0.750000",
+        "exposure": "0.350000",
+        "colorgrade": "0.650000",
+        "vignette": "0.180000",
+        "sharpen": "0.220000",
+        "bloom": "0.650000",
+        "bloomthreshold": "0.400000",
+        "bloomradius": "2.500000",
+        "lightglow": "2.200000",
+        "lightcolor": "0.800000",
+        "splitpreview": "0"
+      }
+    },
+    {
+      "capture": "AOA_2026-10-28_09-15-12_0",
+      "method": "ReShade before/after processing of the same rendered frame",
+      "width": 1920,
+      "height": 1200,
+      "changed_pixels_percent": 18.381,
+      "mean_absolute_channel_difference_0_255": 4.3937,
+      "before_sha256": "3c0927f73716db23377d19a4ef937726c8d20dc2ce4bd61e44a6c9cf9029d5e2",
+      "after_sha256": "02ecc4a6cc0abee7b8d4e9cfe61d8d5f0a76272263f8c65e18022654e9ff5fa1",
+      "preset": {
+        "protectsky": "1",
+        "vibrance": "0.950000",
+        "contrast": "0.300000",
+        "shadowlift": "0.750000",
+        "exposure": "0.350000",
+        "colorgrade": "0.650000",
+        "vignette": "0.180000",
+        "sharpen": "0.220000",
+        "bloom": "0.650000",
+        "bloomthreshold": "0.400000",
+        "bloomradius": "2.500000",
+        "lightglow": "2.200000",
+        "lightcolor": "0.800000",
+        "splitpreview": "0"
+      }
+    },
+    {
+      "capture": "AOA_2026-10-28_09-15-18_0",
+      "method": "ReShade before/after processing of the same rendered frame",
+      "width": 1920,
+      "height": 1200,
+      "changed_pixels_percent": 18.375,
+      "mean_absolute_channel_difference_0_255": 4.3929,
+      "before_sha256": "68bb93ad509a7267631104a9c2eded645f5d203ee2002a28b9d694dc5cc93c66",
+      "after_sha256": "a8e6afb15a9b0a0bc750cca407095d34c270d9d09e47625176d5eb3abe873c62",
+      "preset": {
+        "protectsky": "1",
+        "vibrance": "0.950000",
+        "contrast": "0.300000",
+        "shadowlift": "0.750000",
+        "exposure": "0.350000",
+        "colorgrade": "0.650000",
+        "vignette": "0.180000",
+        "sharpen": "0.220000",
+        "bloom": "0.650000",
+        "bloomthreshold": "0.400000",
+        "bloomradius": "2.500000",
+        "lightglow": "2.200000",
+        "lightcolor": "0.800000",
+        "splitpreview": "0"
+      }
+    }
+  ],
+  "measurements": [
+    {
+      "capture": "AOA_2026-10-28_09-15-06_0",
+      "regions": {
+        "left_nebula": {
+          "box": [
+            10,
+            680,
+            180,
+            840
+          ],
+          "mean_absolute_channel_difference": 0.0,
+          "extrema": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ]
+          ]
+        },
+        "right_nebula": {
+          "box": [
+            1550,
+            300,
+            1850,
+            700
+          ],
+          "mean_absolute_channel_difference": 0.0,
+          "extrema": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ]
+          ]
+        },
+        "station": {
+          "box": [
+            300,
+            480,
+            700,
+            550
+          ],
+          "mean_absolute_channel_difference": 18.92925,
+          "extrema": [
+            [
+              0,
+              155
+            ],
+            [
+              0,
+              154
+            ],
+            [
+              0,
+              151
+            ]
+          ]
+        },
+        "ship": {
+          "box": [
+            840,
+            830,
+            1080,
+            920
+          ],
+          "mean_absolute_channel_difference": 40.116388888888885,
+          "extrema": [
+            [
+              0,
+              138
+            ],
+            [
+              0,
+              145
+            ],
+            [
+              0,
+              122
+            ]
+          ]
+        },
+        "panel": {
+          "box": [
+            900,
+            700,
+            1000,
+            760
+          ],
+          "mean_absolute_channel_difference": 0.0,
+          "extrema": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "capture": "AOA_2026-10-28_09-15-12_0",
+      "regions": {
+        "left_nebula": {
+          "box": [
+            10,
+            680,
+            180,
+            840
+          ],
+          "mean_absolute_channel_difference": 0.0,
+          "extrema": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ]
+          ]
+        },
+        "right_nebula": {
+          "box": [
+            1550,
+            300,
+            1850,
+            700
+          ],
+          "mean_absolute_channel_difference": 0.0,
+          "extrema": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ]
+          ]
+        },
+        "station": {
+          "box": [
+            300,
+            480,
+            700,
+            550
+          ],
+          "mean_absolute_channel_difference": 18.92925,
+          "extrema": [
+            [
+              0,
+              155
+            ],
+            [
+              0,
+              154
+            ],
+            [
+              0,
+              151
+            ]
+          ]
+        },
+        "ship": {
+          "box": [
+            840,
+            830,
+            1080,
+            920
+          ],
+          "mean_absolute_channel_difference": 40.116388888888885,
+          "extrema": [
+            [
+              0,
+              138
+            ],
+            [
+              0,
+              145
+            ],
+            [
+              0,
+              122
+            ]
+          ]
+        },
+        "panel": {
+          "box": [
+            900,
+            700,
+            1000,
+            760
+          ],
+          "mean_absolute_channel_difference": 0.0,
+          "extrema": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "capture": "AOA_2026-10-28_09-15-18_0",
+      "regions": {
+        "left_nebula": {
+          "box": [
+            10,
+            680,
+            180,
+            840
+          ],
+          "mean_absolute_channel_difference": 0.0,
+          "extrema": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ]
+          ]
+        },
+        "right_nebula": {
+          "box": [
+            1550,
+            300,
+            1850,
+            700
+          ],
+          "mean_absolute_channel_difference": 0.0,
+          "extrema": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ]
+          ]
+        },
+        "station": {
+          "box": [
+            300,
+            480,
+            700,
+            550
+          ],
+          "mean_absolute_channel_difference": 18.92925,
+          "extrema": [
+            [
+              0,
+              155
+            ],
+            [
+              0,
+              154
+            ],
+            [
+              0,
+              151
+            ]
+          ]
+        },
+        "ship": {
+          "box": [
+            840,
+            830,
+            1080,
+            920
+          ],
+          "mean_absolute_channel_difference": 40.116388888888885,
+          "extrema": [
+            [
+              0,
+              138
+            ],
+            [
+              0,
+              145
+            ],
+            [
+              0,
+              122
+            ]
+          ]
+        },
+        "panel": {
+          "box": [
+            900,
+            700,
+            1000,
+            760
+          ],
+          "mean_absolute_channel_difference": 0.0,
+          "extrema": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ]
+          ]
+        }
+      }
+    }
+  ],
+  "checks": [
+    "All 6 report PNGs match native captures byte-for-byte",
+    "Two sky regions pixel-identical to original in all 3 pairs",
+    "Ship and station regions retain mean channel changes greater than 10/255",
+    "Flat briefing panel region preserved within 0.1/255 in all pairs",
+    "No-depth synthetic D3D11 frame unchanged pixel-for-pixel",
+    "Live and synthetic shader compiled without warnings",
+    "Both presets specify all user-controlled uniforms"
+  ],
+  "limitations": [
+    "One stationary offline view",
+    "Packed-depth cutoff specific to pinned dgVoodoo D3D11 path",
+    "Depthless sprites may bypass grading",
+    "HUD over geometry may still be graded; neutral-dark tone guard protects flat panel base",
+    "Foreground bloom intentionally spills across sky",
+    "No frame-time benchmark"
+  ],
+  "incremental_report": "work\\classic-enhanced\\sky-preserved\\index.html"
+}
