@@ -20,8 +20,12 @@ Classic Enhanced visual experiment (28 Oct 2026): opt-in ReShade 6.8.0 shader
 and preset prepared in a separate game copy, with vibrance, gentle contrast,
 bounded sharpening, and faint bloom. Source files verified unchanged; no
 client executable patch. Original shader compiled in a 32-bit D3D11 GPU smoke
-harness and presented 240 frames. Experiment client opened to startup, but
-in-flight injection, HUD/color acceptance, and performance remain unverified.
+harness and presented 240 frames. Follow-up computer-use entry through native
+Offline/Play accelerators in a temporary dialog-resource copy reached flight.
+Standard ReShade injection and shader compilation verified at 1920x1200; a
+private full-add-on capture helper then saved three real same-frame comparison
+pairs. Initial visual inspection confirms a subtle color/detail change; live
+key toggles, broader HUD/color acceptance, and performance remain unverified.
 See [experiment guide](docs/classic-enhanced.md). Not enabled in normal setup.
 
 Nine-gate expansion (27 Oct 2026): `--warp-trial` and the host checkbox now

@@ -58,7 +58,7 @@ def build(before, after, output):
         raise ValueError("split preview was enabled; disable it before capturing a full-frame comparison")
     record = {
         "capture": before.name.removesuffix("_Before.png"),
-        "method": "ReShade SaveBeforeShot: before/after processing of the same rendered frame",
+        "method": "ReShade before/after processing of the same rendered frame",
         "width": width, "height": height,
         "changed_pixels_percent": round(changed * 100 / (width * height), 3),
         "mean_absolute_channel_difference_0_255": round(mean_difference, 4),

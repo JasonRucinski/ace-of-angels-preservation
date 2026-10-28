@@ -1,0 +1,86 @@
+{
+  "date": "2026-10-28",
+  "mode": "offline mission",
+  "dimensions": [
+    1920,
+    1200
+  ],
+  "entry": "Computer use Alt+O then Alt+P using native controls exposed in temporary dialog resources",
+  "private_client_sha256": "b5d8fddaf66ebbf6c535eed477c2b137494a27ba0f04b7e66a7fe09a7d7b6a93",
+  "client_code_unchanged": true,
+  "changed_dialog_resource_ids": [
+    127,
+    128,
+    191
+  ],
+  "capture_method": "ReShade 6.8.0 full-add-on API before/after effects callbacks at frames 180,540,900",
+  "runtime_sha256": "da430e0a9c6eecefa0d1b27d05e16c426fb5d04e808b194d914eaac4b31bc0f8",
+  "helper_binary_sha256": "148b2af768c6f08965572980d83dcaa921b288d51c1ddf6c1f85d242b1732cf7",
+  "helper_source": "tools/classic_capture_addon.cpp",
+  "shader_sha256": "acfe84c95aee33d89e5c5d951b55bc36e5b158aeb67267e00cc4b4eb43c000bb",
+  "standard_runtime_game_injection": "verified before full-add-on capture; shader compiled at 1920x1200",
+  "pairs": [
+    {
+      "capture": "AOA_2026-10-28_08-20-01_0",
+      "method": "ReShade before/after processing of the same rendered frame",
+      "width": 1920,
+      "height": 1200,
+      "changed_pixels_percent": 46.673,
+      "mean_absolute_channel_difference_0_255": 0.621,
+      "before_sha256": "a754d3a8f4afe0564977db83af38d7cec915a118752c5eed16aa48906c064923",
+      "after_sha256": "e4da8af7d9666f239650faed16a544349d6e483b1b218e10fadba1a13b1b4c3d",
+      "preset": {
+        "vibrance": "0.140000",
+        "contrast": "0.080000",
+        "sharpen": "0.120000",
+        "bloom": "0.060000",
+        "bloomthreshold": "0.780000",
+        "splitpreview": "0"
+      }
+    },
+    {
+      "capture": "AOA_2026-10-28_08-20-07_0",
+      "method": "ReShade before/after processing of the same rendered frame",
+      "width": 1920,
+      "height": 1200,
+      "changed_pixels_percent": 46.577,
+      "mean_absolute_channel_difference_0_255": 0.6182,
+      "before_sha256": "fd6caffb5849e6dc75f7d2d3cf17a54f6e6abc8916f280c92e3c7756768ce2a5",
+      "after_sha256": "62a990e1642153cff19eb39a4269bca556eba8add21367fd6843f3f9689d8cb1",
+      "preset": {
+        "vibrance": "0.140000",
+        "contrast": "0.080000",
+        "sharpen": "0.120000",
+        "bloom": "0.060000",
+        "bloomthreshold": "0.780000",
+        "splitpreview": "0"
+      }
+    },
+    {
+      "capture": "AOA_2026-10-28_08-20-13_0",
+      "method": "ReShade before/after processing of the same rendered frame",
+      "width": 1920,
+      "height": 1200,
+      "changed_pixels_percent": 46.577,
+      "mean_absolute_channel_difference_0_255": 0.618,
+      "before_sha256": "abc8b1cf447a7efa5252c3466b463ce195c9e029703a8da68add93f3c5d7ed6c",
+      "after_sha256": "baaf089b57217803efc8d680137f73bcf5a54803162356e894da0ac753dda196",
+      "preset": {
+        "vibrance": "0.140000",
+        "contrast": "0.080000",
+        "sharpen": "0.120000",
+        "bloom": "0.060000",
+        "bloomthreshold": "0.780000",
+        "splitpreview": "0"
+      }
+    }
+  ],
+  "visual_review": "First pair inspected: subtle richer green ship and blue HUD, readable text; station remains very dark",
+  "limitations": [
+    "One stationary camera view, with brief mission animation changes across the three pairs",
+    "Briefing panel remains visible",
+    "Desktop capture tools timed out",
+    "Automated screenshot key taps were not detected",
+    "No frame-time benchmark or manual toggle acceptance"
+  ]
+}

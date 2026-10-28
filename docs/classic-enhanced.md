@@ -71,9 +71,9 @@ To build a report from the latest existing pair manually:
 python -I tools\compare_classic_capture.py game\classic-enhanced\comparison-captures
 ```
 
-Automatic report generation was checked with labeled synthetic fixtures;
-this does not establish that a live game capture has succeeded. The game
-must have entered its 3D renderer before ReShade can capture a frame.
+Automatic report generation was checked with labeled synthetic fixtures and
+then three actual offline-mission capture pairs (see verification below).
+The game must have entered its 3D renderer before ReShade can capture a frame.
 
 ## Prepare on another machine
 
@@ -130,11 +130,52 @@ Pilots/settings changed in the experiment are not synchronized back.
 - Separate local game copy prepared; source hashes and copied executable matched.
 - ReShade FX compiled successfully in a 32-bit D3D11 GPU smoke harness at
   1280 × 720 / feature level 11.0; 240 frames presented and runtime shut down.
-- The experiment client opened to its startup dialog. Its renderer had not
-  started, so this does **not** establish dgVoodoo/ReShade injection in flight.
-- In-game color/HUD acceptance, toggle behavior, and frame-time impact remain
-  pending. The startup dialog could be read through accessibility, but screenshot
-  capture timed out. No live visual approval is claimed.
+- Standard ReShade 6.8.0 loaded through dgVoodoo and compiled the shader inside
+  the offline mission at 1920 × 1200.
+- Three real before/after frame pairs were captured and automatic comparison
+  reports generated. Each pair has identical scene geometry and timing.
+  The first pair changes 46.673% of pixels, with mean absolute channel change
+  0.621 on a 0–255 scale: this preset is deliberately subtle.
+- Visual inspection of the first pair found richer green ship paint and blue
+  HUD colors, with readable text. The station remains very dark. This is an
+  initial review of one view, not full visual or performance acceptance.
+- Live key toggles and frame-time impact remain unverified. Computer-use
+  screenshot capture consistently timed out; automated screenshot key taps
+  were not recognized by ReShade in this session.
+
+### How the automated live capture was obtained
+
+Only the temporary `game/classic-capture` copy was changed for capture.
+Its login and station **dialog resources**, not executable code, expose native
+Offline/Play controls with Alt+O / Alt+P accelerators and `WS_EX_APPWINDOW`.
+Computer use then activated these controls to enter the offline mission.
+The regular `game/classic-enhanced` executable was not changed.
+
+For deterministic capture, the private copy used the official 6.8.0 full-add-on
+runtime and [classic_capture_addon.cpp](../tools/classic_capture_addon.cpp).
+The helper calls the runtime's screenshot API immediately before and after
+effects at rendered frames 180, 540, and 900. It does not inject input or alter
+game state. A synthetic D3D11 test confirmed the callback captures different
+before/after pixels before it was used in the game.
+
+The helper was built with Zig 0.16.0 C++ targeting `x86-windows-gnu`, using
+the official ReShade v6.8.0 include headers, `-std=c++20 -O2 -shared -s` and
+`-luser32`. Its DLL is installed as `AutoPair.addon32` **only in the diagnostic
+copy**. No runtime/helper binaries or captured game images are committed.
+The default experiment continues to use the standard runtime.
+
+Capture runtime package:
+[official ReShade 6.8.0 full-add-on download](https://reshade.me/downloads/ReShade_Setup_6.8.0_Addon.exe),
+SHA-256 `afe4c8f13048306307983b8b3d41d5bf00a86820440b0e57dea10950e1176445`.
+Runtime DLL SHA-256:
+`da430e0a9c6eecefa0d1b27d05e16c426fb5d04e808b194d914eaac4b31bc0f8`.
+
+Reports are saved locally as
+`work/classic-enhanced/AOA_2026-10-28_08-20-01_0/index.html`,
+`AOA_2026-10-28_08-20-07_0/index.html`, and
+`AOA_2026-10-28_08-20-13_0/index.html` under the same parent.
+See [capture evidence](../evidence/2.9.2/classic_enhanced_capture_20261028.json)
+for hashes, measurements, and the exact scope of verification.
 
 References: [ReShade FX language](https://github.com/crosire/reshade-shaders/blob/slim/REFERENCE.md),
 [official setup implementation](https://github.com/crosire/reshade/blob/v6.8.0/setup/MainWindow.xaml.cs).
