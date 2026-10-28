@@ -5,16 +5,79 @@
 #include <d3d11_1.h>
 #include <cstdio>
 #include <cstring>
+#include <cmath>
+
 static reshade::api::effect_runtime *runtime=nullptr;
 static bool installed=false, in_effect=false, applied=false;
 static unsigned frames=0, calls=0, capture_step=0;
 static bool capture_enabled=false;
+static unsigned engine_capture_step=0;
 static unsigned char patch[6];
 static ID3D11ShaderResourceView *world_depth=nullptr;
 static const unsigned char original[6]={0x8b,0x8e,0x98,0x01,0x00,0x00};
 static void log(const char *s){FILE*f=fopen("classic-ui.log","a");if(f){fprintf(f,"%s\n",s);fclose(f);}}
+// Only read native state. No physics, asset, or input changes.
+static float engine_start[2][4]={}, engine_end[2][4]={};
+static bool read_native(uintptr_t address,void *out,size_t count){
+ SIZE_T got=0;return address && ReadProcessMemory(GetCurrentProcess(),(void*)address,out,count,&got) && got==count;
+}
+static uintptr_t pointer(uintptr_t address){uintptr_t p=0;read_native(address,&p,sizeof(p));return p;}
+static void project_point(const float *p,const float *view,const float *proj,float *out){
+ float q[4]={},c[4]={};
+ for(int j=0;j<4;++j)q[j]=p[0]*view[j]+p[1]*view[4+j]+p[2]*view[8+j]+view[12+j];
+ for(int j=0;j<4;++j)for(int k=0;k<4;++k)c[j]+=q[k]*proj[k*4+j];
+ if(c[3]<=1 || !std::isfinite(c[3])){out[3]=0;return;}
+ out[0]=0.5f+0.5f*c[0]/c[3];out[1]=0.5f-0.5f*c[1]/c[3];out[2]=c[2]/c[3];out[3]=fabsf(proj[5]*4.5f/c[3]);
+}
+static void update_engines(){
+ memset(engine_start,0,sizeof(engine_start));memset(engine_end,0,sizeof(engine_end));
+ uintptr_t app=pointer(0x5e6e58),world=pointer(0x5e7728),node=pointer(world+0xd3448);
+ bool probe=engine_capture_step!=0;
+ if(probe){char line[160];sprintf(line,"engine capture node=%lx cached=%lx tick=%u cachedtick=%u",(unsigned long)node,(unsigned long)pointer(0x60d3e0),(unsigned)pointer(0x5e8e5c),(unsigned)pointer(0x60d3e4));log(line);}
+ // The native clock advances during a moving frame (observed 1-2 ms).
+ // Accept its fresh chase record; reject stale spectator/menu records.
+ if(!node || node!=pointer(0x60d3e0) || uint32_t(pointer(0x5e8e5c)-pointer(0x60d3e4))>100)return;
+ uintptr_t gfx=pointer(app+0x138);auto device=(void*)pointer(gfx+0x188);
+ if(!device)return;
+ // IDirect3DDevice7::GetTransform is vtable slot 12 (legacy d3d.h).
+ using GetTransform=HRESULT(WINAPI*)(void*,DWORD,float*);
+ auto get_transform=(GetTransform)((void**)*(void***)device)[12];
+ float view[16],proj[16];
+ if(FAILED(get_transform(device,2,view)) || FAILED(get_transform(device,3,proj)))return;
+ float m[16];if(!read_native(node+0x7c,m,sizeof(m)))return;
+ if(probe){char line[240];sprintf(line,"engine coordinates pos=%g,%g,%g viewpos=%g,%g,%g",m[12],m[13],m[14],view[12],view[13],view[14]);log(line);}
+ // Motion response uses rendered position; it does not pretend to read throttle.
+ static uintptr_t last_node=0;static float previous[3]={},power=0;static DWORD last_time=0;
+ DWORD now=GetTickCount();float dt=(now-last_time)*0.001f;
+ if(node==last_node && dt>0 && dt<0.25f){float speed=0;for(int i=0;i<3;++i)speed+=(m[12+i]-previous[i])*m[8+i]/dt;
+  float target=fminf(fabsf(speed)/250.0f,1.0f);power+=(target-power)*fminf(dt*4.0f,1.0f);
+ }else power=0;
+ last_node=node;last_time=now;memcpy(previous,m+12,12);
+ uintptr_t link=pointer(node+0x244);int count=0;
+ for(int limit=0;link && limit<64 && count<2;++limit,link=pointer(link+8)){
+  uintptr_t child=pointer(link+0x10);char name[8]={};
+  if(!read_native(pointer(child+0x20),name,7) || _strnicmp(name,"trail",5)!=0)continue;
+  float local[3],a[3],b[3];if(!read_native(child+0xac,local,sizeof(local)))continue;
+  for(int j=0;j<3;++j){a[j]=m[12+j]+local[0]*m[j]+local[1]*m[4+j]+local[2]*m[8+j];b[j]=a[j]-m[8+j]*(40.0f+65.0f*power);}
+  // The native view matrix already includes the absolute camera translation.
+  project_point(a,(float*)&view,(float*)&proj,engine_start[count]);
+  project_point(b,(float*)&view,(float*)&proj,engine_end[count]);
+  if(calls<3 || probe){char line[180];sprintf(line,"engine %d uv %.3f %.3f z %.6f radius %.4f end %.3f %.3f",count,engine_start[count][0],engine_start[count][1],engine_start[count][2],engine_start[count][3],engine_end[count][0],engine_end[count][1]);log(line);}
+  ++count;
+ }
+}
+static void update_uniforms(){
+ runtime->enumerate_uniform_variables("AOAClassic.fx",[](reshade::api::effect_runtime *rt,reshade::api::effect_uniform_variable v){char name[80];rt->get_uniform_variable_name(v,name);if(strcmp(name,"PreUIActive")==0)rt->set_uniform_value_bool(v,true);
+ else if(strcmp(name,"EngineCaptureOff")==0)rt->set_uniform_value_bool(v,engine_capture_step==1);
+ else if(strcmp(name,"EngineStart0")==0)rt->set_uniform_value_float(v,engine_start[0],4);
+ else if(strcmp(name,"EngineStart1")==0)rt->set_uniform_value_float(v,engine_start[1],4);
+ else if(strcmp(name,"EngineEnd0")==0)rt->set_uniform_value_float(v,engine_end[0],4);
+ else if(strcmp(name,"EngineEnd1")==0)rt->set_uniform_value_float(v,engine_end[1],4);});
+}
 extern "C" void before_hud(){
  if(!runtime || in_effect || applied)return;
+ update_engines();
+ update_uniforms();
  auto cmd=runtime->get_command_queue()->get_immediate_command_list();
  auto context=reinterpret_cast<ID3D11DeviceContext*>(cmd->get_native());
  ID3D11DeviceContext1 *ctx1=nullptr;
@@ -54,7 +117,7 @@ extern "C" void before_hud(){
  dev1->Release();dev->Release();rtv->Release();ctx1->Release();
 }
 static void effects_begin(reshade::api::effect_runtime *r,reshade::api::command_list *,reshade::api::resource_view,reshade::api::resource_view){
- if(in_effect && world_depth){r->update_texture_bindings("AOA_WORLD_DEPTH",{reinterpret_cast<uint64_t>(world_depth)},{reinterpret_cast<uint64_t>(world_depth)});r->enumerate_uniform_variables("AOAClassic.fx",[](reshade::api::effect_runtime *rt,reshade::api::effect_uniform_variable v){char name[80];rt->get_uniform_variable_name(v,name);if(strcmp(name,"PreUIActive")==0)rt->set_uniform_value_bool(v,true);});}
+ if(in_effect && world_depth){r->update_texture_bindings("AOA_WORLD_DEPTH",{reinterpret_cast<uint64_t>(world_depth)},{reinterpret_cast<uint64_t>(world_depth)});}
 }
 extern "C" __attribute__((naked)) void hud_hook(){
  __asm__ volatile("pushfl\n pushal\n movl %esp,%eax\n subl $528,%esp\n andl $-16,%esp\n movl %eax,512(%esp)\n fxsave (%esp)\n call _before_hud\n fxrstor (%esp)\n movl 512(%esp),%esp\n popal\n popfl\n movl 0x198(%esi),%ecx\n pushl $0x44b3cd\n ret\n");
@@ -78,11 +141,16 @@ static void presenting(reshade::api::command_queue *q,reshade::api::swapchain *s
 }
 static void presented(reshade::api::effect_runtime *r){
  runtime=r;++frames;
+ if(engine_capture_step==1){r->save_screenshot("EngineBefore");engine_capture_step=2;}
+ else if(engine_capture_step==2){r->save_screenshot("EngineAfter");engine_capture_step=0;}
+ else if(capture_step==0 && GetFileAttributesA("classic-engine-capture.flag")!=INVALID_FILE_ATTRIBUTES){
+  DeleteFileA("classic-engine-capture.flag");engine_capture_step=1;
+ }
  // Explicit opt-in capture: two full frames, with the HUD present in both.
  // They are sequential frames, not a same-frame simulation.
  if(capture_step==1){r->save_screenshot("UIOriginal");r->set_effects_state(capture_enabled);capture_step=2;}
  else if(capture_step==2){r->save_screenshot("UIProtected");capture_step=0;}
- else if(GetFileAttributesA("classic-ui-capture.flag")!=INVALID_FILE_ATTRIBUTES){
+ else if(engine_capture_step==0 && GetFileAttributesA("classic-ui-capture.flag")!=INVALID_FILE_ATTRIBUTES){
   DeleteFileA("classic-ui-capture.flag");capture_enabled=r->get_effects_state();
   r->set_effects_state(false);capture_step=1;
  }

@@ -28,10 +28,13 @@ def latest_pair(folder):
     return max(pairs, key=lambda pair: pair[1].stat().st_mtime_ns)
 
 
-def build(before, after, output, *, sequential_ui=False):
+def build(before, after, output, *, sequential_ui=False, engines=False):
     if output.exists():
         raise ValueError("output already exists; select a new folder to preserve earlier captures")
-    if sequential_ui and not (before.name.endswith("_UIOriginal.png") and after.name.endswith("_UIProtected.png")):
+    suffixes = ("_EngineBefore.png", "_EngineAfter.png") if engines else ("_UIOriginal.png", "_UIProtected.png")
+    if engines and not sequential_ui:
+        raise ValueError("engine comparison requires consecutive UI-preserved captures")
+    if sequential_ui and not (before.name.endswith(suffixes[0]) and after.name.endswith(suffixes[1])):
         raise ValueError("expected the UI add-on's original/protected captures")
     if not sequential_ui and before.name.removesuffix("_Before.png") != after.name.removesuffix("_After.png"):
         raise ValueError("the two files are not a matching same-frame capture pair")
@@ -60,7 +63,7 @@ def build(before, after, output, *, sequential_ui=False):
         raise ValueError("split preview was enabled; disable it before capturing a full-frame comparison")
     record = {
         "capture": before.name.removesuffix("_Before.png"),
-        "method": ("Consecutive live frames with effects off/on and HUD present; moving objects may differ"
+        "method": ("Consecutive live frames with engine exhaust off/on; all other effects and HUD retained" if engines else "Consecutive live frames with effects off/on and HUD present; moving objects may differ"
                    if sequential_ui else "ReShade before/after processing of the same rendered frame"),
         "width": width, "height": height,
         "changed_pixels_percent": round(changed * 100 / (width * height), 3),
@@ -105,6 +108,11 @@ document.getElementById('line').style.left = e.target.value + '%';
         page = page.replace("Original and enhanced captures of the same frame.",
                             "Consecutive live captures with the UI preserved. Moving objects may differ.")
         page = page.replace("Same game frame with Classic Enhanced", "Next game frame with Classic Enhanced")
+    if engines:
+        page = page.replace("<h1>Classic Enhanced</h1>", "<h1>Engine exhaust</h1>")
+        page = page.replace("<figcaption>Original</figcaption>", "<figcaption>Previous lighting — exhaust off</figcaption>")
+        page = page.replace("<figcaption>Classic Enhanced</figcaption>", "<figcaption>Engine exhaust on</figcaption>")
+        page = page.replace("Consecutive live captures with the UI preserved.", "Engine exhaust off/on; all other effects and the UI retained.")
     caption = f"{width} × {height} · {record['changed_pixels_percent']}% of pixels changed · {record['capture']}"
     page = page.replace("__CAPTION__", html.escape(caption)).replace("__RECORD__", html.escape(json.dumps(record, indent=2)))
     (output / "index.html").write_text(page, encoding="utf-8")

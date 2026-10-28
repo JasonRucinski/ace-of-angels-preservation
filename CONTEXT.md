@@ -16,6 +16,14 @@ a search-engine summary only.
 
 ## 2. Status
 
+Latest visual experiment (28 Oct): player engine exhaust added to the optional
+pre-HUD add-on and shader. Blue-white tapered plumes use named model anchors,
+native world/view/projection transforms and typed world-depth occlusion. Limited to
+two engines in the existing F2 chase path; measured forward motion controls
+length, not direct throttle. `classic_ui.py capture --engines` isolates exhaust
+while retaining earlier lighting. See docs/classic-enhanced.md for scope.
+
+
 Classic Enhanced visual experiment (28 Oct 2026): opt-in ReShade 6.8.0 shader
 and preset prepared in a separate game copy, with vibrance, gentle contrast,
 bounded sharpening, and faint bloom. Source files verified unchanged; no

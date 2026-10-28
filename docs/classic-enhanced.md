@@ -16,6 +16,40 @@ The prepared local experiment now has the optional **UI preservation mode** belo
 it applies the effect before the HUD is drawn, keeping panels, text, radar, and
 target previews in their original colors.
 
+## Engine exhaust experiment
+
+The optional UI add-on now projects two blue-white engine plumes from the
+player model's named `Trail` attachment points. In **F2 chase view**, the
+plumes have a white core, blue flame and soft halo. **Engine exhaust** controls
+strength (default 1.6; 0 disables it). This needs the updated add-on as well
+as the shader; standard ReShade alone has no engine-position data.
+
+The first version covers up to two engines on the player ship. Length ranges
+from 40 to 105 world units with smoothed forward speed measured from rendered
+positions. This is a motion response, not a direct throttle/afterburner read.
+Models without named attachments get no invented engine placement. The
+existing chase-camera patch must supply a current player node; cockpit,
+spectator and unsupported camera paths fail closed. New cinematic-camera
+patches have not been validated with this experiment.
+
+The add-on reads model attachments and the native world/view/projection transforms;
+it does not modify physics or assets. The shader tests against world depth
+and runs before HUD rendering. Sky colors remain unchanged; exhaust light can
+occupy a small area of sky immediately around an engine.
+
+Capture only this effect while retaining all earlier lighting:
+
+```powershell
+python -I tools/classic_ui.py capture game/classic-capture --engines --output work/classic-enhanced/engine-review
+```
+
+Enter F2 chase view with effects enabled first. Captures are consecutive live
+frames, so moving scenery may differ. The initial paused briefing comparison
+isolates exhaust cleanly. Original PNG bytes are retained in the report. The verified local reports are
+`work/classic-enhanced/engine-verified/index.html` (isolated idle comparison)
+and `work/classic-enhanced/engine-motion-verified/index.html` (moving flight).
+See [engine verification evidence](../evidence/2.9.2/classic_enhanced_engines_20261028.json).
+
 ## Try the prepared experiment
 
 From the repository root:

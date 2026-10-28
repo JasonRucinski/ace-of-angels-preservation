@@ -1,0 +1,275 @@
+{
+  "date": "2026-10-28",
+  "revision": "Player engine exhaust in F2 chase view",
+  "hashes": {
+    "config/classic-enhanced/AOAClassic.fx": "c4e8019a0ac960ad39b4273751006b0fd7bdbfa00376ed2be23a4a36ae9fda7d",
+    "tools/classic_ui_addon.cpp": "9545152341cd4a308751e30b55d8d16627f51b3e2559b4f15b1c4d214dbfbdf0",
+    "builds/classic-ui/ClassicUI.addon32": "c7d67558ca8c12cfb8965c3b21c9c1cea018a66af6db327f7b4257129f88f9dc"
+  },
+  "captures": {
+    "engine-verified": {
+      "capture": "AOA_2026-10-28_12-46-21_0_EngineBefore.png",
+      "method": "Consecutive live frames with engine exhaust off/on; all other effects and HUD retained",
+      "width": 1920,
+      "height": 1200,
+      "changed_pixels_percent": 1.77,
+      "mean_absolute_channel_difference_0_255": 0.3605,
+      "before_sha256": "d2a709d42cbe819b733f69b907d4a571a13ec64002e8faa5f538daed120ff05a",
+      "after_sha256": "d4c64fff5ef15ee8a354323a1a548a420749666da4c13ac7b342f835f4284443",
+      "preset": {
+        "protectsky": "1",
+        "vibrance": "0.950000",
+        "contrast": "0.300000",
+        "shadowlift": "0.750000",
+        "exposure": "0.350000",
+        "colorgrade": "0.650000",
+        "vignette": "0.180000",
+        "sharpen": "0.220000",
+        "bloom": "0.650000",
+        "bloomthreshold": "0.400000",
+        "bloomradius": "2.500000",
+        "lightglow": "2.200000",
+        "lightcolor": "0.800000",
+        "lightstreaks": "2.200000",
+        "streaklength": "64.000000",
+        "streakthreshold": "0.720000",
+        "engineglow": "1.600000",
+        "splitpreview": "0"
+      }
+    },
+    "engine-motion-verified": {
+      "capture": "AOA_2026-10-28_12-46-45_0_EngineBefore.png",
+      "method": "Consecutive live frames with engine exhaust off/on; all other effects and HUD retained",
+      "width": 1920,
+      "height": 1200,
+      "changed_pixels_percent": 31.338,
+      "mean_absolute_channel_difference_0_255": 3.154,
+      "before_sha256": "9290933577f5b38156ef9ef6f537e8811d2678fe8294b7ee2b3d026970c50208",
+      "after_sha256": "31f3dd3b7fcdd09617a38d13ca16df253ef09575e75160767e3dcab99ab1f020",
+      "preset": {
+        "protectsky": "1",
+        "vibrance": "0.950000",
+        "contrast": "0.300000",
+        "shadowlift": "0.750000",
+        "exposure": "0.350000",
+        "colorgrade": "0.650000",
+        "vignette": "0.180000",
+        "sharpen": "0.220000",
+        "bloom": "0.650000",
+        "bloomthreshold": "0.400000",
+        "bloomradius": "2.500000",
+        "lightglow": "2.200000",
+        "lightcolor": "0.800000",
+        "lightstreaks": "2.200000",
+        "streaklength": "64.000000",
+        "streakthreshold": "0.720000",
+        "engineglow": "1.600000",
+        "splitpreview": "0"
+      }
+    },
+    "engine-ui-verified": {
+      "capture": "AOA_2026-10-28_12-46-21_0_UIOriginal.png",
+      "method": "Consecutive live frames with effects off/on and HUD present; moving objects may differ",
+      "width": 1920,
+      "height": 1200,
+      "changed_pixels_percent": 16.61,
+      "mean_absolute_channel_difference_0_255": 4.2323,
+      "before_sha256": "464225db78793097a7d753a9d79f4cb252ecb123510c359cd8b88d5c18c5950b",
+      "after_sha256": "7eb88dcddf7ae9c6da5a2a362fa03ac3abd112fce925d161ea85e15d71ac9859",
+      "preset": {
+        "protectsky": "1",
+        "vibrance": "0.950000",
+        "contrast": "0.300000",
+        "shadowlift": "0.750000",
+        "exposure": "0.350000",
+        "colorgrade": "0.650000",
+        "vignette": "0.180000",
+        "sharpen": "0.220000",
+        "bloom": "0.650000",
+        "bloomthreshold": "0.400000",
+        "bloomradius": "2.500000",
+        "lightglow": "2.200000",
+        "lightcolor": "0.800000",
+        "lightstreaks": "2.200000",
+        "streaklength": "64.000000",
+        "streakthreshold": "0.720000",
+        "engineglow": "1.600000",
+        "splitpreview": "0"
+      }
+    },
+    "engine-cockpit-verified": {
+      "capture": "AOA_2026-10-28_12-47-17_0_EngineBefore.png",
+      "method": "Consecutive live frames with engine exhaust off/on; all other effects and HUD retained",
+      "width": 1920,
+      "height": 1200,
+      "changed_pixels_percent": 28.242,
+      "mean_absolute_channel_difference_0_255": 0.8142,
+      "before_sha256": "c50d57a29524a4efed9cd4cb4982c840f073917cfc6ce0fe35fb2383e70b889c",
+      "after_sha256": "fe46e9d25af6c3acdc9686f1737717eb790729f756777a20464a9ad729a8adcc",
+      "preset": {
+        "protectsky": "1",
+        "vibrance": "0.950000",
+        "contrast": "0.300000",
+        "shadowlift": "0.750000",
+        "exposure": "0.350000",
+        "colorgrade": "0.650000",
+        "vignette": "0.180000",
+        "sharpen": "0.220000",
+        "bloom": "0.650000",
+        "bloomthreshold": "0.400000",
+        "bloomradius": "2.500000",
+        "lightglow": "2.200000",
+        "lightcolor": "0.800000",
+        "lightstreaks": "2.200000",
+        "streaklength": "64.000000",
+        "streakthreshold": "0.720000",
+        "engineglow": "1.600000",
+        "splitpreview": "0"
+      }
+    }
+  },
+  "isolated_exhaust_check": {
+    "difference_bounds": [
+      777,
+      822,
+      1143,
+      972
+    ],
+    "regions": {
+      "briefing": {
+        "rectangle": [
+          815,
+          425,
+          1100,
+          785
+        ],
+        "maximum_channel_difference": 0
+      },
+      "damage": {
+        "rectangle": [
+          10,
+          170,
+          245,
+          347
+        ],
+        "maximum_channel_difference": 0
+      },
+      "systems": {
+        "rectangle": [
+          1660,
+          0,
+          1908,
+          205
+        ],
+        "maximum_channel_difference": 0
+      },
+      "radar": {
+        "rectangle": [
+          900,
+          1110,
+          1040,
+          1170
+        ],
+        "maximum_channel_difference": 0
+      },
+      "left_nebula": {
+        "rectangle": [
+          10,
+          680,
+          180,
+          840
+        ],
+        "maximum_channel_difference": 0
+      },
+      "right_nebula": {
+        "rectangle": [
+          1550,
+          300,
+          1850,
+          700
+        ],
+        "maximum_channel_difference": 0
+      }
+    }
+  },
+  "ui_preservation_check": {
+    "difference_bounds": [
+      0,
+      229,
+      1696,
+      1200
+    ],
+    "regions": {
+      "briefing": {
+        "rectangle": [
+          815,
+          425,
+          1100,
+          785
+        ],
+        "maximum_channel_difference": 0
+      },
+      "damage": {
+        "rectangle": [
+          10,
+          170,
+          245,
+          347
+        ],
+        "maximum_channel_difference": 0
+      },
+      "systems": {
+        "rectangle": [
+          1660,
+          0,
+          1908,
+          205
+        ],
+        "maximum_channel_difference": 0
+      },
+      "radar": {
+        "rectangle": [
+          900,
+          1110,
+          1040,
+          1170
+        ],
+        "maximum_channel_difference": 0
+      },
+      "left_nebula": {
+        "rectangle": [
+          10,
+          680,
+          180,
+          840
+        ],
+        "maximum_channel_difference": 0
+      },
+      "right_nebula": {
+        "rectangle": [
+          1550,
+          300,
+          1850,
+          700
+        ],
+        "maximum_channel_difference": 0
+      }
+    }
+  },
+  "verified": [
+    "Original shader compiled successfully in the live 32-bit client.",
+    "Entered offline flight with computer use; F1 resumes training; F2 toggles chase.",
+    "Exhaust follows named Trail01/Trail02 anchors on Ym Khtat.",
+    "Moving capture after player world Z exceeded 12000 retained engine-start UVs at approximately (0.541,0.773) and (0.458,0.773); tips extended from Y 0.807 at idle to 0.872 in motion.",
+    "Native camera record was 1-2 ms older than game clock during moving frames; accepts ages up to 100 ms.",
+    "F2 cockpit capture recorded cached chase node 0; emitter uniforms clear to zero.",
+    "4 installer/restore tests passed; main experiment check reports enabled and unchanged client."
+  ],
+  "limits": [
+    "Up to two player engines; existing F2 chase patch only.",
+    "Length reacts to measured forward motion, not direct throttle.",
+    "Screen-space plume representation; world depth masks occlusion, no geometry or dynamic illumination.",
+    "Moving comparison includes scene motion between frames; use stationary engine-verified report to isolate the effect.",
+    "New cinematic-camera patch, other models, multiplayer and performance benchmarking not verified."
+  ]
+}

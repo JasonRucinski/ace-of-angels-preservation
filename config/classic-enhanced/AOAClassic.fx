@@ -34,6 +34,13 @@ uniform float StreakLength < ui_type = "slider"; ui_min = 16.0; ui_max = 120.0;
     ui_label = "Streak reach (pixels at 1920 wide)"; > = 64.0;
 uniform float StreakThreshold < ui_type = "slider"; ui_min = 0.5; ui_max = 0.95;
     ui_label = "Streak highlight threshold"; > = 0.72;
+uniform bool EngineCaptureOff < source = "aoa_engine_capture"; > = false;
+uniform float EngineGlow < ui_type = "slider"; ui_min = 0.0; ui_max = 3.0;
+    ui_label = "Engine exhaust"; > = 1.6;
+uniform float4 EngineStart0 < source = "aoa_engine"; > = 0.0;
+uniform float4 EngineStart1 < source = "aoa_engine"; > = 0.0;
+uniform float4 EngineEnd0 < source = "aoa_engine"; > = 0.0;
+uniform float4 EngineEnd1 < source = "aoa_engine"; > = 0.0;
 uniform bool SplitPreview < ui_label = "Compare: original left / enhanced right"; > = false;
 
 texture BackBuffer : COLOR;
@@ -172,6 +179,28 @@ float4 StreakBlurPS(float4 position : SV_Position, float2 uv : TEXCOORD) : SV_Ta
     return float4(c / total, 1.0);
 }
 
+// Projected engine volumes, depth-tested against the unmodified world depth.
+float3 EnginePlume(float2 uv, float4 start, float4 end)
+{
+    if (!PreUIActive || EngineCaptureOff || EngineGlow <= 0.0 || start.w <= 0.0 || end.w <= 0.0) return 0.0;
+    float2 aspect = float2(float(BUFFER_WIDTH) / float(BUFFER_HEIGHT), 1.0);
+    float2 axis = (end.xy - start.xy) * aspect;
+    float2 offset = (uv - start.xy) * aspect;
+    float length2 = max(dot(axis, axis), 0.000001);
+    float t = clamp(dot(offset, axis) / length2, 0.0, 1.0);
+    float radius = lerp(start.w, end.w * 0.15, t);
+    float distance = length(offset - t * axis) / max(radius, 0.0001);
+    if (distance > 3.5) return 0.0;
+    float depth = lerp(start.z, end.z, t);
+    if (tex2D(WorldDepthSampler, uv).r + 0.000015 < depth) return 0.0;
+    float tail = pow(1.0 - t, 0.65);
+    float core = exp(-distance * distance * 8.0) * tail;
+    float flame = exp(-distance * distance * 1.5) * tail;
+    float halo = exp(-distance * distance * 0.35) * tail;
+    return EngineGlow * (core * float3(0.85, 0.95, 1.0)
+        + flame * float3(0.04, 0.42, 1.0) + halo * float3(0.01, 0.08, 0.32));
+}
+
 float4 FinishPS(float4 position : SV_Position, float2 uv : TEXCOORD) : SV_Target
 {
     float4 original = tex2D(Scene, uv);
@@ -228,6 +257,8 @@ float4 FinishPS(float4 position : SV_Position, float2 uv : TEXCOORD) : SV_Target
             + tex2D(StreakBSampler, uv - streakStep).rgb) * 0.25;
         c = 1.0 - (1.0 - c) * exp(-streak * LightStreaks);
     }
+    float3 exhaust = EnginePlume(uv, EngineStart0, EngineEnd0) + EnginePlume(uv, EngineStart1, EngineEnd1);
+    c = 1.0 - (1.0 - c) * exp(-exhaust);
     return float4(c, original.a);
 }
 
