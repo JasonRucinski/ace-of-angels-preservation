@@ -63,7 +63,7 @@ def prepare(source, destination, setup):
     wrapper_config = set_key((source / "dgVoodoo.conf").read_bytes().decode("latin1"),
                              "[General]", "OutputAPI", "d3d11_fl11_0").encode("latin1")
     assets = {name: (CONFIG / name).read_bytes()
-              for name in ("AOAClassic.fx", "ClassicEnhanced.ini", "ReShade.ini")}
+              for name in ("AOAClassic.fx", "ClassicEnhanced.ini", "Subtle.ini", "ReShade.ini")}
     source_hashes = {str(p.relative_to(source)): digest(p)
                      for p in source.rglob("*") if p.is_file()}
     shutil.copytree(source, destination)
@@ -74,7 +74,7 @@ def prepare(source, destination, setup):
     (destination / ACTIVE).write_bytes(runtime)
     (destination / "classic-enhanced-shaders").mkdir()
     (destination / "classic-enhanced-shaders/AOAClassic.fx").write_bytes(assets["AOAClassic.fx"])
-    for name in ("ClassicEnhanced.ini", "ReShade.ini"):
+    for name in ("ClassicEnhanced.ini", "Subtle.ini", "ReShade.ini"):
         (destination / name).write_bytes(assets[name])
     record = {
         "schema": 1, "source": str(source), "destination": str(destination),

@@ -1,0 +1,88 @@
+{
+  "date": "2026-10-28",
+  "revision": "Dramatic preset requested after subtle pass",
+  "shader_sha256": "c725cd932a23407cba2b60a72e38e8b2ea05830256b46c47e4a2d498afc8af4f",
+  "checks": [
+    "x86 D3D11 smoke shader compilation and 240 presented frames",
+    "Live offline game shader compilation",
+    "Three native same-frame before/after pairs; all six report PNGs byte-exact",
+    "Both presets explicitly specify every shader uniform"
+  ],
+  "pairs": [
+    {
+      "capture": "AOA_2026-10-28_08-30-34_0",
+      "method": "ReShade before/after processing of the same rendered frame",
+      "width": 1920,
+      "height": 1200,
+      "changed_pixels_percent": 71.05,
+      "mean_absolute_channel_difference_0_255": 16.4689,
+      "before_sha256": "e86b271dd83245c96960dc94bf89eb2227c96ee62c10d48f44850230e5d1d6eb",
+      "after_sha256": "349375f3de16fdd07ed0de36fad8a92bc51202705d601a852b620cd553684560",
+      "preset": {
+        "vibrance": "0.950000",
+        "contrast": "0.300000",
+        "shadowlift": "0.750000",
+        "exposure": "0.350000",
+        "colorgrade": "0.650000",
+        "vignette": "0.180000",
+        "sharpen": "0.220000",
+        "bloom": "0.650000",
+        "bloomthreshold": "0.400000",
+        "bloomradius": "2.500000",
+        "splitpreview": "0"
+      }
+    },
+    {
+      "capture": "AOA_2026-10-28_08-30-40_0",
+      "method": "ReShade before/after processing of the same rendered frame",
+      "width": 1920,
+      "height": 1200,
+      "changed_pixels_percent": 70.92,
+      "mean_absolute_channel_difference_0_255": 16.4287,
+      "before_sha256": "0251eb299b0b3d67027a2e8a9bf3960f2b9ad082fc575361a72f3e83fecdfd66",
+      "after_sha256": "a740d59d3b0767cd817616938746799ac58a58735777b9904c16028b562bf6cd",
+      "preset": {
+        "vibrance": "0.950000",
+        "contrast": "0.300000",
+        "shadowlift": "0.750000",
+        "exposure": "0.350000",
+        "colorgrade": "0.650000",
+        "vignette": "0.180000",
+        "sharpen": "0.220000",
+        "bloom": "0.650000",
+        "bloomthreshold": "0.400000",
+        "bloomradius": "2.500000",
+        "splitpreview": "0"
+      }
+    },
+    {
+      "capture": "AOA_2026-10-28_08-30-46_0",
+      "method": "ReShade before/after processing of the same rendered frame",
+      "width": 1920,
+      "height": 1200,
+      "changed_pixels_percent": 70.92,
+      "mean_absolute_channel_difference_0_255": 16.4291,
+      "before_sha256": "bbe1591bd3e2a8866cebec0cc9b257955ff0112fbb5e43c1f191882a64e97b74",
+      "after_sha256": "675493d551784f38b055904a0803c7fbdb26f2848221509dbf8ecc208bb81f74",
+      "preset": {
+        "vibrance": "0.950000",
+        "contrast": "0.300000",
+        "shadowlift": "0.750000",
+        "exposure": "0.350000",
+        "colorgrade": "0.650000",
+        "vignette": "0.180000",
+        "sharpen": "0.220000",
+        "bloom": "0.650000",
+        "bloomthreshold": "0.400000",
+        "bloomradius": "2.500000",
+        "splitpreview": "0"
+      }
+    }
+  ],
+  "visual_review": "First pair inspected: much brighter station hull/asteroids, vivid teal/blue nebula and green/yellow ship, readable HUD; source nebula banding becomes more visible",
+  "limitations": [
+    "Single camera view with briefing panel",
+    "Filter affects HUD as well as world",
+    "No frame-time benchmark"
+  ]
+}

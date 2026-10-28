@@ -28,6 +28,12 @@ pairs. Initial visual inspection confirms a subtle color/detail change; live
 key toggles, broader HUD/color acceptance, and performance remain unverified.
 See [experiment guide](docs/classic-enhanced.md). Not enabled in normal setup.
 
+Follow-up: user requested a dramatic effect. Default experiment now lifts
+shadows and exposure, increases vibrance/bloom, and adds teal/warm grading and
+a mild vignette. Three new live same-frame pairs captured at 1920x1200 and
+inspected; station/nebula visibility and color change are obvious. Old look is
+preserved as Subtle.ini. Performance remains unbenchmarked.
+
 Nine-gate expansion (27 Oct 2026): `--warp-trial` and the host checkbox now
 restore all nine Arena1a warp gates, adding eight placements. Slots 71–79
 replace the old single slot 85; maximum practice targets becomes 69. Original

@@ -1,9 +1,9 @@
 # Classic Enhanced visual experiment
 
-An opt-in color filter for Ace of Angels 2.9.2: slightly richer muted colors,
-gentle contrast, bounded sharpening, and a faint glow around bright pixels.
-The original palette stays neutral. This is an SDR experiment; it does not
-add HDR lighting or new texture detail.
+An opt-in color filter for Ace of Angels 2.9.2. The default now targets a
+dramatic cinematic look: lifted shadow detail, stronger color and contrast,
+teal shadows / warm highlights, wider bloom, and a light edge vignette.
+This is an SDR experiment; it does not add HDR lighting or new texture detail.
 
 The experiment uses the standard 32-bit ReShade 6.8.0 runtime after dgVoodoo2.
 Our self-contained shader needs no shader packs, depth access, or add-ons.
@@ -24,17 +24,23 @@ Choose **Play Offline** and enter training for the first comparison.
 - **Home** opens the ReShade controls. Enable **Compare: original left /
   enhanced right** to inspect both versions of the same frame. Turn it off
   afterward, and close the overlay with Home before flying.
-- Adjust Color vibrance, Gentle contrast, Detail sharpening, or Highlight glow
+- Adjust Color vibrance, Shadow detail, Contrast, or Highlight glow
   in that overlay. These changes belong to the experiment's local preset.
 
 Start by comparing a shadowed hull, a bright weapon/engine effect, and the
 smallest HUD text. Check distant targets remain visible, dark space stays
 dark, highlights retain their color, and turning/firing remains smooth.
 
-The defaults are vibrance **0.14**, contrast **0.08**, sharpening **0.12**,
-glow **0.06**, and glow threshold **0.78**. The glow uses two quarter-resolution
-targets; sharpening is capped at 0.015 per channel to limit halos. These are
-conservative starting values, not visually approved settings.
+The dramatic defaults are vibrance **0.95**, contrast **0.30**, shadow lift
+**0.75**, exposure **+0.35 stops**, color grade **0.65**, vignette **0.18**,
+sharpening **0.22**, glow **0.65**, threshold **0.40**, and glow spread **2.5**.
+The glow uses two quarter-resolution targets; sharpening stays capped at
+0.015 per channel to limit halos. Exact black stays black before bloom.
+
+The original restrained look is preserved in `Subtle.ini`. Select that preset
+in the ReShade overlay, or copy it over `ClassicEnhanced.ini` while the game
+is closed. The new shadow, exposure, grade, and vignette controls are disabled
+in that preset, and the original glow radius is restored.
 
 ## Capture an exact before/after comparison
 
@@ -126,6 +132,24 @@ previous setup, close the experiment and launch your original game folder.
 Pilots/settings changed in the experiment are not synchronized back.
 
 ## Verification status — 28 October 2026
+
+### Dramatic revision
+
+After feedback that the first pass was too subtle, the dramatic preset above
+became the default. It compiled in the x86 D3D11 smoke harness and inside the
+offline game, then produced three new 1920 × 1200 same-frame capture pairs.
+The first pair visibly reveals the station hull and nebula, brightens asteroids,
+and gives the ship a much stronger green/yellow finish. HUD text stays readable
+in this view, though the filter also increases HUD brightness and reveals
+banding in the original nebula texture. Performance is not benchmarked.
+
+New local reports are under `work/classic-enhanced/`:
+`AOA_2026-10-28_08-30-34_0/index.html`,
+`AOA_2026-10-28_08-30-40_0/index.html`, and
+`AOA_2026-10-28_08-30-46_0/index.html`.
+See [dramatic capture evidence](../evidence/2.9.2/classic_enhanced_dramatic_20261028.json).
+
+### Original subtle revision
 
 - Separate local game copy prepared; source hashes and copied executable matched.
 - ReShade FX compiled successfully in a 32-bit D3D11 GPU smoke harness at
