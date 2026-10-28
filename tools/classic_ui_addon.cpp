@@ -14,6 +14,9 @@ static unsigned frames=0, calls=0, capture_step=0;
 static bool capture_enabled=false;
 static unsigned engine_capture_step=0;
 static bool fleet_capture=false;
+static unsigned haze_capture_step=0;
+static bool haze_camera_valid=false,haze_seeded=false;
+static float haze_origin[3],haze_right[3],haze_up[3],haze_forward[3],haze_projection[4],haze_centers[2][3];
 static unsigned char patch[6];
 static ID3D11ShaderResourceView *world_depth=nullptr;
 static const unsigned char original[6]={0x8b,0x8e,0x98,0x01,0x00,0x00};
@@ -63,10 +66,11 @@ static const ExhaustProfile *exhaust_profile(uintptr_t node){
  return nullptr;
 }
 static void update_engines(){
+ haze_camera_valid=false;
  engine_count=player_engine_count=0;
  memset(engine_start,0,sizeof(engine_start));memset(engine_end,0,sizeof(engine_end));
  uintptr_t app=pointer(0x5e6e58),world=pointer(0x5e7728),player=pointer(world+0xd3448);
- if(!app || !world || pointer(app+0x20)!=0x44afd0)return;
+ if(!app || !world || pointer(app+0x20)!=0x44afd0){haze_seeded=false;return;}
  uintptr_t gfx=pointer(app+0x138);auto device=(void*)pointer(gfx+0x188);
  if(!device)return;
  // IDirect3DDevice7::GetTransform is vtable slot 12 (legacy d3d.h).
@@ -74,6 +78,29 @@ static void update_engines(){
  auto get_transform=(GetTransform)((void**)*(void***)device)[12];
  float view[16],proj[16];
  if(FAILED(get_transform(device,2,view)) || FAILED(get_transform(device,3,proj)))return;
+ // Reconstruct the native camera from its rigid world-to-view transform.
+ // Pockets are placed once on flight entry; they never follow the camera.
+ for(float v:view)if(!std::isfinite(v))return;
+ for(float v:proj)if(!std::isfinite(v))return;
+ if(fabsf(proj[0])<0.00001f || fabsf(proj[5])<0.00001f || fabsf(proj[14])<0.00001f)return;
+ for(int j=0;j<3;++j){
+  haze_right[j]=view[j*4];haze_up[j]=view[j*4+1];haze_forward[j]=view[j*4+2];
+  haze_origin[j]=-view[12]*haze_right[j]-view[13]*haze_up[j]-view[14]*haze_forward[j];
+ }
+ haze_projection[0]=1/proj[0];haze_projection[1]=1/proj[5];
+ haze_projection[2]=proj[10];haze_projection[3]=proj[14];
+ if(!haze_seeded){
+  for(int j=0;j<3;++j){
+   haze_centers[0][j]=haze_origin[j]-6500*haze_right[j]-2000*haze_up[j]+18000*haze_forward[j];
+   haze_centers[1][j]=haze_origin[j]+26000*haze_right[j]+7000*haze_up[j]+60000*haze_forward[j];
+  }
+  haze_seeded=true;
+ }
+ haze_camera_valid=true;
+ if(haze_capture_step){
+  char line[240];sprintf(line,"haze camera=%.1f,%.1f,%.1f projection=%.6f,%.6f,%.6f,%.6f",haze_origin[0],haze_origin[1],haze_origin[2],haze_projection[0],haze_projection[1],haze_projection[2],haze_projection[3]);log(line);
+  sprintf(line,"haze centers=%.1f,%.1f,%.1f / %.1f,%.1f,%.1f",haze_centers[0][0],haze_centers[0][1],haze_centers[0][2],haze_centers[1][0],haze_centers[1][1],haze_centers[1][2]);log(line);
+ }
  // Pilot and dynamic-object tables are read in bounded copies. Only explicitly
  // profiled capital models are admitted from the latter; HUD previews stay out.
  static unsigned char pilots[pilot_slots*0x3b0],objects[object_slots*0x360];
@@ -141,6 +168,15 @@ static void update_uniforms(){
  if(strcmp(name,"PreUIActive")==0)rt->set_uniform_value_bool(v,true);
  else if(strcmp(name,"EngineCaptureOff")==0)rt->set_uniform_value_bool(v,engine_capture_step==1 && !fleet_capture);
  else if(strcmp(name,"FleetCaptureOff")==0)rt->set_uniform_value_bool(v,engine_capture_step==1 && fleet_capture);
+ else if(strcmp(name,"HazeCaptureOff")==0)rt->set_uniform_value_bool(v,haze_capture_step==1);
+ else if(strcmp(name,"HazeCameraValid")==0)rt->set_uniform_value_bool(v,haze_camera_valid);
+ else if(strcmp(name,"HazeCameraOrigin")==0)rt->set_uniform_value_float(v,haze_origin,3);
+ else if(strcmp(name,"HazeCameraRight")==0)rt->set_uniform_value_float(v,haze_right,3);
+ else if(strcmp(name,"HazeCameraUp")==0)rt->set_uniform_value_float(v,haze_up,3);
+ else if(strcmp(name,"HazeCameraForward")==0)rt->set_uniform_value_float(v,haze_forward,3);
+ else if(strcmp(name,"HazeProjection")==0)rt->set_uniform_value_float(v,haze_projection,4);
+ else if(strcmp(name,"HazeCenterA")==0)rt->set_uniform_value_float(v,haze_centers[0],3);
+ else if(strcmp(name,"HazeCenterB")==0)rt->set_uniform_value_float(v,haze_centers[1],3);
  else if(strcmp(name,"EngineCount")==0)rt->set_uniform_value_uint(v,engine_count);
  else if(strcmp(name,"PlayerEngineCount")==0)rt->set_uniform_value_uint(v,player_engine_count);
  else if(strcmp(name,"EngineStarts")==0)rt->set_uniform_value_float(v,&engine_start[0][0],max_engines*4);
@@ -214,6 +250,13 @@ static void presenting(reshade::api::command_queue *q,reshade::api::swapchain *s
 }
 static void presented(reshade::api::effect_runtime *r){
  runtime=r;++frames;
+ // The world hook does not run in menus; reset placement here on flight exit.
+ if(pointer(pointer(0x5e6e58)+0x20)!=0x44afd0)haze_seeded=false;
+ if(haze_capture_step==1){r->save_screenshot("HazeBefore");haze_capture_step=2;applied=false;return;}
+ if(haze_capture_step==2){r->save_screenshot("HazeAfter");haze_capture_step=0;applied=false;return;}
+ if(capture_step==0 && engine_capture_step==0 && GetFileAttributesA("classic-haze-capture.flag")!=INVALID_FILE_ATTRIBUTES){
+  DeleteFileA("classic-haze-capture.flag");haze_capture_step=1;applied=false;return;
+ }
  if(engine_capture_step==1){r->save_screenshot(fleet_capture?"FleetBefore":"EngineBefore");engine_capture_step=2;}
  else if(engine_capture_step==2){r->save_screenshot(fleet_capture?"FleetAfter":"EngineAfter");engine_capture_step=0;}
  else if(capture_step==0 && GetFileAttributesA("classic-fleet-capture.flag")!=INVALID_FILE_ATTRIBUTES){

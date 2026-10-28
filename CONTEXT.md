@@ -16,6 +16,15 @@ a search-engine summary only.
 
 ## 2. Status
 
+Latest visual effect (28 Oct): local nebula haze adds two bounded teal/violet
+gas pockets placed on flight entry, then fixed in world space. Native camera
+and depth drive surface-clipped integration. Density 1.2 by default; sky haze
+is a separate opt-in, off by default. HUD preserved in both modes. Haze-only
+capture: `classic_ui.py capture --haze`. Live compiled and verified stationary
+and moving; six sampled HUD/sky rectangles unchanged in the default capture.
+Reports: work/classic-enhanced/haze-verified, haze-clouds, haze-motion.
+Evidence: evidence/2.9.2/classic_enhanced_haze_20261028.json.
+
 Latest visual extension (28 Oct): exhaust now supports explicitly profiled
 capital models (ZCS, Tug1, ZCVS, ztugcargo), fallback fighter outlets (Eagle,
 Janha Vari, Vermok), and underscore-style Trail/tail anchors. Retrofit outlets

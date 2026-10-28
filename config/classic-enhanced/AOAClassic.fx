@@ -44,6 +44,19 @@ uniform uint EngineCount < source = "aoa_engine"; > = 0;
 uniform uint PlayerEngineCount < source = "aoa_engine"; > = 0;
 uniform float4 EngineStarts[64] < source = "aoa_engine"; >;
 uniform float4 EngineEnds[64] < source = "aoa_engine"; >;
+uniform float NebulaHaze < ui_type = "slider"; ui_min = 0.0; ui_max = 3.0;
+    ui_label = "Local nebula haze"; ui_tooltip = "World-anchored gas pockets. Requires the UI preservation add-on. Zero disables haze."; > = 1.2;
+uniform bool HazeOnSky < ui_label = "Show haze over the starfield";
+    ui_tooltip = "Off preserves original sky pixels; on shows gas where a local pocket intersects the view."; > = false;
+uniform bool HazeCaptureOff < source = "aoa_haze"; > = false;
+uniform bool HazeCameraValid < source = "aoa_haze"; > = false;
+uniform float3 HazeCameraOrigin < source = "aoa_haze"; >;
+uniform float3 HazeCameraRight < source = "aoa_haze"; >;
+uniform float3 HazeCameraUp < source = "aoa_haze"; >;
+uniform float3 HazeCameraForward < source = "aoa_haze"; >;
+uniform float4 HazeProjection < source = "aoa_haze"; >;
+uniform float3 HazeCenterA < source = "aoa_haze"; >;
+uniform float3 HazeCenterB < source = "aoa_haze"; >;
 uniform bool SplitPreview < ui_label = "Compare: original left / enhanced right"; > = false;
 
 texture BackBuffer : COLOR;
@@ -228,6 +241,52 @@ float4 EnginePS(float4 position : SV_Position, float2 uv : TEXCOORD0,
     return float4(EnginePlume(uv, EngineStarts[emitter], EngineEnds[emitter]) * strength, 0.0);
 }
 
+// Integrate a bounded ellipsoid along the camera ray up to the visible surface.
+// Smooth world-space density has no screen-space animation or temporal shimmer.
+float HazeOpticalDepth(float3 ray, float surface, float3 center, float3 radii)
+{
+    float3 origin = (HazeCameraOrigin - center) / radii;
+    float3 direction = ray / radii;
+    float a = dot(direction, direction);
+    float b = dot(origin, direction);
+    float discriminant = b*b - a*(dot(origin, origin)-1.0);
+    if (discriminant <= 0.0) return 0.0;
+    float root = sqrt(discriminant);
+    float begin = max(500.0, (-b-root)/a);
+    float end = min(surface, (-b+root)/a);
+    if (end <= begin) return 0.0;
+    float step = (end-begin)/8.0;
+    float density = 0.0;
+    [unroll] for (int i=0; i<8; ++i)
+    {
+        float t = begin + (float(i)+0.5)*step;
+        float3 local = origin + direction*t;
+        float edge = saturate(1.0-dot(local,local));
+        float3 p = (HazeCameraOrigin + ray*t-center)*0.00032;
+        float wisps = 0.62 + 0.20*sin(p.x+0.7*sin(p.z))*sin(p.y-p.z*0.6)
+                           + 0.12*sin(p.z*2.1+p.x*0.8);
+        density += edge*edge*wisps;
+    }
+    return density*step*length(ray)*0.000065*NebulaHaze;
+}
+
+float3 ApplyNebulaHaze(float3 color, float2 uv)
+{
+    if (!PreUIActive || !HazeCameraValid || HazeCaptureOff || NebulaHaze <= 0.0) return color;
+    float depth = tex2D(WorldDepthSampler,uv).r;
+    bool sky = depth >= 0.999999;
+    if (sky && !HazeOnSky) return color;
+    float surface = sky ? 180000.0 : clamp(HazeProjection.w/(depth-HazeProjection.z),0.0,180000.0);
+    float2 xy = (uv*float2(2.0,-2.0)+float2(-1.0,1.0))*HazeProjection.xy;
+    float3 ray = HazeCameraForward + xy.x*HazeCameraRight + xy.y*HazeCameraUp;
+    float teal = HazeOpticalDepth(ray,surface,HazeCenterA,float3(14000,8500,13000));
+    float violet = HazeOpticalDepth(ray,surface,HazeCenterB,float3(18000,10000,24000));
+    float opticalDepth = teal+violet;
+    float3 gas = (teal*float3(0.10,0.34,0.40)+violet*float3(0.25,0.14,0.37))/max(opticalDepth,0.00001);
+    // Bounded extinction preserves readability even at maximum density.
+    return lerp(color,gas,min(0.72,1.0-exp(-opticalDepth)));
+}
+
 float4 FinishPS(float4 position : SV_Position, float2 uv : TEXCOORD) : SV_Target
 {
     float4 original = tex2D(Scene, uv);
@@ -286,6 +345,7 @@ float4 FinishPS(float4 position : SV_Position, float2 uv : TEXCOORD) : SV_Target
     }
     float3 exhaust = tex2D(EngineSampler, uv).rgb;
     c = 1.0 - (1.0 - c) * exp(-exhaust);
+    c = ApplyNebulaHaze(c,uv);
     return float4(c, original.a);
 }
 

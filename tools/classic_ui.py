@@ -124,21 +124,23 @@ def restore(folder):
     return check(folder)
 
 
-def capture(folder, output, engines=False, fleet=False):
+def capture(folder, output, engines=False, fleet=False, haze=False):
     from compare_classic_capture import build as report
     folder = folder.resolve()
     if not (folder / ADDON).is_file():
         raise ValueError("UI add-on is not installed")
     captures = folder / "comparison-captures"
     existing = set(captures.glob("*.png"))
-    (folder / ("classic-fleet-capture.flag" if fleet else "classic-engine-capture.flag" if engines else "classic-ui-capture.flag")).touch()
+    if sum((engines, fleet, haze)) > 1:
+        raise ValueError("select only one isolated effect for capture")
+    (folder / ("classic-haze-capture.flag" if haze else "classic-fleet-capture.flag" if fleet else "classic-engine-capture.flag" if engines else "classic-ui-capture.flag")).touch()
     deadline = time.monotonic() + 20
     while time.monotonic() < deadline:
-        before = sorted(p for p in captures.glob("*_FleetBefore.png" if fleet else "*_EngineBefore.png" if engines else "*_UIOriginal.png") if p not in existing)
-        after = sorted(p for p in captures.glob("*_FleetAfter.png" if fleet else "*_EngineAfter.png" if engines else "*_UIProtected.png") if p not in existing)
+        before = sorted(p for p in captures.glob("*_HazeBefore.png" if haze else "*_FleetBefore.png" if fleet else "*_EngineBefore.png" if engines else "*_UIOriginal.png") if p not in existing)
+        after = sorted(p for p in captures.glob("*_HazeAfter.png" if haze else "*_FleetAfter.png" if fleet else "*_EngineAfter.png" if engines else "*_UIProtected.png") if p not in existing)
         if before and after:
             try:
-                return report(before[-1], after[-1], output, sequential_ui=True, engines=engines, fleet=fleet)
+                return report(before[-1], after[-1], output, sequential_ui=True, engines=engines, fleet=fleet, haze=haze)
             except (OSError, ValueError):
                 if output.exists():
                     raise
@@ -155,6 +157,7 @@ def main():
     p.add_argument("--addon", type=Path)
     p.add_argument("--output", type=Path)
     capture_group = p.add_mutually_exclusive_group()
+    capture_group.add_argument("--haze", action="store_true", help="capture local nebula haze off/on, keeping other effects enabled")
     capture_group.add_argument("--fleet", action="store_true", help="capture nearby exhaust off/on, retaining own exhaust")
     capture_group.add_argument("--engines", action="store_true", help="capture exhaust off/on, keeping other effects enabled")
     a = p.parse_args()
@@ -170,7 +173,7 @@ def main():
         elif a.action == "restore":
             result = restore(a.folder)
         else:
-            result = capture(a.folder, a.output or ROOT / "work/classic-enhanced" / ("ui-" + str(time.time_ns())), engines=a.engines, fleet=a.fleet)
+            result = capture(a.folder, a.output or ROOT / "work/classic-enhanced" / ("ui-" + str(time.time_ns())), engines=a.engines, fleet=a.fleet, haze=a.haze)
         print(json.dumps(result, indent=2))
     except (OSError, ValueError, KeyError, subprocess.CalledProcessError) as error:
         p.exit(1, f"Classic UI: {error}\n")

@@ -28,12 +28,14 @@ def latest_pair(folder):
     return max(pairs, key=lambda pair: pair[1].stat().st_mtime_ns)
 
 
-def build(before, after, output, *, sequential_ui=False, engines=False, fleet=False):
+def build(before, after, output, *, sequential_ui=False, engines=False, fleet=False, haze=False):
     if output.exists():
         raise ValueError("output already exists; select a new folder to preserve earlier captures")
-    suffixes = ("_FleetBefore.png", "_FleetAfter.png") if fleet else ("_EngineBefore.png", "_EngineAfter.png") if engines else ("_UIOriginal.png", "_UIProtected.png")
-    if (engines or fleet) and not sequential_ui:
-        raise ValueError("engine comparison requires consecutive UI-preserved captures")
+    if sum((engines, fleet, haze)) > 1:
+        raise ValueError("select only one isolated effect for capture")
+    suffixes = ("_HazeBefore.png", "_HazeAfter.png") if haze else ("_FleetBefore.png", "_FleetAfter.png") if fleet else ("_EngineBefore.png", "_EngineAfter.png") if engines else ("_UIOriginal.png", "_UIProtected.png")
+    if (engines or fleet or haze) and not sequential_ui:
+        raise ValueError("isolated effect comparison requires consecutive UI-preserved captures")
     if sequential_ui and not (before.name.endswith(suffixes[0]) and after.name.endswith(suffixes[1])):
         raise ValueError("expected the UI add-on's original/protected captures")
     if not sequential_ui and before.name.removesuffix("_Before.png") != after.name.removesuffix("_After.png"):
@@ -63,7 +65,7 @@ def build(before, after, output, *, sequential_ui=False, engines=False, fleet=Fa
         raise ValueError("split preview was enabled; disable it before capturing a full-frame comparison")
     record = {
         "capture": before.name.removesuffix("_Before.png"),
-        "method": ("Consecutive live frames with nearby ship exhaust off/on; own exhaust, other effects and HUD retained" if fleet else "Consecutive live frames with engine exhaust off/on; all other effects and HUD retained" if engines else "Consecutive live frames with effects off/on and HUD present; moving objects may differ"
+        "method": ("Consecutive live frames with local nebula haze off/on; all other effects and HUD retained" if haze else "Consecutive live frames with nearby ship exhaust off/on; own exhaust, other effects and HUD retained" if fleet else "Consecutive live frames with engine exhaust off/on; all other effects and HUD retained" if engines else "Consecutive live frames with effects off/on and HUD present; moving objects may differ"
                    if sequential_ui else "ReShade before/after processing of the same rendered frame"),
         "width": width, "height": height,
         "changed_pixels_percent": round(changed * 100 / (width * height), 3),
@@ -116,6 +118,11 @@ document.getElementById('line').style.left = e.target.value + '%';
     if fleet:
         page = page.replace("Engine exhaust", "Nearby ship exhaust").replace("engine exhaust", "nearby ship exhaust")
         page = page.replace("all other effects and the UI retained", "own exhaust, other effects and the UI retained")
+    if haze:
+        page = page.replace("<h1>Classic Enhanced</h1>", "<h1>Local nebula haze</h1>")
+        page = page.replace("<figcaption>Original</figcaption>", "<figcaption>Previous lighting — haze off</figcaption>")
+        page = page.replace("<figcaption>Classic Enhanced</figcaption>", "<figcaption>Local nebula haze on</figcaption>")
+        page = page.replace("Consecutive live captures with the UI preserved.", "Local nebula haze off/on; all other effects and the UI retained.")
     caption = f"{width} × {height} · {record['changed_pixels_percent']}% of pixels changed · {record['capture']}"
     page = page.replace("__CAPTION__", html.escape(caption)).replace("__RECORD__", html.escape(json.dumps(record, indent=2)))
     (output / "index.html").write_text(page, encoding="utf-8")

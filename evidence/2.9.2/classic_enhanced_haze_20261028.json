@@ -1,0 +1,237 @@
+{
+  "date": "2026-10-28",
+  "revision": "Local nebula haze",
+  "hashes": {
+    "tools/classic_ui_addon.cpp": "a060a258161a8f4b9c496b8e89cb89bd4fc4417a7397558018b31a9541c25896",
+    "config/classic-enhanced/AOAClassic.fx": "a181d48ad01625433c3c7546a70179cfcf81c110deb54dc9dff94bbb3859e3f8",
+    "builds/classic-ui/ClassicUI.addon32": "9185c5ef5ce2ed4518fae942e68ebd69601ff55adb6f88e71adce90be64e872a",
+    "tools/classic_ui.py": "0072661214a4a2b615013cd4a5472b045e33c5f82fc2f3530c186207c039d3a0",
+    "tools/compare_classic_capture.py": "f4cdf2b2bfb4c6ee5249c0177cc5b04b44ebf175e4d1fd528293de1f12959c49"
+  },
+  "captures": {
+    "haze-verified": {
+      "capture": "AOA_2026-10-28_13-33-30_0_HazeBefore.png",
+      "method": "Consecutive live frames with local nebula haze off/on; all other effects and HUD retained",
+      "width": 1920,
+      "height": 1200,
+      "changed_pixels_percent": 14.565,
+      "mean_absolute_channel_difference_0_255": 2.1461,
+      "before_sha256": "5c76cdb7ce3d4961443157ab323c06cd9c0df1d043e9fd3103d58a80b1a721dc",
+      "after_sha256": "3f1198194d3de64ab43e63078b4bbcf11c965b9705c61b9324614b49d831b8ea",
+      "preset": {
+        "nebulahaze": "1.200000",
+        "hazeonsky": "0",
+        "protectsky": "1",
+        "vibrance": "0.950000",
+        "contrast": "0.300000",
+        "shadowlift": "0.750000",
+        "exposure": "0.350000",
+        "colorgrade": "0.650000",
+        "vignette": "0.180000",
+        "sharpen": "0.220000",
+        "bloom": "0.650000",
+        "bloomthreshold": "0.400000",
+        "bloomradius": "2.500000",
+        "lightglow": "2.200000",
+        "lightcolor": "0.800000",
+        "lightstreaks": "2.200000",
+        "streaklength": "64.000000",
+        "streakthreshold": "0.720000",
+        "engineglow": "1.600000",
+        "nearbyengineglow": "1.000000",
+        "splitpreview": "0"
+      }
+    },
+    "haze-clouds": {
+      "capture": "AOA_2026-10-28_13-31-53_0_HazeBefore.png",
+      "method": "Consecutive live frames with local nebula haze off/on; all other effects and HUD retained",
+      "width": 1920,
+      "height": 1200,
+      "changed_pixels_percent": 63.448,
+      "mean_absolute_channel_difference_0_255": 8.1816,
+      "before_sha256": "f8f1b59bd9a9a00b064422bcb5ec94b75f616105a4188909a8ea71d0ab040eaa",
+      "after_sha256": "e6a3b0eaeab774f85f4c6bb901c2a3d2c7a4def72bb7a10c7ebfd05cbbf1b2fe",
+      "preset": {
+        "nebulahaze": "1.200000",
+        "hazeonsky": "1",
+        "protectsky": "1",
+        "vibrance": "0.950000",
+        "contrast": "0.300000",
+        "shadowlift": "0.750000",
+        "exposure": "0.350000",
+        "colorgrade": "0.650000",
+        "vignette": "0.180000",
+        "sharpen": "0.220000",
+        "bloom": "0.650000",
+        "bloomthreshold": "0.400000",
+        "bloomradius": "2.500000",
+        "lightglow": "2.200000",
+        "lightcolor": "0.800000",
+        "lightstreaks": "2.200000",
+        "streaklength": "64.000000",
+        "streakthreshold": "0.720000",
+        "engineglow": "1.600000",
+        "nearbyengineglow": "1.000000",
+        "splitpreview": "0"
+      }
+    },
+    "haze-motion": {
+      "capture": "AOA_2026-10-28_13-33-46_0_HazeBefore.png",
+      "method": "Consecutive live frames with local nebula haze off/on; all other effects and HUD retained",
+      "width": 1920,
+      "height": 1200,
+      "changed_pixels_percent": 28.114,
+      "mean_absolute_channel_difference_0_255": 3.2018,
+      "before_sha256": "6ae3f26ad9abafb0c54888334f42f6cc51a53a56ef6506355ff8517d03a92ca7",
+      "after_sha256": "ce0cddedd701567c2bb8bd8be06f47655fb98a5c8607bd442d419b8301267034",
+      "preset": {
+        "nebulahaze": "1.200000",
+        "hazeonsky": "0",
+        "protectsky": "1",
+        "vibrance": "0.950000",
+        "contrast": "0.300000",
+        "shadowlift": "0.750000",
+        "exposure": "0.350000",
+        "colorgrade": "0.650000",
+        "vignette": "0.180000",
+        "sharpen": "0.220000",
+        "bloom": "0.650000",
+        "bloomthreshold": "0.400000",
+        "bloomradius": "2.500000",
+        "lightglow": "2.200000",
+        "lightcolor": "0.800000",
+        "lightstreaks": "2.200000",
+        "streaklength": "64.000000",
+        "streakthreshold": "0.720000",
+        "engineglow": "1.600000",
+        "nearbyengineglow": "1.000000",
+        "splitpreview": "0"
+      }
+    }
+  },
+  "default_preserved_regions": {
+    "briefing": {
+      "rectangle": [
+        815,
+        425,
+        1100,
+        785
+      ],
+      "maximum_channel_difference": 0
+    },
+    "damage": {
+      "rectangle": [
+        10,
+        170,
+        245,
+        347
+      ],
+      "maximum_channel_difference": 0
+    },
+    "systems": {
+      "rectangle": [
+        1660,
+        0,
+        1908,
+        205
+      ],
+      "maximum_channel_difference": 0
+    },
+    "radar": {
+      "rectangle": [
+        900,
+        1110,
+        1040,
+        1170
+      ],
+      "maximum_channel_difference": 0
+    },
+    "left_nebula": {
+      "rectangle": [
+        10,
+        680,
+        180,
+        840
+      ],
+      "maximum_channel_difference": 0
+    },
+    "right_nebula": {
+      "rectangle": [
+        1550,
+        300,
+        1850,
+        700
+      ],
+      "maximum_channel_difference": 0
+    }
+  },
+  "cloud_variant_hud_regions": {
+    "briefing": {
+      "rectangle": [
+        815,
+        425,
+        1100,
+        785
+      ],
+      "maximum_channel_difference": 0
+    },
+    "damage": {
+      "rectangle": [
+        10,
+        170,
+        245,
+        347
+      ],
+      "maximum_channel_difference": 9
+    },
+    "systems": {
+      "rectangle": [
+        1660,
+        0,
+        1908,
+        205
+      ],
+      "maximum_channel_difference": 0
+    },
+    "radar": {
+      "rectangle": [
+        900,
+        1110,
+        1040,
+        1170
+      ],
+      "maximum_channel_difference": 10
+    }
+  },
+  "cloud_variant_addon_sha256": "fb59ddbcfe9253432497fa7934396bfabf8ef0ad79def4abe774f1cec3b4ed02",
+  "cloud_variant_note": "Same final shader; captured before final add-on menu-exit placement reset and center diagnostic logging refinement. Opaque briefing/systems regions remain exact; damage/radar rectangles include translucent pixels revealing haze beneath the HUD (max channel deltas 9 and 10).",
+  "capture_diagnostics": [
+    "haze camera=0.0,100.0,-420.0 projection=0.767327,0.479579,1.000010,-10.000100",
+    "haze centers=-6500.0,-1900.0,17580.0 / 26000.0,7100.0,59580.0",
+    "haze camera=0.0,100.0,-420.0 projection=0.767327,0.479579,1.000010,-10.000100",
+    "haze centers=-6500.0,-1900.0,17580.0 / 26000.0,7100.0,59580.0",
+    "haze camera=84.5,2236.4,3447.9 projection=0.767327,0.479579,1.000010,-10.000100",
+    "haze centers=-6500.0,-1900.0,17580.0 / 26000.0,7100.0,59580.0",
+    "haze camera=85.5,2241.2,3494.1 projection=0.767327,0.479579,1.000010,-10.000100",
+    "haze centers=-6500.0,-1900.0,17580.0 / 26000.0,7100.0,59580.0"
+  ],
+  "validation": [
+    "Add-on built with pinned ReShade SDK; shader compiled in offline D3D11 flight without logged warnings/errors.",
+    "Default stationary before/after isolates only haze, preserving all six sampled HUD and sky regions exactly.",
+    "Optional sky-cloud capture intentionally adds local clouds over the starfield; HUD draws afterward.",
+    "Moving capture: camera advances from (0,100,-420) to approximately (85,2241,3494) while both pocket centers remain fixed.",
+    "Near ship remains clear; station and distant capital show different gas colors in native captures.",
+    "Four installer/restore tests and Python compilation passed.",
+    "Main experiment installed; check reports enabled and client executable unchanged. Incremental .before-haze backups retained."
+  ],
+  "limits": [
+    "Two authored experiment pockets anchored relative to initial flight camera, not original mission nebula locations.",
+    "Eight integration samples per intersected volume with smooth trigonometric density; no dynamic lighting, shadowed scattering or additional render targets.",
+    "Native 16-bit depth limits distant geometry precision and classification; fog is a visual approximation.",
+    "Sky haze disabled by default; enabling it intentionally overlays clouds on sky pixels and changes scenery visible through translucent HUD backgrounds.",
+    "Maximum extinction 72 percent; no direct physics/gameplay changes.",
+    "Moving screenshots are consecutive frames and include scene motion.",
+    "Captured FPS 59-60 is not a controlled benchmark.",
+    "Only offline training verified, not every mission, multiplayer or alternate camera setup."
+  ]
+}
