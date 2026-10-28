@@ -50,6 +50,18 @@ The glow uses two quarter-resolution and two half-resolution targets;
 sharpening stays capped at
 0.015 per channel to limit halos. Exact black stays black before bloom.
 
+**Cinematic light streaks** adds thin horizontal flares to compact, bright
+foreground highlights. Defaults are strength **2.2**, reach **64 pixels at
+1920-wide resolution**, and highlight threshold **0.72**. Reach scales with
+screen width. Set strength to **0** to restore the preceding glow treatment;
+the Subtle preset keeps streaks off. Higher thresholds restrict them to brighter
+sources. The source comes from the original light layer, before exposure or
+bloom; a local-contrast gate suppresses broad bright hull surfaces. Sharp hull
+glints and world labels can still qualify: this is a highlight effect, not an
+engine/lamp detector. Two extra one-eighth-area targets form the tapered streaks.
+Sky pixels never seed streaks with protection enabled, but nearby world lights
+can cast them across the sky. UI preservation mode draws the HUD afterward.
+
 The original restrained look is preserved in `Subtle.ini`. Select that preset
 in the ReShade overlay, or copy it over `ClassicEnhanced.ini` while the game
 is closed. The new shadow, exposure, grade, and vignette controls are disabled
@@ -222,6 +234,22 @@ previous setup, close the experiment and launch your original game folder.
 Pilots/settings changed in the experiment are not synchronized back.
 
 ## Verification status — 28 October 2026
+
+### Cinematic light streaks revision
+
+The final shader and its pre-HUD permutation compiled in the live offline
+renderer without warnings. The 11:14:10 capture shows thin horizontal flares
+on bright ship highlights and selected station lights. Six sampled regions
+(briefing interior, damage panel, systems panel, radar, and two open-sky regions)
+have zero pixel/channel difference between effects off and on. This is not a
+performance benchmark or verification of every combat scene.
+
+`work/classic-enhanced/light-streaks/index.html` compares the previous glow
+treatment with the new streaks, including a magnified ship detail. These are
+separate live runs of the same view, so animation can differ. The page links
+to the final consecutive off/on capture. All source PNG bytes are unchanged.
+The main experiment and running capture copy both use the final settings.
+See [streak evidence](../evidence/2.9.2/classic_enhanced_streaks_20261028.json).
 
 ### UI preservation revision
 

@@ -28,6 +28,12 @@ uniform float LightGlow < ui_type = "slider"; ui_min = 0.0; ui_max = 4.0;
     ui_label = "Radiant lights"; > = 2.2;
 uniform float LightColor < ui_type = "slider"; ui_min = 0.0; ui_max = 1.5;
     ui_label = "Light halo color"; > = 0.8;
+uniform float LightStreaks < ui_type = "slider"; ui_min = 0.0; ui_max = 4.0;
+    ui_label = "Cinematic light streaks"; > = 2.2;
+uniform float StreakLength < ui_type = "slider"; ui_min = 16.0; ui_max = 120.0;
+    ui_label = "Streak reach (pixels at 1920 wide)"; > = 64.0;
+uniform float StreakThreshold < ui_type = "slider"; ui_min = 0.5; ui_max = 0.95;
+    ui_label = "Streak highlight threshold"; > = 0.72;
 uniform bool SplitPreview < ui_label = "Compare: original left / enhanced right"; > = false;
 
 texture BackBuffer : COLOR;
@@ -47,6 +53,10 @@ texture LightA { Width = BUFFER_WIDTH / 2; Height = BUFFER_HEIGHT / 2; Format = 
 texture LightB { Width = BUFFER_WIDTH / 2; Height = BUFFER_HEIGHT / 2; Format = RGBA16F; };
 sampler LightASampler { Texture = LightA; AddressU = CLAMP; AddressV = CLAMP; };
 sampler LightBSampler { Texture = LightB; AddressU = CLAMP; AddressV = CLAMP; };
+texture StreakA { Width = BUFFER_WIDTH / 4; Height = BUFFER_HEIGHT / 2; Format = RGBA16F; };
+texture StreakB { Width = BUFFER_WIDTH / 4; Height = BUFFER_HEIGHT / 2; Format = RGBA16F; };
+sampler StreakASampler { Texture = StreakA; AddressU = BORDER; AddressV = BORDER; };
+sampler StreakBSampler { Texture = StreakB; AddressU = BORDER; AddressV = BORDER; };
 
 void FullscreenVS(uint id : SV_VertexID, out float4 position : SV_Position, out float2 uv : TEXCOORD)
 {
@@ -124,6 +134,44 @@ float4 LightBlurPS(float4 position : SV_Position, float2 uv : TEXCOORD) : SV_Tar
     return float4(c, 1.0);
 }
 
+float3 StreakSource(float2 uv)
+{
+    // LightA contains only original foreground highlights, before exposure or glow.
+    float3 c = tex2D(LightASampler, uv).rgb;
+    float peak = max(c.r, max(c.g, c.b));
+    float2 p = float2(6.0 * BUFFER_RCP_WIDTH, 4.0 * BUFFER_RCP_HEIGHT);
+    float3 surrounding = (tex2D(LightASampler, uv + float2(p.x, 0)).rgb
+        + tex2D(LightASampler, uv - float2(p.x, 0)).rgb
+        + tex2D(LightASampler, uv + float2(0, p.y)).rgb
+        + tex2D(LightASampler, uv - float2(0, p.y)).rgb) * 0.25;
+    // Reject broad bright hull areas; compact lights and sharp glints can seed a streak.
+    float localContrast = peak - max(surrounding.r, max(surrounding.g, surrounding.b));
+    return c * smoothstep(StreakThreshold, 1.0, peak) * smoothstep(0.08, 0.30, localContrast);
+}
+
+float4 StreakExtractPS(float4 position : SV_Position, float2 uv : TEXCOORD) : SV_Target
+{
+    if (LightStreaks <= 0.0) return 0.0;
+    float2 p = float2(BUFFER_RCP_WIDTH, 0.0);
+    return float4(max(StreakSource(uv - p), StreakSource(uv + p)), 1.0);
+}
+
+float4 StreakBlurPS(float4 position : SV_Position, float2 uv : TEXCOORD) : SV_Target
+{
+    if (LightStreaks <= 0.0) return 0.0;
+    float2 p = float2(StreakLength / (1920.0 * 12.0), 0.0);
+    float3 c = 0.0;
+    float total = 0.0;
+    [unroll] for (int i = -12; i <= 12; ++i)
+    {
+        float t = abs(float(i)) / 12.0;
+        float weight = exp(-3.0 * t) * (1.0 - t);
+        c += tex2D(StreakASampler, uv + p * float(i)).rgb * weight;
+        total += weight;
+    }
+    return float4(c / total, 1.0);
+}
+
 float4 FinishPS(float4 position : SV_Position, float2 uv : TEXCOORD) : SV_Target
 {
     float4 original = tex2D(Scene, uv);
@@ -172,6 +220,14 @@ float4 FinishPS(float4 position : SV_Position, float2 uv : TEXCOORD) : SV_Target
         + tex2D(LightBSampler, uv - lightStep * 3.230769).rgb) * 0.070270;
     // Exponential screen blend rolls off smoothly rather than clipping halos.
     c = 1.0 - (1.0 - c) * exp(-light * LightGlow);
+    if (LightStreaks > 0.0)
+    {
+        float2 streakStep = float2(0.0, BUFFER_RCP_HEIGHT);
+        float3 streak = tex2D(StreakBSampler, uv).rgb * 0.5
+            + (tex2D(StreakBSampler, uv + streakStep).rgb
+            + tex2D(StreakBSampler, uv - streakStep).rgb) * 0.25;
+        c = 1.0 - (1.0 - c) * exp(-streak * LightStreaks);
+    }
     return float4(c, original.a);
 }
 
@@ -182,5 +238,7 @@ technique ClassicEnhanced < ui_label = "AOA Classic Enhanced";
     pass Blur { VertexShader = FullscreenVS; PixelShader = BlurPS; RenderTarget = GlowB; }
     pass LightExtract { VertexShader = FullscreenVS; PixelShader = LightExtractPS; RenderTarget = LightA; }
     pass LightBlur { VertexShader = FullscreenVS; PixelShader = LightBlurPS; RenderTarget = LightB; }
+    pass StreakExtract { VertexShader = FullscreenVS; PixelShader = StreakExtractPS; RenderTarget = StreakA; }
+    pass StreakBlur { VertexShader = FullscreenVS; PixelShader = StreakBlurPS; RenderTarget = StreakB; }
     pass Finish { VertexShader = FullscreenVS; PixelShader = FinishPS; }
 }

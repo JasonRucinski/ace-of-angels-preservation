@@ -54,6 +54,12 @@ World-space labels still receive the effect. Build/install/restore/capture:
 tools/classic_ui.py; guide: docs/classic-enhanced.md. Main isolated experiment
 upgraded; normal source game remains untouched. Local comparison:
 work/classic-enhanced/ui-preserved-verified/index.html. Four installer tests pass.
+Cinematic light streaks added next: compact original foreground highlights feed
+a tapered horizontal blur; strength 2.2, reach 64 at 1920 wide, threshold 0.72.
+Strength 0 restores the previous glow; Subtle keeps streaks off. Final live shader
+compiled and six sampled UI/sky regions stayed pixel-identical. Bright hull
+glints and world-space labels can also seed streaks. Incremental live comparison:
+work/classic-enhanced/light-streaks/index.html. Performance not benchmarked.
 
 Nine-gate expansion (27 Oct 2026): `--warp-trial` and the host checkbox now
 restore all nine Arena1a warp gates, adding eight placements. Slots 71–79
