@@ -1,0 +1,503 @@
+{
+  "schema": 1,
+  "notes": "Authored visual profiles from recovered layout coordinates, not original nebula data. Unrecognized maps have no haze. Native coordinates: +Z forward. Density multiplies the user strength.",
+  "profiles": [
+    {
+      "map": "Curt3",
+      "note": "Offline CTF_arena mission: station skirt and carrier vicinity; clear launch bubble.",
+      "opacity_cap": 0.52,
+      "pockets": [
+        {
+          "center": [
+            -6500,
+            -2000,
+            18000
+          ],
+          "radii": [
+            14000,
+            8500,
+            13000
+          ],
+          "color": [
+            0.1,
+            0.3,
+            0.34
+          ],
+          "density": 0.65
+        },
+        {
+          "center": [
+            32325,
+            7621,
+            82027
+          ],
+          "radii": [
+            14000,
+            9000,
+            18000
+          ],
+          "color": [
+            0.22,
+            0.14,
+            0.3
+          ],
+          "density": 0.45
+        }
+      ]
+    },
+    {
+      "map": "Arena1a",
+      "note": "Asteroid clusters west/east of origin; avoids central approach and distant safe zones.",
+      "opacity_cap": 0.32,
+      "pockets": [
+        {
+          "center": [
+            -105000,
+            -30000,
+            95000
+          ],
+          "radii": [
+            48000,
+            21000,
+            45000
+          ],
+          "color": [
+            0.12,
+            0.22,
+            0.32
+          ],
+          "density": 0.12
+        },
+        {
+          "center": [
+            105000,
+            -30000,
+            95000
+          ],
+          "radii": [
+            48000,
+            21000,
+            45000
+          ],
+          "color": [
+            0.1,
+            0.3,
+            0.34
+          ],
+          "density": 0.12
+        }
+      ]
+    },
+    {
+      "map": "newterrain",
+      "note": "Arena variant: sparse dust at outer asteroid clusters, central route clear.",
+      "opacity_cap": 0.3,
+      "pockets": [
+        {
+          "center": [
+            -105000,
+            -30000,
+            95000
+          ],
+          "radii": [
+            48000,
+            21000,
+            45000
+          ],
+          "color": [
+            0.28,
+            0.23,
+            0.16
+          ],
+          "density": 0.1
+        },
+        {
+          "center": [
+            105000,
+            -30000,
+            95000
+          ],
+          "radii": [
+            48000,
+            21000,
+            45000
+          ],
+          "color": [
+            0.12,
+            0.22,
+            0.32
+          ],
+          "density": 0.1
+        }
+      ]
+    },
+    {
+      "map": "CTF_arena",
+      "note": "Low-density flanking asteroid pockets; origin and bases near z +/-200000 remain clear.",
+      "opacity_cap": 0.28,
+      "pockets": [
+        {
+          "center": [
+            -85000,
+            -26000,
+            40000
+          ],
+          "radii": [
+            42000,
+            20000,
+            55000
+          ],
+          "color": [
+            0.1,
+            0.3,
+            0.34
+          ],
+          "density": 0.1
+        },
+        {
+          "center": [
+            85000,
+            -26000,
+            -40000
+          ],
+          "radii": [
+            42000,
+            20000,
+            55000
+          ],
+          "color": [
+            0.1,
+            0.3,
+            0.34
+          ],
+          "density": 0.1
+        }
+      ]
+    },
+    {
+      "map": "CTF_arena_b",
+      "note": "Offset arena: haze at side asteroid groups, viewing spawn (45396,4633,80000) clear.",
+      "opacity_cap": 0.3,
+      "pockets": [
+        {
+          "center": [
+            -78000,
+            -16000,
+            153000
+          ],
+          "radii": [
+            40000,
+            19000,
+            40000
+          ],
+          "color": [
+            0.12,
+            0.22,
+            0.32
+          ],
+          "density": 0.12
+        },
+        {
+          "center": [
+            80000,
+            0,
+            180000
+          ],
+          "radii": [
+            34000,
+            18000,
+            33000
+          ],
+          "color": [
+            0.12,
+            0.22,
+            0.32
+          ],
+          "density": 0.12
+        }
+      ]
+    },
+    {
+      "map": "outerchange",
+      "note": "Sparse local dust near two recovered asteroid-field placements; no map-wide fog.",
+      "opacity_cap": 0.38,
+      "pockets": [
+        {
+          "center": [
+            -1254518,
+            -457957,
+            -475771
+          ],
+          "radii": [
+            100000,
+            55000,
+            90000
+          ],
+          "color": [
+            0.28,
+            0.23,
+            0.16
+          ],
+          "density": 0.035
+        },
+        {
+          "center": [
+            480435,
+            -3348,
+            1637731
+          ],
+          "radii": [
+            90000,
+            50000,
+            70000
+          ],
+          "color": [
+            0.12,
+            0.22,
+            0.32
+          ],
+          "density": 0.04
+        }
+      ]
+    },
+    {
+      "map": "ast_fld_a",
+      "note": "Dust around two asteroid groups, split around the origin.",
+      "opacity_cap": 0.58,
+      "pockets": [
+        {
+          "center": [
+            -28000,
+            4000,
+            27000
+          ],
+          "radii": [
+            25000,
+            16000,
+            23000
+          ],
+          "color": [
+            0.28,
+            0.23,
+            0.16
+          ],
+          "density": 0.38
+        },
+        {
+          "center": [
+            60000,
+            3000,
+            -19000
+          ],
+          "radii": [
+            30000,
+            16000,
+            26000
+          ],
+          "color": [
+            0.1,
+            0.3,
+            0.34
+          ],
+          "density": 0.28
+        }
+      ]
+    },
+    {
+      "map": "ast_fld_b",
+      "note": "Broad field: cool dust in separated dense asteroid groups.",
+      "opacity_cap": 0.58,
+      "pockets": [
+        {
+          "center": [
+            -135000,
+            5000,
+            10000
+          ],
+          "radii": [
+            55000,
+            20000,
+            40000
+          ],
+          "color": [
+            0.12,
+            0.22,
+            0.32
+          ],
+          "density": 0.22
+        },
+        {
+          "center": [
+            65000,
+            4000,
+            24000
+          ],
+          "radii": [
+            36000,
+            18000,
+            30000
+          ],
+          "color": [
+            0.1,
+            0.3,
+            0.34
+          ],
+          "density": 0.28
+        }
+      ]
+    },
+    {
+      "map": "ast_fld_c",
+      "note": "Compact field: two isolated pockets beside the central transit path.",
+      "opacity_cap": 0.55,
+      "pockets": [
+        {
+          "center": [
+            -50000,
+            -2000,
+            5000
+          ],
+          "radii": [
+            32000,
+            15000,
+            26000
+          ],
+          "color": [
+            0.1,
+            0.3,
+            0.34
+          ],
+          "density": 0.3
+        },
+        {
+          "center": [
+            65000,
+            3000,
+            20000
+          ],
+          "radii": [
+            28000,
+            16000,
+            28000
+          ],
+          "color": [
+            0.22,
+            0.14,
+            0.3
+          ],
+          "density": 0.28
+        }
+      ]
+    },
+    {
+      "map": "ast_fld_d",
+      "note": "Small sparse field: one light dust pocket around the eastern rocks.",
+      "opacity_cap": 0.45,
+      "pockets": [
+        {
+          "center": [
+            49000,
+            4000,
+            19000
+          ],
+          "radii": [
+            28000,
+            17000,
+            25000
+          ],
+          "color": [
+            0.28,
+            0.23,
+            0.16
+          ],
+          "density": 0.24
+        }
+      ]
+    },
+    {
+      "map": "JRMAP",
+      "note": "Editor map: light background dust beyond the station, away from viewing spawn.",
+      "opacity_cap": 0.3,
+      "pockets": [
+        {
+          "center": [
+            35000,
+            18000,
+            -65000
+          ],
+          "radii": [
+            18000,
+            12000,
+            25000
+          ],
+          "color": [
+            0.12,
+            0.22,
+            0.32
+          ],
+          "density": 0.16
+        }
+      ]
+    },
+    {
+      "map": "CTF_base",
+      "note": "Clear profile: preserve component/base interiors and docking visibility.",
+      "opacity_cap": 0,
+      "pockets": []
+    },
+    {
+      "map": "hu_base_a",
+      "note": "Clear profile: preserve component/base interiors and docking visibility.",
+      "opacity_cap": 0,
+      "pockets": []
+    },
+    {
+      "map": "hu_base_b",
+      "note": "Clear profile: preserve component/base interiors and docking visibility.",
+      "opacity_cap": 0,
+      "pockets": []
+    },
+    {
+      "map": "hy_base_test",
+      "note": "Clear profile: preserve component/base interiors and docking visibility.",
+      "opacity_cap": 0,
+      "pockets": []
+    },
+    {
+      "map": "hy_winga",
+      "note": "Clear profile: preserve component/base interiors and docking visibility.",
+      "opacity_cap": 0,
+      "pockets": []
+    },
+    {
+      "map": "HyBase2Lay",
+      "note": "Clear profile: preserve component/base interiors and docking visibility.",
+      "opacity_cap": 0,
+      "pockets": []
+    },
+    {
+      "map": "irrosa01",
+      "note": "Clear profile: preserve component/base interiors and docking visibility.",
+      "opacity_cap": 0,
+      "pockets": []
+    },
+    {
+      "map": "ze_winga",
+      "note": "Clear profile: preserve component/base interiors and docking visibility.",
+      "opacity_cap": 0,
+      "pockets": []
+    },
+    {
+      "map": "ze_wingb",
+      "note": "Clear profile: preserve component/base interiors and docking visibility.",
+      "opacity_cap": 0,
+      "pockets": []
+    },
+    {
+      "map": "Hittest",
+      "note": "Clear profile: preserve component/base interiors and docking visibility.",
+      "opacity_cap": 0,
+      "pockets": []
+    }
+  ]
+}

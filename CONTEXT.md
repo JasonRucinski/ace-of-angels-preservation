@@ -16,7 +16,16 @@ a search-engine summary only.
 
 ## 2. Status
 
-Latest visual effect (28 Oct): local nebula haze adds two bounded teal/violet
+Latest haze refinement (28 Oct): native map identity selects fixed authored
+pockets, replacing camera-relative placement. All 20 map-viewer entries plus
+offline Curt3 have explicit policies; bases/components and unknown maps stay
+clear. Per-map colors, density, radii and caps live in haze-maps.json, compiled
+through classic_haze.py into a hash-checked header. Coverage/clearance tests
+pass; Curt3 selected and visually checked live; other profiles remain
+provisional until individual flight checks. Evidence:
+evidence/2.9.2/classic_enhanced_map_haze_20261028.json.
+
+Previous visual effect (28 Oct): local nebula haze adds two bounded teal/violet
 gas pockets placed on flight entry, then fixed in world space. Native camera
 and depth drive surface-clipped integration. Density 1.2 by default; sky haze
 is a separate opt-in, off by default. HUD preserved in both modes. Haze-only

@@ -45,7 +45,7 @@ uniform uint PlayerEngineCount < source = "aoa_engine"; > = 0;
 uniform float4 EngineStarts[64] < source = "aoa_engine"; >;
 uniform float4 EngineEnds[64] < source = "aoa_engine"; >;
 uniform float NebulaHaze < ui_type = "slider"; ui_min = 0.0; ui_max = 3.0;
-    ui_label = "Local nebula haze"; ui_tooltip = "World-anchored gas pockets. Requires the UI preservation add-on. Zero disables haze."; > = 1.2;
+    ui_label = "Local nebula haze"; ui_tooltip = "Map-specific gas pockets. Requires the UI preservation add-on. Zero disables haze; unknown maps stay clear."; > = 1.2;
 uniform bool HazeOnSky < ui_label = "Show haze over the starfield";
     ui_tooltip = "Off preserves original sky pixels; on shows gas where a local pocket intersects the view."; > = false;
 uniform bool HazeCaptureOff < source = "aoa_haze"; > = false;
@@ -57,6 +57,12 @@ uniform float3 HazeCameraForward < source = "aoa_haze"; >;
 uniform float4 HazeProjection < source = "aoa_haze"; >;
 uniform float3 HazeCenterA < source = "aoa_haze"; >;
 uniform float3 HazeCenterB < source = "aoa_haze"; >;
+uniform float3 HazeRadiiA < source = "aoa_haze"; >;
+uniform float3 HazeRadiiB < source = "aoa_haze"; >;
+uniform float4 HazeColorDensityA < source = "aoa_haze"; >;
+uniform float4 HazeColorDensityB < source = "aoa_haze"; >;
+uniform uint HazePocketCount < source = "aoa_haze"; > = 0;
+uniform float HazeOpacityCap < source = "aoa_haze"; > = 0.0;
 uniform bool SplitPreview < ui_label = "Compare: original left / enhanced right"; > = false;
 
 texture BackBuffer : COLOR;
@@ -272,19 +278,20 @@ float HazeOpticalDepth(float3 ray, float surface, float3 center, float3 radii)
 
 float3 ApplyNebulaHaze(float3 color, float2 uv)
 {
-    if (!PreUIActive || !HazeCameraValid || HazeCaptureOff || NebulaHaze <= 0.0) return color;
+    if (!PreUIActive || !HazeCameraValid || HazeCaptureOff || NebulaHaze <= 0.0 || HazePocketCount == 0) return color;
     float depth = tex2D(WorldDepthSampler,uv).r;
     bool sky = depth >= 0.999999;
     if (sky && !HazeOnSky) return color;
     float surface = sky ? 180000.0 : clamp(HazeProjection.w/(depth-HazeProjection.z),0.0,180000.0);
     float2 xy = (uv*float2(2.0,-2.0)+float2(-1.0,1.0))*HazeProjection.xy;
     float3 ray = HazeCameraForward + xy.x*HazeCameraRight + xy.y*HazeCameraUp;
-    float teal = HazeOpticalDepth(ray,surface,HazeCenterA,float3(14000,8500,13000));
-    float violet = HazeOpticalDepth(ray,surface,HazeCenterB,float3(18000,10000,24000));
+    float teal = HazeOpticalDepth(ray,surface,HazeCenterA,HazeRadiiA)*HazeColorDensityA.w;
+    float violet = 0.0;
+    if (HazePocketCount > 1) violet = HazeOpticalDepth(ray,surface,HazeCenterB,HazeRadiiB)*HazeColorDensityB.w;
     float opticalDepth = teal+violet;
-    float3 gas = (teal*float3(0.10,0.34,0.40)+violet*float3(0.25,0.14,0.37))/max(opticalDepth,0.00001);
+    float3 gas = (teal*HazeColorDensityA.rgb+violet*HazeColorDensityB.rgb)/max(opticalDepth,0.00001);
     // Bounded extinction preserves readability even at maximum density.
-    return lerp(color,gas,min(0.72,1.0-exp(-opticalDepth)));
+    return lerp(color,gas,min(HazeOpacityCap,1.0-exp(-opticalDepth)));
 }
 
 float4 FinishPS(float4 position : SV_Position, float2 uv : TEXCOORD) : SV_Target

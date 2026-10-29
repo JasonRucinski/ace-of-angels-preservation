@@ -45,6 +45,7 @@ class InstallTests(unittest.TestCase):
         self.addon.write_bytes(pe_image())
         self.addon.with_suffix(".json").write_text(json.dumps({
             "source_sha256": ui.digest(ui.SOURCE), "addon_sha256": ui.digest(self.addon),
+            "haze_profiles_sha256": ui.digest(ui.HAZE_HEADER),
             "sdk_sha256": ui.SDK_SHA}))
         self.check_patch = patch.object(ui, "check", return_value={"runtime": "enabled"})
         self.check_patch.start()
@@ -78,6 +79,15 @@ class InstallTests(unittest.TestCase):
 
     def test_changed_addon_rejected(self):
         self.addon.write_bytes(b"changed")
+        with self.assertRaisesRegex(ValueError, "stale or changed"):
+            self.install()
+        self.assertFalse((self.folder / ui.BACKUP).exists())
+
+    def test_stale_haze_table_rejected(self):
+        path = self.addon.with_suffix(".json")
+        manifest = json.loads(path.read_text())
+        manifest["haze_profiles_sha256"] = "old table"
+        path.write_text(json.dumps(manifest))
         with self.assertRaisesRegex(ValueError, "stale or changed"):
             self.install()
         self.assertFalse((self.folder / ui.BACKUP).exists())

@@ -18,12 +18,30 @@ target previews in their original colors.
 
 ## Local nebula haze experiment
 
-The UI add-on now supplies the native camera and projection for two local gas
-pockets: teal and violet. They are placed relative to the first camera on
-flight entry, then remain fixed in world space as you move. This is an authored
-visual experiment, not a reconstruction of native mission nebula locations.
+The UI add-on supplies the native camera/projection and selects authored haze
+settings from the current terrain name. Each map has up to two fixed pockets,
+with its own position, size, color, density and opacity cap. Camera changes,
+spawn positions and flight restarts no longer reposition the haze. Unknown
+maps stay clear. This is an authored visual experiment, not a reconstruction
+of original mission nebula locations.
 
-**Local nebula haze** controls density (default 1.2, range 0–3; 0 disables it).
+| Map or layout | Haze treatment |
+|---|---|
+| Offline Curt3 on CTF_arena | Lighter teal station skirt and violet carrier pocket; 52% opacity cap |
+| Arena1a / newterrain | Sparse dust at the two outer asteroid clusters; 30–32% cap |
+| CTF_arena / CTF_arena_b | Light flanking pockets, sampled spawn/flag-base positions clear; 28–30% cap |
+| ast_fld_a / b / c / d | Dust at selected asteroid groups, with distinct colors and sizes; 45–58% cap |
+| outerchange | Two localized pockets at recovered asteroid-field placements; 38% cap |
+| JRMAP | A light background pocket beyond the station approach; 30% cap |
+| Base/component layouts, irrosa01, Hittest | Clear, to preserve interiors and docking visibility |
+
+All 20 entries in `online_terrain.MAPS` have an explicit policy. The single
+bundled offline scenario has a separate Curt3 profile. Selection reads the
+native terrain string at `world+0xDF040` and the offline bit at `0x5E72C4`;
+it updates when the identity changes, and never guesses from camera position.
+
+**Local nebula haze** multiplies each map's density (default 1.2, range 0–3;
+0 disables it).
 **Show haze over the starfield** is off by default, preserving sky pixels while
 distant hulls and asteroids fade through the pockets. Enable it to see the gas
 against space as well; this deliberately overlays local clouds on the sky.
@@ -35,7 +53,7 @@ The Subtle preset leaves haze disabled.
 Ray/ellipsoid intersections limit haze to two bounded volumes. Eight samples
 per intersected pocket integrate a smooth world-space density field, stopping
 at the visible surface using native D16 depth. Nearby objects in front of the
-gas remain clear. Extinction is capped at 72% to retain visibility. Haze blends
+gas remain clear. Each map caps extinction (currently at most 58%). Haze blends
 after the existing lighting, softening distant lights too. It requires the
 updated pre-HUD add-on and fails closed without its camera data; standard
 ReShade alone cannot supply this experiment. No additional render targets.
@@ -48,11 +66,24 @@ Local reports: `work/classic-enhanced/haze-verified/index.html` isolates the
 default haze; `haze-clouds/index.html` shows the optional starfield clouds;
 `haze-motion/index.html` captures movement with fixed pocket centers. The
 stationary default pair preserves all six sampled HUD/sky rectangles exactly.
+These three reports predate map-specific tuning. The current map-specific
+comparison is `work/classic-enhanced/haze-map-curt3/index.html`; the
+`haze-map-camera` report verifies fixed centers after F2 changes the view.
 Live shader compilation and moving offline flight passed; captured FPS was
 59–60, not a controlled benchmark. D16 depth limits distance precision; this
 is a bounded fog approximation, without light scattering, shadowed volumes or
-mission-authored placement. Other missions and multiplayer remain untested.
+original mission-authored placement. Other maps' profiles are based on decoded
+layout coordinates and static clearance checks; only Curt3 has been visually
+verified with this revision. Multiplayer remains untested.
 See [haze verification evidence](../evidence/2.9.2/classic_enhanced_haze_20261028.json).
+Map-specific evidence: [profile verification](../evidence/2.9.2/classic_enhanced_map_haze_20261028.json).
+
+Edit [haze-maps.json](../config/classic-enhanced/haze-maps.json), then run
+`python -I tools/classic_haze.py` and rebuild the add-on with `classic_ui.py build`.
+The generated table is compiled into the add-on; the JSON is not loaded at
+runtime. The builder rejects a stale table and records its hash; installation
+rejects an add-on built against different profiles. `test_classic_haze.py`
+checks coverage, malformed settings and sampled route/base clearances.
 
 ## Engine exhaust experiment
 

@@ -1,0 +1,309 @@
+{
+  "date": "2026-10-28",
+  "revision": "Map-specific local nebula haze",
+  "hashes": {
+    "config/classic-enhanced/haze-maps.json": "8d7caaadf7ab690d1cab9f470e916ba6c11eeb594486b785a6b31d850628035b",
+    "tools/classic_haze.py": "55173ab10fabf0e317613ff5770886e9c77882df0efcb8be734c8d3af5e060cf",
+    "tools/classic_haze_profiles.h": "ef32e83989dc8911f9883914c0aa21d4460ed86f1da0d54b24bdd7cfb3ddc85f",
+    "tools/classic_ui_addon.cpp": "6e6d2ba2957021ccebbde2c72d6d083d2c1b795d5659f35f1c1edf51a48c702f",
+    "config/classic-enhanced/AOAClassic.fx": "977d9931abf95878feb28bec46dd26e0288f96f597a7d8eb6819dbdd07377bc9",
+    "builds/classic-ui/ClassicUI.addon32": "ad257bc5bdb4eaa43d7553fc154ce541def04ebf0e18fef3aaebacec15f902e0"
+  },
+  "captures": {
+    "haze-map-curt3": {
+      "capture": "AOA_2026-10-28_20-59-49_0_HazeBefore.png",
+      "method": "Consecutive live frames with local nebula haze off/on; all other effects and HUD retained",
+      "width": 1920,
+      "height": 1200,
+      "changed_pixels_percent": 15.038,
+      "mean_absolute_channel_difference_0_255": 1.2981,
+      "before_sha256": "f186c3f34f4d383c49714fc2d13d8624041f1ead33aff59380e18ced56fb0ee8",
+      "after_sha256": "65d41877b2efb38c5be21772629f396f050d17f89ac434bee2aff74a8cef877e",
+      "preset": {
+        "nebulahaze": "1.200000",
+        "hazeonsky": "0",
+        "protectsky": "1",
+        "vibrance": "0.950000",
+        "contrast": "0.300000",
+        "shadowlift": "0.750000",
+        "exposure": "0.350000",
+        "colorgrade": "0.650000",
+        "vignette": "0.180000",
+        "sharpen": "0.220000",
+        "bloom": "0.650000",
+        "bloomthreshold": "0.400000",
+        "bloomradius": "2.500000",
+        "lightglow": "2.200000",
+        "lightcolor": "0.800000",
+        "lightstreaks": "2.200000",
+        "streaklength": "64.000000",
+        "streakthreshold": "0.720000",
+        "engineglow": "1.600000",
+        "nearbyengineglow": "1.000000",
+        "splitpreview": "0"
+      }
+    },
+    "haze-map-camera": {
+      "capture": "AOA_2026-10-28_21-01-28_0_HazeBefore.png",
+      "method": "Consecutive live frames with local nebula haze off/on; all other effects and HUD retained",
+      "width": 1920,
+      "height": 1200,
+      "changed_pixels_percent": 14.453,
+      "mean_absolute_channel_difference_0_255": 1.2291,
+      "before_sha256": "04ac41f365baee7f72ea7e7b681331d375e43d6c35266fcdbc63cee635b79199",
+      "after_sha256": "8263eab963fcbe0b15150cdca4eb99ce66b17ce087071782492a0235d22307d7",
+      "preset": {
+        "nebulahaze": "1.200000",
+        "hazeonsky": "0",
+        "protectsky": "1",
+        "vibrance": "0.950000",
+        "contrast": "0.300000",
+        "shadowlift": "0.750000",
+        "exposure": "0.350000",
+        "colorgrade": "0.650000",
+        "vignette": "0.180000",
+        "sharpen": "0.220000",
+        "bloom": "0.650000",
+        "bloomthreshold": "0.400000",
+        "bloomradius": "2.500000",
+        "lightglow": "2.200000",
+        "lightcolor": "0.800000",
+        "lightstreaks": "2.200000",
+        "streaklength": "64.000000",
+        "streakthreshold": "0.720000",
+        "engineglow": "1.600000",
+        "nearbyengineglow": "1.000000",
+        "splitpreview": "0"
+      }
+    }
+  },
+  "preserved_regions": {
+    "briefing": {
+      "rectangle": [
+        815,
+        425,
+        1100,
+        785
+      ],
+      "maximum_channel_difference": 0
+    },
+    "damage": {
+      "rectangle": [
+        10,
+        170,
+        245,
+        347
+      ],
+      "maximum_channel_difference": 0
+    },
+    "systems": {
+      "rectangle": [
+        1660,
+        0,
+        1908,
+        205
+      ],
+      "maximum_channel_difference": 0
+    },
+    "radar": {
+      "rectangle": [
+        900,
+        1110,
+        1040,
+        1170
+      ],
+      "maximum_channel_difference": 0
+    },
+    "left_nebula": {
+      "rectangle": [
+        10,
+        680,
+        180,
+        840
+      ],
+      "maximum_channel_difference": 0
+    },
+    "right_nebula": {
+      "rectangle": [
+        1550,
+        300,
+        1850,
+        700
+      ],
+      "maximum_channel_difference": 0
+    }
+  },
+  "native_diagnostics": [
+    "haze map=CTF_arena profile=Curt3 pockets=2 cap=0.52",
+    "haze camera=0.0,0.0,0.0 projection=0.767327,0.479579,1.000010,-10.000100",
+    "haze centers=-6500.0,-2000.0,18000.0 / 32325.0,7621.0,82027.0",
+    "haze camera=0.0,0.0,0.0 projection=0.767327,0.479579,1.000010,-10.000100",
+    "haze centers=-6500.0,-2000.0,18000.0 / 32325.0,7621.0,82027.0",
+    "haze camera=0.0,100.0,-420.0 projection=0.767327,0.479579,1.000010,-10.000100",
+    "haze centers=-6500.0,-2000.0,18000.0 / 32325.0,7621.0,82027.0",
+    "haze camera=0.0,100.0,-420.0 projection=0.767327,0.479579,1.000010,-10.000100",
+    "haze centers=-6500.0,-2000.0,18000.0 / 32325.0,7621.0,82027.0"
+  ],
+  "identity_evidence": {
+    "terrain_name": "CAOAWorld + 0xDF040 is a native string object; first word points at the map name. Default CTF_arena set at 0x4A3027/0x4A3040, selected server terrain copied at 0x456F86/0x456F8C.",
+    "offline_mode": "Global mode word at 0x5E72C4, bit 8, selects offline branch at 0x456426..0x456433. Live CTF_arena+offline resolved to Curt3.",
+    "selection": "Case-insensitive exact names, jrmap292.trn alias, null/unknown gives no haze; evaluated on every world frame."
+  },
+  "profiles": [
+    {
+      "map": "Curt3",
+      "pockets": 2,
+      "opacity_cap": 0.52,
+      "note": "Offline CTF_arena mission: station skirt and carrier vicinity; clear launch bubble."
+    },
+    {
+      "map": "Arena1a",
+      "pockets": 2,
+      "opacity_cap": 0.32,
+      "note": "Asteroid clusters west/east of origin; avoids central approach and distant safe zones."
+    },
+    {
+      "map": "newterrain",
+      "pockets": 2,
+      "opacity_cap": 0.3,
+      "note": "Arena variant: sparse dust at outer asteroid clusters, central route clear."
+    },
+    {
+      "map": "CTF_arena",
+      "pockets": 2,
+      "opacity_cap": 0.28,
+      "note": "Low-density flanking asteroid pockets; origin and bases near z +/-200000 remain clear."
+    },
+    {
+      "map": "CTF_arena_b",
+      "pockets": 2,
+      "opacity_cap": 0.3,
+      "note": "Offset arena: haze at side asteroid groups, viewing spawn (45396,4633,80000) clear."
+    },
+    {
+      "map": "outerchange",
+      "pockets": 2,
+      "opacity_cap": 0.38,
+      "note": "Sparse local dust near two recovered asteroid-field placements; no map-wide fog."
+    },
+    {
+      "map": "ast_fld_a",
+      "pockets": 2,
+      "opacity_cap": 0.58,
+      "note": "Dust around two asteroid groups, split around the origin."
+    },
+    {
+      "map": "ast_fld_b",
+      "pockets": 2,
+      "opacity_cap": 0.58,
+      "note": "Broad field: cool dust in separated dense asteroid groups."
+    },
+    {
+      "map": "ast_fld_c",
+      "pockets": 2,
+      "opacity_cap": 0.55,
+      "note": "Compact field: two isolated pockets beside the central transit path."
+    },
+    {
+      "map": "ast_fld_d",
+      "pockets": 1,
+      "opacity_cap": 0.45,
+      "note": "Small sparse field: one light dust pocket around the eastern rocks."
+    },
+    {
+      "map": "JRMAP",
+      "pockets": 1,
+      "opacity_cap": 0.3,
+      "note": "Editor map: light background dust beyond the station, away from viewing spawn."
+    },
+    {
+      "map": "CTF_base",
+      "pockets": 0,
+      "opacity_cap": 0,
+      "note": "Clear profile: preserve component/base interiors and docking visibility."
+    },
+    {
+      "map": "hu_base_a",
+      "pockets": 0,
+      "opacity_cap": 0,
+      "note": "Clear profile: preserve component/base interiors and docking visibility."
+    },
+    {
+      "map": "hu_base_b",
+      "pockets": 0,
+      "opacity_cap": 0,
+      "note": "Clear profile: preserve component/base interiors and docking visibility."
+    },
+    {
+      "map": "hy_base_test",
+      "pockets": 0,
+      "opacity_cap": 0,
+      "note": "Clear profile: preserve component/base interiors and docking visibility."
+    },
+    {
+      "map": "hy_winga",
+      "pockets": 0,
+      "opacity_cap": 0,
+      "note": "Clear profile: preserve component/base interiors and docking visibility."
+    },
+    {
+      "map": "HyBase2Lay",
+      "pockets": 0,
+      "opacity_cap": 0,
+      "note": "Clear profile: preserve component/base interiors and docking visibility."
+    },
+    {
+      "map": "irrosa01",
+      "pockets": 0,
+      "opacity_cap": 0,
+      "note": "Clear profile: preserve component/base interiors and docking visibility."
+    },
+    {
+      "map": "ze_winga",
+      "pockets": 0,
+      "opacity_cap": 0,
+      "note": "Clear profile: preserve component/base interiors and docking visibility."
+    },
+    {
+      "map": "ze_wingb",
+      "pockets": 0,
+      "opacity_cap": 0,
+      "note": "Clear profile: preserve component/base interiors and docking visibility."
+    },
+    {
+      "map": "Hittest",
+      "pockets": 0,
+      "opacity_cap": 0,
+      "note": "Clear profile: preserve component/base interiors and docking visibility."
+    }
+  ],
+  "inspected_layout_hashes": {
+    "Arena1a.Gob": "5d652eaca4972d958eb1dc54b8ef277fdb8ea475be4912f01a5fd8d02afa7886",
+    "ast_fld_a.Gob": "afe75708078bf0c1d44f0c42a2f875aa032f24098972240ffb82c1f6879f0a63",
+    "ast_fld_b.Gob": "0170adc1d7ab7eb61423e3527ae419e134d6853e94d57f582dd6ed5b097ba24d",
+    "ast_fld_c.Gob": "e667ea6d513ca0ca8648db2bee3ff6ea526812ea150a0fad393242e9cd37e87b",
+    "ast_fld_d.Gob": "408a0e9f8236606f2cb4d2cb61147a0a5b82bc24e42786a645b74b6a8897c0cc",
+    "CTF_arena.Gob": "942b92f5a078579824d9e31df36c6388c1d6fe7087436de7d9eaf0161bb31ae5",
+    "CTF_arena_b.Gob": "b89946f1e921f1820c4df4d9e8d1bb03bcdbe40f25640353f098dfc742390a0d",
+    "newterrain.Gob": "cc9fbc2a5d9bf8cc5836472182e27f7bc7e22c14fb76ece7c8cd7a0afd4842f2",
+    "outerchange.Gob": "4525886d931188ca53ce844ccab22e2eaeccfef56feb2a206895c64b648b60a4"
+  },
+  "validation": [
+    "Add-on built, final shader compiled in native offline flight without warnings/errors.",
+    "Three profile tests cover all 20 map entries plus Curt3, sampled combat/spawn/base clearances and malformed profile rejection.",
+    "Five installer/restore tests pass, including rejection of an add-on with stale profile hash.",
+    "Native C++ selector test compiled for x86-windows-gnu and returned zero: case-insensitive identity, offline override, file alias, unknown/null/empty, clear component policy and all table entries.",
+    "Live CTF_arena offline selected Curt3, two pockets, 0.52 opacity cap.",
+    "F2 changed camera from (0,0,0) to (0,100,-420); fixed map centers unchanged.",
+    "All six sampled HUD/sky rectangles remain exact in the stationary haze-only capture.",
+    "Main experiment installed; client unchanged; incremental before-map-haze backups retained."
+  ],
+  "limits": [
+    "Only Curt3 flight-tested with this revision. Other maps have authored coordinate-based profiles and static checks; they are provisional pending individual visual checks.",
+    "Sampled clearance tests do not prove every route, spawn, line of sight or base approach is unobscured.",
+    "Two pockets maximum; large maps are intentionally mostly clear. Standalone components and unknown maps have no haze.",
+    "Not original nebula data; no gameplay, terrain, physics or game asset edits.",
+    "Inherited 16-bit depth precision and 180000 view-depth integration limit can affect distant haze.",
+    "Sky clouds remain optional/off by default; translucent HUD pixels may reveal the altered scene if enabled."
+  ]
+}

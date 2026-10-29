@@ -7,6 +7,7 @@
 #include <cstring>
 #include <cmath>
 #include <algorithm>
+#include "classic_haze_profiles.h"
 
 static reshade::api::effect_runtime *runtime=nullptr;
 static bool installed=false, in_effect=false, applied=false;
@@ -15,7 +16,10 @@ static bool capture_enabled=false;
 static unsigned engine_capture_step=0;
 static bool fleet_capture=false;
 static unsigned haze_capture_step=0;
-static bool haze_camera_valid=false,haze_seeded=false;
+static bool haze_camera_valid=false,haze_selected=false;
+static const HazeProfile *haze_profile=nullptr;
+static unsigned haze_count=0;
+static float haze_cap=0,haze_radii[2][3],haze_colors[2][4];
 static float haze_origin[3],haze_right[3],haze_up[3],haze_forward[3],haze_projection[4],haze_centers[2][3];
 static unsigned char patch[6];
 static ID3D11ShaderResourceView *world_depth=nullptr;
@@ -70,7 +74,7 @@ static void update_engines(){
  engine_count=player_engine_count=0;
  memset(engine_start,0,sizeof(engine_start));memset(engine_end,0,sizeof(engine_end));
  uintptr_t app=pointer(0x5e6e58),world=pointer(0x5e7728),player=pointer(world+0xd3448);
- if(!app || !world || pointer(app+0x20)!=0x44afd0){haze_seeded=false;return;}
+ if(!app || !world || pointer(app+0x20)!=0x44afd0){haze_selected=false;return;}
  uintptr_t gfx=pointer(app+0x138);auto device=(void*)pointer(gfx+0x188);
  if(!device)return;
  // IDirect3DDevice7::GetTransform is vtable slot 12 (legacy d3d.h).
@@ -79,7 +83,7 @@ static void update_engines(){
  float view[16],proj[16];
  if(FAILED(get_transform(device,2,view)) || FAILED(get_transform(device,3,proj)))return;
  // Reconstruct the native camera from its rigid world-to-view transform.
- // Pockets are placed once on flight entry; they never follow the camera.
+ // Haze placement comes from the native map identity, never the camera/spawn.
  for(float v:view)if(!std::isfinite(v))return;
  for(float v:proj)if(!std::isfinite(v))return;
  if(fabsf(proj[0])<0.00001f || fabsf(proj[5])<0.00001f || fabsf(proj[14])<0.00001f)return;
@@ -89,12 +93,17 @@ static void update_engines(){
  }
  haze_projection[0]=1/proj[0];haze_projection[1]=1/proj[5];
  haze_projection[2]=proj[10];haze_projection[3]=proj[14];
- if(!haze_seeded){
-  for(int j=0;j<3;++j){
-   haze_centers[0][j]=haze_origin[j]-6500*haze_right[j]-2000*haze_up[j]+18000*haze_forward[j];
-   haze_centers[1][j]=haze_origin[j]+26000*haze_right[j]+7000*haze_up[j]+60000*haze_forward[j];
+ // Native world string set by 4A3027 (default) and 456F86 (selected server).
+ // Login mode bit 8 is tested by the offline/online branch at 456426.
+ char map[64]={};read_native(pointer(world+0xdf040),map,63);
+ const HazeProfile *selected=select_haze_profile(map,(pointer(0x5e72c4)&0x100)!=0);
+ if(!haze_selected || selected!=haze_profile){
+  haze_profile=selected;haze_selected=true;haze_count=selected?selected->count:0;haze_cap=selected?selected->opacity_cap:0;
+  memset(haze_centers,0,sizeof(haze_centers));memset(haze_radii,0,sizeof(haze_radii));memset(haze_colors,0,sizeof(haze_colors));
+  for(unsigned i=0;i<haze_count;++i){
+   memcpy(haze_centers[i],selected->pockets[i].center,12);memcpy(haze_radii[i],selected->pockets[i].radii,12);memcpy(haze_colors[i],selected->pockets[i].color_density,16);
   }
-  haze_seeded=true;
+  char line[180];sprintf(line,"haze map=%s profile=%s pockets=%u cap=%.2f",map,selected?selected->map:"unknown-clear",haze_count,haze_cap);log(line);
  }
  haze_camera_valid=true;
  if(haze_capture_step){
@@ -177,6 +186,12 @@ static void update_uniforms(){
  else if(strcmp(name,"HazeProjection")==0)rt->set_uniform_value_float(v,haze_projection,4);
  else if(strcmp(name,"HazeCenterA")==0)rt->set_uniform_value_float(v,haze_centers[0],3);
  else if(strcmp(name,"HazeCenterB")==0)rt->set_uniform_value_float(v,haze_centers[1],3);
+ else if(strcmp(name,"HazeRadiiA")==0)rt->set_uniform_value_float(v,haze_radii[0],3);
+ else if(strcmp(name,"HazeRadiiB")==0)rt->set_uniform_value_float(v,haze_radii[1],3);
+ else if(strcmp(name,"HazeColorDensityA")==0)rt->set_uniform_value_float(v,haze_colors[0],4);
+ else if(strcmp(name,"HazeColorDensityB")==0)rt->set_uniform_value_float(v,haze_colors[1],4);
+ else if(strcmp(name,"HazePocketCount")==0)rt->set_uniform_value_uint(v,haze_count);
+ else if(strcmp(name,"HazeOpacityCap")==0)rt->set_uniform_value_float(v,haze_cap);
  else if(strcmp(name,"EngineCount")==0)rt->set_uniform_value_uint(v,engine_count);
  else if(strcmp(name,"PlayerEngineCount")==0)rt->set_uniform_value_uint(v,player_engine_count);
  else if(strcmp(name,"EngineStarts")==0)rt->set_uniform_value_float(v,&engine_start[0][0],max_engines*4);
@@ -250,8 +265,8 @@ static void presenting(reshade::api::command_queue *q,reshade::api::swapchain *s
 }
 static void presented(reshade::api::effect_runtime *r){
  runtime=r;++frames;
- // The world hook does not run in menus; reset placement here on flight exit.
- if(pointer(pointer(0x5e6e58)+0x20)!=0x44afd0)haze_seeded=false;
+ // The world hook does not run in menus; reset selection here on flight exit.
+ if(pointer(pointer(0x5e6e58)+0x20)!=0x44afd0)haze_selected=false;
  if(haze_capture_step==1){r->save_screenshot("HazeBefore");haze_capture_step=2;applied=false;return;}
  if(haze_capture_step==2){r->save_screenshot("HazeAfter");haze_capture_step=0;applied=false;return;}
  if(capture_step==0 && engine_capture_step==0 && GetFileAttributesA("classic-haze-capture.flag")!=INVALID_FILE_ATTRIBUTES){

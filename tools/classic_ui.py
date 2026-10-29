@@ -12,6 +12,7 @@ import zipfile
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from classic_enhanced import ROOT, CONFIG, RECORD, check, digest, require_x86
+from classic_haze import HEADER as HAZE_HEADER, verify_generated
 
 SETUP_SHA = "afe4c8f13048306307983b8b3d41d5bf00a86820440b0e57dea10950e1176445"
 SDK_SHA = "936d3e9cc0506f16e635266299f43a6b9db49023af1573fae572195506e5b764"
@@ -21,6 +22,7 @@ SOURCE = ROOT / "tools/classic_ui_addon.cpp"
 
 
 def build(sdk, output):
+    verify_generated()
     if digest(sdk) != SDK_SHA:
         raise ValueError("requires the official ReShade v6.8.0 source.zip (see docs/classic-enhanced.md)")
     output = output.resolve()
@@ -36,11 +38,13 @@ def build(sdk, output):
                         "-Wno-unknown-attributes", "-I", str(include), str(SOURCE), "-o", str(output),
                         "-luser32", "-ld3d11", "-ldxguid"], check=True)
     output.with_suffix(".json").write_text(json.dumps({"source_sha256": digest(SOURCE),
+        "haze_profiles_sha256": digest(HAZE_HEADER),
         "addon_sha256": digest(output), "sdk_sha256": SDK_SHA}, indent=2), encoding="utf-8")
     return {"addon": str(output)}
 
 
 def install(folder, setup, addon):
+    verify_generated()
     folder = folder.resolve()
     state = check(folder)
     if state["runtime"] != "enabled" or (folder / BACKUP).exists():
@@ -49,7 +53,8 @@ def install(folder, setup, addon):
         raise ValueError("requires official ReShade_Setup_6.8.0_Addon.exe with the pinned hash")
     manifest = json.loads(addon.with_suffix(".json").read_text(encoding="utf-8"))
     if (manifest["source_sha256"] != digest(SOURCE) or manifest["addon_sha256"] != digest(addon)
-            or manifest["sdk_sha256"] != SDK_SHA):
+            or manifest["sdk_sha256"] != SDK_SHA
+            or manifest.get("haze_profiles_sha256") != digest(HAZE_HEADER)):
         raise ValueError("add-on build is stale or changed; rebuild from project source")
     # The client is never modified on disk. Validate the exact instruction that
     # the add-on will replace in process memory, without depending on pefile.
