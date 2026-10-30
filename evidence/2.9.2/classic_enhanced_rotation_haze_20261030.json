@@ -1,0 +1,503 @@
+{
+  "date": "2026-10-30",
+  "scope": "Three rotation maps; custom map deferred by user",
+  "environment": "Separate 2.9.2 diagnostic client, local loopback online relay, native terrain, 1920x1200",
+  "build": {
+    "source_sha256": "6e6d2ba2957021ccebbde2c72d6d083d2c1b795d5659f35f1c1edf51a48c702f",
+    "haze_profiles_sha256": "4791df84f202889cc456bd907cd5a95dc5f8a730dd358ce2bcb425b15782e2d5",
+    "addon_sha256": "2c154eadad4c9367a52eade4e6c93d325149fdf849d11d922ff476d9974b7265",
+    "sdk_sha256": "936d3e9cc0506f16e635266299f43a6b9db49023af1573fae572195506e5b764"
+  },
+  "profile_json_sha256": "31831c74cfc1fb55059494c9f8519edabd20d280fbe78acd3a7a8265f06c79c8",
+  "checks": [
+    "3 profile tests passed",
+    "5 UI installer tests passed",
+    "Native x86 profile selector assertions passed",
+    "Classic Enhanced installation check passed",
+    "Three native online map selections and live captures verified"
+  ],
+  "limitations": [
+    "Local relay only; no remote multiplayer validation.",
+    "Consecutive frames can include frame-to-frame scene changes.",
+    "Transparent HUD background in asteroid-field damage panel reveals changed terrain; HUD is drawn after effect.",
+    "CTF B approach uses diagnostic spawn; default viewing spawn separately captured in rotation-haze-ctf-b.",
+    "D16 depth precision and two-pocket fog approximation unchanged."
+  ],
+  "installation": "game/classic-enhanced/ClassicUI.addon32, previous add-on and record backed up with .before-rotation-haze",
+  "maps": [
+    {
+      "map": "CTF_arena",
+      "profile": {
+        "map": "CTF_arena",
+        "note": "Online rotation: balanced cool teal flanking asteroid haze; central lane and both flag-base approaches stay clear.",
+        "opacity_cap": 0.4,
+        "pockets": [
+          {
+            "center": [
+              -30000,
+              -20000,
+              50000
+            ],
+            "radii": [
+              23000,
+              14000,
+              25000
+            ],
+            "color": [
+              0.1,
+              0.28,
+              0.32
+            ],
+            "density": 0.22
+          },
+          {
+            "center": [
+              35000,
+              -22000,
+              75000
+            ],
+            "radii": [
+              24000,
+              15000,
+              25000
+            ],
+            "color": [
+              0.1,
+              0.28,
+              0.32
+            ],
+            "density": 0.22
+          }
+        ]
+      },
+      "camera": [
+        1000,
+        0,
+        0
+      ],
+      "native_selection": "haze map=CTF_arena profile=CTF_arena pockets=2 cap=0.40",
+      "comparison": "work\\classic-enhanced\\rotation-haze-ctf\\index.html",
+      "capture": {
+        "capture": "AOA_2026-10-30_06-47-59_0_HazeBefore.png",
+        "method": "Consecutive live frames with local nebula haze off/on; all other effects and HUD retained",
+        "width": 1920,
+        "height": 1200,
+        "changed_pixels_percent": 2.482,
+        "mean_absolute_channel_difference_0_255": 0.1069,
+        "before_sha256": "ef500740b10c02e8da52c4c6527cbf0d24b5a06708b72d9e7f85251108f68f62",
+        "after_sha256": "6d0c6cfbff5deab57c7c24624ec7739907c2b9bccfd9891b004bc96f869e03d8",
+        "preset": {
+          "nebulahaze": "1.200000",
+          "hazeonsky": "0",
+          "protectsky": "1",
+          "vibrance": "0.950000",
+          "contrast": "0.300000",
+          "shadowlift": "0.750000",
+          "exposure": "0.350000",
+          "colorgrade": "0.650000",
+          "vignette": "0.180000",
+          "sharpen": "0.220000",
+          "bloom": "0.650000",
+          "bloomthreshold": "0.400000",
+          "bloomradius": "2.500000",
+          "lightglow": "2.200000",
+          "lightcolor": "0.800000",
+          "lightstreaks": "2.200000",
+          "streaklength": "64.000000",
+          "streakthreshold": "0.720000",
+          "engineglow": "1.600000",
+          "nearbyengineglow": "1.000000",
+          "splitpreview": "0"
+        }
+      },
+      "sampled_regions": {
+        "damage_panel": {
+          "rectangle": [
+            10,
+            170,
+            245,
+            347
+          ],
+          "identical": true,
+          "mean_absolute_rgb_difference": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "ship_systems": {
+          "rectangle": [
+            1660,
+            0,
+            1908,
+            205
+          ],
+          "identical": true,
+          "mean_absolute_rgb_difference": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "radar": {
+          "rectangle": [
+            900,
+            1110,
+            1040,
+            1170
+          ],
+          "identical": true,
+          "mean_absolute_rgb_difference": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "sky_top": {
+          "rectangle": [
+            1300,
+            20,
+            1600,
+            300
+          ],
+          "identical": true,
+          "mean_absolute_rgb_difference": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "sky_right": {
+          "rectangle": [
+            1600,
+            800,
+            1850,
+            980
+          ],
+          "identical": true,
+          "mean_absolute_rgb_difference": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      }
+    },
+    {
+      "map": "CTF_arena_b",
+      "profile": {
+        "map": "CTF_arena_b",
+        "note": "Online rotation: contrasting amber western dust and blue eastern haze; offset viewing spawn stays clear.",
+        "opacity_cap": 0.42,
+        "pockets": [
+          {
+            "center": [
+              0,
+              0,
+              145000
+            ],
+            "radii": [
+              28000,
+              18000,
+              30000
+            ],
+            "color": [
+              0.3,
+              0.22,
+              0.13
+            ],
+            "density": 0.25
+          },
+          {
+            "center": [
+              75000,
+              15000,
+              160000
+            ],
+            "radii": [
+              28000,
+              18000,
+              30000
+            ],
+            "color": [
+              0.12,
+              0.24,
+              0.38
+            ],
+            "density": 0.25
+          }
+        ]
+      },
+      "camera": [
+        0,
+        0,
+        80000
+      ],
+      "native_selection": "haze map=CTF_arena_b profile=CTF_arena_b pockets=2 cap=0.42",
+      "comparison": "work\\classic-enhanced\\rotation-haze-ctf-b-approach\\index.html",
+      "capture": {
+        "capture": "AOA_2026-10-30_06-50-15_0_HazeBefore.png",
+        "method": "Consecutive live frames with local nebula haze off/on; all other effects and HUD retained",
+        "width": 1920,
+        "height": 1200,
+        "changed_pixels_percent": 4.958,
+        "mean_absolute_channel_difference_0_255": 0.3672,
+        "before_sha256": "5d6dfa4238ab58fad0becf022b5e97a1730d1aa3f54b0d4f9c9c8908d4e28b7c",
+        "after_sha256": "11f75b29c949b65279c914502b9ca3a041ac3fdcd437e271128b44b9790273be",
+        "preset": {
+          "nebulahaze": "1.200000",
+          "hazeonsky": "0",
+          "protectsky": "1",
+          "vibrance": "0.950000",
+          "contrast": "0.300000",
+          "shadowlift": "0.750000",
+          "exposure": "0.350000",
+          "colorgrade": "0.650000",
+          "vignette": "0.180000",
+          "sharpen": "0.220000",
+          "bloom": "0.650000",
+          "bloomthreshold": "0.400000",
+          "bloomradius": "2.500000",
+          "lightglow": "2.200000",
+          "lightcolor": "0.800000",
+          "lightstreaks": "2.200000",
+          "streaklength": "64.000000",
+          "streakthreshold": "0.720000",
+          "engineglow": "1.600000",
+          "nearbyengineglow": "1.000000",
+          "splitpreview": "0"
+        }
+      },
+      "sampled_regions": {
+        "damage_panel": {
+          "rectangle": [
+            10,
+            170,
+            245,
+            347
+          ],
+          "identical": true,
+          "mean_absolute_rgb_difference": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "ship_systems": {
+          "rectangle": [
+            1660,
+            0,
+            1908,
+            205
+          ],
+          "identical": true,
+          "mean_absolute_rgb_difference": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "radar": {
+          "rectangle": [
+            900,
+            1110,
+            1040,
+            1170
+          ],
+          "identical": true,
+          "mean_absolute_rgb_difference": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "sky_top": {
+          "rectangle": [
+            1300,
+            20,
+            1600,
+            300
+          ],
+          "identical": true,
+          "mean_absolute_rgb_difference": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "sky_right": {
+          "rectangle": [
+            1600,
+            800,
+            1850,
+            980
+          ],
+          "identical": true,
+          "mean_absolute_rgb_difference": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      }
+    },
+    {
+      "map": "ast_fld_a",
+      "profile": {
+        "map": "ast_fld_a",
+        "note": "Online rotation: stronger warm dust and cool teal pockets within asteroid groups; split around the spawn.",
+        "opacity_cap": 0.58,
+        "pockets": [
+          {
+            "center": [
+              -28000,
+              4000,
+              27000
+            ],
+            "radii": [
+              25000,
+              16000,
+              23000
+            ],
+            "color": [
+              0.28,
+              0.23,
+              0.16
+            ],
+            "density": 0.5
+          },
+          {
+            "center": [
+              35000,
+              3000,
+              42000
+            ],
+            "radii": [
+              24000,
+              16000,
+              24000
+            ],
+            "color": [
+              0.1,
+              0.3,
+              0.34
+            ],
+            "density": 0.4
+          }
+        ]
+      },
+      "camera": [
+        0,
+        0,
+        0
+      ],
+      "native_selection": "haze map=ast_fld_a profile=ast_fld_a pockets=2 cap=0.58",
+      "comparison": "work\\classic-enhanced\\rotation-haze-asteroids\\index.html",
+      "capture": {
+        "capture": "AOA_2026-10-30_06-51-05_0_HazeBefore.png",
+        "method": "Consecutive live frames with local nebula haze off/on; all other effects and HUD retained",
+        "width": 1920,
+        "height": 1200,
+        "changed_pixels_percent": 12.318,
+        "mean_absolute_channel_difference_0_255": 0.7618,
+        "before_sha256": "8638f24505e1c2f41af50ded4bbda6611222f5446dd3f44ce75fe59f2fbe5a33",
+        "after_sha256": "633dabc989516b660a75ce3d7cdeca545139c96fc6ea67f8d5739b11c091a720",
+        "preset": {
+          "nebulahaze": "1.200000",
+          "hazeonsky": "0",
+          "protectsky": "1",
+          "vibrance": "0.950000",
+          "contrast": "0.300000",
+          "shadowlift": "0.750000",
+          "exposure": "0.350000",
+          "colorgrade": "0.650000",
+          "vignette": "0.180000",
+          "sharpen": "0.220000",
+          "bloom": "0.650000",
+          "bloomthreshold": "0.400000",
+          "bloomradius": "2.500000",
+          "lightglow": "2.200000",
+          "lightcolor": "0.800000",
+          "lightstreaks": "2.200000",
+          "streaklength": "64.000000",
+          "streakthreshold": "0.720000",
+          "engineglow": "1.600000",
+          "nearbyengineglow": "1.000000",
+          "splitpreview": "0"
+        }
+      },
+      "sampled_regions": {
+        "damage_panel": {
+          "rectangle": [
+            10,
+            170,
+            245,
+            347
+          ],
+          "identical": false,
+          "mean_absolute_rgb_difference": [
+            5.379757182353648,
+            4.101574708498617,
+            3.334920062507513
+          ]
+        },
+        "ship_systems": {
+          "rectangle": [
+            1660,
+            0,
+            1908,
+            205
+          ],
+          "identical": true,
+          "mean_absolute_rgb_difference": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "radar": {
+          "rectangle": [
+            900,
+            1110,
+            1040,
+            1170
+          ],
+          "identical": true,
+          "mean_absolute_rgb_difference": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "sky_top": {
+          "rectangle": [
+            1300,
+            20,
+            1600,
+            300
+          ],
+          "identical": true,
+          "mean_absolute_rgb_difference": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "sky_right": {
+          "rectangle": [
+            1600,
+            800,
+            1850,
+            980
+          ],
+          "identical": true,
+          "mean_absolute_rgb_difference": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      }
+    }
+  ]
+}

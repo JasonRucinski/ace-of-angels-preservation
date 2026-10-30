@@ -29,8 +29,10 @@ of original mission nebula locations.
 |---|---|
 | Offline Curt3 on CTF_arena | Lighter teal station skirt and violet carrier pocket; 52% opacity cap |
 | Arena1a / newterrain | Sparse dust at the two outer asteroid clusters; 30–32% cap |
-| CTF_arena / CTF_arena_b | Light flanking pockets, sampled spawn/flag-base positions clear; 28–30% cap |
-| ast_fld_a / b / c / d | Dust at selected asteroid groups, with distinct colors and sizes; 45–58% cap |
+| CTF_arena | Cool teal around two forward asteroid groups below the central lane; spawn/flag-base positions clear; 40% cap |
+| CTF_arena_b | Amber western dust and blue eastern haze around forward asteroid groups; viewing spawn clear; 42% cap |
+| ast_fld_a | Denser warm dust on the left and teal haze on the right; origin clear; 58% cap |
+| ast_fld_b / c / d | Dust at selected asteroid groups, with distinct colors and sizes; 45–58% cap |
 | outerchange | Two localized pockets at recovered asteroid-field placements; 38% cap |
 | JRMAP | A light background pocket beyond the station approach; 30% cap |
 | Base/component layouts, irrosa01, Hittest | Clear, to preserve interiors and docking visibility |
@@ -72,11 +74,20 @@ comparison is `work/classic-enhanced/haze-map-curt3/index.html`; the
 Live shader compilation and moving offline flight passed; captured FPS was
 59–60, not a controlled benchmark. D16 depth limits distance precision; this
 is a bounded fog approximation, without light scattering, shadowed volumes or
-original mission-authored placement. Other maps' profiles are based on decoded
-layout coordinates and static clearance checks; only Curt3 has been visually
-verified with this revision. Multiplayer remains untested.
+original mission-authored placement. On 30 Oct the three rotation maps were
+also visually checked through a local online relay, using a separate test client.
+Reports: `work/classic-enhanced/rotation-haze-ctf/index.html`,
+`rotation-haze-ctf-b-approach/index.html`, and `rotation-haze-asteroids/index.html`.
+The CTF B approach capture uses diagnostic spawn (0, 0, 80000), avoiding the
+large foreground asteroid at its usual viewing spawn. Other profiles remain
+based on decoded layouts and static checks. Remote multiplayer is untested.
+Sampled sky, ship-systems and radar rectangles match exactly in all three
+pairs. In ast_fld_a, the transparent damage-panel background reveals the
+changed asteroid beneath it; HUD drawing itself still occurs after haze.
+The custom map was deferred at the user's request.
 See [haze verification evidence](../evidence/2.9.2/classic_enhanced_haze_20261028.json).
 Map-specific evidence: [profile verification](../evidence/2.9.2/classic_enhanced_map_haze_20261028.json).
+Rotation-map evidence: [online captures](../evidence/2.9.2/classic_enhanced_rotation_haze_20261030.json).
 
 Edit [haze-maps.json](../config/classic-enhanced/haze-maps.json), then run
 `python -I tools/classic_haze.py` and rebuild the add-on with `classic_ui.py build`.

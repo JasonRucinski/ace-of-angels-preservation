@@ -133,87 +133,87 @@
     },
     {
       "map": "CTF_arena",
-      "note": "Low-density flanking asteroid pockets; origin and bases near z +/-200000 remain clear.",
-      "opacity_cap": 0.28,
+      "note": "Online rotation: balanced cool teal flanking asteroid haze; central lane and both flag-base approaches stay clear.",
+      "opacity_cap": 0.4,
       "pockets": [
         {
           "center": [
-            -85000,
-            -26000,
-            40000
+            -30000,
+            -20000,
+            50000
           ],
           "radii": [
-            42000,
-            20000,
-            55000
+            23000,
+            14000,
+            25000
           ],
           "color": [
             0.1,
-            0.3,
-            0.34
+            0.28,
+            0.32
           ],
-          "density": 0.1
+          "density": 0.22
         },
         {
           "center": [
-            85000,
-            -26000,
-            -40000
+            35000,
+            -22000,
+            75000
           ],
           "radii": [
-            42000,
-            20000,
-            55000
+            24000,
+            15000,
+            25000
           ],
           "color": [
             0.1,
-            0.3,
-            0.34
+            0.28,
+            0.32
           ],
-          "density": 0.1
+          "density": 0.22
         }
       ]
     },
     {
       "map": "CTF_arena_b",
-      "note": "Offset arena: haze at side asteroid groups, viewing spawn (45396,4633,80000) clear.",
-      "opacity_cap": 0.3,
+      "note": "Online rotation: contrasting amber western dust and blue eastern haze; offset viewing spawn stays clear.",
+      "opacity_cap": 0.42,
       "pockets": [
         {
           "center": [
-            -78000,
-            -16000,
-            153000
+            0,
+            0,
+            145000
           ],
           "radii": [
-            40000,
-            19000,
-            40000
+            28000,
+            18000,
+            30000
           ],
           "color": [
-            0.12,
+            0.3,
             0.22,
-            0.32
+            0.13
           ],
-          "density": 0.12
+          "density": 0.25
         },
         {
           "center": [
-            80000,
-            0,
-            180000
+            75000,
+            15000,
+            160000
           ],
           "radii": [
-            34000,
+            28000,
             18000,
-            33000
+            30000
           ],
           "color": [
             0.12,
-            0.22,
-            0.32
+            0.24,
+            0.38
           ],
-          "density": 0.12
+          "density": 0.25
         }
       ]
     },
@@ -262,7 +262,7 @@
     },
     {
       "map": "ast_fld_a",
-      "note": "Dust around two asteroid groups, split around the origin.",
+      "note": "Online rotation: stronger warm dust and cool teal pockets within asteroid groups; split around the spawn.",
       "opacity_cap": 0.58,
       "pockets": [
         {
@@ -281,25 +281,25 @@
             0.23,
             0.16
           ],
-          "density": 0.38
+          "density": 0.5
         },
         {
           "center": [
-            60000,
+            35000,
             3000,
-            -19000
+            42000
           ],
           "radii": [
-            30000,
+            24000,
             16000,
-            26000
+            24000
           ],
           "color": [
             0.1,
             0.3,
             0.34
           ],
-          "density": 0.28
+          "density": 0.4
         }
       ]
     },

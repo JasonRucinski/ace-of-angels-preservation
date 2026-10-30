@@ -16,7 +16,16 @@ a search-engine summary only.
 
 ## 2. Status
 
-Latest haze refinement (28 Oct): native map identity selects fixed authored
+Latest haze refinement (30 Oct): tuned and locally online-verified CTF_arena
+(teal, 40% cap), CTF_arena_b (amber/blue, 42%), and ast_fld_a (dust/teal, 58%).
+Pockets follow visible asteroid groups with sampled spawn/base points clear.
+Captured haze-off/on pairs under work/classic-enhanced/rotation-haze-*;
+gallery: work/classic-enhanced/rotation-haze.html. Classic Enhanced add-on
+updated with backups; user's running classic-capture client left untouched.
+Custom map deferred by user. Remote multiplayer not tested. Evidence:
+evidence/2.9.2/classic_enhanced_rotation_haze_20261030.json.
+
+Previous haze refinement (28 Oct): native map identity selects fixed authored
 pockets, replacing camera-relative placement. All 20 map-viewer entries plus
 offline Curt3 have explicit policies; bases/components and unknown maps stay
 clear. Per-map colors, density, radii and caps live in haze-maps.json, compiled
