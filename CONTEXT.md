@@ -105,6 +105,58 @@ compiled and six sampled UI/sky regions stayed pixel-identical. Bright hull
 glints and world-space labels can also seed streaks. Incremental live comparison:
 work/classic-enhanced/light-streaks/index.html. Performance not benchmarked.
 
+First new map (27 Oct 2026): `tools/make_map.py` writes a JSON spec as a
+native 2.9.2 `.TRN`, in the record layout of JRMAP's editor records.
+**Crucible** (`config/maps/crucible.json`) is an original layout of 62 objects
+from the shipped art, with 2 safe zones and 5 power-up zones: a launch
+between escort carriers, a ring of 14 asteroids, a graveyard of seven
+tumbling capital ships, a dish-wall gate before `hy_base`, and a distant
+outpost. The client has no free map slot, so the map goes into the JRMAP
+`.TRN` slot of a separate play copy (`work/custom-map/client`). `game/2.9.2`
+is unchanged. Real client, loopback, two runs: all 64 terrain objects
+loaded, models at their spec positions, "Entering Safe Zone" at the spawn,
+textured in F5 captures. Later the same day: a Far Yards shipyard 405 km
+out (18 more models) and a **navigation waypoint** to it. The client skips
+kind-3 records, so the new server option `--map-waypoints TRN` sends them
+like the original maps' buoys. Live, the waypoint loaded as world object 90.
+T selected it, and the HUD marked it at about 389k. All six power-ups
+appeared as objects. Then the first **new object**: NASA's Bennu asteroid
+(3D Resources `.glb`, hash-checked, not committed), converted by
+`tools/make_object.py` into a `.Gob` and `.Sco` from the Astr-C template.
+It is scaled to 120 km and appended to the play copy's object database
+(`aoapack.rebuild` can now add entries). It sits 776 km out with a mining
+settlement and a second waypoint. Live: no crash, 103 terrain objects, and
+Bennu drawn, textured and lit. 19 tests pass. Power-up pickup, collision,
+Bennu's frame-rate cost, the full flights out and a second player are
+untested. See [custom objects](docs/custom-objects.md) and the
+[Bennu evidence](evidence/2.9.2/custom_object_bennu_20261027.json). See [custom maps](docs/custom-maps.md)
+and the [evidence](evidence/2.9.2/custom_map_crucible_20261027.json).
+
+Distant object visibility (27 Oct 2026): optional `distant-world-objects-v1`
+extends the mesh surface-distance limit from 61,000 to 4,500,000 units and
+the cached-world-image horizon from 900,000 to 4,500,000. The minimum projected
+size drops from 5 to 0.5 (ten times farther for size-limited objects). Group
+visibility and child LOD selection are adjusted together, retaining the lowest
+authored selection at distance and the existing near selections. Seven tests
+cover complete original-code group execution, all 154 parsed mesh models,
+cutoffs/FPU precisions, optional rendering composition, hook state and exact
+undo/corruption checks. Patch version 22 recognizes and preserves this opt-in
+mode. Installed in the normal client and active Arena1a trial copy; both
+pass asset/setup and exact layer-backup checks. All nine focused suites pass
+(58 tests); [verification record](evidence/2.9.2/object_persistence_20261027.json).
+Visual acceptance and GPU performance remain pending. See
+[rendering notes](docs/asteroid-rendering.md#distant-object-persistence-27-october-2026).
+
+Highlight reel (27 Oct 2026): a 48.9 s video from scripted recordings of the
+real 2.9.2 client, nine shots on six maps (irrosa01, ast_fld_a/b,
+outerchange, CTF_arena_b, JRMAP) with eleven fighters, in the cockpit, chase and
+orbit views. Scripted pilots, camera and velocity held in memory, a new host
+option `--start-vessel`, Windows Graphics Capture through ffmpeg. The first cut
+showed orbit-view flicker (fixed in patch version 21) and untextured Tholfus
+wingmen (original data; replaced). Re-cut the same day with six re-filmed
+shots on version 21 and short punchy title cards (48.95 s). Output stays
+in ignored `work/reel/`. See [hype-reel.md](docs/hype-reel.md).
+
 Nine-gate expansion (27 Oct 2026): `--warp-trial` and the host checkbox now
 restore all nine Arena1a warp gates, adding eight placements. Slots 71–79
 replace the old single slot 85; maximum practice targets becomes 69. Original
@@ -448,6 +500,16 @@ taken power-up never re-enables its model. Patch version 19
 live with no memory writes: 22 pickups in a row, one every 5 s, and the HUD
 showed "Shield +5". The user confirmed it on JRMAP's own zones with
 `game/2.9.2` at version 19. A second player watching is untested.
+Orbit camera (26 Oct 2026, [findings 9.47](docs/findings.md)): patch version 20
+(`third-person-camera-v2`, replaces v1, upgrades in place) adds **F4**, a
+camera that circles your ship once per 24 s at the chase distance. It turns
+the renderer's own forward and right copies (`0x43B367`) and the culling copy
+together. Seen live through a full lap of F5 captures; the F4 read was
+forced on in memory because the test window had no focus, so a real F4
+press is still unconfirmed. Patch version 21 (`third-person-camera-v3`,
+27 Oct) fixes orbit-view objects blinking: culling used the orbit camera
+only when the millisecond clock had not moved ([findings 9.48](docs/findings.md)).
+Plain F2 turned out to be bound by default ("Toggle Mentor"); plain F4 is free.
 Ship changes (24 Oct 2026, [findings 9.40](docs/findings.md)): **fixed in the
 relay.** The in-flight fighter menu needs a config list (TCP job 4, one
 `_all` entry) and an answer to its `0xA0` request. The relay sent neither,

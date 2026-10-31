@@ -16,6 +16,9 @@ Newest results are in [findings.md](findings.md) and the status section of
 | [linux-host.md](linux-host.md) | Minimal Linux host with a systemd service, LAN checks and a VPN path |
 | [host-control.md](host-control.md) | The host window: players, scores, kick/ban, map switching |
 | [map-viewer.md](map-viewer.md) | Loading any of the 20 recovered maps in the client |
+| [custom-maps.md](custom-maps.md) | Building new maps from a JSON spec; the first one, Crucible |
+| [custom-objects.md](custom-objects.md) | Adding new objects from glTF models; the first one, NASA's Bennu |
+| [hype-reel.md](hype-reel.md) | Filming scripted shots of the real client and cutting the highlight reel |
 | [texture-pack.md](texture-pack.md) | Optional sharper ship and station skins, built from your own copy |
 | [classic-enhanced.md](classic-enhanced.md) | Experimental color, contrast, sharpening, and glow in a separate game copy |
 | [running-on-windows-11.md](running-on-windows-11.md) | Why the client crashed on modern Windows and how it was fixed |

@@ -1,0 +1,40 @@
+{
+ "date": "2026-10-27",
+ "what": "First new object added to the 2.9.2 object database: asteroid Bennu from NASA's 3D Resources, converted by tools/make_object.py into a single-mesh .Gob and a .Sco, and placed 776 km out in Crucible with a mining settlement and a navigation waypoint",
+ "source": {
+  "url": "https://raw.githubusercontent.com/nasa/NASA-3D-Resources/master/3D%20Models/1999%20RQ36%20asteroid/1999%20RQ36%20asteroid.glb",
+  "repository_commit": "87fd3a6afa6eda1d3d8a44bc8881d28bacdbe2ce (last change to the folder, 2025-03-20)",
+  "bytes": 329596,
+  "sha256": "644af15678447df90c2d9e85674809c7fc70f439e0865418aa6618a8483b7958",
+  "md5": "88dd9226932cd6f2223a84fc4e81c8b9",
+  "kept_at": "builds/bennu-nasa/bennu.glb (ignored, not committed)",
+  "contents": "glTF 2.0 from ImageToStl.com: one primitive, 9,122 vertices, 18,240 triangles, normals, no texture coordinates or images, flat material colour; normals point inward",
+  "credit": "NASA (NASA 3D Resources); NASA media guidelines: generally not subject to US copyright, credit NASA, no implied endorsement"
+ },
+ "spec": {"path": "config/objects/bennu.json", "sha256": "d62c16852fd43f7d190e8b0eb6b1e1074ada5025ca2842b05abf99dd7e58dfa8"},
+ "converted": {
+  "template": "Astr-C.Gob / Astr-C.Sco from the user's AOAOBJECTS.ODB",
+  "Bennu1.Gob": {"bytes": 1289795, "sha256": "11ceffb5070eba74a66a273272ee91b36cd1246132b5337a7c304296b84cc6aa",
+                 "vertices": 9880, "faces": 18240, "radius": 60000, "texture": "astr4_a.tga (existing, 256x256, tiled every 18,000 units)"},
+  "Bennu.Sco": {"bytes": 1234, "sha256": "c63e5d6bb5b37e1eee89e3e2ce9e0f3d2e0e18d54cbeedc4f8d5399f638457c5"},
+  "checks": "winding flipped by signed volume; all 18,240 faces and 9,880 vertex normals outward; Gob parses back with tools/gob2obj.py; face edge-length order |ab|,|bc|,|ca| matches all 518 Astr-C faces"
+ },
+ "play_copy": {
+  "AOAOBJECTS.ODB": {"entries": 339, "sha256": "86419cd05964f9dc9786fd5260bd8302d66e880becacf3b9c1a4322107a2ecc8",
+                     "backup": "AOAOBJECTS.ODB.before-custom-objects, identical to game/2.9.2/AOAOBJECTS.ODB (22d0d355e758993cb34037eeec80376e5d95851d7f29b2036fd78673c3f81880)"},
+  "jrmap292.trn": {"records": 113, "sha256": "2c63c6655d42609698b2a97a9a0e04fb709166e0392e9e4599605470794f0d67"},
+  "map_spec_sha256": "b3c4dc7d2f088b90c7567c0d7bb5b312d11e24f5bdc0a584a07ad74bef9a0250"
+ },
+ "tests": "tools/test_make_object.py 7 passed (synthetic glTF, winding, triplanar UVs, mesh block, synthetic archive append, real template Gob/Sco, Bennu build); tools/test_make_map.py 12 passed; aoapack.rebuild with no changes reproduces the shipped AOAOBJECTS.ODB byte for byte and the 337 original entries decode unchanged after the append",
+ "live": {
+  "client": "play copy work/custom-map/client (patch_version 21), loopback relay as JRMAP with --map-waypoints, --powerup-zones and --sustained-delivery",
+  "runs": [
+   {"spawn": [-364897, -78192, 555246], "terrain_objects": 103,
+    "result": "no crash; 103 = 82 earlier + 20 new models (Bennu included) + 1 safe zone; waypoints 'Far Yards' (slot 90) and 'Bennu' (slot 91) loaded as kind-3 world objects; F5 shows Bennu's lit surface with the docks, haulers, safe-zone box and an ore chunk; target windows list Bennu and Far Yards"},
+   {"spawn": [-350000, -75000, 430000], "terrain_objects": 103,
+    "result": "F5 from about 220 km shows the whole of Bennu textured, the settlement on its face, ore chunks and the Bennu waypoint marker"}
+  ],
+  "screenshots": "work/custom-map/scout/bennu-near-a.tga (82624e3bb584f6b6c2b7221f6d65246145d9f6e0669631b4648e3cae0bd043d6), bennu-far-a.tga (5a2ed02eb8200431b07fb424c1c52ae92067bcc6e14a38b3148531a909a05fad); not committed"
+ },
+ "not_verified": ["collision with Bennu", "frame rate cost of the 18,240-triangle mesh (the captures were taken by automation, not timed)", "how Bennu looks from beyond the 61,000-unit mesh distance in normal flight, e.g. from the spawn 776 km away", "flying the route from the spawn", "a second player"]
+}

@@ -19,12 +19,15 @@ executable accept only known, hash-checked builds and record an exact undo.
 | `host_control.cmd` / `host_control.py` | The host window: start, watch players, message, kick, switch maps, stop |
 | `start_lan_dogfight.ps1` | Starts the LAN or VPN dogfight server from the command line |
 | `map_viewer.py serve MAP` | Serves one recovered map for flying around |
+| `make_object.py install SPEC MODEL.glb CLIENT` | Adds a new object from a glTF model to a play copy's object database ([custom-objects.md](../docs/custom-objects.md)) |
+| `make_map.py install/serve SPEC CLIENT` | Builds a new map from a JSON spec into a play copy of the client and serves it ([custom-maps.md](../docs/custom-maps.md)) |
 | `station_stub.py` | The stand-in Station and arena server that all of the above run |
 | `register_activeskin.ps1` | Registers the game's dialog skin control for the current user (no admin) |
 | `make_install.py` / `install_wrapper.py` | The extract and wrapper steps of `setup_game.ps1` |
 | `build_texture_pack.py GAME_DIR` | Builds the 2x skin pack from your own archives with Real-ESRGAN ([texture-pack.md](../docs/texture-pack.md)) |
 | `texture_pack.py` | Installs or removes replacement TGA skins in a game folder |
 | `classic_enhanced.cmd` / `classic_enhanced.py` | Prepares/launches a separate color-filter experiment; Scroll Lock compares ([guide](../docs/classic-enhanced.md)) |
+| `reel/record.py SHOTS` / `reel/edit.py EDIT` | Films scripted shots of the real client and cuts them into the highlight reel ([hype-reel.md](../docs/hype-reel.md)) |
 
 ## Server internals
 
@@ -48,11 +51,12 @@ Details and addresses are in [client-setup.md](../docs/client-setup.md).
 | `visibility_fix.py` | Invalid trigonometry in visibility culling |
 | `cursor_warp.py` | Dragged panels jumping to the corner |
 | `menu_aspect.py` | Ship-selection framing on wide screens |
-| `third_person.py` | F2 chase camera |
+| `third_person.py` | F2 chase camera and F4 orbit camera |
 | `own_ship_model.py` / `own_ship_menu.py` | Drawing your own ship in the chase camera and after a ship change |
 | `online_terrain.py` | Server-chosen maps, safe-zone cubes |
 | `powerup_pickup.py` | Picking up server-placed power-ups |
 | `texture32.py`, `world_detail.py`, `station_detail.py`, `solid_world_render.py`, `asteroid_render.py` | Optional rendering quality |
+| `object_persistence.py` | Optional 4,500,000-unit world visibility, smaller screen-size cutoff and retained distant LODs; exact undo |
 | `local_station.py`, `explicit_protection.py` | Station hostname; protection setter prototype |
 
 ## Finding builds and history

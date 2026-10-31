@@ -1,0 +1,30 @@
+{
+ "date": "2026-10-27",
+ "what": "First map built from scratch: Crucible, written by tools/make_map.py as a native 2.9.2 .TRN and loaded by the real client; later the same day a Far Yards section 405 km out with a navigation waypoint",
+ "spec": {"path": "config/maps/crucible.json", "sha256": "980550302f97c5af7c0366a7cb42b31e197690908193b331beaf445e9181d34b"},
+ "trn": {"records": 89, "bytes": 48064, "sha256": "da64c00141d670989ebf87207c88fc5cb1adf76ce7b060fd5b233e4be3de9c18",
+         "static_models": 80, "safe_zones": 2, "navigation_waypoints": 1, "powerup_zones": 6, "turret_links": 0},
+ "objects_used": ["Astr-A", "Astr-B", "Astr-C", "IBCH", "Tug1", "tug_01", "tug_02", "ztug_01", "MCVA", "ZCVS", "RCVS",
+                  "HCVL-H", "ZDD", "HDD", "CCVB", "DishWall", "hy_base", "NewDock", "MBB", "base_719", "Wall", "NavMarkerBlue"],
+ "offline_checks": {
+  "tests": "tools/test_make_map.py: 12 passed (record layout against JRMAP's editor records, yaw convention against JRMAP flag3, proper rotations, zones, waypoint record -> navigation_buoys.trn_placements -> LoadObject kind 3 slot 90, --map-waypoints option checks, rejections, spec round trip, objects present in the user's AOAOBJECTS.ODB); test_station_runtime, test_powerups and test_navigation_buoys unchanged and passing",
+  "preview": "make_map.py obj + render_obj.py from the original meshes and textures: 80/89 records drawn (zones and the waypoint are not drawn); spawn 3,293 units clear of the nearest bounding sphere"
+ },
+ "live": {
+  "client": "separate play copy work/custom-map/client of game/2.9.2 (patch_version 21 in _client_setup.json; AOACLIENT.EXE sha256 c56d9b8d5b74d626e4e5829101b1bd863bfa3be8eebceac350ac91791e057e3a); the map installed in its jrmap292.trn slot",
+  "server": "station_stub.py --profile local-relay --map JRMAP --experimental-terrain --spawn-at ... --powerup-zones <copy>/jrmap292.trn (and, for the waypoint runs, --map-waypoints <copy>/jrmap292.trn --sustained-delivery), loopback",
+  "method": "window-message login and Station Play (tools/reel/record.py flow), terrain and world-object lists read from memory by inspect_arena.snapshot, T sent with window.key, F5 captures",
+  "runs": [
+   {"map_version": "62 models", "spawn": [0, 0, -6000], "camera": "cockpit", "terrain_objects": 64,
+    "result": "all 62 named models present at their spec positions (no coordinate off by more than 2 units); the 2 safe zones listed under the default name '---'; HUD showed 'Entering Safe Zone' and the blue zone tint at the spawn"},
+   {"map_version": "62 models", "spawn": [0, 4000, 132000], "camera": "chase", "terrain_objects": 64,
+    "result": "screenshot shows the DishWall gate, hy_base and the MBB/MCVA guards drawn with textures"},
+   {"map_version": "80 models + waypoint", "spawn": [0, 0, -6000], "terrain_objects": 82,
+    "result": "host printed 'JRMAP navigation buoys: 1' and 'power-ups: 6'; world object slot 90 'Far Yards', tag 0x4001005a, kind 3, visible, at (220915, 67235, 307123); six power-up objects (slots 100-105) at points inside their zones. After T the three target windows showed 'Far Yards' / 'NavMark.' with relation N and the on-screen marker read about 389k (actual distance 389,100 units)"},
+   {"map_version": "80 models + waypoint", "spawn": [230000, 76000, 296000], "terrain_objects": 82,
+    "result": "screenshot shows the slipway walls with the ZDD inside, tugs, dock and anchor rock; after T the target windows showed Far Yards at 1.7k"}
+  ],
+  "screenshots": "work/custom-map/scout/: crucible-spawn.png (sha256 57528385a24f0238575a6bf79e55823decfb148d1ffbe704f1d53b467795b171), crucible-graveyard.png (700ba6cbc4d8356eec4ee1356a29d3c6d4f25862a9ff755b9a4ae82a18d19aca), nav-spawn-t.tga (f99b63f734a5ccc507b95152b67b0f4a6f46166338115d34cfc6945c68c8fdef), nav-yards-t.tga (e96e0b626b8e071a89e908abaf1d4e62bb750b55a793839dbc20c60e0de926b4); game footage, not committed"
+ },
+ "not_verified": ["picking up power-ups on this map", "collision with the new objects or the waypoint", "flying the full 389 km to the waypoint", "a second player", "orientation of tumbled ships against the editor's own pitch/roll records (yaw is checked; pitch and roll use the same Direct3D convention)"]
+}

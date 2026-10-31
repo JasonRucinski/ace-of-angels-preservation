@@ -1,0 +1,38 @@
+[
+ {"name": "opening_orbit", "map": "irrosa01", "seconds": 11, "start_vessel": "Ym Khtat",
+  "spawn_at": [-2635, 2500, 6500], "camera": "orbit", "velocity": [0, 0, 250],
+  "pilots": [{"hull": "Grathven", "path": {"kind": "line", "start": [-3300, 2700, 4000], "velocity": [0, 0, 950]}},
+             {"hull": "Shrike", "path": {"kind": "line", "start": [-2000, 2350, 3400], "velocity": [0, 0, 1000]}}]},
+
+ {"name": "formation_flyby", "map": "ast_fld_b", "seconds": 10, "start_vessel": "Hartra",
+  "camera": "cockpit", "velocity": [0, 0, 120],
+  "pilots": [{"hull": "Shrike", "path": {"kind": "line", "start": [0, -120, -2600], "velocity": [0, 0, 900]}},
+             {"hull": "Vermok", "path": {"kind": "line", "start": [-380, -60, -3000], "velocity": [0, 0, 900]}},
+             {"hull": "Rhino", "path": {"kind": "line", "start": [380, -60, -3000], "velocity": [0, 0, 900]}}]},
+
+ {"name": "chase_asteroids", "map": "ast_fld_a", "seconds": 10, "start_vessel": "Eagle",
+  "camera": "chase", "velocity": [0, 0, 700],
+  "pilots": [{"hull": "Kafic", "path": {"kind": "line", "start": [420, 60, 250], "velocity": [0, 0, 700]}}]},
+
+ {"name": "outerchange_orbit", "map": "outerchange", "seconds": 11, "start_vessel": "Naroch",
+  "spawn_at": [15500, 2500, -4000], "camera": "orbit", "velocity": [0, 0, 250]},
+
+ {"name": "overtake_chase", "map": "CTF_arena_b", "seconds": 10, "start_vessel": "Rhino",
+  "spawn_at": [45396, 9000, 70000], "camera": "chase", "velocity": [0, 0, 500],
+  "pilots": [{"hull": "Vermok", "path": {"kind": "line", "start": [45050, 9150, 68600], "velocity": [0, 0, 1150]}},
+             {"hull": "Foushar", "path": {"kind": "line", "start": [45760, 8880, 68200], "velocity": [0, 0, 1250]}}]},
+
+ {"name": "gunfire", "map": "ast_fld_b", "seconds": 12, "start_vessel": "Grathven",
+  "target_ships": 1, "camera": "cockpit", "velocity": [0, 0, 800], "fire": [[2, 11]]},
+
+ {"name": "jrmap_station", "map": "JRMAP", "seconds": 11, "start_vessel": "Mkulat",
+  "camera": "orbit", "velocity": [0, 0, 200]},
+
+ {"name": "base_run", "map": "irrosa01", "seconds": 10, "start_vessel": "Shrike",
+  "spawn_at": [-2635, 1500, 6000], "camera": "cockpit", "velocity": [0, 0, 900],
+  "pilots": [{"hull": "Ym Khtat", "path": {"kind": "line", "start": [-2950, 1650, 7600], "velocity": [0, 0, 900]}},
+             {"hull": "Grathven", "path": {"kind": "line", "start": [-2300, 1580, 8300], "velocity": [0, 0, 900]}}]},
+
+ {"name": "closer_orbit", "map": "CTF_arena_b", "seconds": 12, "start_vessel": "Vasa Chovo",
+  "spawn_at": [45396, 4633, 72000], "camera": "orbit", "velocity": [0, 0, 250]}
+]
