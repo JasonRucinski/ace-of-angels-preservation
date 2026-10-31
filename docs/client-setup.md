@@ -5,6 +5,63 @@ assets and never execute the installer. Windows 11 is the locally exercised
 platform; a clean Windows 10/11 installation still needs validation. This
 prepares the local diagnostic client, not a released internet game.
 
+## Client launcher and visual options
+
+Double-click `tools\client_launcher.cmd`, or run:
+
+```powershell
+.venv\Scripts\python.exe -I tools/client_launcher.py
+# Optional: select a different installation
+.venv\Scripts\python.exe -I tools/client_launcher.py game/another-copy
+```
+
+The window reads the actual installed settings when it opens or when you browse
+to another game folder. **Apply** saves and verifies the choices; **Play** also
+starts the checked client with that game folder as its working directory.
+Selections persist in the executable, wrapper configuration and texture archives.
+Close the game first; applying changes is blocked while AOACLIENT.EXE is running.
+
+Each visual addition has its own checkbox:
+
+- Extended distant-object visibility, solid-world meshes or asteroid-only meshes.
+- Full world detail or station-only detail, and 32-bit texture loading.
+- Smoother frame timing, corrected visibility math, F2 chase camera and F4
+  orbit view with the player's ship, and widescreen ship-selection framing.
+- Wrapper anti-aliasing, anisotropic filtering, point-sample preservation,
+  generated mipmaps and per-pixel lighting.
+- Replacement texture pack, when installed or previously saved by the launcher.
+
+Selecting a full-world option unchecks its limited-only alternative. Turning
+off the chase camera also removes its two own-ship rendering patches.
+**Original visuals (all off)** clears all these visual options. Compatibility
+fixes, restored native terrain and server-provided map content remain active;
+the separate **Restored power-up pickups** checkbox controls that gameplay fix.
+This preset is the original visual behavior with the compatibility layer,
+not an exact unpatched executable.
+
+Unchecked wrapper effects use application-controlled values (or `false` for
+the two boolean options). Existing custom enabled values, such as 4x AA, are
+preserved until their checkbox changes. Re-enabling uses the values shown in
+the launcher. Missing wrapper or replacement pack options are disabled.
+
+Disabling an installed texture pack saves hash-checked copies as
+`<ARCHIVE>.launcher-texture-pack` and `_launcher_texture_pack.json` in the game
+folder, then restores the original archives. Re-enabling restores those saved
+images, so the original upscale source folders are not needed. The existing
+`<ARCHIVE>.before-texture-pack` backups are retained. Do not delete the launcher
+cache if you want to re-enable the pack. No assets are downloaded.
+
+The launcher preflights the selected patches and rolls back changed files if
+an apply operation fails. Existing setup backups and verification are retained.
+New visual patch entries should be added to `client_launcher.PATCHES`; this
+supplies their checkbox, installed-state detection and explicit on/off setting.
+
+Verified on temporary game copies: individual visual patch off/on transitions,
+all-off launch validation, option persistence, mutually exclusive modes,
+wrapper preservation, failed-write rollback, texture cache off/on and corruption
+rejection, and Windows GUI checkbox wiring. This does not replace in-flight
+visual/performance acceptance for the individual experimental effects.
+
 ## Prepare an existing working folder
 
 Close the game first. Run from the repository root:
@@ -33,11 +90,12 @@ wrappers must match the verified dgVoodoo2 2.87.5 DLLs.
 
 The source executable SHA-256 is
 `4b6c35e2b3ab473bd98c0afa6538079ee78678d85c28406c07bc27a08cc78c7e`.
-Patch version 12 is recorded in `_client_setup.json`, with input/output and
+Patch version 22 is recorded in `_client_setup.json`, with input/output and
 undo-backup hashes, hostname, patch IDs, wrapper and transaction status.
 `check` requires the physics guard, background-network fix, archive
-terminator, ship-menu aspect fix, cursor-warp fix and online terrain hook, so an older setup must be prepared again. That upgrade happens in place and
-keeps the original undo backup. The prepared localhost executable is
+terminator, cursor-warp fix and online terrain hook, so an older setup must be
+prepared again. Ship-menu framing is optional (`--no-menu-framing` or the
+launcher checkbox). That upgrade happens in place and keeps the original undo backup. The prepared localhost executable is
 `78c5bd395c436776742e632d0cde8404aec8c38a37aeafcb55be481ad284680f` (patch version 12,
 no optional rendering patches).
 The existing `.orig` and `_patches.json` research artifacts are left intact.

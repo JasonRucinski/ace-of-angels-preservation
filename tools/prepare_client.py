@@ -146,7 +146,7 @@ def inspect(data):
             + ([explicit_protection.NAME] if protection else [])}
 
 
-def configure(data, host="localhost", experimental_protection=None, experimental_asteroids=None, experimental_solids=None, experimental_station_detail=None, experimental_world_detail=None, experimental_texture32=None, smooth_frame_clock=True, bounded_visibility=True, chase_camera=True, powerup_pickups=True, distant_objects=None):
+def configure(data, host="localhost", experimental_protection=None, experimental_asteroids=None, experimental_solids=None, experimental_station_detail=None, experimental_world_detail=None, experimental_texture32=None, smooth_frame_clock=True, bounded_visibility=True, chase_camera=True, powerup_pickups=True, distant_objects=None, menu_framing=True):
     field = host_field(host)
     state = inspect(data)
     distant = object_persistence.NAME in state["patches"] if distant_objects is None else distant_objects
@@ -180,7 +180,7 @@ def configure(data, host="localhost", experimental_protection=None, experimental
     guarded = physics_timestep.configure(normalized)
     result = archive_terminator.configure(background_site(guarded[:OFFSET] + field + guarded[OFFSET + 12:], True))
     result = explicit_protection.configure(result, protection)
-    result = menu_aspect.configure(result)
+    result = menu_aspect.configure(result, menu_framing)
     result = cursor_warp.configure(result)
     result = online_terrain.configure(result)
     result = asteroid_render.configure(result, not solids and (asteroid_render.NAME in state["patches"]
@@ -266,7 +266,7 @@ def load_record(record_path, backup, current):
     return record
 
 
-def prepare(exe, host="localhost", undo=False, experimental_protection=None, experimental_asteroids=None, experimental_solids=None, experimental_station_detail=None, experimental_world_detail=None, experimental_texture32=None, smooth_frame_clock=True, bounded_visibility=True, chase_camera=True, powerup_pickups=True, distant_objects=None):
+def prepare(exe, host="localhost", undo=False, experimental_protection=None, experimental_asteroids=None, experimental_solids=None, experimental_station_detail=None, experimental_world_detail=None, experimental_texture32=None, smooth_frame_clock=True, bounded_visibility=True, chase_camera=True, powerup_pickups=True, distant_objects=None, menu_framing=True):
     exe, backup, record_path = paths(exe)
     current = exe.read_bytes()
     inspect(current)
@@ -278,7 +278,7 @@ def prepare(exe, host="localhost", undo=False, experimental_protection=None, exp
         result = backup.read_bytes()
         inspect(result)
     else:
-        result = configure(current, host, experimental_protection, experimental_asteroids, experimental_solids, experimental_station_detail, experimental_world_detail, experimental_texture32, smooth_frame_clock, bounded_visibility, chase_camera, powerup_pickups, distant_objects)
+        result = configure(current, host, experimental_protection, experimental_asteroids, experimental_solids, experimental_station_detail, experimental_world_detail, experimental_texture32, smooth_frame_clock, bounded_visibility, chase_camera, powerup_pickups, distant_objects, menu_framing)
         if old is None:
             # Exclusive creation: never replace an unrelated backup. A prior
             # interruption before recording is recoverable only if bytes match.
@@ -310,7 +310,7 @@ def check(exe, require_assets=True):
     record = load_record(record_path, backup, data)
     if (record is None or record["status"] != "ready"
             or not {"zero-time-physics-v1", "background-network-v1",
-                    "archive-terminator-v1", menu_aspect.NAME, cursor_warp.NAME, online_terrain.NAME} <= set(state["patches"])):
+                    "archive-terminator-v1", cursor_warp.NAME, online_terrain.NAME} <= set(state["patches"])):
         raise ValueError("run prepare before launching; setup must be recorded and complete")
     wrapper = wrapper_state(exe.parent)
     if require_assets:
@@ -336,6 +336,8 @@ def main():
                         help="server-placed power-ups can be picked up and reappear (powerup-pickup-v1); prepare only")
     parser.add_argument("--distant-objects", action=argparse.BooleanOptionalAction, default=None,
                         help="extend world-object visibility to 4,500,000 units and 0.5 projected size; preserve installed choice by default; prepare only")
+    parser.add_argument("--menu-framing", action=argparse.BooleanOptionalAction, default=True,
+                        help="widescreen ship-selection framing; prepare only")
     args = parser.parse_args()
     if args.experimental_protection is not None and args.action != "prepare":
         parser.error("--experimental-protection applies only to prepare")
@@ -349,7 +351,7 @@ def main():
                              bounded_visibility=args.visibility_math,
                              chase_camera=args.third_person,
                              powerup_pickups=args.powerup_pickup,
-                             distant_objects=args.distant_objects)
+                             distant_objects=args.distant_objects, menu_framing=args.menu_framing)
         else:
             result = check(args.exe)
             if args.action == "launch":

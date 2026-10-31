@@ -16,6 +16,15 @@ a search-engine summary only.
 
 ## 2. Status
 
+Client visual launcher (27 Oct 2026; rebased onto patch version 22 on
+31 Oct 2026): `tools/client_launcher.cmd` opens saved on/off checkboxes for
+visual patches, wrapper quality effects and an installed replacement texture
+pack. Original visuals clears all visual additions; power-up pickups have a
+separate control. Ship-menu framing is now optional (`--no-menu-framing`).
+Temporary-copy tests cover toggles, checked launch, texture caching/restoration,
+rollback and GUI wiring; no in-flight rendering claim. See
+[launcher options](docs/client-setup.md#client-launcher-and-visual-options).
+
 Distant object visibility (27 Oct 2026): optional `distant-world-objects-v1`
 extends the mesh surface-distance limit from 61,000 to 4,500,000 units and
 the cached-world-image horizon from 900,000 to 4,500,000. The minimum projected
