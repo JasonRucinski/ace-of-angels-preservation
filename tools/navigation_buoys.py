@@ -63,6 +63,28 @@ def map_placements(source, name, trn=None):
     return nodes
 
 
+def trn_placements(data):
+    """Kind-3 waypoints of a 2.9.2 terrain file written by tools/make_map.py.
+
+    The 2.9.2 client gates kind 3 off in AddTerrainObject, so the server
+    sends them like the original maps' buoys.
+    """
+    count = struct.unpack_from('<I', data, 0)[0]
+    if len(data) < 4 + count * decode_trn.REC_292:
+        raise ValueError('truncated 2.9.2 terrain file')
+    nodes = []
+    for i in range(count):
+        r = data[4 + i * decode_trn.REC_292:4 + (i + 1) * decode_trn.REC_292]
+        if struct.unpack_from('<I', r, decode_trn.REC_292 - 4)[0] != decode_trn.SENTINEL:
+            raise ValueError(f'record {i}: missing sentinel')
+        if struct.unpack_from('<I', r, 0x200)[0] == 3:
+            nodes.append({'name': decode_trn.cstr(r[0x80:0x98]), 'model_object': decode_trn.cstr(r[0x40:0x80]),
+                          'position': list(struct.unpack_from('<3f', r, 0xC4))})
+    if len(nodes) > COUNT:
+        raise ValueError('navigation records exceed reserved slots 90..99')
+    return nodes
+
+
 def placements(source):
     data = source.read_bytes()
     if hashlib.sha256(data).hexdigest() != ARENA1A_SHA256:

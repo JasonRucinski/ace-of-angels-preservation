@@ -19,6 +19,8 @@ executable accept only known, hash-checked builds and record an exact undo.
 | `host_control.cmd` / `host_control.py` | The host window: start, watch players, message, kick, switch maps, stop |
 | `start_lan_dogfight.ps1` | Starts the LAN or VPN dogfight server from the command line |
 | `map_viewer.py serve MAP` | Serves one recovered map for flying around |
+| `make_object.py install SPEC MODEL.glb CLIENT` | Adds a new object from a glTF model to a play copy's object database ([custom-objects.md](../docs/custom-objects.md)) |
+| `make_map.py install/serve SPEC CLIENT` | Builds a new map from a JSON spec into a play copy of the client and serves it ([custom-maps.md](../docs/custom-maps.md)) |
 | `station_stub.py` | The stand-in Station and arena server that all of the above run |
 | `register_activeskin.ps1` | Registers the game's dialog skin control for the current user (no admin) |
 | `make_install.py` / `install_wrapper.py` | The extract and wrapper steps of `setup_game.ps1` |

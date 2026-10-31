@@ -1,0 +1,16 @@
+{
+ "object": "Bennu",
+ "model": "Bennu1",
+ "about": "Asteroid 101955 Bennu (1999 RQ36) scaled up into a 120 km mining world for Crucible.",
+ "source": {
+  "url": "https://raw.githubusercontent.com/nasa/NASA-3D-Resources/master/3D%20Models/1999%20RQ36%20asteroid/1999%20RQ36%20asteroid.glb",
+  "repository": "https://github.com/nasa/NASA-3D-Resources (commit 87fd3a6afa6eda1d3d8a44bc8881d28bacdbe2ce, folder '1999 RQ36 asteroid')",
+  "sha256": "644af15678447df90c2d9e85674809c7fc70f439e0865418aa6618a8483b7958",
+  "bytes": 329596,
+  "credit": "NASA (NASA 3D Resources). NASA does not endorse this project.",
+  "license": "NASA media guidelines: NASA 3D data is generally not subject to copyright in the US; credit NASA as the source"
+ },
+ "radius": 60000,
+ "tile": 18000,
+ "texture": "astr4_a.tga"
+}

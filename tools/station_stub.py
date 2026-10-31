@@ -1122,6 +1122,8 @@ def run(args, key, log, resources):
     if args.navigation_buoys:
         buoys = navigation_buoys.loads(navigation_buoys.map_placements(
             args.navigation_buoys, args.map, args.buoy_trn or args.key.parent / 'JRMAP.TRN'))
+    if args.map_waypoints:
+        buoys = navigation_buoys.loads(navigation_buoys.trn_placements(args.map_waypoints.read_bytes()))
     port, seconds, peer_timeout = args.port, args.seconds, args.peer_timeout
     reply, pilot = args.ack, args.pilot
     notifications = queue.Queue(maxsize=1024)
