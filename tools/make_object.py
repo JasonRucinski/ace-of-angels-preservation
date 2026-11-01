@@ -11,8 +11,9 @@ existing texture from TEXTURES.AOA, so no new texture entry is needed.
 `install` writes a single-mesh .Gob and a .Sco cloned from the template object
 (Astr-C: one textured mesh, asteroid systems) and appends both to the play
 copy's AOAOBJECTS.ODB with aoapack.rebuild. The first install keeps the
-copy's database as AOAOBJECTS.ODB.before-custom-objects, and every install
-rebuilds from that, so it can be repeated; `undo` restores it. The main
+copy's database as AOAOBJECTS.ODB.before-custom-objects. Later installs keep
+the objects already added and replace this spec's own entries, so it can be
+repeated; `undo` restores the backup, removing every added object. The main
 game/2.9.2 folder is refused. Place the object with tools/make_map.py by its
 object name.
 
@@ -227,8 +228,13 @@ def load_spec(path):
         if key not in spec:
             raise ValueError(f"object spec needs {key!r}")
     for key in ("object", "model"):
-        if not spec[key] or len(spec[key]) > 23 or not spec[key].replace("_", "").replace("-", "").isalnum():
+        value = spec[key]
+        if not (isinstance(value, str) and 0 < len(value) <= 23 and value.isascii()
+                and value.replace("_", "").replace("-", "").isalnum()):
             raise ValueError(f"{key} must be 1..23 letters, digits, '-' or '_'")
+    for key in ("radius", "tile"):
+        if not (isinstance(spec[key], (int, float)) and math.isfinite(spec[key]) and spec[key] > 0):
+            raise ValueError(f"{key} must be a positive number")
     return spec
 
 
@@ -270,6 +276,17 @@ def _play_copy(client):
     return client
 
 
+def split_entries(entries, original, current):
+    """(replacements, additions): an earlier install's entries for this spec
+    are replaced, other new names are added. original and current are the
+    lower-case entry names of the backup and the installed database."""
+    taken = sorted(n for n in entries if n.lower() in original)
+    if taken:
+        raise SystemExit(f"{', '.join(taken)} already in the original database; choose new names")
+    replace = {n: d for n, d in entries.items() if n.lower() in current}
+    return replace, {n: d for n, d in entries.items() if n not in replace}
+
+
 def install(spec, glb, client):
     client = _play_copy(client)
     odb, backup = client / "AOAOBJECTS.ODB", client / ("AOAOBJECTS.ODB" + BACKUP)
@@ -277,7 +294,10 @@ def install(spec, glb, client):
         shutil.copy2(odb, backup)
     aoapack, key0 = _archive(client)
     entries, stats = build(spec, glb, templates_from(backup, aoapack, key0))
-    out = aoapack.rebuild(backup, key0, {}, entries)
+    # Rebuild the installed database, not the backup, so objects added by
+    # other specs stay.
+    names = [{e["name"].lower() for e in aoapack.read_archive(p, key0)[3]} for p in (backup, odb)]
+    out = aoapack.rebuild(odb, key0, *split_entries(entries, *names))
     odb.write_bytes(out)
     print(f"added {', '.join(entries)} to {odb} ({stats['vertices']} vertices, {stats['faces']} faces, "
           f"radius {stats['radius']}; sha256 {hashlib.sha256(out).hexdigest()})")

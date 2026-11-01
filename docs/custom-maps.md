@@ -57,6 +57,8 @@ The first command copies the client once (about 550 MB, without `Logs` and
 `Capture Images`) and writes the map. Crucible uses the new object Bennu, so
 add it to the play copy first ([custom-objects.md](custom-objects.md#using-it)).
 Otherwise `install` stops on the missing name. Run it again after editing the spec.
+The first time, it keeps the copy's previous map file as
+`jrmap292.trn.before-custom-map`.
 Then launch `work\custom-map\client\AOACLIENT.EXE`, log in to `127.0.0.1` and
 press Play. `serve` starts the loopback relay as map JRMAP, at the spec's
 spawn, with the spec's power-up zones and waypoints (`--powerup-zones`,
@@ -85,7 +87,7 @@ the original `JRMAP.TRN`.
   Positive yaw turns the nose (+z) toward +x. The file has no scale field.
 - `half` is a zone's half-size: zones are cubes. Power-up types are 0
   missile, 1/2/3 shield +5/+10/+20 and 4 repair ([findings 9.44](findings.md)).
-- `nav` makes a navigation waypoint with that name, at most 23 characters
+- `nav` makes a navigation waypoint with that name, at most 23 ASCII characters
   (`object` defaults to `Buoy`). There can be at most ten. The client ignores
   waypoints in the file, so the server sends them as objects (LoadObject
   kind 3, slots 90–99, the same path as the original maps' buoys in
@@ -122,7 +124,8 @@ Turrets, warp gates and flags (kinds 1, 7, 8) are not written.
 
 ## Not verified
 
-- picking up power-ups on this map (all six appear as objects in the client)
+- picking up power-ups on this map (six appeared as objects in the Far Yards
+  run, before the two at Bennu were added)
 - whether a waypoint can be collided with (kind 3 is the one collidable
   non-terrain kind, [findings 9.45](findings.md); the marker is 66 units across)
 - collision with the new objects

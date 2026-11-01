@@ -8,8 +8,9 @@
 The client has no free map slot: the online-terrain cave's 20-entry table
 fills its region, and its only .TRN entry is JRMAP's `jrmap292.trn`. So
 `install` writes the new map into that slot of a separate play copy of the
-client (made with --copy-from when the folder does not exist yet), and
-refuses the main game/2.9.2 folder, whose JRMAP stays the original. `serve`
+client (made with --copy-from when the folder does not exist yet), keeping
+the copy's previous file as jrmap292.trn.before-custom-map the first time,
+and refuses the main game/2.9.2 folder, whose JRMAP stays the original. `serve`
 runs the loopback relay as map JRMAP from that copy, at the spec's spawn,
 with the spec's power-up zones.
 
@@ -20,8 +21,8 @@ Spec (JSON): {"name", "spawn": [x, y, z], "objects": [...]}. Each object:
   {"zone": "powerup", "pos": [...], "half": h, "type": 0..4}
   {"nav": waypoint name, "pos": [...], "object": model (default Buoy)}
 Power-up types (findings 9.44): 0 missile, 1/2/3 shield +5/+10/+20, 4 repair.
-At most ten waypoints; `serve` has the relay send them as LoadObject kind 3
-(navigation_buoys.py, slots 90..99) with sustained delivery.
+At most ten waypoints, with ASCII names; `serve` has the relay send them as
+LoadObject kind 3 (navigation_buoys.py, slots 90..99) with sustained delivery.
 
 Records follow the editor-saved JRMAP layout as decode_trn converts it:
 names at +0x00/+0x40/+0x80, the rotated x axis at +0x98 and z axis at +0xA4
@@ -54,7 +55,9 @@ SLOT_MAP = "JRMAP"
 SLOT_FILE = online_terrain.MAPS[online_terrain.MAP_NAMES.index(SLOT_MAP)][2]
 KIND_MODEL, KIND_SAFE, KIND_NAV, KIND_POWERUP = 0, 2, 3, decode_trn.KIND_POWERUP_ZONE
 NAME_MAX = 23  # 24-byte field with its NUL
+NAV_MAX = 10  # navigation_buoys.py slots 90..99
 COPY_SKIP = ("Logs", "Capture Images")
+SLOT_BACKUP = ".before-custom-map"
 
 
 def rotation(yaw=0.0, pitch=0.0, roll=0.0):
@@ -78,10 +81,13 @@ def _finite(values, n, what):
     return [float(v) for v in values]
 
 
-def _name(text, what):
-    raw = text.encode("latin1")
-    if len(raw) > NAME_MAX or b"\0" in raw:
-        raise ValueError(f"{what}: {text!r} must be at most {NAME_MAX} characters")
+def _name(text, what, encoding="latin1"):
+    try:
+        raw = text.encode(encoding)
+    except (AttributeError, UnicodeEncodeError):
+        raw = None
+    if raw is None or len(raw) > NAME_MAX or b"\0" in raw:
+        raise ValueError(f"{what}: {text!r} must be at most {NAME_MAX} {encoding} characters")
     return raw
 
 
@@ -98,9 +104,10 @@ def record(entry, index=0):
     struct.pack_into("<f", r, 0x100, 1.0)
     zone = entry.get("zone")
     if "nav" in entry:
-        # Kind 3, as JRMAP's buoys; the server sends it (see module notes).
-        name = _name(entry["nav"], what + " nav")
-        database, obj, kind, x_field = (decode_trn.DATABASE, _name(entry.get("object", "Buoy"), what + " object"),
+        # Kind 3, as JRMAP's buoys; the server sends it (see module notes)
+        # in LoadObject, whose name fields are ASCII.
+        name = _name(entry["nav"], what + " nav", "ascii")
+        database, obj, kind, x_field = (decode_trn.DATABASE, _name(entry.get("object", "Buoy"), what + " object", "ascii"),
                                         KIND_NAV, pos[0])
     elif zone is None:
         obj = entry.get("object")
@@ -137,8 +144,13 @@ def record(entry, index=0):
 
 def load_spec(path):
     spec = json.loads(Path(path).read_text(encoding="utf-8"))
+    # The name also names the log and preview files.
+    if not (isinstance(spec.get("name"), str) and re.fullmatch(r"[A-Za-z0-9_-]{1,64}", spec["name"])):
+        raise ValueError("spec needs a name of letters, digits, '-' or '_'")
     if not isinstance(spec.get("objects"), list) or not spec["objects"]:
         raise ValueError("spec needs a non-empty objects list")
+    if sum("nav" in e for e in spec["objects"]) > NAV_MAX:
+        raise ValueError(f"at most {NAV_MAX} navigation waypoints")
     _finite(spec.get("spawn"), 3, "spawn")
     return spec
 
@@ -194,8 +206,11 @@ def install(spec, client, copy_from=None):
     if not client.exists():
         if copy_from is None:
             raise SystemExit(f"{client} does not exist; pass --copy-from game/2.9.2 to make the play copy")
+        source = copy_from.resolve()
+        if source in client.parents:
+            raise SystemExit(f"{client} is inside {source}; put the play copy elsewhere")
         print(f"copying {copy_from} to {client} ...", flush=True)
-        copy_client(copy_from.resolve(), client)
+        copy_client(source, client)
     if not (client / "SCRTY.BIN").is_file():
         raise SystemExit(f"{client} is not a client folder (no SCRTY.BIN)")
     try:
@@ -203,7 +218,10 @@ def install(spec, client, copy_from=None):
     except ImportError as error:  # the archive key lookup needs requirements.txt
         print(f"object names not checked ({error.name} missing); a missing object is skipped by the client")
     data = build(spec)
-    (client / SLOT_FILE).write_bytes(data)
+    trn, backup = client / SLOT_FILE, client / (SLOT_FILE + SLOT_BACKUP)
+    if trn.exists() and not backup.exists():
+        shutil.copy2(trn, backup)
+    trn.write_bytes(data)
     (client / "_custom_map.json").write_text(json.dumps({
         "map": spec["name"], "slot": SLOT_MAP, "file": SLOT_FILE, "records": len(spec["objects"]),
         "sha256": hashlib.sha256(data).hexdigest()}, indent=1) + "\n", encoding="utf-8")
@@ -213,7 +231,7 @@ def install(spec, client, copy_from=None):
 
 def serve(spec, client, seconds=0):
     trn = client / SLOT_FILE
-    if trn.read_bytes() != build(spec):
+    if not trn.is_file() or trn.read_bytes() != build(spec):
         raise SystemExit(f"{trn} is not this spec; run install first")
     log = ROOT / "work/custom-map" / f"{spec['name']}.jsonl"
     log.parent.mkdir(parents=True, exist_ok=True)

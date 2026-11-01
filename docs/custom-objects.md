@@ -61,9 +61,10 @@ Then `make_map.py serve` as usual. In flight, press T until the target
 windows show **Bennu**, and follow the marker.
 
 `install` needs `requirements.txt` for the archive key. The first time, it
-keeps the database as `AOAOBJECTS.ODB.before-custom-objects`. Every install
-rebuilds from that copy, so it can be repeated after changing the spec.
-`undo` puts it back. `game\2.9.2` is refused. `preview SPEC MODEL OUT_DIR`
+keeps the database as `AOAOBJECTS.ODB.before-custom-objects`. Later installs
+keep objects added from other specs and replace the spec's own entries, so
+it can be repeated after changing the spec. `undo` puts the backup back,
+removing every added object. `game\2.9.2` is refused. `preview SPEC MODEL OUT_DIR`
 writes the `.Gob` and `.Sco` without installing them. Render a preview with
 `tools/gob2obj.py`, then `tools/render_obj.py`.
 

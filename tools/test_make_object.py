@@ -11,6 +11,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import aoacrypt
@@ -101,10 +102,12 @@ class GeometryTests(unittest.TestCase):
 
     def test_spec_names(self):
         with tempfile.TemporaryDirectory() as tmp:
-            for bad in ({"object": "Has space", "model": "M"}, {"object": "O", "model": "x" * 24}):
+            for bad in ({"object": "Has space", "model": "M"}, {"object": "O", "model": "x" * 24},
+                        {"object": "Ωmega", "model": "M"}, {"object": "O", "model": "M", "tile": 0},
+                        {"object": "O", "model": "M", "radius": float("inf")}):
                 path = Path(tmp) / "s.json"
-                path.write_text(json.dumps({**bad, "texture": "t.tga", "radius": 1, "tile": 1}))
-                with self.assertRaises(ValueError):
+                path.write_text(json.dumps({"texture": "t.tga", "radius": 1, "tile": 1, **bad}))
+                with self.assertRaises(ValueError, msg=bad):
                     make_object.load_spec(path)
 
     def test_refuses_main_client(self):
@@ -143,6 +146,34 @@ class ArchiveAppendTests(unittest.TestCase):
             for bad in ({"a.sco": b"x"}, {"N.Sco": b"x", "n.sco": b"y"}):
                 with self.assertRaises(KeyError):
                     aoapack.rebuild(path, key0, {}, bad)
+
+    def test_install_keeps_other_objects(self):
+        key0, key = bytes(range(256)), bytes((7 * i + 3) % 256 for i in range(256))
+
+        def build(spec, glb, templates):
+            return ({f"{spec['object']}.Sco": spec["data"], f"{spec['model']}.Gob": spec["data"]},
+                    {"vertices": 0, "faces": 0, "radius": 0})
+        with tempfile.TemporaryDirectory() as tmp:
+            client, original = Path(tmp), {"A.Sco": b"sco", "A.Gob": b"gob"}
+            (client / "AOAOBJECTS.ODB").write_bytes(self.archive(key0, key, list(original.items())))
+            with mock.patch.object(make_object, "_archive", return_value=(aoapack, key0)), \
+                    mock.patch.object(make_object, "templates_from", return_value={}), \
+                    mock.patch.object(make_object, "build", build):
+                # Two specs, then a repeat of the first: both objects stay, the repeat replaces.
+                for spec in ({"object": "Rock", "model": "Rock1", "data": b"r"},
+                             {"object": "Bennu", "model": "Bennu1", "data": b"b"},
+                             {"object": "Rock", "model": "Rock1", "data": b"R"}):
+                    make_object.install(spec, None, client)
+                with self.assertRaises(SystemExit):
+                    make_object.install({"object": "A", "model": "Rock1", "data": b"x"}, None, client)
+
+            def contents():
+                d, k, _, entries = aoapack.read_archive(client / "AOAOBJECTS.ODB", key0)
+                return {e["name"]: aoapack.entry_bytes(d, k, key0, e)[0] for e in entries}
+            self.assertEqual(contents(), {**original, "Rock.Sco": b"R", "Rock1.Gob": b"R",
+                                          "Bennu.Sco": b"b", "Bennu1.Gob": b"b"})
+            make_object.undo(client)
+            self.assertEqual(contents(), original)
 
 
 @unittest.skipUnless(HAVE_GAME, "requires the user's 2.9.2 client and requirements.txt")

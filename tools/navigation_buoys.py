@@ -69,8 +69,8 @@ def trn_placements(data):
     The 2.9.2 client gates kind 3 off in AddTerrainObject, so the server
     sends them like the original maps' buoys.
     """
-    count = struct.unpack_from('<I', data, 0)[0]
-    if len(data) < 4 + count * decode_trn.REC_292:
+    count = struct.unpack_from('<I', data, 0)[0] if len(data) >= 4 else -1
+    if count < 0 or len(data) < 4 + count * decode_trn.REC_292:
         raise ValueError('truncated 2.9.2 terrain file')
     nodes = []
     for i in range(count):

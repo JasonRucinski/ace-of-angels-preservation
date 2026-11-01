@@ -9,6 +9,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import decode_trn
@@ -117,16 +118,28 @@ class RecordTests(unittest.TestCase):
                {"pos": [0, 0, 0]},
                {"zone": "safe", "pos": [0, 0, 0], "half": 0},
                {"zone": "powerup", "pos": [0, 0, 0], "half": 9, "type": 5},
-               {"zone": "turret", "pos": [0, 0, 0], "half": 9}]
+               {"zone": "turret", "pos": [0, 0, 0], "half": 9},
+               # LoadObject's name fields are ASCII.
+               {"nav": "Bénnu", "pos": [0, 0, 0]}]
         for entry in bad:
             with self.assertRaises(ValueError, msg=entry):
                 one(entry)
         with self.assertRaises(ValueError):
             make_map.check_objects({"objects": [{"object": "ss1", "pos": [0, 0, 0]}]}, {"wall"})
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "s.json"
+            for spec in ({"name": "t", "spawn": [0, 0, 0], "objects": [{"nav": f"N{i}", "pos": [i, 0, 0]} for i in range(11)]},
+                         {"name": "../t", "spawn": [0, 0, 0], "objects": [{"object": "Wall", "pos": [0, 0, 0]}]}):
+                path.write_text(json.dumps(spec), encoding="utf-8")
+                with self.assertRaises(ValueError, msg=spec["name"]):
+                    make_map.load_spec(path)
 
     def test_install_refuses_main_client(self):
         with self.assertRaises(SystemExit):
             make_map.install({"objects": []}, GAME)
+        with tempfile.TemporaryDirectory() as tmp:
+            with self.assertRaises(SystemExit):
+                make_map.install({"objects": []}, Path(tmp) / "copy", copy_from=Path(tmp))
 
 
 class CrucibleTests(unittest.TestCase):
@@ -167,8 +180,8 @@ class CrucibleTests(unittest.TestCase):
     def test_build_cli(self):
         with tempfile.TemporaryDirectory() as tmp:
             out = Path(tmp) / "c.trn"
-            sys.argv = ["make_map.py", "build", str(SPEC), str(out)]
-            make_map.main()
+            with mock.patch.object(sys, "argv", ["make_map.py", "build", str(SPEC), str(out)]):
+                make_map.main()
             self.assertEqual(out.read_bytes(), self.data)
         self.assertEqual(json.loads(SPEC.read_text(encoding="utf-8"))["name"], "crucible")
 
