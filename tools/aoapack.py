@@ -227,20 +227,36 @@ def entry_bytes(d, key, key0, e):
     return raw, info
 
 
-def rebuild(path, key0, replacements):
+def rebuild(path, key0, replacements, additions=None):
     """Return archive bytes with entries replaced by name (case-insensitive).
-    replacements: {entry name: new uncompressed bytes}."""
+    replacements: {entry name: new uncompressed bytes}.
+    additions: {new entry name: uncompressed bytes}, appended in order after
+    the existing entries (compressed with CRC, archive-key cipher, as the
+    shipped object database stores every entry)."""
     d, key, version, entries = read_archive(path, key0)
     wanted = {name.lower(): data for name, data in replacements.items()}
+    additions = dict(additions or {})
     names = [e["name"].lower() for e in entries]
     missing = set(wanted) - set(names)
     if missing:
         raise KeyError(f"no such archive entries: {sorted(missing)}")
     if any(names.count(n) > 1 for n in wanted):
         raise KeyError("ambiguous replacement: duplicate entry name")
-    count = len(entries)
-    directory = bytearray(aoacrypt.decrypt(d[260:260 + count * 280], key))
+    clash = {n.lower() for n in additions} & set(names)
+    if clash or len({n.lower() for n in additions}) != len(additions):
+        raise KeyError(f"added entries must be new and distinct: {sorted(clash)}")
+    if any(len(n.encode("latin1")) >= 256 for n in additions):
+        raise ValueError("entry name exceeds 255 bytes")
+    old_count, count = len(entries), len(entries) + len(additions)
+    if count > 0xFFFF:
+        raise ValueError("too many archive entries")
+    directory = bytearray(aoacrypt.decrypt(d[260:260 + old_count * 280], key)) + bytearray(len(additions) * 280)
     body, offset = [], 260 + count * 280
+    for i, (name, data) in enumerate(additions.items(), old_count):
+        entries.append({"index": i, "name": name, "compress_sel": 0, "cipher_mode": 1})
+        directory[i * 280:i * 280 + 256] = name.encode("latin1").ljust(256, b"\0")
+        directory[i * 280 + 268:i * 280 + 276] = (0).to_bytes(4, "little") + (1).to_bytes(4, "little")
+        wanted[name.lower()] = data
     for e in entries:
         if e["name"].lower() in wanted:
             if (e["compress_sel"], e["cipher_mode"]) != (0, 1):
@@ -256,8 +272,12 @@ def rebuild(path, key0, replacements):
         directory[record + 264:record + 268] = len(raw).to_bytes(4, "little")
         body.append(raw)
         offset += len(raw)
-    out = d[:260] + aoacrypt.encrypt(bytes(directory), key) + b"".join(body)
-    _, check_key, _, check_entries = read_archive_bytes(out, key0)
+    header = d[256:260] if count == old_count else aoacrypt.encrypt(
+        count.to_bytes(2, "little") + version.to_bytes(2, "little"), key)
+    out = d[:256] + header + aoacrypt.encrypt(bytes(directory), key) + b"".join(body)
+    _, check_key, check_version, check_entries = read_archive_bytes(out, key0)
+    if check_version != version or [e["name"] for e in check_entries] != [e["name"] for e in entries]:
+        raise ValueError("round-trip verification failed for the directory")
     for e in check_entries:
         if e["name"].lower() in wanted:
             data, info = entry_bytes(out, check_key, key0, e)

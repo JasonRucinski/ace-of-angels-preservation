@@ -23,6 +23,12 @@ the game being studied.
 - **Patches are applied locally.** The client fixes in `tools/` change bytes in
   your own copy of the game executable, with an exact undo. They do not ship
   any part of the original program.
+- **New map content is new.** `config/maps/` lists placements of the game's
+  own objects, and `config/objects/` describes new objects built from third-party
+  models. The models are not stored here: the specs record each source URL and
+  hash. The first is asteroid Bennu from NASA's 3D Resources
+  (https://github.com/nasa/NASA-3D-Resources), credited to NASA. NASA does not
+  endorse this project.
 - **The stand-in server is new code.** `tools/station_stub.py` and its helpers
   were written from observing and statically analysing the client. No
   original server software was recovered or used.

@@ -108,6 +108,8 @@ def parse_args(argv=None):
     parser.add_argument('--navigation-buoys', type=Path, metavar='EXPORT_DIR',
                         help='restore the selected map navigation objects from exported AOAOBJECTS, with original archive order')
     parser.add_argument('--buoy-trn', type=Path, help='original JRMAP.TRN for navigation; defaults beside SCRTY.BIN')
+    parser.add_argument('--map-waypoints', type=Path, metavar='TRN',
+                        help='navigation waypoints (kind 3) of a 2.9.2 terrain file from tools/make_map.py')
     parser.add_argument('--turret-trial', type=Path, metavar='EXPORT_DIR',
                         help='inactive five-turret Arena1a placement trial; model assignment is provisional and orientation is zero')
     parser.add_argument('--warp-trial', type=Path, metavar='EXPORT_DIR',
@@ -182,6 +184,15 @@ def parse_args(argv=None):
             parser.error('--navigation-buoys reserves slots 90..99; at most 88 target ships')
         if not args.navigation_buoys.is_dir():
             parser.error('--navigation-buoys requires an exported AOAOBJECTS directory')
+    if args.map_waypoints is not None:
+        if args.arena1a_buoys or args.navigation_buoys:
+            parser.error('--map-waypoints replaces the other navigation options')
+        if not (args.experimental_relay and args.experimental_terrain and args.sustained_delivery):
+            parser.error('--map-waypoints requires relay, terrain and sustained delivery')
+        if args.target_ships > 88:
+            parser.error('--map-waypoints reserves slots 90..99; at most 88 target ships')
+        if not args.map_waypoints.is_file():
+            parser.error(f'--map-waypoints: no file {args.map_waypoints}')
     if args.powerup_zones is not None and not args.powerup_zones.is_file():
         parser.error(f"--powerup-zones: no file {args.powerup_zones}")
     if args.spawn_at is not None:

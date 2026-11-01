@@ -25,6 +25,33 @@ Temporary-copy tests cover toggles, checked launch, texture caching/restoration,
 rollback and GUI wiring; no in-flight rendering claim. See
 [launcher options](docs/client-setup.md#client-launcher-and-visual-options).
 
+First new map (27 Oct 2026): `tools/make_map.py` writes a JSON spec as a
+native 2.9.2 `.TRN`, in the record layout of JRMAP's editor records.
+**Crucible** (`config/maps/crucible.json`) is an original layout of 62 objects
+from the shipped art, with 2 safe zones and 5 power-up zones: a launch
+between escort carriers, a ring of 14 asteroids, a graveyard of seven
+tumbling capital ships, a dish-wall gate before `hy_base`, and a distant
+outpost. The client has no free map slot, so the map goes into the JRMAP
+`.TRN` slot of a separate play copy (`work/custom-map/client`). `game/2.9.2`
+is unchanged. Real client, loopback, two runs: all 64 terrain objects
+loaded, models at their spec positions, "Entering Safe Zone" at the spawn,
+textured in F5 captures. Later the same day: a Far Yards shipyard 405 km
+out (18 more models) and a **navigation waypoint** to it. The client skips
+kind-3 records, so the new server option `--map-waypoints TRN` sends them
+like the original maps' buoys. Live, the waypoint loaded as world object 90.
+T selected it, and the HUD marked it at about 389k. All six power-ups
+appeared as objects. Then the first **new object**: NASA's Bennu asteroid
+(3D Resources `.glb`, hash-checked, not committed), converted by
+`tools/make_object.py` into a `.Gob` and `.Sco` from the Astr-C template.
+It is scaled to 120 km and appended to the play copy's object database
+(`aoapack.rebuild` can now add entries). It sits 776 km out with a mining
+settlement and a second waypoint. Live: no crash, 103 terrain objects, and
+Bennu drawn, textured and lit. 19 tests pass. Power-up pickup, collision,
+Bennu's frame-rate cost, the full flights out and a second player are
+untested. See [custom objects](docs/custom-objects.md) and the
+[Bennu evidence](evidence/2.9.2/custom_object_bennu_20261027.json). See [custom maps](docs/custom-maps.md)
+and the [evidence](evidence/2.9.2/custom_map_crucible_20261027.json).
+
 Distant object visibility (27 Oct 2026): optional `distant-world-objects-v1`
 extends the mesh surface-distance limit from 61,000 to 4,500,000 units and
 the cached-world-image horizon from 900,000 to 4,500,000. The minimum projected
