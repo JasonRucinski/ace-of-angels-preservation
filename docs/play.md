@@ -51,6 +51,14 @@ never appears.
 
 ## 4. Fly offline
 
+Double-click `tools\client_launcher.cmd`. The launcher reads the installed
+settings and provides an on/off checkbox for each visual addition. Choose
+**Apply** to save, or **Play** to save and launch. **Original visuals (all off)**
+clears the visual additions together. Close the game before applying changes.
+See [the launcher options](client-setup.md#client-launcher-and-visual-options).
+
+The checked command-line launch is also available:
+
 ```powershell
 .venv\Scripts\python.exe -I tools\prepare_client.py launch game\2.9.2\AOACLIENT.EXE
 ```
