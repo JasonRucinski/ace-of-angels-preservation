@@ -58,4 +58,4 @@ $layer = Get-ItemProperty "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Ap
 if ($layer) { "WARNING: a compatibility mode ('$layer') is set on this EXE; it breaks the client. Untick it in Properties > Compatibility." }
 Invoke-Step "record final configuration" { & $python -I tools\prepare_client.py prepare (Join-Path $Dest "AOACLIENT.EXE") --station $Station }
 Invoke-Step "verify prepared client" { & $python -I tools\prepare_client.py check (Join-Path $Dest "AOACLIENT.EXE") }
-"Done. Launch using: $python -I tools\prepare_client.py launch `"$(Resolve-Path $Dest)\AOACLIENT.EXE`""
+"Done. Choose visual options and play using: $python -I tools\client_launcher.py `"$(Resolve-Path $Dest)`""

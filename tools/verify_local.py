@@ -14,6 +14,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SUITES = ("test_network_bounds.py", "test_relay_motion.py", "test_prepare_client.py",
+          "test_client_launcher.py",
           "test_station_runtime.py", "test_station_sessions.py", "test_guest_admission.py",
           "test_relay_recovery.py", "test_station_stub.py", "test_combat_delivery.py",
           "test_client_extensions.py", "test_lan_dogfight.py", "test_scene_nodes.py",
