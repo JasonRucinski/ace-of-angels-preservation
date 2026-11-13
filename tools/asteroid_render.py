@@ -68,35 +68,25 @@ def configure(data, enabled=True):
     return bytes(result)
 
 
-def main():
+def install(exe, undo=False):
+    """Turn this option on, or off with undo, through prepare_client.prepare().
+
+    Every other option keeps its installed state; prepare's own backup and
+    record (_client_setup.json) cover undo.
+    """
     import prepare_client
+    return prepare_client.prepare(exe, experimental_asteroids=not undo)
+
+
+def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("client", type=Path)
-    parser.add_argument("--undo", action="store_true")
+    parser.add_argument("--undo", action="store_true", help="turn this option off")
     args = parser.parse_args()
-    exe = args.client.resolve()
-    prepare_client.paths(exe)
-    source = exe.read_bytes()
-    prepare_client.inspect(source)  # normalize all recognized patches; reject unknown edits
-    original = configure(source, False)
-    backup = exe.with_suffix(".EXE.before-asteroid-render")
-    if backup.exists() and backup.read_bytes() != original:
-        raise ValueError("asteroid render backup does not match this client")
-    if not backup.exists():
-        prepare_client.atomic_write(backup, original)
-    result = configure(source, not args.undo)
-    prepare_client.inspect(result)
-    # Use the normal pending/ready transaction and preserve its exact-undo backup.
-    prepare_client.prepare(exe, host=prepare_client.inspect(result)["host"],
-                           experimental_asteroids=not args.undo)
-    if exe.read_bytes() != result:
-        raise ValueError("asteroid render verification failed")
-    record = {"enabled": not args.undo, "sha256": prepare_client.sha(result),
-              "undo_sha256": prepare_client.sha(original), "visual_acceptance": "pending",
-              "scope": "Astr-* and Astr_* surface-distance cutoff 61000 to 900000; texture LOD unchanged"}
-    prepare_client.atomic_write(exe.parent / "_asteroid_render.json",
-                               (json.dumps(record, indent=2) + "\n").encode())
-    print(json.dumps(record, indent=2))
+    try:
+        print(json.dumps(install(args.client, args.undo), indent=2))
+    except (ValueError, RuntimeError, OSError) as error:
+        parser.exit(1, f"Asteroid render setup failed: {error}\n")
 
 
 if __name__ == "__main__":

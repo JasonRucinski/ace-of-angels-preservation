@@ -57,34 +57,25 @@ def configure(data, enabled=True):
 
 
 def install(exe, undo=False):
+    """Turn this option on, or off with undo, through prepare_client.prepare().
+
+    Every other option keeps its installed state; prepare's own backup and
+    record (_client_setup.json) cover undo.
+    """
     import prepare_client
-    exe = Path(exe).resolve()
-    prepare_client.paths(exe)
-    source = exe.read_bytes()
-    info = prepare_client.inspect(source)
-    before = configure(source, False)
-    backup = exe.with_suffix(".EXE.before-station-detail")
-    if backup.exists() and backup.read_bytes() != before:
-        raise ValueError("station detail backup does not match this client")
-    if not backup.exists():
-        if undo or state(source):
-            raise ValueError("missing station detail exact-undo backup")
-        prepare_client.atomic_write(backup, before)
-    result = configure(source, not undo)
-    prepare_client.prepare(exe, host=info["host"], experimental_station_detail=not undo)
-    if exe.read_bytes() != result:
-        raise ValueError("station detail verification failed")
-    record = {"enabled": not undo, "sha256": prepare_client.sha(result),
-              "undo_sha256": prepare_client.sha(before), "visual_acceptance": "pending",
-              "scope": "Hy_base1 child LOD selection fixed at projected size 4000; actual visibility and other models unchanged"}
-    prepare_client.atomic_write(exe.parent / "_station_detail.json",
-                               (json.dumps(record, indent=2) + "\n").encode())
-    return record
+    return prepare_client.prepare(exe, experimental_station_detail=not undo)
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("client", type=Path)
+    parser.add_argument("--undo", action="store_true", help="turn this option off")
+    args = parser.parse_args()
+    try:
+        print(json.dumps(install(args.client, args.undo), indent=2))
+    except (ValueError, RuntimeError, OSError) as error:
+        parser.exit(1, f"Station detail setup failed: {error}\n")
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("client", type=Path)
-    parser.add_argument("--undo", action="store_true")
-    args = parser.parse_args()
-    print(json.dumps(install(args.client, args.undo), indent=2))
+    main()

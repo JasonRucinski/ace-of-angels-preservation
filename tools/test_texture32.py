@@ -148,10 +148,8 @@ class Texture32Tests(unittest.TestCase):
             self.assertEqual(exe.read_bytes(), after)
             patch.install(exe, undo=True)
             self.assertEqual(exe.read_bytes(), before)
-            exe.with_suffix('.EXE.before-texture32').write_bytes(b'wrong backup')
-            with self.assertRaises(ValueError):
-                patch.install(exe)
-            self.assertEqual(exe.read_bytes(), before)
+            self.assertEqual(sorted(p.name for p in Path(folder).iterdir()),
+                             ['AOACLIENT.EXE', 'AOACLIENT.EXE.setup-original', '_client_setup.json'])
 
 
 if __name__ == '__main__':

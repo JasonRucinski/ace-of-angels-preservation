@@ -214,10 +214,8 @@ class ObjectPersistenceTests(unittest.TestCase):
             self.assertEqual(exe.read_bytes(), before)
             patch.install(exe, undo=True)
             self.assertEqual(exe.read_bytes(), before)
-            exe.with_suffix(".EXE.before-object-persistence").write_bytes(b"wrong")
-            with self.assertRaises(ValueError):
-                patch.install(exe)
-            self.assertEqual(exe.read_bytes(), before)
+            self.assertEqual(sorted(p.name for p in Path(folder).iterdir()),
+                             ["AOACLIENT.EXE", "AOACLIENT.EXE.setup-original", "_client_setup.json"])
 
     def test_byte_scope_partial_corruption_and_backup_rejection(self):
         before = prepare_client.configure(SOURCE.read_bytes())

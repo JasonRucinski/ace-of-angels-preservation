@@ -66,7 +66,7 @@ class WorldDetailTests(unittest.TestCase):
             with mock_patch.object(patch, 'MODEL', b'anything\0', create=True):
                 probe.test_hook_preserves_registers_and_flags()
 
-    def test_migration_preservation_and_exact_rollback(self):
+    def test_migration_preservation_and_undo_turns_it_off(self):
         with tempfile.TemporaryDirectory() as folder:
             exe = Path(folder) / 'AOACLIENT.EXE'
             exe.write_bytes(fixture.SOURCE.read_bytes())
@@ -79,12 +79,11 @@ class WorldDetailTests(unittest.TestCase):
             self.assertNotIn(station_detail.NAME, prepare_client.inspect(after)['patches'])
             patch.install(exe)
             self.assertEqual(exe.read_bytes(), after)
+            # Undo turns world detail off; the station-only patch it replaced stays off.
             patch.install(exe, undo=True)
-            self.assertEqual(exe.read_bytes(), before)
-            exe.with_suffix('.EXE.before-world-detail').write_bytes(b'wrong backup')
-            with self.assertRaises(ValueError):
-                patch.install(exe)
-            self.assertEqual(exe.read_bytes(), before)
+            self.assertEqual(exe.read_bytes(), prepare_client.configure(before, experimental_station_detail=False))
+            self.assertEqual(sorted(p.name for p in Path(folder).iterdir()),
+                             ['AOACLIENT.EXE', 'AOACLIENT.EXE.setup-original', '_client_setup.json'])
 
     def test_byte_scope_and_corruption_rejection(self):
         before = prepare_client.configure(fixture.SOURCE.read_bytes(), experimental_solids=True)

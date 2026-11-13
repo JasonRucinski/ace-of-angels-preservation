@@ -251,6 +251,21 @@ class SyntheticClientTests(unittest.TestCase):
                 self.assertEqual(module.configure(with_sibling, False), with_sibling)
                 self.assertEqual(module.configure(module.configure(self.pristine, True), False), self.pristine)
 
+    def test_per_tool_installers_change_only_their_option(self):
+        setup.prepare(self.exe, chase_camera=False, menu_framing=False, host="aoalan")
+        kept = set(setup.prepare(self.exe)["patches"])
+        for module in (setup.asteroid_render, setup.solid_world_render, setup.station_detail,
+                       setup.world_detail, setup.texture32, setup.object_persistence):
+            with self.subTest(patch=module.NAME):
+                record = module.install(self.exe)
+                self.assertEqual(record["status"], "ready")
+                self.assertIn(module.NAME, self.installed()["patches"])
+                module.install(self.exe, undo=True)
+                self.assertEqual(set(self.installed()["patches"]), kept)
+                self.assertEqual(self.installed()["host"], "aoalan")
+                self.assertEqual(sorted(p.name for p in self.exe.parent.iterdir()),
+                                 ["AOACLIENT.EXE", "AOACLIENT.EXE.setup-original", "_client_setup.json"])
+
     def test_command_line(self):
         for argv in (["check", str(self.exe), "--station", "aoalan"],
                      ["undo", str(self.exe), "--no-third-person"],

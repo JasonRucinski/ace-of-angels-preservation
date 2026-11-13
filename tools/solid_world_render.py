@@ -43,42 +43,24 @@ def configure(data, enabled=True):
 
 
 def install(exe, undo=False):
+    """Turn this option on, or off with undo, through prepare_client.prepare().
+
+    Every other option keeps its installed state; prepare's own backup and
+    record (_client_setup.json) cover undo.
+    """
     import prepare_client
-    exe = Path(exe).resolve()
-    prepare_client.paths(exe)
-    source = exe.read_bytes()
-    info = prepare_client.inspect(source)
-    backup = exe.with_suffix(".EXE.before-solid-world-render")
-    if not backup.exists():
-        if undo or state(source):
-            raise ValueError("missing solid-world exact-undo backup")
-        prepare_client.atomic_write(backup, source)
-    before = backup.read_bytes()
-    before_info = prepare_client.inspect(before)
-    if state(before):
-        raise ValueError("solid-world backup already contains this patch")
-    expected = prepare_client.configure(before, host=before_info["host"], experimental_solids=True)
-    if source not in (before, expected):
-        raise ValueError("solid-world backup does not match this client")
-    result = before if undo else expected
-    prepare_client.prepare(exe, host=info["host"], experimental_solids=not undo,
-                           experimental_asteroids=asteroid_render.NAME in before_info["patches"] if undo else False)
-    if exe.read_bytes() != result:
-        raise ValueError("solid-world render verification failed")
-    record = {"enabled": not undo, "sha256": prepare_client.sha(result),
-              "undo_sha256": prepare_client.sha(before), "visual_acceptance": "pending",
-              "scope": "world model-group surface-distance cutoff 61000 to 900000; texture LOD and effect renderer unchanged"}
-    prepare_client.atomic_write(exe.parent / "_solid_world_render.json",
-                               (json.dumps(record, indent=2) + "\n").encode())
-    return record
+    return prepare_client.prepare(exe, experimental_solids=not undo)
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("client", type=Path)
-    parser.add_argument("--undo", action="store_true")
+    parser.add_argument("--undo", action="store_true", help="turn this option off")
     args = parser.parse_args()
-    print(json.dumps(install(args.client, args.undo), indent=2))
+    try:
+        print(json.dumps(install(args.client, args.undo), indent=2))
+    except (ValueError, RuntimeError, OSError) as error:
+        parser.exit(1, f"Solid-world render setup failed: {error}\n")
 
 
 if __name__ == "__main__":

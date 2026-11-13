@@ -83,50 +83,23 @@ def configure(data, enabled=True):
 
 
 def install(exe, undo=False):
-    import frame_clock
-    import powerup_pickup
-    import prepare_client
-    import third_person
-    import visibility_fix
+    """Turn this option on, or off with undo, through prepare_client.prepare().
 
-    exe = Path(exe).resolve()
-    info = prepare_client.check(exe, require_assets=False)
-    source = exe.read_bytes()
-    before = configure(source, False)
-    backup = exe.with_suffix(".EXE.before-object-persistence")
-    if backup.exists() and backup.read_bytes() != before:
-        raise ValueError("distant-object backup does not match this client")
-    if not backup.exists():
-        if undo or state(source):
-            raise ValueError("missing distant-object exact-undo backup")
-        prepare_client.atomic_write(backup, before)
-    result = configure(source, not undo)
-    prepare_client.prepare(
-        exe, host=info["host"], distant_objects=not undo,
-        smooth_frame_clock=frame_clock.NAME in info["patches"],
-        bounded_visibility=visibility_fix.NAME in info["patches"],
-        chase_camera=third_person.NAME in info["patches"],
-        powerup_pickups=powerup_pickup.NAME in info["patches"],
-    )
-    if exe.read_bytes() != result:
-        raise ValueError("distant-object verification failed")
-    record = {"enabled": not undo, "sha256": prepare_client.sha(result),
-              "undo_sha256": prepare_client.sha(before), "visual_acceptance": "pending",
-              "horizon_world_units": HORIZON, "minimum_projected_size": MIN_SIZE,
-              "scope": "world model visibility and cached-world-image horizon; authored LODs retained"}
-    prepare_client.atomic_write(exe.parent / "_object_persistence.json",
-                               (json.dumps(record, indent=2) + "\n").encode())
-    return record
+    Every other option keeps its installed state; prepare's own backup and
+    record (_client_setup.json) cover undo.
+    """
+    import prepare_client
+    return prepare_client.prepare(exe, distant_objects=not undo)
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("client", type=Path)
-    parser.add_argument("--undo", action="store_true")
+    parser.add_argument("--undo", action="store_true", help="turn this option off")
     args = parser.parse_args()
     try:
         print(json.dumps(install(args.client, args.undo), indent=2))
-    except (ValueError, OSError) as error:
+    except (ValueError, RuntimeError, OSError) as error:
         parser.exit(1, f"Distant-object setup failed: {error}\n")
 
 

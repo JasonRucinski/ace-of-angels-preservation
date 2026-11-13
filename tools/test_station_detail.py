@@ -108,8 +108,11 @@ class StationDetailTests(unittest.TestCase):
             self.assertEqual(exe.read_bytes(), before)
             allowed = {i for off, old, _ in patch.regions() for i in range(off, off + len(old))}
             self.assertTrue(all(a == b or i in allowed for i, (a, b) in enumerate(zip(before, after))))
+            # prepare's backup and record are the only undo; no per-tool side files.
+            self.assertEqual(sorted(p.name for p in Path(folder).iterdir()),
+                             ['AOACLIENT.EXE', 'AOACLIENT.EXE.setup-original', '_client_setup.json'])
 
-    def test_partial_corruption_and_backup_rejection(self):
+    def test_partial_corruption_rejection(self):
         before = prepare_client.configure(SOURCE.read_bytes(), experimental_solids=True)
         after = prepare_client.configure(before, experimental_station_detail=True)
         for offset in (patch.SITE - 0x400000, patch.CAVE - 0x400000, 0x12345):
@@ -122,13 +125,6 @@ class StationDetailTests(unittest.TestCase):
         partial[off:off + len(new)] = new
         with self.assertRaises(ValueError):
             patch.configure(bytes(partial))
-        with tempfile.TemporaryDirectory() as folder:
-            exe = Path(folder) / 'AOACLIENT.EXE'
-            exe.write_bytes(before)
-            exe.with_suffix('.EXE.before-station-detail').write_bytes(b'wrong backup')
-            with self.assertRaises(ValueError):
-                patch.install(exe)
-            self.assertEqual(exe.read_bytes(), before)
 
 
 if __name__ == '__main__':

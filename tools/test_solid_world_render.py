@@ -61,7 +61,7 @@ class SolidWorldRenderTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 prepare_client.inspect(bytes(broken))
 
-    def test_install_reapply_undo_and_backup_guard(self):
+    def test_install_reapply_and_undo_turns_it_off(self):
         with tempfile.TemporaryDirectory() as directory:
             exe = Path(directory) / 'AOACLIENT.EXE'
             exe.write_bytes(fixture.SOURCE.read_bytes())
@@ -72,15 +72,14 @@ class SolidWorldRenderTests(unittest.TestCase):
             patch.install(exe)
             self.assertEqual(exe.read_bytes(), after)
             self.assertIn(patch.NAME, prepare_client.check(exe, require_assets=False)['patches'])
+            # Undo turns solid-world off; the asteroid-only patch it replaced stays off.
+            off = prepare_client.configure(before, experimental_asteroids=False)
             patch.install(exe, undo=True)
-            self.assertEqual(exe.read_bytes(), before)
+            self.assertEqual(exe.read_bytes(), off)
             patch.install(exe, undo=True)
-            self.assertEqual(exe.read_bytes(), before)
-            backup = exe.with_suffix('.EXE.before-solid-world-render')
-            backup.write_bytes(backup.read_bytes()[:-1])
-            with self.assertRaises(ValueError):
-                patch.install(exe)
-            self.assertEqual(exe.read_bytes(), before)
+            self.assertEqual(exe.read_bytes(), off)
+            self.assertEqual(sorted(p.name for p in Path(directory).iterdir()),
+                             ['AOACLIENT.EXE', 'AOACLIENT.EXE.setup-original', '_client_setup.json'])
 
 
 if __name__ == '__main__':
