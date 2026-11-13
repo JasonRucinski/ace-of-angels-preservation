@@ -34,6 +34,7 @@ from patch_client import Asm, jmp_patch  # noqa: E402
 from third_person import CHASE_FLAG, TICK  # noqa: E402
 
 NAME = "own-ship-menu-model-v1"
+LEGACY_NAME = "own-ship-menu-model-legacy"   # the first cave, without the +0x245 restore
 PART_SITE = 0x56ECDC                      # mov al, byte [edi+0x244]
 PART_ORIGINAL = bytes.fromhex("8a8744020000")
 PART_RESUME = 0x56ECE2                    # test al, al ; je skip part
@@ -120,6 +121,15 @@ def state(data):
         found = matches(data, legacy)
         if found is not None:
             return found
+    raise ValueError("unexpected or partial own-ship menu-model patch")
+
+
+def installed_name(data):
+    """Name of the installed variant (the legacy one only until prepare upgrades it), or None."""
+    for legacy, name in ((False, NAME), (True, LEGACY_NAME)):
+        found = matches(data, legacy)
+        if found is not None:
+            return name if found else None
     raise ValueError("unexpected or partial own-ship menu-model patch")
 
 

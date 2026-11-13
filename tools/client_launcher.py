@@ -83,7 +83,9 @@ def read_settings(folder):
     state = setup.inspect(current)
     setup.load_record(record, backup, current)
     setup.check_assets(folder)
-    options = {key: module.NAME in state["patches"] for key, _, module in PATCHES}
+    # An older variant counts as on; Apply upgrades it.
+    options = {key: bool(set(getattr(module, "NAMES", (module.NAME,))) & set(state["patches"]))
+               for key, _, module in PATCHES}
     quality = wrapper_options(folder)
     for key, _, conf_key, _, original in QUALITY:
         options[key] = quality is not None and quality[conf_key] != original
@@ -92,7 +94,8 @@ def read_settings(folder):
     options["texture_pack"] = bool(active and active["archives"])
     options["powerup_pickups"] = setup.powerup_pickup.NAME in state["patches"]
     options["station"] = state["host"] if state["host"] != "aoahost.com" else "localhost"
-    return options, {"wrapper": quality is not None, "texture_pack": bool(active and active["archives"] or cache)}
+    return options, {"wrapper": quality is not None, "texture_pack": bool(active and active["archives"] or cache),
+                     "outdated": sorted(setup.OUTDATED & set(state["patches"]))}
 
 
 def require_closed():
@@ -238,6 +241,9 @@ def gui(folder=DEFAULT_GAME, run=True):
                 notes.append("Replacement textures unavailable — install a pack to enable this option.")
             if not available["wrapper"]:
                 notes.append("Graphics quality options require the dgVoodoo wrapper.")
+            if available["outdated"]:
+                notes.append("Older patch versions installed (" + ", ".join(available["outdated"])
+                             + ") — Apply or Play updates them.")
             status.set("Loaded installed settings." + ("\n" + "\n".join(notes) if notes else ""))
         except (OSError, ValueError, KeyError, configparser.Error) as error:
             status.set(f"Cannot load this game folder: {error}")

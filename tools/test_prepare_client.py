@@ -266,6 +266,38 @@ class SyntheticClientTests(unittest.TestCase):
                 self.assertEqual(sorted(p.name for p in self.exe.parent.iterdir()),
                                  ["AOACLIENT.EXE", "AOACLIENT.EXE.setup-original", "_client_setup.json"])
 
+    def test_older_camera_variants_are_named_and_fail_check(self):
+        import own_ship_menu
+        import third_person
+        setup.prepare(self.exe)
+        on = self.exe.read_bytes()
+        setup.prepare(self.exe, chase_camera=False)
+        off = self.exe.read_bytes()
+        for module, variant, name in ((third_person, "v1", "third-person-camera-v1"),
+                                      (third_person, "v2", "third-person-camera-v2"),
+                                      (own_ship_menu, True, "own-ship-menu-model-legacy")):
+            with self.subTest(variant=name):
+                # third_person's own cave is off here; own_ship_menu needs the camera on.
+                old = bytearray(off if module is third_person else own_ship_menu.configure(on, False))
+                for offset, original, new in module.regions(variant):
+                    old[offset:offset + len(original)] = new
+                old = bytes(old)
+                self.assertIn(name, setup.inspect(old)["patches"])
+                self.assertNotIn(module.NAME, setup.inspect(old)["patches"])
+                # As an earlier prepare would have recorded it.
+                record_path = self.exe.with_name("_client_setup.json")
+                record = json.loads(record_path.read_text())
+                self.exe.write_bytes(old)
+                record_path.write_text(json.dumps({**record, "output_sha256": setup.sha(old)}))
+                with self.assertRaisesRegex(ValueError, f"outdated client patches \\({name}\\); re-run prepare"):
+                    self.installed()
+                # An unnamed option keeps the old variant on, and prepare upgrades it.
+                state = setup.prepare(self.exe)
+                self.assertIn(module.NAME, state["patches"])
+                self.assertNotIn(name, state["patches"])
+                setup.prepare(self.exe, chase_camera=False)
+                self.assertEqual(self.exe.read_bytes(), off)
+
     def test_command_line(self):
         for argv in (["check", str(self.exe), "--station", "aoalan"],
                      ["undo", str(self.exe), "--no-third-person"],

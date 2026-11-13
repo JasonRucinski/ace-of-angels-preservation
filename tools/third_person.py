@@ -86,6 +86,7 @@ SET_ENABLED = 0x542A90           # thiscall(bool): node+0x150 = arg
 ORBIT_PERIOD = 24000             # ms per lap
 CULL_WINDOW = 250                # ms after cave A that cave B may still use FAKE
 VARIANTS = ("v3", "v2", "v1")    # current first; older ones only for upgrade
+NAMES = tuple("third-person-camera-" + v for v in VARIANTS)   # NAMES[0] == NAME
 
 SITE_A = 0x44A091                # push eax ; call 0x553810
 ORIGINAL_A = bytes.fromhex("50e879971000")
@@ -264,6 +265,15 @@ def state(data):
         found = matches(data, variant)
         if found is not None:
             return found
+    raise ValueError("unexpected or partial third-person camera patch")
+
+
+def installed_name(data):
+    """Name of the installed variant (an older one only until prepare upgrades it), or None."""
+    for variant, name in zip(VARIANTS, NAMES):
+        found = matches(data, variant)
+        if found is not None:
+            return name if found else None
     raise ValueError("unexpected or partial third-person camera patch")
 
 

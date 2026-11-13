@@ -349,7 +349,9 @@ class ThirdPersonTests(unittest.TestCase):
             v1[o:o + len(old)] = new
         v1 = bytes(v1)
         self.assertIs(tp.state(v1), True)
-        self.assertIn(tp.NAME, prepare_client.inspect(v1)["patches"])
+        self.assertEqual(tp.installed_name(v1), "third-person-camera-v1")
+        self.assertIn("third-person-camera-v1", prepare_client.inspect(v1)["patches"])
+        self.assertNotIn(tp.NAME, prepare_client.inspect(v1)["patches"])
         self.assertEqual(prepare_client.configure(v1), on)
         self.assertEqual(tp.configure(v1, False), tp.configure(on, False))
         # So does v2 (patch version 20: orbit, same-tick cull check).
@@ -359,6 +361,7 @@ class ThirdPersonTests(unittest.TestCase):
         v2 = bytes(v2)
         self.assertNotEqual(v2, on)
         self.assertIs(tp.state(v2), True)
+        self.assertIn("third-person-camera-v2", prepare_client.inspect(v2)["patches"])
         self.assertEqual(prepare_client.configure(v2), on)
         self.assertEqual(tp.configure(v2, False), tp.configure(on, False))
         self.assertEqual(on[tp.SITE_R - 0x400000:][:len(tp.ORIGINAL_R)][:1], b"\xe9")
@@ -541,7 +544,8 @@ class OwnShipMenuTests(unittest.TestCase):
         for o, old, new in own_ship_menu.regions(legacy=True):
             first[o:o + len(old)] = new
         self.assertIs(own_ship_menu.state(bytes(first)), True)
-        self.assertIn(own_ship_menu.NAME, prepare_client.inspect(bytes(first))["patches"])
+        self.assertIn(own_ship_menu.LEGACY_NAME, prepare_client.inspect(bytes(first))["patches"])
+        self.assertNotIn(own_ship_menu.NAME, prepare_client.inspect(bytes(first))["patches"])
         self.assertEqual(prepare_client.configure(bytes(first)), self.prepared)
         self.assertEqual(own_ship_menu.configure(bytes(first), False), v16)
         for o, old, new in own_ship_menu.regions():

@@ -50,6 +50,9 @@ WRAPPERS = {
 LOOPBACK = ("localhost", "127.0.0.1")
 # A client with only these has never been prepared, so it has no options yet.
 UNPREPARED = {"logger-size-v1", "logger-lock-v1", "zero-time-physics-v1"}
+# Older variants inspect() still recognizes; prepare upgrades them in place.
+OUTDATED = {*third_person.NAMES[1:], own_ship_menu.LEGACY_NAME, online_terrain.V2_NAME,
+            online_terrain.LEGACY_NAME}
 
 
 def sha(data):
@@ -83,11 +86,11 @@ def inspect(data):
     data = object_persistence.configure(data, False)
     pickup = powerup_pickup.state(data)
     data = powerup_pickup.configure(data, False)
-    chase = third_person.state(data)
+    chase = third_person.installed_name(data)
     data = third_person.configure(data, False)
     model = own_ship_model.state(data)
     data = own_ship_model.configure(data, False)
-    menu_model = own_ship_menu.state(data)
+    menu_model = own_ship_menu.installed_name(data)
     data = own_ship_menu.configure(data, False)
     clock = frame_clock.state(data)
     data = frame_clock.configure(data, False)
@@ -142,16 +145,17 @@ def inspect(data):
             + ([texture32.NAME] if tex32 else [])
             + ([frame_clock.NAME] if clock else [])
             + ([visibility_fix.NAME] if visibility else [])
-            + ([third_person.NAME] if chase else [])
+            + ([chase] if chase else [])
             + ([own_ship_model.NAME] if model else [])
-            + ([own_ship_menu.NAME] if menu_model else [])
+            + ([menu_model] if menu_model else [])
             + ([powerup_pickup.NAME] if pickup else [])
             + ([explicit_protection.NAME] if protection else [])}
 
 
-def choose(state, requested, name, default):
+def choose(state, requested, names, default):
     """An explicit True/False wins; None keeps the installed state.
 
+    names is the patch ID, or a tuple of the IDs of every recognized variant.
     The default applies only to an unprepared client (pristine, or carrying
     only the legacy stability fixes), which has no options installed yet.
     """
@@ -159,7 +163,7 @@ def choose(state, requested, name, default):
         return requested
     if set(state["patches"]) <= UNPREPARED:
         return default
-    return name in state["patches"]
+    return bool(({names} if isinstance(names, str) else set(names)) & set(state["patches"]))
 
 
 def exclusive(state, first, first_name, second, second_name):
@@ -180,7 +184,7 @@ def configure(data, host=None, experimental_protection=None, experimental_astero
     host = host if host is not None else "localhost" if fresh else state["host"]
     field = host_field(host)
     distant = choose(state, distant_objects, object_persistence.NAME, False)
-    chase = choose(state, chase_camera, third_person.NAME, True)
+    chase = choose(state, chase_camera, third_person.NAMES, True)
     pickups = choose(state, powerup_pickups, powerup_pickup.NAME, True)
     clock = choose(state, smooth_frame_clock, frame_clock.NAME, True)
     visibility = choose(state, bounded_visibility, visibility_fix.NAME, True)
@@ -346,6 +350,9 @@ def check(exe, require_assets=True):
     data = exe.read_bytes()
     state = inspect(data)
     record = load_record(record_path, backup, data)
+    old = sorted(OUTDATED & set(state["patches"]))
+    if old:
+        raise ValueError(f"outdated client patches ({', '.join(old)}); re-run prepare")
     if (record is None or record["status"] != "ready"
             or not {"zero-time-physics-v1", "background-network-v1",
                     "archive-terminator-v1", cursor_warp.NAME, online_terrain.NAME} <= set(state["patches"])):
