@@ -64,7 +64,8 @@ import vessel_combat
 import navigation_buoys
 import turret_trial
 import warp_trial
-from station_runtime import DatagramBudget, EventLog, StationTCPServer, parse_args
+from station_runtime import (DEFAULT_VESSEL, SELECTABLE_VESSELS, DatagramBudget, EventLog,
+                             StationTCPServer, parse_args)
 
 NUL = bytes(1)
 SESSION_COMPLETE = 75  # Dedicated controller advances the rotation only on this clean exit.
@@ -281,16 +282,6 @@ def udp_replies(message_type, payload, arena=False):
     if message_type == 0x0A and len(payload) == 381:
         replies.append(ack_connect(payload, kind=0 if arena else 1))
     return replies
-
-
-DEFAULT_VESSEL = "Ym Khtat"
-# Every .Sco object in the 2.9.2 AoAObjects.odb with an engine, pods
-# excluded (work/2.9.2/sco.json): the fighters the in-flight menu offers.
-SELECTABLE_VESSELS = frozenset((
-    "AlphaFighter", "Dafusha", "Dasibaz", "Eagle", "Etat'Illraku", "Foushar", "Grathven", "Hartra",
-    "IBCH", "Janha Vari", "Kafic", "MBB", "Meskvak Su", "Mkulat", "N'Goc", "Naroch", "Natak'Illraku",
-    "Rchat", "Rhino", "Saksatar", "Shrike", "Tekan", "Test Missile Boat", "Tholfus", "Ummra Viazyem",
-    "Vagym", "Vasa Chovo", "Vermok", "Vrak Stat", "Yagari", "Ym Khtat", "Zkole"))
 
 
 def ship_config_list():
@@ -1095,26 +1086,12 @@ def server_list_body(population, arena_port=None, mode="Local Arena", available=
     return body
 
 
-def main():
-    args = parse_args()
-    if args.print_config:
-        print(json.dumps(vars(args), default=str, indent=2))
-        return
-    key = args.key.read_bytes()
-    if len(key) != 256:
-        raise ValueError("SCRTY.BIN must contain exactly 256 bytes")
-    try:
-        with EventLog(args.log, args.raw_capture, args.log_max_bytes, args.log_backups) as log, ExitStack() as resources:
-            return run(args, key, log, resources)
-    except KeyboardInterrupt:
-        # systemd uses SIGINT, like a foreground Ctrl+C, so the context
-        # managers close sockets and drain logs before a successful exit.
-        print("Host stopped", flush=True)
-    except OSError as error:
-        raise SystemExit(f"Host I/O failed: {error}. Check that {args.bind_address} belongs to this PC and the ports are free.") from error
+def load_objects(args):
+    """Every map object run() places: (warp gates, warp loads, turret loads, buoy loads).
 
-
-def run(args, key, log, resources):
+    main() calls this before --print-config and before any socket opens, so
+    validation covers the asset files, not only the flags.
+    """
     warp_gates = warp_trial.placements(args.warp_trial) if args.warp_trial else []
     warp = warp_trial.loads(warp_gates)
     trial = turret_trial.loads(turret_trial.placements(args.turret_trial)) if args.turret_trial else []
@@ -1124,6 +1101,36 @@ def run(args, key, log, resources):
             args.navigation_buoys, args.map, args.buoy_trn or args.key.parent / 'JRMAP.TRN'))
     if args.map_waypoints:
         buoys = navigation_buoys.loads(navigation_buoys.trn_placements(args.map_waypoints.read_bytes()))
+    return warp_gates, warp, trial, buoys
+
+
+def main(argv=None):
+    args = parse_args(argv)
+    try:
+        objects = load_objects(args)
+    except (OSError, ValueError, KeyError) as error:
+        # An asset problem, reported as one line like the other setting errors.
+        print(f"{Path(sys.argv[0]).name}: error: map objects: {error}", file=sys.stderr, flush=True)
+        raise SystemExit(2) from None
+    if args.print_config:
+        print(json.dumps(vars(args), default=str, indent=2))
+        return
+    key = args.key.read_bytes()
+    if len(key) != 256:
+        raise ValueError("SCRTY.BIN must contain exactly 256 bytes")
+    try:
+        with EventLog(args.log, args.raw_capture, args.log_max_bytes, args.log_backups) as log, ExitStack() as resources:
+            return run(args, key, log, resources, objects)
+    except KeyboardInterrupt:
+        # systemd uses SIGINT, like a foreground Ctrl+C, so the context
+        # managers close sockets and drain logs before a successful exit.
+        print("Host stopped", flush=True)
+    except OSError as error:
+        raise SystemExit(f"Host I/O failed: {error}. Check that {args.bind_address} belongs to this PC and the ports are free.") from error
+
+
+def run(args, key, log, resources, objects=None):
+    warp_gates, warp, trial, buoys = load_objects(args) if objects is None else objects
     port, seconds, peer_timeout = args.port, args.seconds, args.peer_timeout
     reply, pilot = args.ack, args.pilot
     notifications = queue.Queue(maxsize=1024)

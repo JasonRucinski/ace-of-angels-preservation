@@ -67,6 +67,7 @@ def make_root(base, assets=True):
     game.mkdir(parents=True)
     (game / "SCRTY.BIN").write_bytes(bytes(256))
     (game / "jrmap292.trn").write_bytes(b"")
+    (game / "JRMAP.TRN").write_bytes(b"")  # navigation buoys on JRMAP
     if assets:
         export = base / "work/2.9.2/export/AOAOBJECTS"
         export.mkdir(parents=True)

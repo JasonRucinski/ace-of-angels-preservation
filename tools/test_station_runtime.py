@@ -127,6 +127,36 @@ class RuntimeTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertTrue(json.loads(result.stdout)["experimental_relay"])
 
+    def test_validation_covers_what_run_rejects(self):
+        """--print-config fails, naming the problem, on everything run() would reject at start."""
+        relay = ["--profile", "local-guests", "--experimental-terrain", "--sustained-delivery"]
+        self.assertEqual(parse_args(["key", "log", "--profile", "local-relay", "--start-vessel", "Rhino"]).start_vessel,
+                         "Rhino")
+        with self.assertRaisesRegex(ValueError, "invalid choice: 'Bogus'"):
+            parse_args(["key", "log", "--profile", "local-relay", "--start-vessel", "Bogus"], raise_errors=True)
+        with tempfile.TemporaryDirectory() as temp:
+            folder = Path(temp)
+            export = folder / "export/AOAOBJECTS"
+            export.mkdir(parents=True)
+            key = folder / "SCRTY.BIN"
+            buoys = [str(key), str(folder / "log"), *relay, "--navigation-buoys", str(export)]
+            with self.assertRaises(ValueError) as caught:
+                parse_args(buoys + ["--map", "JRMAP"], raise_errors=True)
+            self.assertIn(f"JRMAP.TRN: no file {folder / 'JRMAP.TRN'}", str(caught.exception))
+            (folder / "JRMAP.TRN").write_bytes(b"")
+            parse_args(buoys + ["--map", "JRMAP"], raise_errors=True)
+            for command, message in ((buoys + ["--map", "JRMAP"], "map objects: JRMAP navigation requires"),
+                                     (buoys + ["--map", "Arena1a"], "map objects: exported model/configuration"),
+                                     ([str(key), str(folder / "log"), "--profile", "local-relay",
+                                       "--start-vessel", "Bogus"], "invalid choice: 'Bogus'")):
+                with self.subTest(command=command[2:]):
+                    result = subprocess.run([sys.executable, "-I", str(Path(stub.__file__)), *command, "--print-config"],
+                                            capture_output=True, text=True, timeout=20)
+                    self.assertEqual(result.returncode, 2)
+                    self.assertIn(message, result.stderr.strip().splitlines()[-1])
+                    self.assertNotIn("Check that", result.stderr)
+            self.assertEqual(sorted(path.name for path in folder.iterdir()), ["JRMAP.TRN", "export"])
+
     def test_log_redaction_rotation_and_capture(self):
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "metadata.jsonl"
