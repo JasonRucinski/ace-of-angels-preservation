@@ -47,6 +47,7 @@ finding your brief cites by ID.
   test_lan_dogfight test_internet_play test_powerups test_target_ships
   test_host_control test_prepare_client test_dedicated_host
   test_client_launcher test_make_map test_make_object
+  test_patch_layout test_host_argv test_reel
   plus any test you added. All must pass.
 
 ## Report back (under 400 words)

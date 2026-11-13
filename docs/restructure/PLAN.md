@@ -132,12 +132,15 @@ verified without the game: see section 4.
 
 ### Phase 0. Safety net and fixes, no files move
 
-- [ ] **0a Golden snapshots** (game-free tests, added to CI):
+- [x] **0a Golden snapshots** (game-free tests, added to CI):
   every patch's regions as address/bytes (proves later refactors change no
   patch byte); the server command line for each launcher and each documented
   command; region disjointness and cave/data bounds. Install the pinned
   `unicorn`, `capstone` and `pefile` in the Linux CI job. Record the pass,
-  skip and error outcome of all 47 suites as the baseline.
+  skip and error outcome of every suite as the baseline.
+  Done 13 Nov: `tools/test_patch_layout.py`, `tools/test_host_argv.py`,
+  `tools/snapshots/`, [baseline-tests.md](baseline-tests.md). Not run: the
+  Windows CI job.
 - [ ] **0b Client fixes**: U1, U2, U9; legacy command lines of `patch_client`,
   `local_station` and `physics_timestep` removed (they break a prepared
   client); `setup_game.ps1` fails on an explicit missing `-Wrapper`.
