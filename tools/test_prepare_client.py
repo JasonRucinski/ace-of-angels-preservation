@@ -1,5 +1,6 @@
 """Exercise preparation on temporary copies of the user's original client."""
 import hashlib
+import io
 import json
 import sys
 import tempfile
@@ -164,6 +165,101 @@ class ClientPreparationTests(unittest.TestCase):
                 setup.check(exe, require_assets=False)
             setup.prepare(exe, undo=True)
             self.assertEqual(exe.read_bytes(), self.original)
+
+
+class SyntheticClientTests(unittest.TestCase):
+    """Option handling on the synthetic client of test_patch_layout; game-free."""
+    FORCED = {"smooth_frame_clock": "frame-clock-v1", "bounded_visibility": "visibility-math-v1",
+              "chase_camera": "third-person-camera-v3", "powerup_pickups": "powerup-pickup-v1",
+              "menu_framing": "ship-menu-aspect-v1"}
+
+    @classmethod
+    def setUpClass(cls):
+        import test_patch_layout
+        cls.pristine = test_patch_layout.synthetic_pristine()
+        pristine_sha = hashlib.sha256(cls.pristine).hexdigest()
+        with patch.object(patch_client, "PRISTINE_292", pristine_sha):
+            stable_sha = hashlib.sha256(patch_client.configure(cls.pristine)[0]).hexdigest()
+        cls.hashes = (patch.object(patch_client, "PRISTINE_292", pristine_sha),
+                      patch.object(setup, "STABLE_SHA256", stable_sha),
+                      patch.object(physics_timestep, "STABLE_SHA256", stable_sha))
+
+    def setUp(self):
+        for mocked in self.hashes:
+            mocked.start()
+            self.addCleanup(mocked.stop)
+        temp = tempfile.TemporaryDirectory()
+        self.addCleanup(temp.cleanup)
+        self.exe = Path(temp.name) / "AOACLIENT.EXE"
+        self.exe.write_bytes(self.pristine)
+
+    def installed(self):
+        return setup.check(self.exe, require_assets=False)
+
+    def test_unnamed_options_keep_their_installed_state(self):
+        fresh = setup.prepare(self.exe)
+        self.assertEqual(fresh["host"], "localhost")
+        self.assertLessEqual(set(self.FORCED.values()), set(fresh["patches"]))
+        for key, name in self.FORCED.items():
+            with self.subTest(option=key):
+                setup.prepare(self.exe, **{key: False})
+                # What play.md tells LAN players to run: only the Station is named.
+                state = setup.prepare(self.exe, host="aoalan", experimental_protection=False)
+                self.assertEqual(state["host"], "aoalan")
+                self.assertNotIn(name, state["patches"])
+                setup.prepare(self.exe, **{key: True})
+                self.assertIn(name, setup.prepare(self.exe, host="localhost")["patches"])
+        setup.prepare(self.exe, distant_objects=True, experimental_texture32=True,
+                      **dict.fromkeys(self.FORCED, False))
+        before = self.exe.read_bytes()
+        setup.prepare(self.exe)
+        self.assertEqual(self.exe.read_bytes(), before)
+        self.assertEqual(self.installed()["host"], "localhost")
+        state = setup.prepare(self.exe, host="10.0.0.1")
+        self.assertFalse(set(self.FORCED.values()) & set(state["patches"]))
+        self.assertIn("distant-world-objects-v1", state["patches"])
+        self.assertIn("texture-argb8888-v1", state["patches"])
+        setup.prepare(self.exe, undo=True)
+        self.assertEqual(self.exe.read_bytes(), self.pristine)
+        self.assertLessEqual(set(self.FORCED.values()), set(setup.prepare(self.exe)["patches"]))
+
+    def test_conflicting_pairs(self):
+        pairs = (("experimental_asteroids", "asteroid-mesh-distance-v1",
+                  "experimental_solids", "solid-world-mesh-distance-v1"),
+                 ("experimental_station_detail", "station-full-detail-v1",
+                  "experimental_world_detail", "world-full-detail-v1"))
+        for first, first_name, second, second_name in pairs:
+            with self.subTest(pair=(first, second)):
+                prepared = setup.configure(self.pristine)
+                with self.assertRaisesRegex(ValueError, f"{first_name} and {second_name}"):
+                    setup.configure(prepared, **{first: True, second: True})
+                # An explicit request replaces the installed alternative, either way round.
+                one = setup.configure(prepared, **{first: True})
+                other = setup.configure(one, **{second: True})
+                self.assertNotIn(first_name, setup.inspect(other)["patches"])
+                self.assertIn(second_name, setup.inspect(other)["patches"])
+                self.assertEqual(setup.configure(other, **{first: True}), one)
+                self.assertEqual(setup.configure(one, **{first: False}), prepared)
+
+    def test_command_line(self):
+        for argv in (["check", str(self.exe), "--station", "aoalan"],
+                     ["undo", str(self.exe), "--no-third-person"],
+                     ["launch", str(self.exe), "--frame-clock"]):
+            with self.subTest(argv=argv), patch("sys.stderr", io.StringIO()) as stderr, \
+                    self.assertRaises(SystemExit) as stopped:
+                setup.main(argv)
+            self.assertEqual(stopped.exception.code, 2)
+            self.assertIn("applies only to prepare", stderr.getvalue())
+        with patch("sys.stdout", io.StringIO()):
+            setup.main(["prepare", str(self.exe), "--no-third-person"])
+            setup.main(["prepare", str(self.exe), "--station", "aoalan"])
+        self.assertNotIn("third-person-camera-v3", self.installed()["patches"])
+        self.assertEqual(self.installed()["host"], "aoalan")
+        with patch.object(setup, "atomic_write", side_effect=RuntimeError("write verification failed")), \
+                patch("sys.stderr", io.StringIO()) as stderr, self.assertRaises(SystemExit) as stopped:
+            setup.main(["prepare", str(self.exe), "--third-person"])
+        self.assertEqual(stopped.exception.code, 1)
+        self.assertEqual(stderr.getvalue(), "Client setup failed: write verification failed\n")
 
 
 if __name__ == "__main__":

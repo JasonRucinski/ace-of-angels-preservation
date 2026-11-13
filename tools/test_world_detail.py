@@ -100,8 +100,10 @@ class WorldDetailTests(unittest.TestCase):
         partial[patch.OFFSET:patch.OFFSET + 6] = patch.PATCHED
         with self.assertRaises(ValueError):
             patch.configure(bytes(partial))
-        with self.assertRaises(ValueError):
-            prepare_client.configure(after, experimental_station_detail=True)
+        self.assertNotIn(patch.NAME, prepare_client.inspect(
+            prepare_client.configure(after, experimental_station_detail=True))['patches'])
+        with self.assertRaisesRegex(ValueError, f"{station_detail.NAME} and {patch.NAME}"):
+            prepare_client.configure(before, experimental_station_detail=True, experimental_world_detail=True)
 
 
 if __name__ == '__main__':

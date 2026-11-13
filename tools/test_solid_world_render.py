@@ -49,8 +49,9 @@ class SolidWorldRenderTests(unittest.TestCase):
                                                 experimental_asteroids=True), legacy)
         self.assertIn(patch.NAME, prepare_client.inspect(broad)['patches'])
         self.assertNotIn(asteroid_render.NAME, prepare_client.inspect(broad)['patches'])
-        with self.assertRaises(ValueError):
-            prepare_client.configure(broad, experimental_asteroids=True)
+        self.assertEqual(prepare_client.configure(broad, experimental_asteroids=True), legacy)
+        with self.assertRaisesRegex(ValueError, f"{asteroid_render.NAME} and {patch.NAME}"):
+            prepare_client.configure(clean, experimental_asteroids=True, experimental_solids=True)
 
     def test_corruption_and_abandoned_cave_rejected(self):
         broad = prepare_client.configure(fixture.SOURCE.read_bytes(), experimental_solids=True)

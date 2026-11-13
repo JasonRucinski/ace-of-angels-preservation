@@ -47,6 +47,9 @@ WRAPPERS = {
     "DDraw.dll": "612a24408a090a3c6f3886557fa18034ee742e94ad0a40ebdf854d2816176c2e",
     "D3DImm.dll": "93c534f2d17419ea78f15551f7e0aac78b3c503733a840914fa063708a5afe8e",
 }
+LOOPBACK = ("localhost", "127.0.0.1")
+# A client with only these has never been prepared, so it has no options yet.
+UNPREPARED = {"logger-size-v1", "logger-lock-v1", "zero-time-physics-v1"}
 
 
 def sha(data):
@@ -146,32 +149,61 @@ def inspect(data):
             + ([explicit_protection.NAME] if protection else [])}
 
 
-def configure(data, host="localhost", experimental_protection=None, experimental_asteroids=None, experimental_solids=None, experimental_station_detail=None, experimental_world_detail=None, experimental_texture32=None, smooth_frame_clock=True, bounded_visibility=True, chase_camera=True, powerup_pickups=True, distant_objects=None, menu_framing=True):
-    field = host_field(host)
+def choose(state, requested, name, default):
+    """An explicit True/False wins; None keeps the installed state.
+
+    The default applies only to an unprepared client (pristine, or carrying
+    only the legacy stability fixes), which has no options installed yet.
+    """
+    if requested is not None:
+        return requested
+    if set(state["patches"]) <= UNPREPARED:
+        return default
+    return name in state["patches"]
+
+
+def exclusive(state, first, first_name, second, second_name):
+    """Resolve a pair that shares one code site: requesting both is an error,
+    and an explicit request replaces the installed other one."""
+    if first and second:
+        raise ValueError(f"{first_name} and {second_name} cannot both be on; select one")
+    a, b = choose(state, first, first_name, False), choose(state, second, second_name, False)
+    if a and b:
+        a, b = (a, False) if first else (False, b)
+    return a, b
+
+
+def configure(data, host=None, experimental_protection=None, experimental_asteroids=None, experimental_solids=None, experimental_station_detail=None, experimental_world_detail=None, experimental_texture32=None, smooth_frame_clock=None, bounded_visibility=None, chase_camera=None, powerup_pickups=None, distant_objects=None, menu_framing=None):
+    """Every option left as None keeps its installed state (see choose())."""
     state = inspect(data)
-    distant = object_persistence.NAME in state["patches"] if distant_objects is None else distant_objects
+    fresh = set(state["patches"]) <= UNPREPARED
+    host = host if host is not None else "localhost" if fresh else state["host"]
+    field = host_field(host)
+    distant = choose(state, distant_objects, object_persistence.NAME, False)
+    chase = choose(state, chase_camera, third_person.NAME, True)
+    pickups = choose(state, powerup_pickups, powerup_pickup.NAME, True)
+    clock = choose(state, smooth_frame_clock, frame_clock.NAME, True)
+    visibility = choose(state, bounded_visibility, visibility_fix.NAME, True)
+    framing = choose(state, menu_framing, menu_aspect.NAME, True)
+    tex32 = choose(state, experimental_texture32, texture32.NAME, False)
+    station_lod, world_lod = exclusive(state, experimental_station_detail, station_detail.NAME,
+                                       experimental_world_detail, world_detail.NAME)
+    asteroids, solids = exclusive(state, experimental_asteroids, asteroid_render.NAME,
+                                  experimental_solids, solid_world_render.NAME)
     data = object_persistence.configure(data, False)
     data = own_ship_menu.configure(own_ship_model.configure(third_person.configure(data, False), False), False)
     data = powerup_pickup.configure(data, False)
     data = visibility_fix.configure(frame_clock.configure(data, False), False)
-    tex32 = (texture32.NAME in state["patches"] if experimental_texture32 is None else experimental_texture32)
     data = texture32.configure(data, False)
-    world_lod = (world_detail.NAME in state["patches"] if experimental_world_detail is None else experimental_world_detail)
-    if world_lod and experimental_station_detail:
-        raise ValueError("select world detail or station-only detail, not both")
     data = world_detail.configure(data, False)
     data = station_detail.configure(data, False)
-    solids = (solid_world_render.NAME in state["patches"] if experimental_solids is None else experimental_solids)
-    if solids and experimental_asteroids:
-        raise ValueError("select either solid-world or asteroid-only rendering, not both")
     data = solid_world_render.configure(data, False)
     data = asteroid_render.configure(data, False)
     data = online_terrain.configure(data, False)
     data = menu_aspect.configure(data, False)
     data = cursor_warp.configure(data, False)
-    protection = (explicit_protection.NAME in state["patches"] if experimental_protection is None
-                  else experimental_protection)
-    if protection and host not in ("localhost", "127.0.0.1"):
+    protection = choose(state, experimental_protection, explicit_protection.NAME, False)
+    if protection and host not in LOOPBACK:
         raise ValueError("experimental protection requires a loopback Station")
     data = explicit_protection.configure(data, False)
     stable = (patch_client.configure(data)[0] if not state["patches"]
@@ -180,22 +212,20 @@ def configure(data, host="localhost", experimental_protection=None, experimental
     guarded = physics_timestep.configure(normalized)
     result = archive_terminator.configure(background_site(guarded[:OFFSET] + field + guarded[OFFSET + 12:], True))
     result = explicit_protection.configure(result, protection)
-    result = menu_aspect.configure(result, menu_framing)
+    result = menu_aspect.configure(result, framing)
     result = cursor_warp.configure(result)
     result = online_terrain.configure(result)
-    result = asteroid_render.configure(result, not solids and (asteroid_render.NAME in state["patches"]
-                                       if experimental_asteroids is None else experimental_asteroids))
+    result = asteroid_render.configure(result, asteroids)
     result = solid_world_render.configure(result, solids)
-    result = station_detail.configure(result, not world_lod and (station_detail.NAME in state["patches"]
-                                      if experimental_station_detail is None else experimental_station_detail))
+    result = station_detail.configure(result, station_lod)
     result = world_detail.configure(result, world_lod)
     result = texture32.configure(result, tex32)
-    result = frame_clock.configure(result, smooth_frame_clock)
-    result = visibility_fix.configure(result, bounded_visibility)
-    result = third_person.configure(result, chase_camera)
-    result = own_ship_model.configure(result, chase_camera)
-    result = own_ship_menu.configure(result, chase_camera)
-    result = powerup_pickup.configure(result, powerup_pickups)
+    result = frame_clock.configure(result, clock)
+    result = visibility_fix.configure(result, visibility)
+    result = third_person.configure(result, chase)
+    result = own_ship_model.configure(result, chase)
+    result = own_ship_menu.configure(result, chase)
+    result = powerup_pickup.configure(result, pickups)
     result = object_persistence.configure(result, distant)
     inspect(result)
     return result
@@ -266,7 +296,8 @@ def load_record(record_path, backup, current):
     return record
 
 
-def prepare(exe, host="localhost", undo=False, experimental_protection=None, experimental_asteroids=None, experimental_solids=None, experimental_station_detail=None, experimental_world_detail=None, experimental_texture32=None, smooth_frame_clock=True, bounded_visibility=True, chase_camera=True, powerup_pickups=True, distant_objects=None, menu_framing=True):
+def prepare(exe, host=None, undo=False, experimental_protection=None, experimental_asteroids=None, experimental_solids=None, experimental_station_detail=None, experimental_world_detail=None, experimental_texture32=None, smooth_frame_clock=None, bounded_visibility=None, chase_camera=None, powerup_pickups=None, distant_objects=None, menu_framing=None):
+    """Options left as None keep their installed state, as in configure()."""
     exe, backup, record_path = paths(exe)
     current = exe.read_bytes()
     inspect(current)
@@ -278,7 +309,14 @@ def prepare(exe, host="localhost", undo=False, experimental_protection=None, exp
         result = backup.read_bytes()
         inspect(result)
     else:
-        result = configure(current, host, experimental_protection, experimental_asteroids, experimental_solids, experimental_station_detail, experimental_world_detail, experimental_texture32, smooth_frame_clock, bounded_visibility, chase_camera, powerup_pickups, distant_objects, menu_framing)
+        result = configure(current, host=host, experimental_protection=experimental_protection,
+                           experimental_asteroids=experimental_asteroids, experimental_solids=experimental_solids,
+                           experimental_station_detail=experimental_station_detail,
+                           experimental_world_detail=experimental_world_detail,
+                           experimental_texture32=experimental_texture32, smooth_frame_clock=smooth_frame_clock,
+                           bounded_visibility=bounded_visibility, chase_camera=chase_camera,
+                           powerup_pickups=powerup_pickups, distant_objects=distant_objects,
+                           menu_framing=menu_framing)
         if old is None:
             # Exclusive creation: never replace an unrelated backup. A prior
             # interruption before recording is recoverable only if bytes match.
@@ -319,33 +357,39 @@ def check(exe, require_assets=True):
             "mutable_assets_not_hash_verified": ["SOUNDS.AOA"] if require_assets else [], **state}
 
 
-def main():
-    parser = argparse.ArgumentParser(description=__doc__)
+PREPARE_ONLY = ("station", "experimental_protection", "frame_clock", "visibility_math", "third_person",
+                "powerup_pickup", "distant_objects", "menu_framing")
+
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(description=__doc__, epilog="An option that is not named keeps its "
+                                     "installed state. The defaults apply only to a client never prepared before.")
     parser.add_argument("action", choices=("prepare", "check", "undo", "launch"))
     parser.add_argument("exe", type=Path)
-    parser.add_argument("--station", default="localhost", help="Station hostname/IP, max 11 ASCII characters")
-    parser.add_argument("--experimental-protection", action=argparse.BooleanOptionalAction, default=None,
-                        help="opt-in localhost explicit protection setter; prepare only")
-    parser.add_argument("--frame-clock", action=argparse.BooleanOptionalAction, default=True,
-                        help="millisecond QPC game clock and timer-frame gate (frame-clock-v1); prepare only")
-    parser.add_argument("--visibility-math", action=argparse.BooleanOptionalAction, default=True,
-                        help="bounded acos/asin inputs in object visibility (visibility-math-v1); prepare only")
-    parser.add_argument("--third-person", action=argparse.BooleanOptionalAction, default=True,
-                        help="F2 toggles a chase camera behind your ship, F4 one that orbits it (third-person-camera-v3, own-ship-model-v1, own-ship-menu-model-v1); prepare only")
-    parser.add_argument("--powerup-pickup", action=argparse.BooleanOptionalAction, default=True,
-                        help="server-placed power-ups can be picked up and reappear (powerup-pickup-v1); prepare only")
-    parser.add_argument("--distant-objects", action=argparse.BooleanOptionalAction, default=None,
-                        help="extend world-object visibility to 4,500,000 units and 0.5 projected size; preserve installed choice by default; prepare only")
-    parser.add_argument("--menu-framing", action=argparse.BooleanOptionalAction, default=True,
-                        help="widescreen ship-selection framing; prepare only")
-    args = parser.parse_args()
-    if args.experimental_protection is not None and args.action != "prepare":
-        parser.error("--experimental-protection applies only to prepare")
-    if args.distant_objects is not None and args.action != "prepare":
-        parser.error("--distant-objects applies only to prepare")
+    parser.add_argument("--station", help="Station hostname/IP, max 11 ASCII characters "
+                        "(default: keep the installed one; localhost on a fresh client); prepare only")
+    parser.add_argument("--experimental-protection", action=argparse.BooleanOptionalAction,
+                        help="opt-in localhost explicit protection setter (default off); prepare only")
+    parser.add_argument("--frame-clock", action=argparse.BooleanOptionalAction,
+                        help="millisecond QPC game clock and timer-frame gate (frame-clock-v1; default on); prepare only")
+    parser.add_argument("--visibility-math", action=argparse.BooleanOptionalAction,
+                        help="bounded acos/asin inputs in object visibility (visibility-math-v1; default on); prepare only")
+    parser.add_argument("--third-person", action=argparse.BooleanOptionalAction,
+                        help="F2 toggles a chase camera behind your ship, F4 one that orbits it (third-person-camera-v3, own-ship-model-v1, own-ship-menu-model-v1; default on); prepare only")
+    parser.add_argument("--powerup-pickup", action=argparse.BooleanOptionalAction,
+                        help="server-placed power-ups can be picked up and reappear (powerup-pickup-v1; default on); prepare only")
+    parser.add_argument("--distant-objects", action=argparse.BooleanOptionalAction,
+                        help="extend world-object visibility to 4,500,000 units and 0.5 projected size (default off); prepare only")
+    parser.add_argument("--menu-framing", action=argparse.BooleanOptionalAction,
+                        help="widescreen ship-selection framing (default on); prepare only")
+    args = parser.parse_args(argv)
+    if args.action != "prepare":
+        named = [f"--{key.replace('_', '-')}" for key in PREPARE_ONLY if getattr(args, key) is not None]
+        if named:
+            parser.error(f"{', '.join(named)} applies only to prepare")
     try:
         if args.action in ("prepare", "undo"):
-            result = prepare(args.exe, args.station, undo=args.action == "undo",
+            result = prepare(args.exe, host=args.station, undo=args.action == "undo",
                              experimental_protection=args.experimental_protection,
                              smooth_frame_clock=args.frame_clock,
                              bounded_visibility=args.visibility_math,
@@ -357,7 +401,7 @@ def main():
             if args.action == "launch":
                 subprocess.Popen([str(args.exe.resolve())], cwd=args.exe.resolve().parent)
         print(json.dumps(result, indent=2))
-    except (ValueError, OSError, KeyError, json.JSONDecodeError) as error:
+    except (ValueError, RuntimeError, OSError, KeyError, json.JSONDecodeError) as error:
         parser.exit(1, f"Client setup failed: {error}\n")
 
 
