@@ -36,13 +36,13 @@ def state(data):
 
 
 def configure(data, enabled=True):
-    if state(data):
-        for off, old, _ in regions():
-            data = data[:off] + old + data[off + len(old):]
-    if enabled:
-        data = station_detail.configure(data, False)
-        for off, old, new in regions():
-            data = data[:off] + new + data[off + len(old):]
+    """Pure toggle: refuses to replace the station-only patch at the same site."""
+    if enabled == state(data):
+        return data  # also leaves an installed station-only patch alone when off
+    if enabled and station_detail.state(data):
+        raise ValueError(f"{station_detail.NAME} and {NAME} cannot both be on; select one")
+    for off, old, new in regions():
+        data = data[:off] + (new if enabled else old) + data[off + len(old):]
     return data
 
 

@@ -241,6 +241,16 @@ class SyntheticClientTests(unittest.TestCase):
                 self.assertEqual(setup.configure(other, **{first: True}), one)
                 self.assertEqual(setup.configure(one, **{first: False}), prepared)
 
+    def test_patch_modules_do_not_strip_their_sibling(self):
+        for module, sibling in ((setup.solid_world_render, setup.asteroid_render),
+                                (setup.world_detail, setup.station_detail)):
+            with self.subTest(patch=module.NAME):
+                with_sibling = sibling.configure(self.pristine, True)
+                with self.assertRaisesRegex(ValueError, f"{sibling.NAME} and {module.NAME}"):
+                    module.configure(with_sibling, True)
+                self.assertEqual(module.configure(with_sibling, False), with_sibling)
+                self.assertEqual(module.configure(module.configure(self.pristine, True), False), self.pristine)
+
     def test_command_line(self):
         for argv in (["check", str(self.exe), "--station", "aoalan"],
                      ["undo", str(self.exe), "--no-third-person"],

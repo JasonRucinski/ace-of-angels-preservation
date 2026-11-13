@@ -1,7 +1,8 @@
 """Keep world model groups on their mesh path to the existing far horizon.
 
 This changes the model visibility comparison, not the sprite/particle renderer.
-The separate asteroid-only patch is removed when this patch is selected.
+It shares its site with the asteroid-only patch: configure() refuses to
+replace that patch, and prepare_client decides between the two.
 """
 import argparse
 import json
@@ -34,13 +35,11 @@ def state(data):
 
 
 def configure(data, enabled=True):
-    active = state(data)
-    if active:
-        data = data[:OFFSET] + ORIGINAL + data[OFFSET + 6:]
-    if enabled:
-        data = asteroid_render.configure(data, False)
-        data = data[:OFFSET] + PATCHED + data[OFFSET + 6:]
-    return data
+    if enabled == state(data):
+        return data  # also leaves an installed asteroid-only patch alone when off
+    if enabled and asteroid_render.state(data):
+        raise ValueError(f"{asteroid_render.NAME} and {NAME} cannot both be on; select one")
+    return data[:OFFSET] + (PATCHED if enabled else ORIGINAL) + data[OFFSET + 6:]
 
 
 def install(exe, undo=False):
