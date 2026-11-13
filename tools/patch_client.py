@@ -1,11 +1,9 @@
-"""Apply stability fixes to the 2.9.2 AoA client so it runs on modern Windows.
+"""Stability fixes that let the 2.9.2 AoA client run on modern Windows.
 
-Usage:
-    python -I tools/patch_client.py <AOACLIENT.EXE in a game folder>
-
-The file is patched in place after its SHA-256 is checked against the
-pristine 2.9.2 client; the untouched copy is kept beside it as
-AOACLIENT.EXE.orig. Never point this at originals/.
+Library use only: prepare_client.py applies them, with its record and
+exact-undo backup, to a client whose SHA-256 matches the pristine 2.9.2
+client. The standalone command line was removed because it wrote the
+executable with no setup record, which a prepared client then rejects.
 
 Both bugs were present in 2003 but only became fatal under the modern NT
 heap (found with tools/crashdbg.py --guard-heap):
@@ -27,11 +25,7 @@ heap (found with tools/crashdbg.py --guard-heap):
    imports used are ones the client already has (GetCurrentThreadId, Sleep).
 """
 import hashlib
-import json
-import shutil
 import struct
-import sys
-from pathlib import Path
 
 PRISTINE_292 = "4b6c35e2b3ab473bd98c0afa6538079ee78678d85c28406c07bc27a08cc78c7e"
 IMAGE_BASE = 0x400000
@@ -201,19 +195,3 @@ def configure(source):
               "patches": record}
     return bytes(data), result
 
-
-def main():
-    exe = Path(sys.argv[1])
-    if "originals" in (part.lower() for part in exe.resolve().parts):
-        sys.exit("refusing to patch a file under originals/")
-    data, result = configure(exe.read_bytes())
-    backup = exe.with_name(exe.name + ".orig")
-    if not backup.exists():
-        shutil.copy2(exe, backup)
-    exe.write_bytes(data)
-    exe.with_name("_patches.json").write_text(json.dumps(result, indent=2), encoding="utf-8")
-    print(json.dumps(result, indent=2))
-
-
-if __name__ == "__main__":
-    main()

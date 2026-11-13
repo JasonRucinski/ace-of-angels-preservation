@@ -1,10 +1,10 @@
 """Reversible zero-time physics guard for the stability-patched 2.9.2 client.
 
-Usage: python -I tools/physics_timestep.py CLIENT.EXE [--undo]
 Accepts the known logger fixes, with either original or localhost lookup.
-Never changes preserved originals. No client is executed by this tool.
+Library use only (prepare_client.py composes it): the standalone command
+line was removed because it wrote the executable with no setup record,
+which a prepared client then rejects.
 """
-import argparse
 import hashlib
 import sys
 from pathlib import Path
@@ -47,21 +47,3 @@ def configure(data, undo=False):
     out[CAVE_OFFSET:CAVE_OFFSET + len(code)] = bytes(len(code)) if undo else code
     return bytes(out)
 
-
-def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("exe", type=Path)
-    parser.add_argument("--undo", action="store_true")
-    args = parser.parse_args()
-    if "originals" in (p.lower() for p in args.exe.resolve().parts):
-        parser.error("refusing to modify originals/")
-    data = configure(args.exe.read_bytes(), args.undo)
-    args.exe.write_bytes(data)
-    if args.exe.read_bytes() != data:
-        raise RuntimeError("write verification failed")
-    print("Zero-time physics guard: " + ("removed" if args.undo else "enabled"))
-    print("SHA-256: " + hashlib.sha256(data).hexdigest())
-
-
-if __name__ == "__main__":
-    main()
