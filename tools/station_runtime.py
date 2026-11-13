@@ -7,6 +7,7 @@ import os
 import queue
 import selectors
 import socket
+import sys
 import threading
 import time
 from pathlib import Path
@@ -85,7 +86,8 @@ def parse_args(argv=None, *, raise_errors=False):
                         default="diagnostic")
     parser.add_argument("--bind-address", default="127.0.0.1",
                         help="specific local IPv4; LAN profile requires RFC1918, VPN profile also 100.64.0.0/10")
-    parser.add_argument("--advertised-address", help="arena IPv4; defaults to bind address and must match it")
+    # Deprecated: it must equal --bind-address, so it changes nothing.
+    parser.add_argument("--advertised-address", help=argparse.SUPPRESS)
     parser.add_argument("--map", choices=online_terrain.MAP_NAMES, default="CTF_arena",
                         help="advertised terrain; with --experimental-terrain, the map a patched client loads")
     parser.add_argument("--backdrop", choices=("spacebkgd", "spacebkgd2", "spacebkgd3", "spacebkgd5", "spacebkgd6"),
@@ -232,6 +234,9 @@ def parse_args(argv=None, *, raise_errors=False):
         args.spawn_origin = online_terrain.spawn(args.map) if args.experimental_terrain else None
     if args.tcp is None and args.profile in ("local-relay", "local-guests") + DOGFIGHT_PROFILES:
         args.tcp = 5034
+    if args.advertised_address is not None:
+        print("warning: --advertised-address is deprecated and changes nothing; it must equal --bind-address",
+              file=sys.stderr)
     args.advertised_address = args.advertised_address or args.bind_address
     try:
         bind = ipaddress.IPv4Address(args.bind_address)

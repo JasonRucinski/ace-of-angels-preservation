@@ -127,6 +127,22 @@ class RuntimeTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertTrue(json.loads(result.stdout)["experimental_relay"])
 
+    def test_advertised_address_is_hidden_and_deprecated(self):
+        help_text = io.StringIO()
+        with contextlib.redirect_stdout(help_text), self.assertRaises(SystemExit):
+            parse_args(["--help"])
+        self.assertNotIn("--advertised-address", help_text.getvalue())
+        warning = io.StringIO()
+        with contextlib.redirect_stderr(warning):
+            args = parse_args(["key", "log", "--advertised-address", "127.0.0.1"])
+        self.assertEqual(args.advertised_address, "127.0.0.1")
+        self.assertIn("--advertised-address is deprecated", warning.getvalue())
+        with contextlib.redirect_stderr(io.StringIO()) as quiet:
+            parse_args(["key", "log"])
+        self.assertEqual(quiet.getvalue(), "")
+        with contextlib.redirect_stderr(io.StringIO()), self.assertRaises(SystemExit):
+            parse_args(["key", "log", "--advertised-address", "127.0.0.2"])
+
     def test_validation_covers_what_run_rejects(self):
         """--print-config fails, naming the problem, on everything run() would reject at start."""
         relay = ["--profile", "local-guests", "--experimental-terrain", "--sustained-delivery"]
