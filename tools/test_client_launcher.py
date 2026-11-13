@@ -52,6 +52,46 @@ class TextureToggleTests(unittest.TestCase):
                 self.assertEqual((folder / "DATA.AOA").read_bytes(), originals["DATA.AOA"])
 
 
+class SyntheticLauncherTests(unittest.TestCase):
+    """apply_settings on the synthetic client of test_patch_layout; game-free."""
+
+    def setUp(self):
+        import hashlib
+        import patch_client
+        import physics_timestep
+        import test_patch_layout
+        pristine = test_patch_layout.synthetic_pristine()
+        pristine_sha = hashlib.sha256(pristine).hexdigest()
+        with patch.object(patch_client, "PRISTINE_292", pristine_sha):
+            stable_sha = hashlib.sha256(patch_client.configure(pristine)[0]).hexdigest()
+        for mocked in (patch.object(patch_client, "PRISTINE_292", pristine_sha),
+                       patch.object(setup, "STABLE_SHA256", stable_sha),
+                       patch.object(physics_timestep, "STABLE_SHA256", stable_sha),
+                       patch.object(setup, "check_assets", return_value=0),
+                       patch.object(launcher, "require_closed")):
+            mocked.start()
+            self.addCleanup(mocked.stop)
+        temp = tempfile.TemporaryDirectory()
+        self.addCleanup(temp.cleanup)
+        self.folder = Path(temp.name)
+        self.exe = self.folder / "AOACLIENT.EXE"
+        self.exe.write_bytes(pristine)
+
+    def test_protection_switched_off_for_a_remote_station(self):
+        name = setup.explicit_protection.NAME
+        setup.prepare(self.exe, experimental_protection=True)
+        options, available = launcher.read_settings(self.folder)
+        self.assertTrue(available["protection"])
+        launcher.apply_settings(self.folder, options)
+        self.assertIn(name, setup.check(self.exe)["patches"])
+        options["station"] = "aoalan"
+        launcher.apply_settings(self.folder, options)
+        state = setup.check(self.exe)
+        self.assertEqual(state["host"], "aoalan")
+        self.assertNotIn(name, state["patches"])
+        self.assertFalse(launcher.read_settings(self.folder)[1]["protection"])
+
+
 @unittest.skipUnless((GAME / "AOACLIENT.EXE.orig").exists(), "requires user's game files")
 class LauncherTests(unittest.TestCase):
     def setUp(self):

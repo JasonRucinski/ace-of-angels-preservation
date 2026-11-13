@@ -95,7 +95,8 @@ def read_settings(folder):
     options["powerup_pickups"] = setup.powerup_pickup.NAME in state["patches"]
     options["station"] = state["host"] if state["host"] != "aoahost.com" else "localhost"
     return options, {"wrapper": quality is not None, "texture_pack": bool(active and active["archives"] or cache),
-                     "outdated": sorted(setup.OUTDATED & set(state["patches"]))}
+                     "outdated": sorted(setup.OUTDATED & set(state["patches"])),
+                     "protection": setup.explicit_protection.NAME in state["patches"]}
 
 
 def require_closed():
@@ -155,6 +156,9 @@ def apply_settings(folder, options):
     exe = folder / "AOACLIENT.EXE"
     kwargs = {key: options[key] for key, _, _ in PATCHES}
     kwargs["powerup_pickups"] = options["powerup_pickups"]
+    if options["station"] not in setup.LOOPBACK:
+        # The launcher has no control for this probe, which needs a loopback Station.
+        kwargs["experimental_protection"] = False
     # Preflight composition and wrapper edits before any writes.
     setup.configure(exe.read_bytes(), host=options["station"], **kwargs)
     conf_path = folder / "dgVoodoo.conf"
@@ -212,6 +216,7 @@ def gui(folder=DEFAULT_GAME, run=True):
     variables = {key: tk.BooleanVar(value=False) for key in (*VISUAL_KEYS, "powerup_pickups")}
     checks = {}
     loaded_folder = None
+    protection = False
     top = ttk.Frame(root, padding=12)
     top.pack(fill="x")
     ttk.Label(top, text="Ace of Angels", font=("Segoe UI", 18, "bold")).grid(row=0, column=0, sticky="w")
@@ -221,7 +226,7 @@ def gui(folder=DEFAULT_GAME, run=True):
     top.columnconfigure(0, weight=1)
 
     def load():
-        nonlocal loaded_folder
+        nonlocal loaded_folder, protection
         loaded_folder = None
         apply_button.state(["disabled"])
         launch_button.state(["disabled"])
@@ -230,6 +235,7 @@ def gui(folder=DEFAULT_GAME, run=True):
             for key, var in variables.items():
                 var.set(selected[key])
             station.set(selected["station"])
+            protection = available["protection"]
             for key, *_ in QUALITY:
                 checks[key].state(["!disabled"] if available["wrapper"] else ["disabled"])
             checks["texture_pack"].state(["!disabled"] if available["texture_pack"] else ["disabled"])
@@ -303,6 +309,7 @@ def gui(folder=DEFAULT_GAME, run=True):
     bottom.pack(fill="x", side="bottom")
 
     def apply(play=False):
+        nonlocal protection
         if loaded_folder != game.get():
             return
         options = {key: var.get() for key, var in variables.items()}
@@ -314,7 +321,12 @@ def gui(folder=DEFAULT_GAME, run=True):
                 launch(game.get(), options)
             else:
                 apply_settings(game.get(), options)
-            status.set("Game launched. Close it before changing settings." if play else "Settings saved and verified. Ready to play.")
+            note = ""
+            if protection and options["station"] not in setup.LOOPBACK:
+                protection = False
+                note = "\nExperimental protection was switched off: it works only with a loopback Station."
+            status.set(("Game launched. Close it before changing settings." if play
+                        else "Settings saved and verified. Ready to play.") + note)
         except (OSError, ValueError, KeyError, RuntimeError, subprocess.SubprocessError, configparser.Error) as error:
             status.set(f"Could not {'launch' if play else 'apply'}: {error}")
             messagebox.showerror("Client launcher", str(error), parent=root)
