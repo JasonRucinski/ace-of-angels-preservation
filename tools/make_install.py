@@ -13,6 +13,7 @@ registered; see tools/register_activeskin.ps1.
 Member paths are never trusted: only the basename is used, and it must match
 [A-Za-z0-9_.-]+. Refuses to overwrite an existing <out_dir>.
 """
+import argparse
 import hashlib
 import json
 import re
@@ -28,9 +29,15 @@ INSTALLER_ONLY_RE = re.compile(r"^FILE\d{4}\.DAT$")
 SAFE_NAME = re.compile(r"^[A-Za-z0-9_.-]+$")
 
 
-def main() -> int:
-    installer, out_dir = sys.argv[1:3]
-    out = Path(out_dir)
+def main(argv=None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument("installer", help="Wise/ZIP installer .exe")
+    parser.add_argument("out_dir", help="new folder for the game files")
+    args = parser.parse_args(argv)
+    installer, out = args.installer, Path(args.out_dir)
+    if not Path(installer).is_file():
+        print(f"installer not found: {installer}", file=sys.stderr)
+        return 1
     if out.exists():
         print(f"refusing to overwrite existing {out}", file=sys.stderr)
         return 1

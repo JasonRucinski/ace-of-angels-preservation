@@ -12,15 +12,21 @@ Usage:
   at >100% display scaling Windows reports a shrunken desktop (e.g. 1536x864
   for 1920x1080 at 125%), the game renders at that size and it gets upscaled.
   The client has no embedded manifest, so the external one is honoured.
+* An existing dgVoodoo.conf keeps its [DirectX] values (the client
+  launcher's graphics quality choices); every file is replaced atomically.
 
 Delete DDraw.dll, D3DImm.dll and dgVoodoo.conf to go back to native DirectX.
 """
+import argparse
 import re
 import hashlib
 import sys
 import zipfile
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+ZIP_SHA256 = "5ffde6927f7355ca3fdd5d785b581256a8e6539fa13e395a891ade6ba1040850"  # dgVoodoo2 2.87.5
 CONF_CHANGES = [
     ("[General]", "FullScreenMode", "false"),
     ("[General]", "CenterAppWindow", "true"),
@@ -46,7 +52,8 @@ def set_key(text, section, key, value):
         if stripped.startswith("["):
             current = stripped
         if current == section and not done and re.match(rf"{key}\s*=", stripped):
-            line = re.sub(r"=.*", "= " + value, line, count=1)
+            # Keep the line's own ending: `.` would also replace a CR before the LF.
+            line = re.sub(r"=[^\r\n]*", lambda _: "= " + value, line, count=1)
             done = True
         out.append(line)
     if not done:
@@ -54,20 +61,56 @@ def set_key(text, section, key, value):
     return "".join(out)
 
 
-def main():
-    zip_path, game_dir = Path(sys.argv[1]), Path(sys.argv[2])
-    if hashlib.sha256(zip_path.read_bytes()).hexdigest() != "5ffde6927f7355ca3fdd5d785b581256a8e6539fa13e395a891ade6ba1040850":
-        sys.exit("requires the verified dgVoodoo2 2.87.5 archive; no files changed")
-    if not (game_dir / "AOACLIENT.EXE").exists():
-        sys.exit(f"{game_dir} has no AOACLIENT.EXE")
-    with zipfile.ZipFile(zip_path) as z:
-        for member, name in (("MS/x86/DDraw.dll", "DDraw.dll"), ("MS/x86/D3DImm.dll", "D3DImm.dll")):
-            (game_dir / name).write_bytes(z.read(member))
-        conf = z.read("dgVoodoo.conf").decode("latin1")
-    for section, key, value in CONF_CHANGES:
-        conf = set_key(conf, section, key, value)
-    (game_dir / "dgVoodoo.conf").write_text(conf, encoding="latin1")
-    (game_dir / "AOACLIENT.EXE.manifest").write_text(MANIFEST, encoding="utf-8")
+def section_values(text, section):
+    """{key: value} of the plain key = value lines in one section."""
+    values, current = {}, None
+    for line in text.splitlines():
+        stripped = line.strip()
+        if stripped.startswith("["):
+            current = stripped
+        elif current == section:
+            match = re.fullmatch(r"(\w+)\s*=\s*(.*?)", stripped)
+            if match:
+                values[match[1]] = match[2]
+    return values
+
+
+def keep_section(conf, previous, section):
+    """Carry an earlier conf's values for the keys this conf also has."""
+    for key, value in section_values(previous, section).items():
+        if key in section_values(conf, section):
+            conf = set_key(conf, section, key, value)
+    return conf
+
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument("zip", type=Path, help="dgVoodoo2 2.87.5 release zip")
+    parser.add_argument("game_dir", type=Path, help="game folder holding AOACLIENT.EXE")
+    args = parser.parse_args(argv)
+    from prepare_client import atomic_write
+    zip_path, game_dir = args.zip, args.game_dir
+    try:
+        if hashlib.sha256(zip_path.read_bytes()).hexdigest() != ZIP_SHA256:
+            sys.exit("requires the verified dgVoodoo2 2.87.5 archive; no files changed")
+        if not (game_dir / "AOACLIENT.EXE").exists():
+            sys.exit(f"{game_dir} has no AOACLIENT.EXE")
+        with zipfile.ZipFile(zip_path) as z:
+            files = {name: z.read(member) for member, name in (("MS/x86/DDraw.dll", "DDraw.dll"),
+                                                                ("MS/x86/D3DImm.dll", "D3DImm.dll"))}
+            conf = z.read("dgVoodoo.conf").decode("latin1")
+        previous = game_dir / "dgVoodoo.conf"
+        if previous.exists():
+            conf = keep_section(conf, previous.read_bytes().decode("latin1"), "[DirectX]")
+        for section, key, value in CONF_CHANGES:
+            conf = set_key(conf, section, key, value)
+        # Build everything before the first write.
+        files["dgVoodoo.conf"] = conf.encode("latin1")
+        files["AOACLIENT.EXE.manifest"] = MANIFEST.encode("utf-8")
+        for name, data in files.items():
+            atomic_write(game_dir / name, data)
+    except (OSError, KeyError, zipfile.BadZipFile) as error:
+        sys.exit(f"Wrapper install failed: {error}")
     print(f"installed {zip_path.name} wrapper and DPI manifest into {game_dir}")
 
 
