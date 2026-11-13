@@ -76,16 +76,6 @@ RELATION_HOSTILE = 3
 TYPE_NAMES = {0x0A: "SConnectReq", 0x0B: "SAckConnect", 0x94: "type94 (ping/keepalive?)", 0x1B: "wrapper 0x1B"}
 
 
-def connect_req_fields(p):
-    """Decode SConnectReq (0x0A) as described in docs/findings.md section 3."""
-    if len(p) < 0x1F + 20:
-        return {}
-    u32 = lambda o: int.from_bytes(p[o:o + 4], "little")  # noqa: E731
-    handle = p[0x1F:0x1F + 20].split(b"\0")[0].decode("latin1")
-    return {"version": f"{u32(5)}.{u32(1)}.{u32(9)}", "flag_0x0E": p[0x0E], "handle": handle,
-            "login_block_len": len(p) - 0x1F}
-
-
 def ack_connect(req_payload, kind=1, player_id=1, station_id=None, result=0, pilot_name=None):
     """SAckConnect (0x0B), layout from 2.9.2 CClientComm::ReceiveAckConnect (0x431630):
     +0 u8 (logged as "me[%d]"), +1 u8 ack kind (switch at 0x4317d6:
@@ -117,9 +107,6 @@ def ack_reliable(payload):
     payload starts with that u32 sequence (CAOAComm receive switch, 0x4864E2,
     walks the retry list at +0xF18 comparing entry+0 with payload+0)."""
     return 0x0F, payload[-5:-1]
-
-
-TCP_REQUEST_LEN = 142   # u32 correlation at +0x3C, u8 job +0x80, u8 flag +0x81
 
 
 class StationSessions:
@@ -1900,8 +1887,6 @@ def run(args, key, log, resources, objects=None):
                             for peer in {addr, loaded.get(killer_slot)} - {None}:
                                 if peer in arena_connections:
                                     deliver(peer, own_record(peer))
-            for rtype, rpay in udp_replies(message_type, payload, arena=receiver is not s):
-                receiver.sendto(aoanet.encode(rtype, rpay, key), addr)
 
 
 if __name__ == "__main__":

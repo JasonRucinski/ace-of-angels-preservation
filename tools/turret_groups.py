@@ -1,4 +1,4 @@
-"""Native turret-group status codec; not enabled in the host yet.
+"""Native turret-group status codec; the turret-trial host sends it to keep turrets disabled.
 
 2.9.2 receiver 0x4AFD20 reads an enabled DWORD, up to 50 zero-terminated
 object tags, then a 32-byte team name. This changes existing objects; it
