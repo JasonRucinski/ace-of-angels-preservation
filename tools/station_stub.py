@@ -1686,6 +1686,9 @@ def run(args, key, log, resources, objects=None):
                "len": len(m["payload"]), "payload": m["payload"].hex()}
         log({"event": "udp_packet", **rec})
         if reply and m["crc_ok"]:
+            if addr[0] in banned_ips:
+                # Before any reply, including reliable acks and version rejections.
+                continue
             message_type, payload = m["type"], m["payload"]
             if message_type == 0x1B:
                 if len(payload) < 5:
@@ -1708,8 +1711,6 @@ def run(args, key, log, resources, objects=None):
                     receiver.sendto(aoanet.encode(*ack_connect(payload, kind=1 if receiver is s else 0, result=8), key), addr)
                     log({"t": round(time.time(), 3), "event": "admission_rejected", "reason": "unsupported client version"})
                     continue
-            if addr[0] in banned_ips:
-                continue
             if receiver is s:
                 now = time.monotonic()
                 if message_type == 0x0A and len(payload) == 381:
