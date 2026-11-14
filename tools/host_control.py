@@ -14,7 +14,6 @@ Modes: this PC only (local-relay on 127.0.0.1), LAN (lan-dogfight) and VPN
 it binds anything. No firewall, hosts-file or client files are changed.
 Settings are remembered in work/host/host_control.json.
 """
-import datetime
 import json
 import queue
 import subprocess
@@ -24,6 +23,7 @@ import time
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import host_ops  # noqa: E402
 import online_terrain  # noqa: E402
 from station_runtime import HOST_DEFAULTS  # noqa: E402
 
@@ -86,7 +86,7 @@ def server_args(settings, extra=()):
 
 
 def status_path(settings):
-    return WORK / f"{MODES[settings['mode']]}-status.json"
+    return host_ops.status_path(MODES[settings["mode"]], WORK)
 
 
 def detect_addresses():
@@ -172,13 +172,7 @@ class HostProcess:
         """(status dict or None, age in seconds or None) from this run's status file."""
         if self.settings is None:
             return None, None
-        try:
-            data = json.loads(status_path(self.settings).read_text(encoding="utf-8"))
-            updated = datetime.datetime.fromisoformat(data["updated_utc"])
-        except (OSError, ValueError, KeyError):
-            return None, None
-        age = (datetime.datetime.now(datetime.timezone.utc) - updated).total_seconds()
-        return data, age
+        return host_ops.read_status(status_path(self.settings), self.proc.pid)
 
 
 def load_settings():

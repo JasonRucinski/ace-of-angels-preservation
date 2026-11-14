@@ -27,6 +27,25 @@ class ConsoleCommandTests(unittest.TestCase):
         self.assertEqual(host_ops.parse_command("say"), (None, host_ops.HELP))
 
 
+class StatusFileTests(unittest.TestCase):
+    def test_one_status_path_and_reader(self):
+        with tempfile.TemporaryDirectory() as temp:
+            path = host_ops.status_path("lan-dogfight", temp)
+            self.assertEqual(path, Path(temp) / "lan-dogfight-status.json")
+            self.assertEqual(host_ops.status_path("vpn-dogfight").parent, host_ops.WORK)
+            self.assertEqual(host_control.status_path({"mode": "LAN"}).parent, host_control.WORK)
+            self.assertEqual(host_ops.read_status(path), (None, None))
+            host_ops.write_status(path, {"pid": 7, "map": "Arena1a"})
+            status, age = host_ops.read_status(path, 7)
+            self.assertEqual(status["map"], "Arena1a")
+            self.assertLess(age, 5)
+            self.assertEqual(host_ops.read_status(path, 8), (None, None))  # an older run's file
+            path.write_text('{"pid": 7}')
+            self.assertEqual(host_ops.read_status(path, 7), ({"pid": 7}, None))
+            path.write_text("[1, 2]")
+            self.assertEqual(host_ops.read_status(path), (None, None))
+
+
 class NodeControlTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()

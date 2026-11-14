@@ -167,11 +167,11 @@ def map_viewer_cases():
 
 def ps1_args(HostAddress, Vpn=False, MaxPlayers=2, Map="CTF_arena", Backdrop="spacebkgd3", Terrain=False,
              TestRttMs=0, TestJitterMs=0, TestLossPercent=0, Key="game/2.9.2/SCRTY.BIN", Log=""):
-    """start_lan_dogfight.ps1's $serverArgs (its lines 32-47), mirrored by hand: keep the two in step."""
+    """start_lan_dogfight.ps1's $serverArgs (its lines 33-50), mirrored by hand: keep the two in step."""
     profile = "vpn-dogfight" if Vpn else "lan-dogfight"
-    args = [Key, Log or f"work/{profile}.jsonl", "--profile", profile, "--bind-address", HostAddress,
+    args = [Key, Log or f"work/host/{profile}.jsonl", "--profile", profile, "--bind-address", HostAddress,
             "--max-players", str(MaxPlayers), "--map", Map, "--backdrop", Backdrop,
-            "--console", "--status-file", f"work/{profile}-status.json"]
+            "--console", "--status-file", f"work/host/{profile}-status.json"]
     if Terrain:
         args.append("--experimental-terrain")
     if TestRttMs or TestJitterMs or TestLossPercent:

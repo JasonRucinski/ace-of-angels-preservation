@@ -5,8 +5,8 @@ Start the private LAN or VPN dogfight relay. Does not change firewall or client 
 -Vpn selects the vpn-dogfight profile for players who reach this PC through a
 private VPN such as Tailscale, ZeroTier or WireGuard (see docs/vpn-dogfight.md).
 The host reads console commands (status, kick <slot>, ban <slot>, end,
-say <text>, quit, help) and rewrites work/<profile>-status.json every two
-seconds. -TestRttMs/-TestJitterMs/-TestLossPercent add artificial delay and
+say <text>, quit, help) and rewrites work/host/<profile>-status.json every
+two seconds, the file the host window uses. -TestRttMs/-TestJitterMs/-TestLossPercent add artificial delay and
 loss for testing only.
 .EXAMPLE
 powershell -NoProfile -ExecutionPolicy Bypass -File tools/start_lan_dogfight.ps1 -HostAddress 192.168.1.55
@@ -32,8 +32,8 @@ param(
 $ErrorActionPreference = "Stop"
 $repoRoot = Split-Path $PSScriptRoot -Parent
 $profileName = if ($Vpn) { "vpn-dogfight" } else { "lan-dogfight" }
-if (-not $Log) { $Log = "work/$profileName.jsonl" }
-$status = "work/$profileName-status.json"
+if (-not $Log) { $Log = "work/host/$profileName.jsonl" }
+$status = "work/host/$profileName-status.json"
 Push-Location $repoRoot
 try {
     $python = Join-Path $repoRoot ".venv/Scripts/python.exe"

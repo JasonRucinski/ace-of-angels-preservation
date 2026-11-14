@@ -3712,7 +3712,7 @@
   "-HostAddress 192.168.1.55": {
    "argv": [
     "game/2.9.2/SCRTY.BIN",
-    "work/lan-dogfight.jsonl",
+    "work/host/lan-dogfight.jsonl",
     "--profile",
     "lan-dogfight",
     "--bind-address",
@@ -3725,7 +3725,7 @@
     "spacebkgd3",
     "--console",
     "--status-file",
-    "work/lan-dogfight-status.json"
+    "work/host/lan-dogfight-status.json"
    ],
    "config": {
     "ack": true,
@@ -3753,7 +3753,7 @@
     "impair_seed": null,
     "key": "game/2.9.2/SCRTY.BIN",
     "kill_limit": 20,
-    "log": "work/lan-dogfight.jsonl",
+    "log": "work/host/lan-dogfight.jsonl",
     "log_backups": 3,
     "log_max_bytes": 1048576,
     "managed_session": false,
@@ -3779,7 +3779,7 @@
     "spawn_origin": null,
     "spawn_spacing": 1000.0,
     "start_vessel": "Ym Khtat",
-    "status_file": "work/lan-dogfight-status.json",
+    "status_file": "work/host/lan-dogfight-status.json",
     "sustained_delivery": false,
     "target_ships": 0,
     "tcp": 5034,
@@ -3791,7 +3791,7 @@
   "-HostAddress 192.168.1.55 -Map Arena1a -Terrain": {
    "argv": [
     "game/2.9.2/SCRTY.BIN",
-    "work/lan-dogfight.jsonl",
+    "work/host/lan-dogfight.jsonl",
     "--profile",
     "lan-dogfight",
     "--bind-address",
@@ -3804,7 +3804,7 @@
     "spacebkgd3",
     "--console",
     "--status-file",
-    "work/lan-dogfight-status.json",
+    "work/host/lan-dogfight-status.json",
     "--experimental-terrain"
    ],
    "config": {
@@ -3833,7 +3833,7 @@
     "impair_seed": null,
     "key": "game/2.9.2/SCRTY.BIN",
     "kill_limit": 20,
-    "log": "work/lan-dogfight.jsonl",
+    "log": "work/host/lan-dogfight.jsonl",
     "log_backups": 3,
     "log_max_bytes": 1048576,
     "managed_session": false,
@@ -3859,7 +3859,7 @@
     "spawn_origin": null,
     "spawn_spacing": 1000.0,
     "start_vessel": "Ym Khtat",
-    "status_file": "work/lan-dogfight-status.json",
+    "status_file": "work/host/lan-dogfight-status.json",
     "sustained_delivery": false,
     "target_ships": 0,
     "tcp": 5034,
@@ -3871,7 +3871,7 @@
   "-HostAddress 192.168.1.55 -TestRttMs 80 -TestLossPercent 1": {
    "argv": [
     "game/2.9.2/SCRTY.BIN",
-    "work/lan-dogfight.jsonl",
+    "work/host/lan-dogfight.jsonl",
     "--profile",
     "lan-dogfight",
     "--bind-address",
@@ -3884,7 +3884,7 @@
     "spacebkgd3",
     "--console",
     "--status-file",
-    "work/lan-dogfight-status.json",
+    "work/host/lan-dogfight-status.json",
     "--impair-rtt-ms",
     "80",
     "--impair-jitter-ms",
@@ -3918,7 +3918,7 @@
     "impair_seed": null,
     "key": "game/2.9.2/SCRTY.BIN",
     "kill_limit": 20,
-    "log": "work/lan-dogfight.jsonl",
+    "log": "work/host/lan-dogfight.jsonl",
     "log_backups": 3,
     "log_max_bytes": 1048576,
     "managed_session": false,
@@ -3944,7 +3944,7 @@
     "spawn_origin": null,
     "spawn_spacing": 1000.0,
     "start_vessel": "Ym Khtat",
-    "status_file": "work/lan-dogfight-status.json",
+    "status_file": "work/host/lan-dogfight-status.json",
     "sustained_delivery": false,
     "target_ships": 0,
     "tcp": 5034,
@@ -3956,7 +3956,7 @@
   "-Vpn -HostAddress 100.101.102.103 -MaxPlayers 4": {
    "argv": [
     "game/2.9.2/SCRTY.BIN",
-    "work/vpn-dogfight.jsonl",
+    "work/host/vpn-dogfight.jsonl",
     "--profile",
     "vpn-dogfight",
     "--bind-address",
@@ -3969,7 +3969,7 @@
     "spacebkgd3",
     "--console",
     "--status-file",
-    "work/vpn-dogfight-status.json"
+    "work/host/vpn-dogfight-status.json"
    ],
    "config": {
     "ack": true,
@@ -3997,7 +3997,7 @@
     "impair_seed": null,
     "key": "game/2.9.2/SCRTY.BIN",
     "kill_limit": 20,
-    "log": "work/vpn-dogfight.jsonl",
+    "log": "work/host/vpn-dogfight.jsonl",
     "log_backups": 3,
     "log_max_bytes": 1048576,
     "managed_session": false,
@@ -4023,7 +4023,7 @@
     "spawn_origin": null,
     "spawn_spacing": 1000.0,
     "start_vessel": "Ym Khtat",
-    "status_file": "work/vpn-dogfight-status.json",
+    "status_file": "work/host/vpn-dogfight-status.json",
     "sustained_delivery": true,
     "target_ships": 0,
     "tcp": 5034,

@@ -117,22 +117,17 @@ def monitor(proc, status_path, timeout):
     while proc.poll() is None:
         try:
             mtime = status_path.stat().st_mtime_ns
-            status = json.loads(status_path.read_text(encoding="utf-8"))
-            if isinstance(status, dict) and status.get("pid") == proc.pid and mtime != last_mtime:
-                last_update, last_mtime, latest = time.monotonic(), mtime, status
-        except (OSError, ValueError):
-            pass
+        except OSError:
+            mtime = None
+        status, _ = host_ops.read_status(status_path, proc.pid)
+        if status is not None and mtime != last_mtime:
+            last_update, last_mtime, latest = time.monotonic(), mtime, status
         if time.monotonic() - last_update >= timeout:
             raise RuntimeError(f"game process {proc.pid} has not updated its status for {timeout:g}s")
         time.sleep(0.25)
     # The final state is written immediately before a planned exit.
-    try:
-        status = json.loads(status_path.read_text(encoding="utf-8"))
-        if isinstance(status, dict) and status.get("pid") == proc.pid:
-            latest = status
-    except (OSError, ValueError):
-        pass
-    return proc.returncode, latest
+    status, _ = host_ops.read_status(status_path, proc.pid)
+    return proc.returncode, status or latest
 
 
 def run(args, settings):
@@ -168,7 +163,8 @@ def main(argv=None):
     parser.add_argument("log", type=Path)
     parser.add_argument("--config", type=Path, required=True)
     parser.add_argument("--state-file", type=Path, required=True)
-    parser.add_argument("--status-file", type=Path, required=True)
+    parser.add_argument("--status-file", type=Path,
+                        help="default work/host/<profile>-status.json, as the host window writes")
     parser.add_argument("--profile", default="vpn-dogfight", choices=("vpn-dogfight", "lan-dogfight", "local-guests"))
     parser.add_argument("--bind-address", default="127.0.0.1")
     parser.add_argument("--max-players", type=int, default=HOST_DEFAULTS["max_players"])
@@ -177,6 +173,8 @@ def main(argv=None):
     parser.add_argument("--tcp", type=int, default=5034)
     parser.add_argument("--check", action="store_true", help="validate without opening sockets or writing state")
     args = parser.parse_args(argv)
+    if args.status_file is None:
+        args.status_file = host_ops.status_path(args.profile)
     try:
         paths = [args.key, args.log, args.config, args.state_file, args.status_file]
         if len({path.resolve() for path in paths}) != len(paths):
