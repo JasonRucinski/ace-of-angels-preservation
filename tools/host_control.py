@@ -5,9 +5,10 @@
 It runs tools/station_stub.py as a child process with --console and
 --status-file. The window reads the status file every second for the
 player/score table and host counters, and sends the server's own console
-commands (kick, ban, end, say, quit). "Load map" stops the host cleanly and
-starts it again on the chosen map; players must quit and rejoin, because a
-client builds terrain only once per flight session.
+commands (kick, ban, end, say, quit). "Load map" checks the new settings,
+then stops the host cleanly and starts it again on the chosen map; players
+must quit and rejoin, because a client builds terrain only once per flight
+session.
 
 Modes: this PC only (local-guests on 127.0.0.1, with the guest admission
 and sustained delivery LAN and VPN players get), LAN (lan-dogfight) and VPN
@@ -143,9 +144,8 @@ class HostProcess:
             lines = [l for l in result.stderr.strip().splitlines() if l.strip()]
             raise ValueError(lines[-1] if lines else "invalid settings")
 
-    def start(self, settings, extra=()):
-        if self.running:
-            raise RuntimeError("host already running")
+    def check(self, settings, extra=()):
+        """Everything start() checks, without starting: files, then the server's own validation."""
         game = Path(settings["game"])
         game = game if game.is_absolute() else ROOT / game
         if not (game / "SCRTY.BIN").is_file():
@@ -153,6 +153,12 @@ class HostProcess:
         if settings["terrain"] and settings["map"] == "JRMAP" and not (game / "jrmap292.trn").is_file():
             raise ValueError(f"JRMAP needs: python -I tools/map_viewer.py install {settings['game']}")
         self.validate(settings, extra)
+
+    def start(self, settings, extra=(), checked=False):
+        if self.running:
+            raise RuntimeError("host already running")
+        if not checked:
+            self.check(settings, extra)
         WORK.mkdir(parents=True, exist_ok=True)
         status_path(settings).unlink(missing_ok=True)
         self.proc = subprocess.Popen([sys.executable, "-u", "-I", *server_args(settings, extra)], cwd=ROOT,
@@ -210,6 +216,16 @@ def valid_setting(key, value):
         return type(value) in (int, float) and math.isfinite(value) and 0 <= value <= 1440
     low, high = {"max_players": (1, 8), "kill_limit": (0, 1000), "target_ships": (0, 20)}[key]
     return type(value) is int and low <= value <= high
+
+
+def load_map(host, settings, extra=(), notice_seconds=0.5):
+    """Restart `host` on new settings. They are checked first: if they are invalid,
+    this raises before anything is announced or stopped, and the host keeps running."""
+    host.check(settings, extra)
+    host.command(f"say Host is switching to {settings['map']}. Quit the game and rejoin in a minute.")
+    time.sleep(notice_seconds)
+    host.stop()
+    host.start(settings, extra, checked=True)
 
 
 def load_settings(notices=None):
@@ -455,11 +471,18 @@ def gui(autostart=False, run=True):
         new = v["map"].get()
         if not confirm_disconnect(f"Load {new}"):
             return
-        host.command(f"say Host is switching to {new}. Quit the game and rejoin in a minute.")
-        time.sleep(0.5)
-        write_log(f"[switching map to {new}]")
-        host.stop()
-        do_start()
+        try:
+            s = settings()
+            write_log(f"[switching map to {new}]")
+            load_map(host, s)
+        except (ValueError, RuntimeError, OSError) as error:
+            messagebox.showerror("Cannot load map", str(error))
+            write_log(f"[map not changed: {error}]" if host.running else f"[not started: {error}]")
+            refresh_controls()
+            return
+        save_settings(s)
+        write_log(f"[starting {MODES[s['mode']]} host: map {s['map']}{' with terrain' if s['terrain'] else ''}]")
+        refresh_controls()
 
     def selected_slot():
         item = table.selection()

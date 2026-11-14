@@ -108,6 +108,44 @@ class StartupTests(unittest.TestCase):
         self.assertEqual(host_control.load_settings(), {**host_control.DEFAULTS, **good, "mode": "vpn-dogfight"})
 
 
+class FakeHost:
+    """HostProcess stand-in that records calls; `invalid` makes check() reject."""
+
+    def __init__(self, invalid=None):
+        self.calls, self.invalid = [], invalid
+
+    def check(self, settings, extra=()):
+        self.calls.append(("check", settings["map"]))
+        if self.invalid:
+            raise ValueError(self.invalid)
+
+    def command(self, line):
+        self.calls.append(("command", line))
+        return True
+
+    def stop(self):
+        self.calls.append(("stop",))
+        return 0
+
+    def start(self, settings, extra=(), checked=False):
+        self.calls.append(("start", settings["map"], checked))
+
+
+class LoadMapTests(unittest.TestCase):
+    def test_invalid_settings_leave_the_host_running(self):
+        host = FakeHost(invalid="JRMAP needs: python -I tools/map_viewer.py install game/2.9.2")
+        with self.assertRaisesRegex(ValueError, "JRMAP needs"):
+            host_control.load_map(host, settings(map="JRMAP"), notice_seconds=0)
+        self.assertEqual(host.calls, [("check", "JRMAP")])  # nothing said, nothing stopped
+
+    def test_valid_settings_announce_stop_and_start(self):
+        host = FakeHost()
+        host_control.load_map(host, settings(map="CTF_arena"), notice_seconds=0)
+        self.assertEqual([call[0] for call in host.calls], ["check", "command", "stop", "start"])
+        self.assertIn("switching to CTF_arena", host.calls[1][1])
+        self.assertEqual(host.calls[-1], ("start", "CTF_arena", True))
+
+
 class NodeControlTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
