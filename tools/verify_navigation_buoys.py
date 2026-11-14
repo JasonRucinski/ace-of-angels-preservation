@@ -38,16 +38,20 @@ def verify(live, nodes, map_name='Arena1a'):
             'editor_rotations_restored': False}
 
 
-if __name__ == '__main__':
+def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('pid', type=int)
     parser.add_argument('source', type=Path)
     parser.add_argument('output', type=Path)
     parser.add_argument('--map', default='Arena1a', choices=navigation_buoys.online_terrain.MAP_NAMES)
     parser.add_argument('--trn', type=Path)
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
     nodes = (navigation_buoys.placements(args.source) if args.source.is_file() and args.map == 'Arena1a' else
              navigation_buoys.map_placements(args.source, args.map, args.trn))
     result = verify(snapshot(args.pid, include_objects=True), nodes, args.map)
     args.output.write_text(json.dumps(result, indent=2) + '\n', encoding='utf-8')
     print(json.dumps(result, indent=2))
+
+
+if __name__ == '__main__':
+    main()

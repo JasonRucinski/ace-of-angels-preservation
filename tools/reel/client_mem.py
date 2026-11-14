@@ -21,7 +21,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import window  # noqa: E402
 
-k = ctypes.WinDLL("kernel32", use_last_error=True)
+k = window.dll("kernel32")
 k.OpenProcess.argtypes = [wintypes.DWORD, wintypes.BOOL, wintypes.DWORD]
 k.OpenProcess.restype = wintypes.HANDLE
 k.CloseHandle.argtypes = [wintypes.HANDLE]
@@ -99,7 +99,7 @@ class Client:
         self.write(p + 0x70, struct.pack("<3f", *pos))
 
 
-def main():
+def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = parser.add_subparsers(dest="action", required=True)
     p = sub.add_parser("camera")
@@ -108,7 +108,9 @@ def main():
     p = sub.add_parser("velocity")
     p.add_argument("v", type=float, nargs=3)
     p.add_argument("--hold", type=float, default=0, help="keep rewriting it for this many seconds")
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
+    if sys.platform != "win32":
+        sys.exit("client_mem: needs Windows")
     c = Client()
     try:
         if args.action == "camera":

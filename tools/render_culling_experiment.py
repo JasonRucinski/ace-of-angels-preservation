@@ -80,10 +80,10 @@ def configure(data, enabled=True):
     return bytes(result)
 
 
-def main():
+def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--undo',action='store_true')
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
     exe = Path(__file__).resolve().parents[1]/'game/offline-baseline-2.9.2/AOACLIENT.EXE'
     source = exe.read_bytes()
     original = configure(source,False)

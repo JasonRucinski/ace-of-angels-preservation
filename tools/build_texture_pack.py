@@ -137,12 +137,12 @@ def sources(game_dir, entries):
             raise KeyError(f"not in {name}: {sorted(wanted.values())}")
 
 
-def main():
+def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("game_dir", type=Path)
     parser.add_argument("--out", type=Path, default=OUT)
     parser.add_argument("--group", action="append", help="manifest group(s) to build; default all")
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
     groups = args.group or list(manifest["groups"])
     entries = [e for g in groups for e in manifest["groups"][g]]

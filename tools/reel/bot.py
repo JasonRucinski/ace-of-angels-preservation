@@ -145,13 +145,13 @@ class Pilot:
             self.receive()
 
 
-def main():
+def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("key", type=Path, help="SCRTY.BIN")
     parser.add_argument("pilots", type=Path)
     parser.add_argument("--seconds", type=float, default=60)
     parser.add_argument("--delay", type=float, default=0, help="hold paths at t=0 for this long after login")
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
     key = args.key.read_bytes()
     spec = json.loads(args.pilots.read_text())
     pilots = [Pilot(key, f"Wing{i + 1}", p["hull"], p["path"]) for i, p in enumerate(spec)]

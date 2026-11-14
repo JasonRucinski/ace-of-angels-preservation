@@ -243,13 +243,13 @@ def film(shot, index, out, encoder):
     return report
 
 
-def main():
+def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("shots", type=Path)
     parser.add_argument("--only", nargs="*")
     parser.add_argument("--out", type=Path, default=ROOT / "work/reel/raw")
     parser.add_argument("--encoder", choices=("amf", "x264"), default="amf")
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
     args.out.mkdir(parents=True, exist_ok=True)
     shots = json.loads(args.shots.read_text())
     keep_awake()

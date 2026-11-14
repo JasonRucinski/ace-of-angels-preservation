@@ -49,12 +49,16 @@ def verify_gate(live, gate):
             'editor_orientation_restored': False, 'host_authorized_transit': False}
 
 
-if __name__ == '__main__':
+def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('pid', type=int)
     parser.add_argument('source', type=Path)
     parser.add_argument('output', type=Path)
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
     result = verify(snapshot(args.pid, include_objects=True), warp_trial.placements(args.source))
     args.output.write_text(json.dumps(result, indent=2) + '\n', encoding='utf-8')
     print(json.dumps(result, indent=2))
+
+
+if __name__ == '__main__':
+    main()

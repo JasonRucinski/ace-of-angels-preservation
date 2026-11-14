@@ -22,12 +22,12 @@ CANDIDATES = {
 }
 
 
-def main():
+def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--scenes", type=Path, default=ROOT / "work/2.9.2/scenes")
     parser.add_argument("--out", type=Path, default=ROOT / "work/map-previews")
     parser.add_argument("--size", type=int, default=1000)
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
     if not 256 <= args.size <= 2048:
         parser.error("size must be 256..2048")
     args.out.mkdir(parents=True, exist_ok=True)

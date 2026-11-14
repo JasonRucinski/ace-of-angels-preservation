@@ -313,7 +313,7 @@ def undo(client):
     print(f"restored {client / 'AOAOBJECTS.ODB'}")
 
 
-def main():
+def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = parser.add_subparsers(dest="action", required=True)
     p = sub.add_parser("install")
@@ -327,7 +327,7 @@ def main():
     p.add_argument("--client", type=Path, default=ROOT / "game/2.9.2", help="client whose database holds the template")
     p = sub.add_parser("undo")
     p.add_argument("client", type=Path)
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
     if args.action == "undo":
         undo(args.client)
     elif args.action == "install":

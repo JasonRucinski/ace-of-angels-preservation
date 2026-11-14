@@ -235,7 +235,7 @@ def build(edit, raw, out, music, start):
     return {"reel": str(target), "reel_720p": str(small), "seconds": round(length, 3), "music_start": start}
 
 
-def main():
+def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("edit", type=Path)
     parser.add_argument("--raw", type=Path, default=ROOT / "work/reel/raw")
@@ -244,7 +244,7 @@ def main():
     group.add_argument("--no-music", action="store_true")
     group.add_argument("--music", type=Path)
     parser.add_argument("--music-start")
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
     edit = json.loads(args.edit.read_text(encoding="utf-8"))
     spec = edit.get("music", {})
     music = None if args.no_music else (args.music or (ROOT / spec["file"] if spec.get("file") else None))

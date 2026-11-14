@@ -152,13 +152,13 @@ def record(pid, seconds):
         proc.close()
 
 
-def main():
+def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("pid", type=int)
     parser.add_argument("output", type=Path)
     parser.add_argument("--seconds", type=float, default=10)
     parser.add_argument("--label", default="")
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
     if not 0 < args.seconds <= 120:
         parser.error("--seconds must be in (0, 120]")
     frames, polls, seconds = record(args.pid, args.seconds)

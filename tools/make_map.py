@@ -295,7 +295,7 @@ def clearance(spec, placed):
                for p in placed if p["drawn"])
 
 
-def main():
+def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = parser.add_subparsers(dest="action", required=True)
     p = sub.add_parser("build")
@@ -314,7 +314,7 @@ def main():
     p.add_argument("src", type=Path, help="exported AOAOBJECTS folder (*.Sco, *.Gob)")
     p.add_argument("out_dir", type=Path)
     p.add_argument("tex_dir", nargs="?")
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
     spec = load_spec(args.spec)
     if args.action == "build":
         data = build(spec)

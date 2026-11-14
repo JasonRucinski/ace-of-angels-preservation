@@ -30,10 +30,10 @@ EMULATORS = ("emulate_station_request.py", "emulate_station_aliases.py", "emulat
              "emulate_ordered_events.py", "emulate_terrain_nodes.py")
 
 
-def main():
+def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--report", type=Path, default=ROOT / "work/local-verification.json")
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
     client = ROOT / "game/2.9.2/AOACLIENT.EXE.orig"
     report = {"schema": 1, "started_utc": datetime.datetime.now(datetime.timezone.utc).isoformat(),
               "scope": "synthetic loopback and isolated original-code emulation; excludes real-client UI, combat, collision, internet, clean-machine install and performance release gates",

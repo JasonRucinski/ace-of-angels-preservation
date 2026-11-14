@@ -52,7 +52,7 @@ def read_png(path):
     return w, h, rows
 
 
-def main():
+def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("obj", type=Path)
     parser.add_argument("out", type=Path)
@@ -60,7 +60,7 @@ def main():
     parser.add_argument("yaw", type=float, nargs="?", default=35)
     parser.add_argument("pitch", type=float, nargs="?", default=25)
     parser.add_argument("--focus", help="frame objects whose names start with this prefix; surrounding geometry may be cropped")
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
     obj, out, size = args.obj, args.out, args.size
     yaw, pitch = math.radians(args.yaw), math.radians(args.pitch)
     focus, object_name = [], ""
