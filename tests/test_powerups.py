@@ -16,7 +16,7 @@ from pathlib import Path
 from aoa.protocol import codec
 from aoa.formats import trn
 from aoa.host import server as stub
-from tests.test_station_stub import request
+from tests.support import request
 from aoa import paths
 
 

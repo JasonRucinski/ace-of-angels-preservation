@@ -16,9 +16,7 @@ from pathlib import Path
 from aoa.host import dedicated
 from aoa.client.patches import online_terrain
 from aoa.host import server as stub
-from tests.test_internet_play import SyntheticClient
-from tests.test_station_runtime import job_request, read_reply
-from tests.test_station_stub import request
+from tests.support import SyntheticClient, job_request, read_reply, request
 from aoa import paths
 
 

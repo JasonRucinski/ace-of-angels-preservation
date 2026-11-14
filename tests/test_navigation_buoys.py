@@ -15,7 +15,7 @@ from pathlib import Path
 from aoa.protocol import codec
 from aoa.maps import navigation as buoys
 from aoa.host.runtime import parse_args
-from tests.test_station_stub import request
+from tests.support import request
 from aoa.paths import ROOT
 from aoa import paths
 

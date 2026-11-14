@@ -17,31 +17,10 @@ from pathlib import Path
 from unittest.mock import patch
 
 from aoa.protocol import codec
-from aoa.formats import aoapack
 from aoa.host import server as stub
 from aoa.host.runtime import EventLog, StationTCPServer, parse_args
-from tests.test_station_stub import request
+from tests.support import job_request, read_reply, request
 from aoa import paths
-
-
-def read_reply(client):
-    with client.makefile("rb") as stream:
-        header = stream.read(4)
-        if len(header) != 4:
-            raise AssertionError("missing TCP frame header")
-        size = int.from_bytes(header, "little")
-        body = stream.read(size)
-        if len(body) != size:
-            raise AssertionError("truncated TCP reply")
-        return aoapack.decompress(body)[0] if size else b""
-
-
-def job_request(job=5, identity=0, flag=0):
-    header = bytearray(142)
-    header[:12] = b"private-name"
-    struct.pack_into("<I", header, 60, identity)
-    header[128:130] = bytes([job, flag])
-    return bytes(header)
 
 
 def test_responder(request, address):

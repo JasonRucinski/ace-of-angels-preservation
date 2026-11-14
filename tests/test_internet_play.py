@@ -23,15 +23,12 @@ from collections import deque
 from pathlib import Path
 from unittest.mock import patch
 
-from aoa.protocol import codec
 from aoa.host import ops
 from aoa.host import server as stub
 from aoa.host.net_impair import Impairment, MeteredSocket, TrafficMeter
 from aoa.host.delivery import WindowedReliable
 from aoa.host.runtime import parse_args
-from tests.test_station_runtime import job_request, read_reply
-from tests import test_station_stub
-from tests.test_station_stub import request
+from tests.support import ClientHistory, SyntheticClient, fire_missile, job_request, read_reply, request
 
 VPN_ADDRESS = "100.101.102.103"
 
@@ -39,19 +36,6 @@ VPN_ADDRESS = "100.101.102.103"
 def quiet_parse(argv):
     with contextlib.redirect_stderr(io.StringIO()):
         return parse_args(argv)
-
-
-class ClientHistory:
-    """The original filter (0x4C2730): 30 IDs, circular, zero pre-filled."""
-
-    def __init__(self):
-        self.ids = deque([0] * 30, maxlen=30)
-
-    def first(self, sequence):
-        if sequence in self.ids:
-            return False
-        self.ids.append(sequence)
-        return True
 
 
 class ConfigTests(unittest.TestCase):
@@ -240,57 +224,6 @@ class HostOpsTests(unittest.TestCase):
         self.assertIn("testpilot-02", table)
 
 
-class SyntheticClient:
-    """Models the 2.9.2 receive path: ACK every 0x1B, filter, then dispatch."""
-
-    def __init__(self, key):
-        self.key = key
-        self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.sock.bind(("127.0.0.1", 0))
-        self.history = ClientHistory()
-        self.applied, self.pending = [], {}
-        self.sequence, self.slot, self.silent = 1, 0, False
-        self.acks = {}
-
-    def send(self, endpoint, kind, body):
-        self.sock.sendto(codec.encode(kind, body, self.key), endpoint)
-
-    def send_reliable(self, endpoint, kind, body):
-        packet = body + struct.pack("<I", self.sequence) + bytes([kind])
-        self.pending[self.sequence] = [endpoint, packet, time.monotonic() + 0.2]
-        self.sequence += 1
-        self.send(endpoint, 0x1B, packet)
-
-    def handle(self, wire, source):
-        message = codec.decode(wire, self.key)
-        assert message["crc_ok"]
-        kind, body = message["type"], message["payload"]
-        if kind == 0x1B:
-            self.send(source, 0x0F, body[-5:-1])
-            if not self.history.first(struct.unpack("<I", body[-5:-1])[0]):
-                return
-            kind, body = body[-1], body[:-5]
-        if kind == 0x0F:
-            self.pending.pop(struct.unpack("<I", body)[0], None)
-        elif kind == 8:
-            reply = bytearray(body)
-            reply[6] = self.slot
-            self.send(source, 9, bytes(reply))
-        elif kind == 0x0B:
-            self.acks[source[1]] = body
-        self.applied.append((kind, body))
-
-    def resend(self):
-        now = time.monotonic()
-        for entry in self.pending.values():
-            if now >= entry[2]:
-                self.send(entry[0], 0x1B, entry[1])
-                entry[2] = now + 0.2
-
-    def bodies(self, kind):
-        return [body for applied, body in self.applied if applied == kind]
-
-
 class LiveVpnSessionTests(unittest.TestCase):
     def test_impaired_session_kick_and_rejoin(self):
         directory = tempfile.TemporaryDirectory()
@@ -394,7 +327,7 @@ class LiveVpnSessionTests(unittest.TestCase):
             # Far beyond the old 30-event lifetime budget, through 3% loss.
             cycles = 25
             for index in range(cycles):
-                a.send_reliable(arena, 0x2A, test_station_stub.ProtocolTests.fire_missile())
+                a.send_reliable(arena, 0x2A, fire_missile())
                 until(lambda: all(len(c.bodies(0x2A)) == index + 1 for c in (a, b)))
                 tag = struct.unpack_from("<I", a.bodies(0x2A)[-1], 0x10)[0]
                 impact = struct.pack("<II3fB", tag, stub.player_tag(2), 0, 0, 5000, 1)

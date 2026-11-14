@@ -11,8 +11,7 @@ from pathlib import Path
 
 from aoa.protocol import codec
 from aoa.host import server as stub
-from tests import test_station_stub
-from tests.test_station_stub import request
+from tests.support import fire_missile, request
 from aoa import paths
 
 
@@ -83,7 +82,7 @@ class CombatDeliveryTests(unittest.TestCase):
                 pump(3.5)
                 for peer in peers:
                     self.assertEqual(len(bodies(peer, 0x2C)), 1)
-                launch = test_station_stub.ProtocolTests.fire_missile()
+                launch = fire_missile()
                 wrapped = launch + struct.pack("<I", 100) + b"\x2a"
                 send(a, 0x1B, wrapped)
                 send(a, 0x1B, wrapped)  # Lost inbound ACK / duplicate launch.

@@ -20,7 +20,7 @@ from aoa.protocol import codec
 from aoa.protocol import motion
 from aoa.host import server
 from aoa.host import warp_trial
-from tests.test_station_stub import request
+from tests.support import request
 
 from aoa.paths import ROOT
 from aoa import paths

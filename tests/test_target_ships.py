@@ -17,11 +17,8 @@ from aoa.protocol import codec
 from aoa.protocol import motion
 from aoa.host import server as stub
 from aoa.host import vessel_combat
-from tests import test_station_stub
-from tests.test_station_stub import request
+from tests.support import fire_missile, request
 from aoa import paths
-
-fire_missile = test_station_stub.ProtocolTests.fire_missile  # Module import keeps its tests out of this run
 
 # A real 2.9.2 client's 0x1F upload (Ym Khtat, slot 1) while its guns hit
 # Target 1: mask 0x80000804, submask 2 = three perceived-damage entries.

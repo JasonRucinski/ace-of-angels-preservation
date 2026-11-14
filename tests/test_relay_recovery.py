@@ -12,7 +12,7 @@ from pathlib import Path
 
 from aoa.protocol import codec
 from aoa.protocol import motion
-from tests.test_station_stub import request
+from tests.support import request
 from aoa import paths
 
 

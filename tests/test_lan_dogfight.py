@@ -16,9 +16,7 @@ from unittest.mock import patch
 from aoa.protocol import codec
 from aoa.host import server as stub
 from aoa.host.runtime import parse_args
-from tests.test_station_runtime import job_request, read_reply
-from tests import test_station_stub
-from tests.test_station_stub import request
+from tests.support import fire_missile, job_request, read_reply, request
 
 
 class LanDogfightTests(unittest.TestCase):
@@ -162,7 +160,7 @@ class LanDogfightTests(unittest.TestCase):
                 a, b = peers
                 # 120 events per observer, not the bounded reliable experiment.
                 for index in range(60):
-                    send(a, arena, 0x2A, test_station_stub.ProtocolTests.fire_missile())
+                    send(a, arena, 0x2A, fire_missile())
                     until(lambda: all(len(bodies(p, 0x2A)) == index + 1 for p in peers))
                     tag = struct.unpack_from("<I", bodies(a, 0x2A)[-1], 0x10)[0]
                     impact = struct.pack("<II3fB", tag, stub.player_tag(2), 0, 0, 5000, 1)

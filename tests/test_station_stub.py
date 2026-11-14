@@ -22,18 +22,12 @@ from aoa.formats import aoapack
 from aoa.host import server as stub
 from aoa.protocol import motion as protocol_motion
 from aoa import paths
-
-
-def request():
-    payload = bytearray(381)
-    payload[1:5] = (9).to_bytes(4, "little")
-    payload[5:9] = (2).to_bytes(4, "little")
-    payload[9:13] = (2).to_bytes(4, "little")
-    payload[31:40] = b"testpilot"
-    return bytes(payload)
+from tests.support import fire_missile, request
 
 
 class ProtocolTests(unittest.TestCase):
+    fire_missile = staticmethod(fire_missile)
+
     def test_ordered_combat_delivery(self):
         delivery = stub.ReliableRemovals(ordered=True)
         launch = delivery.queue_message("a", 0x2A, b"launch", 0)
@@ -180,16 +174,6 @@ class ProtocolTests(unittest.TestCase):
         # Same-team and other-team relation: Hostile (index 3, client value 4).
         # Friendly (0) made LaunchActiveMissiles refuse every target.
         self.assertEqual((plain[0x44], plain[0x45]), (3, 3))
-
-    @staticmethod
-    def fire_missile(target=0x80010002, shooter=0x80010001, count=1, lock=100.0):
-        """A launch shaped like the real client's (stack bytes after names)."""
-        p = bytearray(0x92)
-        struct.pack_into("<fIII", p, 0, lock, target, shooter, count)
-        stack = bytes.fromhex("18000000688c5303acf71900b4f71900ffffffff")
-        p[0x50:0x70] = (b"Type II 1.1\0" + stack)[:0x20]
-        p[0x70:0x90] = (b"Rack IIB a\0\0" + stack)[:0x20]
-        return bytes(p)
 
     def test_missile_launch_echo(self):
         ledger = stub.MissileLedger()

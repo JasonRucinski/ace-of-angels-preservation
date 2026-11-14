@@ -8,7 +8,7 @@ import unittest
 from pathlib import Path
 
 from aoa.protocol import codec
-from tests.test_station_stub import request
+from tests.support import request
 from aoa import paths
 
 

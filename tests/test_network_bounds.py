@@ -12,7 +12,7 @@ from aoa.formats import aoacrypt
 from aoa.protocol import codec
 from aoa.formats import aoapack
 from aoa.host.runtime import DatagramBudget
-from tests.test_station_stub import request
+from tests.support import request
 from aoa import paths
 
 KEY = bytes(range(256))

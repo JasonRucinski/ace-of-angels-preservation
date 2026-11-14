@@ -9,7 +9,7 @@ import struct
 import unittest
 
 from aoa.emulation.emu import SCRATCH, STACK, STOP
-from tests.test_object_persistence import GroupProbe
+from tests.support_emulation import GroupProbe
 from unicorn.x86_const import (UC_X86_REG_EBX, UC_X86_REG_ESI, UC_X86_REG_EDI,
                                UC_X86_REG_EBP, UC_X86_REG_ESP, UC_X86_REG_EIP,
                                UC_X86_REG_FPCW, UC_X86_REG_FPSW, UC_X86_REG_EDX)
