@@ -174,7 +174,7 @@ def collect():
         (prepare.BACKGROUND_OFFSET, prepare.BACKGROUND_JNE, prepare.BACKGROUND_NOP)]})
     for name, m in (("archive-terminator-v1", archive_terminator), (explicit_protection.NAME, explicit_protection)):
         code = m.cave_code()
-        add(name, m.__name__, {"current": [
+        add(name, m.__name__.rpartition(".")[2], {"current": [
             (m.SITE_OFFSET, m.DISPLACED, base.jmp_patch(m.SITE, m.CAVE, len(m.DISPLACED))),
             (m.CAVE_OFFSET, bytes(len(code)), code)]})
     m = online_terrain
@@ -184,7 +184,7 @@ def collect():
         for label, cave in (("current", m.cave_code()), (m.V2_NAME, m.v2_code()), (m.LEGACY_NAME, m.legacy_code()))})
     for m in (menu_aspect, cursor_warp, frame_clock, visibility_fix, own_ship_model, powerup_pickup,
               asteroid_render, solid_world_render, station_detail, world_detail, texture32, object_persistence):
-        add(m.NAME, m.__name__, {"current": m.regions()})
+        add(m.NAME, m.__name__.rpartition(".")[2], {"current": m.regions()})
     add(third_person.NAME, "third_person", {"current" if v == "v3" else v: third_person.regions(v)
                                             for v in third_person.VARIANTS},
         runtime_data=[runtime(third_person.FAKE, third_person.ARMED + 1 - third_person.FAKE,

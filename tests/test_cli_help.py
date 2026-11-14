@@ -1,7 +1,8 @@
 """Every tool answers --help with usage and nothing else.
 
-For each script under tools/ (and tools/reel/) that has a __main__ block, this
-runs `python -I -B <script> --help` against a throw-away copy of the
+For each script under tools/ that has a __main__ block, and through
+tools/run.py for each module under aoa/ and archive/ that has one, this runs
+`python -I -B <script> [module] --help` against a throw-away copy of the
 repository, from an empty working directory, with sockets and child processes
 blocked inside the interpreter. It asserts exit code 0, argparse usage on
 stdout, no network or process attempt, and no file created or changed in the
@@ -12,8 +13,8 @@ example Pillow, or a Windows-only module on Linux) is skipped with the
 package's name. Scripts owned by other restructure tasks that still act on
 --help are listed in KNOWN_UNSAFE with their finding ID and are not run.
 
-    python -I tools/test_cli_help.py
-    python -I tools/test_cli_help.py -k fetch_known_builds
+    python -I tools/test.py test_cli_help
+    python -I tools/test.py test_cli_help -- -k fetch_known_builds
 """
 import importlib.util
 import os
@@ -25,11 +26,14 @@ import tempfile
 import unittest
 from pathlib import Path
 
-TOOLS = Path(__file__).resolve().parent
-ROOT = TOOLS.parent
+from aoa.paths import ROOT
+
+TOOLS = ROOT / "tools"
+# Packages whose modules run through tools/run.py.
+PACKAGES = ("aoa", "archive")
 # What the copy holds: everything tracked that a tool might read, never the
 # ignored game/, builds/, work/, wb/ or originals/ folders.
-COPY_DIRS = ["tools", "config", "data", "evidence", "manifest", "docs", "deploy"]
+COPY_DIRS = ["aoa", "archive", "tests", "tools", "config", "data", "evidence", "manifest", "docs", "deploy"]
 COPY_FILES = ["CONTEXT.md", "README.md", "CLAUDE.md", "CONTRIBUTING.md", "requirements.txt"]
 TIMEOUT = 60
 
@@ -67,13 +71,17 @@ runpy.run_path(script, run_name="__main__")
 
 
 def entry_points():
-    """Paths, relative to the repo, of the scripts that have a __main__ block."""
+    """tools/ scripts (repo-relative paths) and aoa/archive modules (dotted names) with a __main__ block."""
     found = []
-    for path in sorted(TOOLS.glob("*.py")) + sorted((TOOLS / "reel").glob("*.py")):
-        if path.name.startswith("test_"):
-            continue
+    for path in sorted(TOOLS.glob("*.py")):
         if MAIN.search(path.read_text(encoding="utf-8", errors="replace")):
             found.append(path.relative_to(ROOT).as_posix())
+    for package in PACKAGES:
+        for path in sorted((ROOT / package).rglob("*.py")):
+            if path.name.startswith("test_"):
+                continue
+            if MAIN.search(path.read_text(encoding="utf-8", errors="replace")):
+                found.append(".".join(path.relative_to(ROOT).with_suffix("").parts))
     return found
 
 
@@ -95,7 +103,7 @@ def missing_optional(stderr):
     if not m:
         return None
     top = m[1].split(".")[0]
-    if (TOOLS / f"{top}.py").exists() or (TOOLS / "reel" / f"{top}.py").exists():
+    if top in PACKAGES or top == "tests":
         return None
     return top if importlib.util.find_spec(top) is None else None
 
@@ -121,7 +129,12 @@ class CliHelp(unittest.TestCase):
         cls.tmp.cleanup()
 
     def sandboxed(self, rel, *args):
-        """Run a copy of tools/<rel> with args in the sandbox; assert it stayed inside."""
+        """Run a copy of a tools/ script, or a module through tools/run.py, with args in the sandbox.
+
+        Asserts it stayed inside.
+        """
+        if not rel.endswith(".py"):
+            rel, args = "tools/run.py", (rel, *args)
         script = self.repo / rel
         # The interpreter's own environment only; no proxy, so even an
         # unguarded connection attempt would go nowhere useful.
@@ -161,25 +174,25 @@ class CliHelp(unittest.TestCase):
 
     def test_output_folder_named_like_an_option_is_refused(self):
         # R1/R2: these used to download or query archive.org into "./--help".
-        for rel in ("tools/fetch_known_builds.py", "tools/ia_fulltext_search.py"):
+        for rel in ("tools/fetch_known_builds.py", "aoa.research.ia_fulltext_search"):
             proc = self.sandboxed(rel, "--", "-x")
             self.assertEqual(proc.returncode, 2, f"{rel}:\n{proc.stderr}")
             self.assertIn("refusing output folder", proc.stderr)
 
     def test_missing_output_folder_stops_before_querying(self):
-        proc = self.sandboxed("tools/ia_fulltext_search.py", "no-such-folder")
+        proc = self.sandboxed("aoa.research.ia_fulltext_search", "no-such-folder")
         self.one_line_failure(proc, "ia_fulltext_search with a missing folder")
 
     def test_missing_input_is_one_line(self):
-        for rel, args in (("tools/decode_trn.py", ["missing.trn"]),
-                          ("tools/wise_extract.py", ["missing.exe"]),
+        for rel, args in (("aoa.formats.trn", ["missing.trn"]),
+                          ("aoa.formats.wise", ["missing.exe"]),
                           ("tools/aoa_version.py", ["missing.exe"]),
                           ("tools/export_assets.py", ["missing", "out"])):
             self.one_line_failure(self.sandboxed(rel, *args), f"{rel} {args}")
 
     def test_lod_audit_fails_without_export(self):
         # R3: it wrote {"mesh_models": 0} and exited 0.
-        proc = self.sandboxed("tools/audit_object_lod.py", "report.json")
+        proc = self.sandboxed("aoa.maps.lod", "report.json")
         self.one_line_failure(proc, "audit_object_lod without an export folder")
 
     def test_known_unsafe_entries_exist(self):
