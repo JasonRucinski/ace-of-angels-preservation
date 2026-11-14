@@ -39,7 +39,7 @@ from station_runtime import parse_args  # noqa: E402
 ROOT = Path(__file__).resolve().parents[1]
 SNAPSHOT = Path(__file__).resolve().parent / "snapshots/host_configs.json"
 DEPLOY = ROOT / "deploy/linux"
-ADDRESSES = {"This PC only": "127.0.0.1", "LAN": "192.168.1.5", "VPN (internet)": "100.101.102.103"}
+ADDRESSES = {"local-guests": "127.0.0.1", "lan-dogfight": "192.168.1.5", "vpn-dogfight": "100.101.102.103"}
 NODES_ON = dict.fromkeys(host_control.NODE_LABELS, True)
 NODES_OFF = dict.fromkeys(host_control.NODE_LABELS, False)
 # One row per mode: name, assets exported, settings changes.
@@ -114,8 +114,9 @@ def host_control_cases():
             settings = {**host_control.DEFAULTS, "mode": mode, "address": ADDRESSES[mode], **changes}
             with mock.patch.object(host_control, "ROOT", root), mock.patch.object(host_control, "WORK", root / "work/host"):
                 argv = host_control.server_args(settings)
-            out[f"{mode}: {label}"] = case(argv[1:], [(root, "")], assets_exported=assets, settings=settings,
-                                           script=normalize(argv[0], [(root, "")]))
+            out[f"{host_control.MODES[mode]}: {label}"] = case(
+                argv[1:], [(root, "")], assets_exported=assets, settings=settings,
+                script=normalize(argv[0], [(root, "")]))
     return out
 
 

@@ -9,10 +9,12 @@ commands (kick, ban, end, say, quit). "Load map" stops the host cleanly and
 starts it again on the chosen map; players must quit and rejoin, because a
 client builds terrain only once per flight session.
 
-Modes: this PC only (local-relay on 127.0.0.1), LAN (lan-dogfight) and VPN
+Modes: this PC only (local-guests on 127.0.0.1, with the guest admission
+and sustained delivery LAN and VPN players get), LAN (lan-dogfight) and VPN
 (vpn-dogfight). The server validates every setting (--print-config) before
 it binds anything. No firewall, hosts-file or client files are changed.
-Settings are remembered in work/host/host_control.json.
+Settings are remembered in work/host/host_control.json, with the mode as its
+profile id.
 """
 import json
 import queue
@@ -30,10 +32,12 @@ from station_runtime import HOST_DEFAULTS  # noqa: E402
 ROOT = Path(__file__).resolve().parents[1]
 WORK = ROOT / "work/host"
 SETTINGS_FILE = WORK / "host_control.json"
-MODES = {"This PC only": "local-relay", "LAN": "lan-dogfight", "VPN (internet)": "vpn-dogfight"}
+LOCAL = "local-guests"
+MODES = {LOCAL: "This PC only", "lan-dogfight": "LAN", "vpn-dogfight": "VPN (internet)"}  # profile -> label
+LABELS = {label: profile for profile, label in MODES.items()}  # also reads files saved with labels
 ALIASES = {"lan-dogfight": "aoalan", "vpn-dogfight": "aoavpn"}
 BACKDROPS = ("spacebkgd", "spacebkgd2", "spacebkgd3", "spacebkgd5", "spacebkgd6")
-DEFAULTS = {"mode": "This PC only", "address": "127.0.0.1", "map": "Arena1a", "terrain": True,
+DEFAULTS = {"mode": LOCAL, "address": "127.0.0.1", "map": "Arena1a", "terrain": True,
             "backdrop": "spacebkgd3", "max_players": HOST_DEFAULTS["max_players"],
             "kill_limit": HOST_DEFAULTS["kill_limit"], "time_limit_min": HOST_DEFAULTS["time_limit_seconds"] // 60,
             "target_ships": 4, "game": "game/2.9.2",
@@ -45,6 +49,15 @@ NO_WINDOW = getattr(subprocess, "CREATE_NO_WINDOW", 0)
 RESTARTS_PER_10_MIN = 3
 
 
+def profile_of(mode):
+    """The server profile for a saved mode: a profile id, or a display label from older settings."""
+    if mode in MODES:
+        return mode
+    if mode in LABELS:
+        return LABELS[mode]
+    raise ValueError(f"unknown host mode {mode!r}")
+
+
 def node_availability(settings):
     """Explain unavailable options consistently in the UI and launch arguments."""
     source = ROOT / 'work/2.9.2/export/AOAOBJECTS'
@@ -53,13 +66,13 @@ def node_availability(settings):
                   source.is_dir() and (source.parent / '_export.json').is_file()) else "")
     arena = common or ("Select Arena1a." if settings["map"] != "Arena1a" else "")
     return {"navigation_buoys": common, "turret_trial": arena,
-            "warp_trial": arena or ("Select This PC only mode." if settings["mode"] != "This PC only" else "")}
+            "warp_trial": arena or ("Select This PC only mode." if profile_of(settings["mode"]) != LOCAL else "")}
 
 
 def server_args(settings, extra=()):
     """station_stub.py arguments for these settings; the server validates them."""
-    profile = MODES[settings["mode"]]
-    address = "127.0.0.1" if profile == "local-relay" else settings["address"].strip()
+    profile = profile_of(settings["mode"])
+    address = "127.0.0.1" if profile == LOCAL else settings["address"].strip()
     game = Path(settings["game"])
     game = game if game.is_absolute() else ROOT / game
     args = [str(ROOT / "tools/station_stub.py"), str(game / "SCRTY.BIN"), str(WORK / f"{profile}.jsonl"),
@@ -76,17 +89,19 @@ def server_args(settings, extra=()):
                    if not reason and settings.get(key, DEFAULTS[key])]
         for key in enabled:
             args += ['--' + key.replace('_', '-'), str(source)]
-        if enabled:
+        if enabled or profile == LOCAL:
             args.append('--sustained-delivery')
         _, kind, target, _ = online_terrain.MAPS[online_terrain.MAP_NAMES.index(settings["map"])]
         if kind == online_terrain.TRN:
             # The map's own power-up zones (findings 9.44); layouts have none.
             args += ["--powerup-zones", str(game / target)]
+    elif profile == LOCAL:
+        args.append('--sustained-delivery')
     return args + list(extra)
 
 
 def status_path(settings):
-    return host_ops.status_path(MODES[settings["mode"]], WORK)
+    return host_ops.status_path(profile_of(settings["mode"]), WORK)
 
 
 def detect_addresses():
@@ -178,7 +193,9 @@ class HostProcess:
 def load_settings():
     try:
         saved = json.loads(SETTINGS_FILE.read_text(encoding="utf-8"))
-        return {k: saved.get(k, v) for k, v in DEFAULTS.items()}
+        loaded = {k: saved.get(k, v) for k, v in DEFAULTS.items()}
+        loaded["mode"] = LABELS.get(loaded["mode"], loaded["mode"])
+        return loaded
     except (OSError, ValueError):
         return dict(DEFAULTS)
 
@@ -198,7 +215,7 @@ def gui(autostart=False, run=True):
     root.minsize(860, 640)
     saved = load_settings()
     addresses = detect_addresses()
-    v = {"mode": tk.StringVar(value=saved["mode"]), "address": tk.StringVar(value=saved["address"]),
+    v = {"mode": tk.StringVar(value=MODES[saved["mode"]]), "address": tk.StringVar(value=saved["address"]),
          "map": tk.StringVar(value=saved["map"]), "terrain": tk.BooleanVar(value=saved["terrain"]),
          "backdrop": tk.StringVar(value=saved["backdrop"]), "max_players": tk.IntVar(value=saved["max_players"]),
          "kill_limit": tk.IntVar(value=saved["kill_limit"]), "time_limit_min": tk.DoubleVar(value=saved["time_limit_min"]),
@@ -215,6 +232,7 @@ def gui(autostart=False, run=True):
             except tk.TclError:
                 raise ValueError(f"{key.replace('_', ' ')} must be a number")
         out["address"] = out["address"].split()[0] if out["address"].strip() else ""
+        out["mode"] = LABELS[out["mode"]]
         return out
 
     # Server settings
@@ -222,7 +240,7 @@ def gui(autostart=False, run=True):
     box.pack(fill="x", padx=8, pady=(8, 4))
     row = 0
     ttk.Label(box, text="Mode").grid(row=row, column=0, sticky="w")
-    mode = ttk.Combobox(box, textvariable=v["mode"], values=list(MODES), state="readonly", width=16)
+    mode = ttk.Combobox(box, textvariable=v["mode"], values=list(LABELS), state="readonly", width=16)
     mode.grid(row=row, column=1, sticky="w", padx=4)
     ttk.Label(box, text="Host address").grid(row=row, column=2, sticky="w", padx=(12, 0))
     address = ttk.Combobox(box, textvariable=v["address"], width=34,
@@ -337,8 +355,8 @@ def gui(autostart=False, run=True):
         start_b.state(["disabled"] if running else ["!disabled"])
         for b in (stop_b, load_b, end_b, say_b, kick_b, ban_b):
             b.state(["!disabled"] if running else ["disabled"])
-        profile = MODES[v["mode"].get()]
-        availability = node_availability({key: v[key].get() for key in ("terrain", "map", "mode")})
+        profile = LABELS[v["mode"].get()]
+        availability = node_availability({"terrain": v["terrain"].get(), "map": v["map"].get(), "mode": profile})
         for key, reason in availability.items():
             node_checks[key].state(["disabled"] if reason else ["!disabled"])
             if reason:
@@ -346,8 +364,8 @@ def gui(autostart=False, run=True):
         reasons = list(dict.fromkeys(reason for reason in availability.values() if reason))
         node_hint.configure(text="Unavailable options: " + " ".join(reasons) if reasons else
                             "Trials are experimental; turret firing stays disabled.")
-        address.state(["disabled"] if profile == "local-relay" else ["!disabled"])
-        if profile == "local-relay":
+        address.state(["disabled"] if profile == LOCAL else ["!disabled"])
+        if profile == LOCAL:
             hint.configure(text="Only clients on this PC can join: log in to 127.0.0.1. "
                                 "Prepare the client with --station localhost.")
         else:
@@ -367,7 +385,7 @@ def gui(autostart=False, run=True):
             write_log(f"[not started: {error}]")
             return False
         save_settings(s)
-        write_log(f"[starting {s['mode']} host: map {s['map']}{' with terrain' if s['terrain'] else ''}]")
+        write_log(f"[starting {MODES[s['mode']]} host: map {s['map']}{' with terrain' if s['terrain'] else ''}]")
         refresh_controls()
         return True
 
@@ -462,7 +480,7 @@ def gui(autostart=False, run=True):
         else:
             uptime = int(data.get("uptime_s", 0))
             stale = " — STATUS NOT UPDATING, host may be stuck" if age is not None and age > 8 else ""
-            status_text.set(f"Running: {host.settings['mode']} on map {data.get('map')}"
+            status_text.set(f"Running: {MODES[host.settings['mode']]} on map {data.get('map')}"
                             f"{' (terrain on)' if host.settings['terrain'] else ''}, "
                             f"match {data.get('match')}, up {uptime // 3600}:{uptime % 3600 // 60:02}:{uptime % 60:02}"
                             + stale)

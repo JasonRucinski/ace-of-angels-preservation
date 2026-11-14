@@ -65,11 +65,13 @@ class NodeControlTests(unittest.TestCase):
             args = host_control.server_args(settings(**choices))
             for key, enabled in choices.items():
                 self.assertEqual('--' + key.replace('_', '-') in args, enabled)
-            self.assertEqual(args.count('--sustained-delivery'), int(bool(bits)))
+            self.assertEqual(args.count('--sustained-delivery'), 1)  # always on in local mode
+            lan = host_control.server_args(settings(mode='lan-dogfight', address='192.168.1.5', **choices))
+            self.assertEqual(lan.count('--sustained-delivery'), int(bits & 3 != 0))  # buoys or turrets
         all_on = dict.fromkeys(keys, True)
         for changes, allowed in (({'terrain': False}, set()),
                                  ({'map': 'CTF_arena'}, {'navigation_buoys'}),
-                                 ({'mode': 'LAN'}, {'navigation_buoys', 'turret_trial'})):
+                                 ({'mode': 'lan-dogfight'}, {'navigation_buoys', 'turret_trial'})):
             args = host_control.server_args(settings(**all_on, **changes))
             for key in keys:
                 self.assertEqual('--' + key.replace('_', '-') in args, key in allowed)
@@ -89,6 +91,20 @@ class NodeControlTests(unittest.TestCase):
             chosen = settings(navigation_buoys=False, turret_trial=True, warp_trial=True)
             host_control.save_settings(chosen)
             self.assertEqual(host_control.load_settings(), chosen)
+            # Older files saved the display label; it reads back as the profile id.
+            host_control.save_settings({**chosen, 'mode': 'LAN'})
+            self.assertEqual(host_control.load_settings()['mode'], 'lan-dogfight')
+
+    def test_local_mode_uses_the_lan_admission_and_delivery_path(self):
+        for terrain in (True, False):
+            args = host_control.server_args(settings(terrain=terrain, **dict.fromkeys(host_control.NODE_LABELS, False)))
+            self.assertEqual(args[args.index('--profile') + 1], 'local-guests')
+            self.assertEqual(args[args.index('--bind-address') + 1], '127.0.0.1')
+            self.assertEqual(args.count('--sustained-delivery'), 1)
+        self.assertEqual(host_control.server_args(settings(mode='This PC only')),
+                         host_control.server_args(settings()))
+        self.assertNotIn('--sustained-delivery',
+                         host_control.server_args(settings(mode='lan-dogfight', address='192.168.1.5', terrain=False)))
 
     def test_real_checkboxes_follow_map_mode_and_terrain(self):
         try:
@@ -163,7 +179,7 @@ class HostProcessTests(unittest.TestCase):
     def test_start_status_say_and_clean_quit(self):
         self.host.start(settings(map="CTF_arena", terrain=True), EPHEMERAL)
         data, age = self.wait_status()
-        self.assertEqual((data["profile"], data["map"], data["players"]), ("local-relay", "CTF_arena", []))
+        self.assertEqual((data["profile"], data["map"], data["players"]), ("local-guests", "CTF_arena", []))
         self.assertLess(age, 5)
         self.assertTrue(self.host.command("say hello pilots"))
         self.assertEqual(self.host.stop(timeout=10), 0)
@@ -176,7 +192,7 @@ class HostProcessTests(unittest.TestCase):
 
     def test_invalid_settings_fail_before_starting(self):
         with self.assertRaises(ValueError):
-            self.host.start(settings(mode="LAN", address="8.8.8.8"), EPHEMERAL)
+            self.host.start(settings(mode="lan-dogfight", address="8.8.8.8"), EPHEMERAL)
         with self.assertRaises(ValueError):
             self.host.start(settings(game=self.temp.name), EPHEMERAL)
         self.assertIsNone(self.host.proc)
@@ -202,7 +218,7 @@ class HostProcessTests(unittest.TestCase):
             args = host_control.server_args(settings(map=name))
             self.assertEqual(args[args.index("--map") + 1], name)
             self.assertIn("--experimental-terrain", args)
-        args = host_control.server_args(settings(mode="VPN (internet)", address="100.64.0.5  (Tailscale)",
+        args = host_control.server_args(settings(mode="vpn-dogfight", address="100.64.0.5  (Tailscale)",
                                                  terrain=False, time_limit_min=2.5))
         self.assertEqual(args[args.index("--profile") + 1], "vpn-dogfight")
         self.assertEqual(args[args.index("--time-limit") + 1], "150")
