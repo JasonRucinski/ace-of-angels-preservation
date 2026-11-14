@@ -15,14 +15,21 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import cli_util  # noqa: E402
 from pe_util import PE, Disasm  # noqa: E402
 
 TYPE_RE = re.compile(r"^byte ptr \[(\w+) \+ 0x498\], (0x[0-9a-f]+|\d+)$")
 LEN_RE = re.compile(r"^dword ptr \[(\w+) \+ 0x494\], (0x[0-9a-f]+|\d+)$")
 
 
-def main():
-    path, cache, sizes_path, out = sys.argv[1:5]
+def main(argv=None):
+    ap = cli_util.parser(__doc__)
+    ap.add_argument("client", help="client executable")
+    ap.add_argument("cache", help="disassembly cache (.pkl) for that executable")
+    ap.add_argument("sizes", help="packet_sizes.json for size hints, or - for none")
+    ap.add_argument("out", help="JSON file to write")
+    a = ap.parse_args(argv)
+    path, cache, sizes_path, out = a.client, a.cache, a.sizes, a.out
     pe = PE(path)
     d = Disasm(pe, cache)
     by_size = {}
@@ -55,4 +62,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(cli_util.run(main))

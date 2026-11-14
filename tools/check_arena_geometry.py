@@ -6,7 +6,11 @@ The OBJ uses negated Z relative to the game's coordinates.
 import hashlib
 import json
 import math
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import cli_util  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -47,7 +51,8 @@ def inspect_geometry(path):
                            "max": [max(v[i] for v in vertices) for i in range(3)]}}
 
 
-def main():
+def main(argv=None):
+    cli_util.parser(__doc__).parse_args(argv)
     scene = ROOT / "work/2.9.2/scenes"
     nodes_path = scene / "CTF_arena_nodes.json"
     nodes = json.loads(nodes_path.read_text(encoding="utf-8"))
@@ -71,4 +76,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(cli_util.run(main))

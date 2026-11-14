@@ -17,6 +17,7 @@ from unicorn.x86_const import UC_X86_REG_ECX, UC_X86_REG_EIP, UC_X86_REG_ESP
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import aoacrypt  # noqa: E402
+import cli_util  # noqa: E402
 from pe_util import PE  # noqa: E402
 
 STACK, BUF, TAB, STOP = 0x00100000, 0x00200000, 0x00300000, 0x00400000 - 0x1000
@@ -37,8 +38,15 @@ def run(uc, fn_va, buf, table):
     return bytes(uc.mem_read(BUF, len(buf)))
 
 
-def main():
-    path, key_path, enc_s, dec_s, out = sys.argv[1:6]
+def main(argv=None):
+    ap = cli_util.parser(__doc__)
+    ap.add_argument("client", help="client executable")
+    ap.add_argument("key", help="256-byte cipher table such as SCRTY.BIN")
+    ap.add_argument("enc_va", help="VA (hex) of the encrypt routine")
+    ap.add_argument("dec_va", help="VA (hex) of the decrypt routine")
+    ap.add_argument("out", help="JSON file to write")
+    a = ap.parse_args(argv)
+    path, key_path, enc_s, dec_s, out = a.client, a.key, a.enc_va, a.dec_va, a.out
     enc_va, dec_va = int(enc_s, 16), int(dec_s, 16)
     pe = PE(path)
     key = Path(key_path).read_bytes()
@@ -71,4 +79,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(cli_util.run(main))

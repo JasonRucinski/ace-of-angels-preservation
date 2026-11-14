@@ -8,6 +8,10 @@ import json
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import cli_util  # noqa: E402
+
+
 def inventory(export, scenes):
     objects = export / "AOAOBJECTS"
     gob_files = {p.stem.casefold(): p for p in objects.glob("*.Gob")}
@@ -33,7 +37,16 @@ def inventory(export, scenes):
                                 if p.stem.casefold().startswith("spacebkgd"))}
 
 
-if __name__ == "__main__":
-    result = inventory(Path(sys.argv[1]), Path(sys.argv[2]))
-    Path(sys.argv[3]).write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
+def main(argv=None):
+    ap = cli_util.parser(__doc__)
+    ap.add_argument("export", type=Path, help="export folder holding AOAOBJECTS/ and SCENARIOS/")
+    ap.add_argument("scenes", type=Path, help="folder of *_nodes.json from scene2obj.py")
+    ap.add_argument("output", type=Path, help="JSON file to write")
+    a = ap.parse_args(argv)
+    result = inventory(a.export, a.scenes)
+    a.output.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(result, indent=2))
+
+
+if __name__ == "__main__":
+    sys.exit(cli_util.run(main))

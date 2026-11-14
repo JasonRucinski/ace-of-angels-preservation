@@ -24,6 +24,9 @@ import struct
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import cli_util  # noqa: E402
+
 STR_TAG = 0x05765768
 MAGIC = 0x8155108D
 
@@ -96,15 +99,17 @@ def decode(data):
             "consumed_exactly": True, "header": header, "teams": teams, "groups": groups}
 
 
-def main():
-    if len(sys.argv) not in (2, 3):
-        sys.exit(__doc__)
-    out = decode(Path(sys.argv[1]).read_bytes())
+def main(argv=None):
+    ap = cli_util.parser(__doc__)
+    ap.add_argument("scenario", type=Path, help="scenario file from SCENARIOS.AOA")
+    ap.add_argument("out", type=Path, nargs="?", help="JSON file to write as well as printing it")
+    a = ap.parse_args(argv)
+    out = decode(a.scenario.read_bytes())
     text = json.dumps(out, indent=1)
-    if len(sys.argv) == 3:
-        Path(sys.argv[2]).write_text(text, encoding="utf-8")
+    if a.out:
+        a.out.write_text(text, encoding="utf-8")
     print(text)
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(cli_util.run(main))

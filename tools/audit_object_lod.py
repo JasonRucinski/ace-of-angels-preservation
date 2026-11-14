@@ -2,6 +2,10 @@
 
 Named *LOD meshes are distinguished from unnamed variants. Matching geometry
 does not establish runtime selection thresholds, culling or texture behavior.
+
+    python -I tools/audit_object_lod.py <output.json> [--source DIR]
+
+DIR defaults to work/2.9.2/export/AOAOBJECTS (from export_assets.py).
 """
 import hashlib
 import json
@@ -12,7 +16,8 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-import gob2obj
+import cli_util  # noqa: E402
+import gob2obj  # noqa: E402
 
 
 def mesh_record(mesh, node):
@@ -87,10 +92,16 @@ def audit(source):
             'asteroid_models': [m['model'] for m in asteroids], 'models': models}
 
 
-if __name__ == '__main__':
-    root = Path(__file__).resolve().parents[1]
-    result = audit(root / 'work/2.9.2/export/AOAOBJECTS')
-    output = Path(sys.argv[1])
+def main(argv=None):
+    ap = cli_util.parser(__doc__)
+    ap.add_argument('output', type=Path, help='JSON report to write')
+    ap.add_argument('--source', type=Path, default=cli_util.WORK / '2.9.2/export/AOAOBJECTS',
+                    help='exported AOAOBJECTS folder (default: %(default)s)')
+    a = ap.parse_args(argv)
+    if not a.source.is_dir():
+        sys.exit(f'audit_object_lod: export folder not found: {a.source} (run export_assets.py first)')
+    result = audit(a.source)
+    output = a.output
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(result, indent=2)+'\n')
     print(json.dumps({'mesh_models': result['mesh_models'],
@@ -98,3 +109,7 @@ if __name__ == '__main__':
                       'named_lod_largest_center_shifts': sorted(
                           [{'model':m['model'],'fraction':m['named_lod_max_center_shift_fraction_of_diagonal']} for m in result['models'] if 'named_lod_max_center_shift_fraction_of_diagonal' in m],
                           key=lambda m:m['fraction'], reverse=True)[:8]}, indent=2))
+
+
+if __name__ == '__main__':
+    sys.exit(cli_util.run(main))

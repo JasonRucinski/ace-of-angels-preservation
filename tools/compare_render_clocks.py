@@ -14,6 +14,7 @@ import time
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import cli_util
 from emulate_codec import Emu, SCRATCH, STOP, STUBS
 from pe_util import PE
 import render_clock_experiment as clock
@@ -38,9 +39,13 @@ def project(matrix, point):
     return 960 * xyz[0] / xyz[2], 960 * xyz[1] / xyz[2]
 
 
-def main():
-    root = Path(__file__).resolve().parents[1]
-    pe = PE(root / 'game/2.9.2/AOACLIENT.EXE.orig')
+def main(argv=None):
+    ap = cli_util.parser(__doc__)
+    ap.add_argument('output', type=Path, help='JSON report to write')
+    ap.add_argument('--source', type=Path, default=cli_util.ROOT / 'game/2.9.2/AOACLIENT.EXE.orig',
+                    help='pristine 2.9.2 client (default: %(default)s)')
+    a = ap.parse_args(argv)
+    pe = PE(a.source)
     assert hashlib.sha256(pe.data).hexdigest() == '4b6c35e2b3ab473bd98c0afa6538079ee78678d85c28406c07bc27a08cc78c7e'
     emu = Emu(pe)
     emu.uc.reg_write(UC_X86_REG_FPCW, 0x7F)  # Direct3D single precision
@@ -104,9 +109,9 @@ def main():
             errors.append(math.sqrt(sum((sum(eye[i]*m[4*i+j] for i in range(3))+m[12+j])**2 for j in range(3))))
         precision.append({'world_offset': distance, 'max_camera_origin_error_units': max(errors)})
     result = {'scope': __doc__.split('Usage:')[0].strip(), 'clock_replays': cases, 'camera_precision': precision}
-    Path(sys.argv[1]).write_text(json.dumps(result, indent=2)+'\n')
+    a.output.write_text(json.dumps(result, indent=2)+'\n')
     print(json.dumps(result, indent=2))
 
 
 if __name__ == '__main__':
-    main()
+    sys.exit(cli_util.run(main))

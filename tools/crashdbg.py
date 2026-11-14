@@ -7,6 +7,8 @@ Options:
     --trace-physics     log 2.9.2 acceleration time steps (changes timing)
     --trace-exit        log the caller and stack of msvcrt exit/_exit before
                         deliberate shutdowns (which are not exceptions)
+    --trace-arena       log when 2.9.2 reaches its ship/player load, flight
+                        entry, position and flight watchdog code
     --timeout SECONDS   terminate the game after this long
     --trace VA[,VA...]  log the registers each time one of these instruction
                         addresses (image VAs, base 0x400000) executes; each
@@ -37,6 +39,7 @@ working directory under DEBUG_ONLY_THIS_PROCESS and logs, to stdout:
     image, plus the EBP frame chain.
 Second-chance (unhandled) exceptions end the session.
 """
+import argparse
 import ctypes
 import ctypes.wintypes as wt
 import os
@@ -45,8 +48,12 @@ import subprocess
 import sys
 import time
 from collections import Counter
+from pathlib import Path
 
-k32 = ctypes.WinDLL("kernel32", use_last_error=True)
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import cli_util  # noqa: E402
+
+k32 = None  # kernel32, bound by load_kernel32() (Windows only)
 
 DEBUG_ONLY_THIS_PROCESS = 0x2
 CREATE_UNICODE_ENVIRONMENT = 0x400
@@ -141,23 +148,26 @@ class PROCESS_INFORMATION(ctypes.Structure):
                 ("dwProcessId", wt.DWORD), ("dwThreadId", wt.DWORD)]
 
 
-k32.WaitForDebugEvent.argtypes = [ctypes.POINTER(DEBUG_EVENT), wt.DWORD]
-k32.ContinueDebugEvent.argtypes = [wt.DWORD, wt.DWORD, wt.DWORD]
-k32.ReadProcessMemory.argtypes = [wt.HANDLE, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_size_t,
-                                  ctypes.POINTER(ctypes.c_size_t)]
-k32.WriteProcessMemory.argtypes = [wt.HANDLE, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_size_t,
-                                   ctypes.POINTER(ctypes.c_size_t)]
-k32.VirtualAllocEx.restype = ctypes.c_void_p
-k32.VirtualAllocEx.argtypes = [wt.HANDLE, ctypes.c_void_p, ctypes.c_size_t, wt.DWORD, wt.DWORD]
-k32.VirtualFreeEx.argtypes = [wt.HANDLE, ctypes.c_void_p, ctypes.c_size_t, wt.DWORD]
-k32.FlushInstructionCache.argtypes = [wt.HANDLE, ctypes.c_void_p, ctypes.c_size_t]
-k32.Wow64GetThreadContext.argtypes = [wt.HANDLE, ctypes.POINTER(WOW64_CONTEXT)]
-k32.Wow64SetThreadContext.argtypes = [wt.HANDLE, ctypes.POINTER(WOW64_CONTEXT)]
-k32.OpenThread.restype = wt.HANDLE
-k32.OpenThread.argtypes = [wt.DWORD, wt.BOOL, wt.DWORD]
-k32.GetFinalPathNameByHandleW.argtypes = [wt.HANDLE, wt.LPWSTR, wt.DWORD, wt.DWORD]
-k32.CloseHandle.argtypes = [wt.HANDLE]
-k32.TerminateProcess.argtypes = [wt.HANDLE, wt.UINT]
+def load_kernel32():
+    global k32
+    k32 = ctypes.WinDLL("kernel32", use_last_error=True)
+    k32.WaitForDebugEvent.argtypes = [ctypes.POINTER(DEBUG_EVENT), wt.DWORD]
+    k32.ContinueDebugEvent.argtypes = [wt.DWORD, wt.DWORD, wt.DWORD]
+    k32.ReadProcessMemory.argtypes = [wt.HANDLE, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_size_t,
+                                      ctypes.POINTER(ctypes.c_size_t)]
+    k32.WriteProcessMemory.argtypes = [wt.HANDLE, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_size_t,
+                                       ctypes.POINTER(ctypes.c_size_t)]
+    k32.VirtualAllocEx.restype = ctypes.c_void_p
+    k32.VirtualAllocEx.argtypes = [wt.HANDLE, ctypes.c_void_p, ctypes.c_size_t, wt.DWORD, wt.DWORD]
+    k32.VirtualFreeEx.argtypes = [wt.HANDLE, ctypes.c_void_p, ctypes.c_size_t, wt.DWORD]
+    k32.FlushInstructionCache.argtypes = [wt.HANDLE, ctypes.c_void_p, ctypes.c_size_t]
+    k32.Wow64GetThreadContext.argtypes = [wt.HANDLE, ctypes.POINTER(WOW64_CONTEXT)]
+    k32.Wow64SetThreadContext.argtypes = [wt.HANDLE, ctypes.POINTER(WOW64_CONTEXT)]
+    k32.OpenThread.restype = wt.HANDLE
+    k32.OpenThread.argtypes = [wt.DWORD, wt.BOOL, wt.DWORD]
+    k32.GetFinalPathNameByHandleW.argtypes = [wt.HANDLE, wt.LPWSTR, wt.DWORD, wt.DWORD]
+    k32.CloseHandle.argtypes = [wt.HANDLE]
+    k32.TerminateProcess.argtypes = [wt.HANDLE, wt.UINT]
 
 
 def path_of(h):
@@ -622,36 +632,28 @@ class Session:
             k32.ContinueDebugEvent(ev.dwProcessId, ev.dwThreadId, status)
 
 
-def main():
-    argv = sys.argv[1:]
-    opts = {"--debug-heap": False, "--guard-heap": False, "--guard-continue": False,
-            "--trace-exit": False, "--trace-arena": False, "--guard-reuse": False,
-            "--trace-physics": False}
-    for flag in opts:
-        if flag in argv:
-            opts[flag] = True
-            argv.remove(flag)
-    timeout, fill = 0.0, None
-    if "--timeout" in argv:
-        i = argv.index("--timeout")
-        timeout = float(argv[i + 1])
-        del argv[i:i + 2]
-    if "--guard-fill" in argv:
-        i = argv.index("--guard-fill")
-        fill = int(argv[i + 1], 0)
-        del argv[i:i + 2]
-    trace = []
-    if "--trace" in argv:
-        i = argv.index("--trace")
-        trace = [int(v, 16) for v in argv[i + 1].split(",")]
-        del argv[i:i + 2]
-    game_dir = os.path.abspath(argv[0])
-    exe = argv[1] if len(argv) > 1 else "AOACLIENT.EXE"
-    session = Session(opts["--guard-heap"], opts["--guard-continue"], fill, opts["--guard-reuse"])
-    session.trace_vas = trace
+def main(argv=None):
+    ap = cli_util.parser(__doc__)
+    for flag in ("--debug-heap", "--guard-heap", "--guard-continue", "--trace-exit",
+                 "--trace-arena", "--guard-reuse", "--trace-physics"):
+        ap.add_argument(flag, action="store_true", help=argparse.SUPPRESS)
+    ap.add_argument("--timeout", type=float, default=0.0, help=argparse.SUPPRESS)
+    ap.add_argument("--guard-fill", type=lambda v: int(v, 0), help=argparse.SUPPRESS)
+    ap.add_argument("--trace", type=lambda v: [int(x, 16) for x in v.split(",")], default=[],
+                    help=argparse.SUPPRESS)
+    ap.add_argument("game_dir", help="folder holding the client; also its working directory")
+    ap.add_argument("exe", nargs="?", default="AOACLIENT.EXE", help="client to launch (default: %(default)s)")
+    ap.add_argument("args", nargs=argparse.REMAINDER, help="arguments passed to the client")
+    a = ap.parse_args(argv)
+    if sys.platform != "win32":
+        sys.exit("crashdbg: needs Windows (it drives the Win32 debugging API)")
+    load_kernel32()
+    game_dir = os.path.abspath(a.game_dir)
+    session = Session(a.guard_heap, a.guard_continue, a.guard_fill, a.guard_reuse)
+    session.trace_vas = a.trace
     session.run(
-        game_dir, exe, argv[2:], opts["--debug-heap"], timeout, opts["--trace-exit"], opts["--trace-arena"], opts["--trace-physics"])
+        game_dir, a.exe, a.args, a.debug_heap, a.timeout, a.trace_exit, a.trace_arena, a.trace_physics)
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(cli_util.run(main))

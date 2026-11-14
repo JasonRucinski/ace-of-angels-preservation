@@ -14,6 +14,10 @@ those dwords from the file. No disassembler needed.
 """
 import struct
 import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import cli_util  # noqa: E402
 
 FORMATS = [
     b"Entering Ace of Angels runtime client ver(%d.%d.%d)",
@@ -52,10 +56,11 @@ def va_to_off(base, secs, v):
     return None
 
 
-def main():
-    if len(sys.argv) != 2:
-        sys.exit(__doc__)
-    d = open(sys.argv[1], "rb").read()
+def main(argv=None):
+    ap = cli_util.parser(__doc__)
+    ap.add_argument("client", help="the AOACLIENT.EXE to read")
+    a = ap.parse_args(argv)
+    d = open(a.client, "rb").read()
     base, secs = sections(d)
     results = set()
     for fmt in FORMATS:
@@ -89,4 +94,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(cli_util.run(main))

@@ -16,6 +16,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import cli_util  # noqa: E402
 from pe_util import PE, Disasm  # noqa: E402
 
 NAME_FMT = re.compile(r"^(S[A-Za-z0-9_]+) \(%d\)$")
@@ -28,8 +29,13 @@ def imm(ops):
         return None
 
 
-def main():
-    path, cache, out = sys.argv[1:4]
+def main(argv=None):
+    ap = cli_util.parser(__doc__)
+    ap.add_argument("client", help="client executable")
+    ap.add_argument("cache", help="disassembly cache (.pkl) for that executable")
+    ap.add_argument("out", help="JSON file to write")
+    a = ap.parse_args(argv)
+    path, cache, out = a.client, a.cache, a.out
     pe = PE(path)
     d = Disasm(pe, cache)
     anchor_off = pe.data.find(b"SPacketServerRegister (%d)\0")
@@ -81,4 +87,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(cli_util.run(main))

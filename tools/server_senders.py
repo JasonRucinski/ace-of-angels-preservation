@@ -16,6 +16,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import cli_util  # noqa: E402
 from pe_util import PE, Disasm  # noqa: E402
 
 NAME_RE = re.compile(rb"(?:CAOAComm::|::)?(Send[A-Z][A-Za-z]+)")
@@ -38,8 +39,15 @@ def callers(d, target):
     return sorted(found)
 
 
-def main():
-    old_path, cache, sites_path, new_path, out = sys.argv[1:6]
+def main(argv=None):
+    ap = cli_util.parser(__doc__)
+    ap.add_argument("old_client", help="the 2.7.1 client")
+    ap.add_argument("cache", help="disassembly cache (.pkl) for the 2.7.1 client")
+    ap.add_argument("sites", help="2.7.1 send_sites.json (the 2.9.2 one is found by name)")
+    ap.add_argument("new_client", help="the 2.9.2 client")
+    ap.add_argument("out", help="JSON file to write")
+    a = ap.parse_args(argv)
+    old_path, cache, sites_path, new_path, out = a.old_client, a.cache, a.sites, a.new_client, a.out
     pe = PE(old_path)
     d = Disasm(pe, cache)
     data = Path(old_path).read_bytes()
@@ -86,4 +94,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(cli_util.run(main))

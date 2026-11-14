@@ -14,11 +14,18 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import cli_util  # noqa: E402
 from pe_util import PE, Disasm  # noqa: E402
 
 
-def main():
-    path, cache, sw_s, out = sys.argv[1:5]
+def main(argv=None):
+    ap = cli_util.parser(__doc__)
+    ap.add_argument("client", help="client executable")
+    ap.add_argument("cache", help="disassembly cache (.pkl) for that executable")
+    ap.add_argument("switch_va", help="VA (hex) of the jmp [ecx*4 + JT] instruction")
+    ap.add_argument("out", help="JSON file to write")
+    a = ap.parse_args(argv)
+    path, cache, sw_s, out = a.client, a.cache, a.switch_va, a.out
     pe = PE(path)
     d = Disasm(pe, cache)
     sw = int(sw_s, 16)
@@ -71,4 +78,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(cli_util.run(main))

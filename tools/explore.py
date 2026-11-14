@@ -12,13 +12,17 @@ Commands
   ctx <va> [before] [after]  instructions around va
   u32 <va> [count]           dwords at va
   f32 <va> [count]           floats at va
+  range <lo> <hi>            strings and imports referenced by code in [lo, hi)
+  funcs <lo> <hi>            functions starting in [lo, hi), with caller counts
 """
+import argparse
 import re
 import struct
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import cli_util  # noqa: E402
 from pe_util import PE, Disasm, fmt  # noqa: E402
 
 
@@ -52,8 +56,14 @@ def ascii_strings(data, minlen=4):
         yield m.start(), m.group().decode("ascii")
 
 
-def main():
-    path, cache, cmd, *args = sys.argv[1:]
+def main(argv=None):
+    ap = cli_util.parser(__doc__)
+    ap.add_argument("client", help="client executable")
+    ap.add_argument("cache", help="disassembly cache (.pkl) for that executable")
+    ap.add_argument("command", help="one of the commands listed above")
+    ap.add_argument("args", nargs=argparse.REMAINDER, help="the command's arguments")
+    a = ap.parse_args(argv)
+    path, cache, cmd, args = a.client, a.cache, a.command, a.args
     pe = PE(path)
     d = Disasm(pe, cache)
     if cmd == "str":
@@ -129,4 +139,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(cli_util.run(main))

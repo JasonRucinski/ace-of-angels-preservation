@@ -1,6 +1,8 @@
 """Original 2.9.2 terrain category dispatch and parent-transform probes.
 
 No rendering, object allocation, online loading or gameplay is exercised.
+
+Usage: python -I tools/emulate_terrain_nodes.py CLIENT.EXE.orig OUT.json
 """
 import hashlib
 import json
@@ -10,6 +12,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import cli_util
 from audit_arena1a import EXPECTED_DISPATCH
 from emulate_codec import Emu, HEAP, STACK, STOP
 from patch_client import PRISTINE_292
@@ -18,8 +21,12 @@ from unicorn import UC_HOOK_CODE
 from unicorn.x86_const import UC_X86_REG_EAX, UC_X86_REG_EDX, UC_X86_REG_EIP, UC_X86_REG_ESP
 
 
-def main():
-    source, output = map(Path, sys.argv[1:])
+def main(argv=None):
+    ap = cli_util.parser(__doc__)
+    ap.add_argument("source", type=Path, help="pristine 2.9.2 client (AOACLIENT.EXE.orig)")
+    ap.add_argument("output", type=Path, help="JSON report to write")
+    a = ap.parse_args(argv)
+    source, output = a.source, a.output
     if hashlib.sha256(source.read_bytes()).hexdigest() != PRISTINE_292:
         raise ValueError("requires original 2.9.2")
     emu = Emu(PE(source))
@@ -71,4 +78,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(cli_util.run(main))

@@ -9,11 +9,16 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import cli_util  # noqa: E402
 from pe_util import PE  # noqa: E402
 
 
-def main():
-    path, out = sys.argv[1:3]
+def main(argv=None):
+    ap = cli_util.parser(__doc__)
+    ap.add_argument("client", help="executable to describe")
+    ap.add_argument("out", help="JSON file to write")
+    a = ap.parse_args(argv)
+    path, out = a.client, a.out
     p = PE(path)
     fh, oh = p.pe.FILE_HEADER, p.pe.OPTIONAL_HEADER
     rich = p.pe.parse_rich_header() or {}
@@ -54,4 +59,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(cli_util.run(main))

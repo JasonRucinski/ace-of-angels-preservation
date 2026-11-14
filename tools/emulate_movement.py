@@ -15,6 +15,7 @@ from unicorn import UcError
 from unicorn.x86_const import UC_X86_REG_EIP, UC_X86_REG_ESP, UC_X86_REG_EBP, UC_X86_REG_EAX
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import cli_util
 from emulate_codec import Emu, HEAP, SCRATCH, STACK, STOP
 from pe_util import PE
 from station_stub import movement_update, reported_motion, motion_snapshot
@@ -26,8 +27,12 @@ from patch_client import jmp_patch
 GUN_COUNTERS = SCRATCH + 0x4000  # Outside the zeroed context and body.
 
 
-def main():
-    source, output = sys.argv[1:]
+def main(argv=None):
+    ap = cli_util.parser(__doc__)
+    ap.add_argument("source", help="pristine 2.9.2 client (AOACLIENT.EXE.orig)")
+    ap.add_argument("output", help="JSON report to write")
+    a = ap.parse_args(argv)
+    source, output = a.source, a.output
     pe = PE(source)
     digest = hashlib.sha256(pe.data).hexdigest()
     if digest != "4b6c35e2b3ab473bd98c0afa6538079ee78678d85c28406c07bc27a08cc78c7e":
@@ -172,4 +177,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(cli_util.run(main))

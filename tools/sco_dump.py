@@ -22,6 +22,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import cli_util  # noqa: E402
 import gob2obj  # noqa: E402
 
 SYSTEM_BLOCK = 284
@@ -53,11 +54,18 @@ def decode(d):
     return out
 
 
-def main():
-    src, out_json = Path(sys.argv[1]), Path(sys.argv[2])
+def main(argv=None):
+    ap = cli_util.parser(__doc__)
+    ap.add_argument("src", type=Path, help="exported AOAOBJECTS folder")
+    ap.add_argument("out_json", type=Path, help="JSON file to write")
+    ap.add_argument("summary", type=Path, nargs="?", help="Markdown summary table to write")
+    a = ap.parse_args(argv)
+    src, out_json = a.src, a.out_json
+    if not src.is_dir():
+        sys.exit(f"sco_dump: folder not found: {src}")
     objs = [decode(p.read_bytes()) for p in sorted(src.glob("*.[Ss]co"))]
     out_json.write_text(json.dumps(objs, indent=1), encoding="utf-8")
-    if len(sys.argv) > 3:
+    if a.summary:
         rows = ["| Object | Class | Faction | Model | Hull | Int. hull | Shield | Engine | Weapons |",
                 "|---|---|---|---|---|---|---|---|---|"]
         for o in objs:
@@ -69,9 +77,9 @@ def main():
                 weapons += ("; " if weapons else "") + "missiles: " + ", ".join(racks)
             rows.append(f"| {o['name']} | {o['class']} | {o['faction']} | {o['model']} | {hp.get('Hull', '')} | "
                         f"{hp.get('Internal Hull', '')} | {hp.get('Shield', '')} | {hp.get('Engine', '')} | {weapons} |")
-        Path(sys.argv[3]).write_text("\n".join(rows) + "\n", encoding="utf-8")
+        a.summary.write_text("\n".join(rows) + "\n", encoding="utf-8")
     print(f"decoded {len(objs)} .Sco files -> {out_json}")
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(cli_util.run(main))
