@@ -12,26 +12,30 @@ from the command line.
 Double-click `tools\host_control.cmd`, or run:
 
 ```powershell
-.venv/Scripts/python.exe tools/host_control.py
+.venv/Scripts/python.exe -I tools/host_control.py
 ```
 
 `--autostart` starts the host with the last-used settings as soon as the
-window opens. Settings are remembered in `work/host/host_control.json`.
+window opens. Settings are remembered in `work/host/host_control.json`. A
+saved value the window cannot use (a hand edit, or a file from an older
+version) falls back to its default, with a notice in the log pane and a
+warning box. Any error that stops the window is shown in a message box and
+written, with its traceback, to `work/logs/host.log`.
 
 ## Settings
 
 | Setting | What it does |
 |---|---|
-| Mode | **This PC only** (`local-relay` on 127.0.0.1), **LAN** (`lan-dogfight`) or **VPN (internet)** (`vpn-dogfight`) |
+| Mode | **This PC only** (`local-guests` on 127.0.0.1, with the guest admission and sustained delivery that LAN and VPN players get), **LAN** (`lan-dogfight`) or **VPN (internet)** (`vpn-dogfight`) |
 | Host address | LAN/VPN only: pick this PC's address from the list (found automatically) or type it |
 | Map | Any of the 20 entries in [map-viewer.md](map-viewer.md); 11 have real content ([which](STATUS.md#maps)) |
-| Build map terrain | Sends the map so clients build it on flight entry. Clients need patch version 11 or later; without it they still join, in empty space |
+| Build map terrain | Sends the map so clients build it on flight entry. Clients need the online terrain hook, patch level 11 or later (the window's label says "patch v11"); without it they still join, in empty space |
 | Navigation buoys | Restore navigation markers for the selected map. Initially checked, preserving the previous automatic behavior when exported assets are available |
 | Turret trial | Restore five Arena1a turrets with firing disabled. Initially unchecked; this does not enable turret combat |
 | Warp gates trial | Restore all nine Arena1a gates with their original destinations. Initially unchecked; available only in **This PC only** mode |
-| Backdrop, max players, kill limit, time limit | Passed straight to the server; 0 turns a limit off |
+| Backdrop, max players, kill limit, time limit | Passed straight to the server; 0 turns a limit off. Defaults: 8 players, 20 kills, 10 minutes (the server's own defaults) |
 | Target ships | Passive hostile ships 12,000 units ahead of the spawn that T, J and missiles can target (`--target-ships`, [findings 9.45](findings.md)); 0 turns them off. Guns and missiles destroy them, the server keeping score of the damage ([findings 9.46](findings.md)), and they return after 15 s |
-| Game folder | Where `SCRTY.BIN` (and, for JRMAP, `jrmap292.trn`) is read from. With terrain on, JRMAP's power-up zones are passed to the host (`--powerup-zones`, [findings 9.44](findings.md)); clients need patch version 19 to pick them up |
+| Game folder | Where `SCRTY.BIN` (and, for JRMAP, `jrmap292.trn`) is read from. With terrain on, JRMAP's power-up zones are passed to the host (`--powerup-zones`, [findings 9.44](findings.md)); clients need power-up pickup, patch level 19, to pick them up |
 
 The server checks every setting (`--print-config`) before it binds a port, so
 an address that isn't on this PC, or the wrong range for the mode, is
@@ -70,7 +74,9 @@ editor orientation and live gameplay acceptance remain unverified.
 
 ## Changing maps and stopping
 
-**Load map (restart)** stops the host cleanly and starts it again on the map
+**Load map (restart)** first checks the new settings. If they are invalid it
+shows the error and the running host carries on; nothing is announced or
+stopped. Valid settings stop the host cleanly and start it again on the map
 now selected. Connected players get an arena message and must quit the game
 and rejoin, because a client builds terrain only once per flight session. The
 window asks first if anyone is connected.
@@ -110,3 +116,8 @@ Two commands were added to the server console (also usable from
     the next 60 seconds.
 - Not tested: LAN/VPN mode with players on other machines, kick/ban with a
   real client, and automatic crash restart.
+- Changed on 13 November 2026 and not yet run on Windows: "This PC only"
+  now uses `local-guests` (the live check above used `local-relay`), the
+  saved-settings check, the error log and the check before "Load map".
+  These are covered by game-free tests in `test_host_control.py` only.
+  Current status: [STATUS.md](STATUS.md#implemented-but-not-tested).

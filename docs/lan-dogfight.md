@@ -8,8 +8,10 @@ events, assigns temporary pilots and counts client-reported kills. It is not an
 authoritative or public internet server.
 
 Implementation is ready for manual LAN acceptance. Two synthetic clients have
-exercised the profile; actual separate-PC gameplay and player capacity must still
-be recorded. Start with two players, then test four and eight.
+exercised this profile. Separate PCs have fought only through the
+[Linux host](linux-host.md); a game hosted this way on Windows between
+separate PCs, and any player count above two, have not been recorded
+([status](STATUS.md)). Start with two players, then test four and eight.
 
 Verification: [65 tests and eight emulators passed](../evidence/2.9.2/local_gate_20261021_lan_dogfight.json).
 A separate [same-PC LAN-address check](../evidence/2.9.2/lan_binding_20261021.json)
@@ -48,8 +50,9 @@ Remove-NetFirewallRule -Name AoA-LAN-UDP,AoA-LAN-TCP
 ```
 
 Start the host, leaving the terminal open. It accepts console commands
-(`status`, `kick <slot>`, `ban <slot>`, `end`, `help`), writes
-`work/lan-dogfight-status.json` every two seconds and restarts itself after a
+(`status`, `kick <slot>`, `ban <slot>`, `end`, `say <text>`, `quit`, `help`),
+writes `work/host/lan-dogfight-status.json` every two seconds (the same file
+the host window reads) and restarts itself after a
 crash (at most three times in 10 minutes); see
 [the VPN runbook](vpn-dogfight.md#host-console). `-TestRttMs`, `-TestJitterMs`
 and `-TestLossPercent` rehearse internet conditions on the LAN
@@ -60,17 +63,21 @@ powershell -NoProfile -ExecutionPolicy Bypass -File tools/start_lan_dogfight.ps1
 ```
 
 The launcher defaults to two players. Add `-MaxPlayers 4` or `-MaxPlayers 8` for
-capacity checks. This is a configuration limit, not verified capacity. Ctrl+C
-stops the host. Logs rotate under `work/lan-dogfight.jsonl` and omit raw payloads.
+capacity checks. This is a configuration limit, not verified capacity. (The
+host window and the server itself default to 8.) Ctrl+C stops the host. Logs
+rotate under `work/host/lan-dogfight.jsonl` and omit raw payloads. `-Map`
+accepts any map the server accepts, and the launcher prints the map, limits
+and player count the server reports.
 
 The equivalent Python command is:
 
 ```powershell
-.venv/Scripts/python.exe -I tools/station_stub.py game/2.9.2/SCRTY.BIN work/lan-dogfight.jsonl --profile lan-dogfight --bind-address 192.168.0.61 --max-players 2
+.venv/Scripts/python.exe -I tools/station_stub.py game/2.9.2/SCRTY.BIN work/host/lan-dogfight.jsonl --profile lan-dogfight --bind-address 192.168.0.61 --max-players 2
 ```
 
-`--advertised-address` defaults to the bind address and must match it. All three
-listeners bind that specific address. A nonexistent local address or occupied
+All three listeners bind the `--bind-address`, and the server list gives
+clients that same address. (`--advertised-address` is deprecated: it had to
+equal the bind address, so it changed nothing.) A nonexistent local address or occupied
 port fails startup. Existing diagnostic/local profiles still bind `127.0.0.1`.
 
 ## Each client PC (including the host if it also plays)
@@ -158,7 +165,7 @@ divergence block LAN acceptance. Synthetic packet tests do not prove real damage
 
 If Play Online is disabled, check `aoalan` resolution and the prepared executable.
 If the server list fails, check TCP 5034 as well as UDP 5033. If Station works but
-flight does not, check UDP 5031 and the advertised address. Ensure both computers
+flight does not, check UDP 5031 and the bind address. Ensure both computers
 are on the same LAN, not an isolated guest Wi-Fi. An address change requires
 updating hosts entries, firewall rules and the host command. A same-PC connection
 to the LAN address does not verify another PC's firewall/network path.

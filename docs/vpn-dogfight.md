@@ -14,7 +14,7 @@ Status, 22 October 2026: implemented and verified on loopback only
 (`tools/test_internet_play.py`, including a session under 60 ms RTT, 3% loss
 and 1% duplication; [full gate: 77 tests and nine emulators](../evidence/2.9.2/local_gate_20261022_internet_play.json)).
 A real internet session between separate connections has
-**not** been recorded yet. See [Acceptance](#acceptance) below.
+**not** been recorded yet ([status](STATUS.md)). See [Acceptance](#acceptance) below.
 
 ## Why a VPN and not port forwarding
 
@@ -45,7 +45,7 @@ A real internet session between separate connections has
   timeout. The host serves 49 arena joins per run before it needs a
   restart. A rejoining player gets a new temporary pilot name and a zero score.
 - **Operator tools** (also available on LAN through the launcher): a console
-  (`status`, `kick <slot>`, `ban <slot>`, `end`, `help`), a status file with
+  (`status`, `kick <slot>`, `ban <slot>`, `end`, `say <text>`, `quit`, `help`), a status file with
   per-player ping, bandwidth and idle time, and automatic restart after a crash
   (at most three restarts within 10 minutes).
 
@@ -84,8 +84,8 @@ powershell -NoProfile -ExecutionPolicy Bypass -File tools/start_lan_dogfight.ps1
    The launcher prints the VPN adapter it found. If the address is missing, the
    VPN is not connected. Add `-Map Arena1a -Terrain` to load the Arena1a
    geometry (see [arena1a.md](arena1a.md); its collision is not yet accepted).
-   Logs go to `work/vpn-dogfight.jsonl`. The status file is
-   `work/vpn-dogfight-status.json`.
+   Logs go to `work/host/vpn-dogfight.jsonl`. The status file is
+   `work/host/vpn-dogfight-status.json`, the same file the host window reads.
 
 If the host PC also plays, it is a client like the others. Use the same
 `aoavpn` hosts entry below.
@@ -130,6 +130,9 @@ Type into the host window:
 | `kick 3` | Sends "You were removed by the host" and removes slot 3. The client then shows `Server Not Responding`. They may rejoin. |
 | `ban 3` | Kick, and ignore that VPN address until the host restarts |
 | `end` | Finish the current match now and announce the result |
+| `say <text>` | Arena message to everyone in flight |
+| `quit` | Tell players the host is stopping, then stop with normal cleanup |
+| `help` | List the commands |
 
 The status file has the same per-player data plus uptime, joins used, reliable
 messages pending/expired and traffic totals. If its `updated_utc` stops

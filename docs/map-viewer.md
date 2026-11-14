@@ -8,9 +8,9 @@ behaviour is claimed.
 
 ## Setup (once)
 
-Close the client, then prepare it (patch version 11 added
-`online-terrain-v2`; version 12 adds the panel-drag fix; version 18's
-`online-terrain-v3` draws safe zones) and convert the shipped `JRMAP.TRN`:
+Close the client, then prepare it and convert the shipped `JRMAP.TRN`. Loading
+a map needs the online terrain hook, patch level 11 or later; safe zones draw
+from patch level 18. Current preparation gives level 22:
 
 ```powershell
 .venv/Scripts/python.exe -I tools/prepare_client.py prepare game/2.9.2/AOACLIENT.EXE --station localhost
@@ -83,7 +83,7 @@ gates and flag stations (kinds 1, 3, 7, 8) are behind controller flags in the
 capital ships and five safe zones (kind 2; before 25 Oct 2026 `install`
 left their names empty and the client dropped them, so re-run it).
 
-**Safe zones** (since patch version 18): Arena1a, newterrain, outerchange,
+**Safe zones** (patch level 18 or later): Arena1a, newterrain, outerchange,
 irrosa01, hy_base_test, CTF_arena_b and JRMAP have them. They draw as
 translucent blue wave cubes; on all but CTF_arena_b and JRMAP you spawn
 inside one, so the whole view is tinted blue until you fly out. See

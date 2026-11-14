@@ -41,6 +41,9 @@ Client scoreboard display, visible respawns and the VPN/internet path still
 need direct acceptance checks. See the
 [deployment verification](../evidence/2.9.2/linux_host_20261026.json) and
 [two-PC combat audit](../evidence/2.9.2/linux_two_pc_combat_20261026.json).
+`dedicated_host.py` changed on 13 November 2026 (shared defaults, required
+`--bind-address`, status path); that version passes `test_dedicated_host.py`
+but has not been deployed yet. Current status: [STATUS.md](STATUS.md).
 
 ## 1. Prepare the Linux machine
 
@@ -99,9 +102,19 @@ sudoedit /etc/ace-of-angels/host.env
 
 Set `AOA_BIND_ADDRESS` to the VM's private LAN address for the first test,
 or the actual `tailscale ip -4` result for VPN play. Keep
-`AOA_MAX_PLAYERS=2` for the first session. Do not reinstall the example over
+`AOA_MAX_PLAYERS=2` for the first session (without it the host allows 8, as
+the Windows host window does; `start_lan_dogfight.ps1` defaults to 2). Do not reinstall the example over
 an existing configuration during later updates. The rotation example selects
 10 kills or 15 minutes, with native terrain enabled; see section 5 to change it.
+
+The unit file runs `tools/dedicated_host.py` with every path given. If you
+run it by hand: `--bind-address` is required for the `vpn-dogfight` (default)
+and `lan-dogfight` profiles, and must be this machine's own LAN or VPN IPv4;
+only `local-guests` defaults to 127.0.0.1. `--status-file` is optional and
+defaults to `work/host/<profile>-status.json` inside the checkout. The
+service names `/var/lib/ace-of-angels/status.json` instead, because the
+checkout under `/opt` is read-only. `--check` validates the settings for every
+map in the rotation without opening sockets or writing state.
 
 ## 3. Check and start
 
@@ -165,8 +178,8 @@ Use the [VPN client instructions](vpn-dogfight.md#each-player): add the host's
 configured address as `aoavpn` in the Windows hosts file, prepare the supported 2.9.2
 client for that Station name, and select **VPN Dogfight**. Each player's VPN
 connection must be active for VPN play; LAN clients can connect directly.
-The rotation enables native terrain. Both clients need the supported prepared
-client with **online-terrain-v2 or later** (included in current preparation).
+The rotation enables native terrain. Both clients need the online terrain
+hook, **patch level 11 or later** (current preparation gives level 22).
 Older clients may connect without displaying the selected terrain. The initial
 playlist uses original layout assets; it needs no extra JRMAP terrain file.
 
@@ -191,13 +204,14 @@ visual map loading after real-client rejoin remains an acceptance check.
 See the [rotation verification](../evidence/2.9.2/linux_rotation_20261026.json).
 
 Edit `/etc/ace-of-angels/rotation.json`, then restart `aoa-host` to apply changes.
-The shipped configuration is:
+An unknown setting is refused with its name; a `"comment"` text is allowed.
+A setting left out takes the host default. The shipped example is:
 
 | Setting | Behavior |
 |---|---|
 | Maps | `CTF_arena` → `CTF_arena_b` → `ast_fld_a` → repeat |
-| Kill limit | First pilot to **10 kills** ends the session |
-| Time limit | **900 seconds (15 minutes)** from first flight entry; whichever limit comes first |
+| Kill limit | First pilot to **10 kills** ends the session (host default: 20) |
+| Time limit | **900 seconds (15 minutes)** from first flight entry; whichever limit comes first (host default: 600 seconds) |
 | Restart warning | Announce next map, allow **30 seconds** to quit, then pause **5 seconds** before reopening |
 | Arena admissions | Recycle at **40**, before the hard lifetime limit of 49 |
 | Station admissions | Recycle at **56**, before the hard lifetime limit of 64 |
