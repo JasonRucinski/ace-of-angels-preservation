@@ -32,11 +32,13 @@ heuristic mesh matching remains a visualization aid, not a collision contract.
 OBJ previews negate game Z. Turret coordinates must not be used for spawning
 until their attachment hierarchy is recovered.
 
-Local previews, generated from the original assets:
+Local previews, generated from the original assets by
+`tools/audit_arena1a.py` into the ignored `work/arena1a-review/` folder (so
+they exist only on a machine that has run it):
 
-- [Full expanded map](../work/arena1a-review/Arena1a-expanded.png)
-- [Recovered nested base](../work/arena1a-review/Arena1a-nested-base.png)
-- [Per-node manifest](../work/arena1a-review/manifest.json)
+- `work/arena1a-review/Arena1a-expanded.png`, the full expanded map
+- `work/arena1a-review/Arena1a-nested-base.png`, the recovered nested base
+- `work/arena1a-review/manifest.json`, the per-node manifest
 
 ## Reproduce and inspect
 
@@ -80,6 +82,8 @@ collision and interactive-node acceptance remain open. See
 
 ```powershell
 .venv/Scripts/python.exe -I tools/audit_arena1a.py
+# The report goes to work/evidence/2.9.2/; add
+# --evidence evidence/2.9.2/arena1a_audit_20261021.json to replace the committed one.
 powershell -NoProfile -ExecutionPolicy Bypass -File tools/start_lan_dogfight.ps1 -HostAddress 192.168.0.61 -Map Arena1a -PrintConfig
 ```
 

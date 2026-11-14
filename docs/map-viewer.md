@@ -110,7 +110,8 @@ previous live counts of 616 and 457. The original client already resolves
 these references; this change fixes the analysis/export tools, not gameplay.
 
 `tools/audit_map_nodes.py` inventories all 17 node-layout Gobs and writes
-[counts and remaining node classes](../evidence/2.9.2/map_nodes_20261026.json).
+[counts and remaining node classes](../evidence/2.9.2/map_nodes_20261026.json)
+(a re-run writes `work/evidence/2.9.2/` unless given `--evidence PATH`).
 Full records and regenerated OBJ files are local under `work/map-node-review/`.
 Object assets being available does not mean they spawn: ship-only components
 still depend on native controller flags. Turret/flag gameplay, service-marker

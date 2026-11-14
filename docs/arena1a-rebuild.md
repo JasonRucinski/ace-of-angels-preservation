@@ -226,6 +226,11 @@ Reproduce with:
 .venv/Scripts/python.exe -I tools/audit_warp_gates.py --local-report work/warp-research/routes.json
 ```
 
+The report goes to `work/evidence/2.9.2/warp_gates_20261026.json`; add
+`--evidence evidence/2.9.2/warp_gates_20261026.json` to replace the committed
+copy. `audit_turret_groups.py` and `audit_arena1a_rebuild.py` work the same
+way.
+
 The audit pins the original client and map hashes. Full coordinates remain in
 the ignored local report; names, checks and limitations are recorded in
 [warp evidence](../evidence/2.9.2/warp_gates_20261026.json).

@@ -484,7 +484,8 @@ checks their MD5s (tested).
   hard-coded to 66.154.81.18 (Cyber Wurx, Atlanta colocation).
 - The client contains the string "Ace of Angels is not supported on Windows
   NT", though Windows 2000 was supported (likely an NT4 check). Needs DirectX
-  7; use a Windows 98/XP VM. It has not been run.
+  7. (20 Oct 2026 note; since then 2.9.2 runs on Windows 10/11 with the
+  project's fixes: [docs/play.md](docs/play.md).)
 - The EULA forbids redistribution without Flying Rock's written permission.
   Linking to archive.org copies is fine; re-hosting is a separate decision.
 
@@ -605,10 +606,10 @@ employees, website flyingrockllc.com, LinkedIn
 | Script | Does | Tested |
 |---|---|---|
 | `fetch_known_builds.py DIR` | Downloads and MD5-checks the verified builds | yes, both OK |
-| `wise_extract.py INSTALLER [OUT]` | Lists or extracts the files in a Wise installer (PK scan, CRC check, basename-only writes) | yes, on v2.8.2 and v2.9.2 |
+| `wise_extract.py INSTALLER [OUT]` | Lists or extracts the files in a Wise installer (PK scan, CRC check, basename-only writes; refuses an entry whose CRC does not match unless `--force`) | yes, on v2.8.2 and v2.9.2 |
 | `aoa_version.py AOACLIENT.EXE` | Reads the compiled-in version | yes: v2.8.2 and v2.9.2, different global addresses |
 | `ia_disc_find.py ID… [--pattern RE]` | Finds files inside archive.org disc images (listing only) | yes |
-| `ia_fulltext_search.py DIR` / `ia_fulltext_context.py DIR` | Full-text search of archive.org scans, then passage extraction | yes; produced `data/` |
+| `ia_fulltext_search.py DIR` / `ia_fulltext_context.py DIR` | Full-text search of archive.org scans (writes `DIR/ia_fulltext_hits.json`), then passage extraction (writes `DIR/ia_fulltext_passages.txt`) | yes; produced the two files in `data/` |
 | `iso_stream_extract.py RE OUT < image` | Pulls matching files out of an ISO stream without seeking (pipe from `7z e -so`) | yes, test ISO and the PC Zone DVD |
 | `rar_img2iso.py RAR ENTRY OUT.iso` | Raw 2352-byte CD image in a RAR to ISO; needs `pip install libarchive-c` | yes, PC Zone 118 CD2 |
 | `wayback_builds.py --out DIR [--download]` | Wayback CDX listing, build filter, `id_` download, hashes | parsing only (synthetic CDX); **never run against the live Wayback** |
@@ -622,8 +623,9 @@ use libarchive (`rar_img2iso.py`) or a 7-Zip build with the RAR codec.
   98/XP VM.
 - One new, empty directory per download. Keep scripts elsewhere and run them
   with `python3 -I`.
-- Pace requests to the archives: the Wayback script pauses 4 s and backs off
-  on 429.
+- Pace requests to the archives. Every archive.org and Wayback request in
+  `tools/` goes through `tools/polite_http.py`, which waits between requests
+  to the same host and backs off on HTTP 429 and 5xx (13 Nov 2026).
 
 ## 10. Sources
 

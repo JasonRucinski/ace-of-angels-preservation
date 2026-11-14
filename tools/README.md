@@ -1,10 +1,23 @@
 # Tools
 
 Run everything from the repository root with the project's Python:
-`.venv\Scripts\python.exe -I tools\<script>.py`. Each script's docstring
-gives its usage. The player-facing scripts need only the standard library;
-the analysis and emulation scripts need `requirements.txt`
-(`pefile`, `capstone`, `unicorn`).
+`.venv\Scripts\python.exe -I tools\<script>.py` on Windows, or
+`python3 -I tools/<script>.py` on Linux (the [Linux host](../docs/linux-host.md)
+uses no venv). Each script's docstring gives its usage, and `--help` prints
+it without doing anything else (`test_cli_help.py` checks this for every
+script).
+
+The server, the host tools, `prepare_client.py` and the client launcher need
+only the standard library. Anything that reads the archive key from the
+client (`make_map.py install`, `make_object.py install`, a `texture_pack.py`
+install, `build_texture_pack.py`) also needs `pefile` and `capstone`, and
+`build_texture_pack.py` needs Pillow. The analysis and emulation scripts need
+`requirements.txt` (`pefile`, `capstone`, `unicorn`).
+
+Tools write to the ignored `work\` folder. The audits that have a committed
+copy under `evidence/` write `work\<same path>` by default and replace the
+committed file only when given `--evidence PATH`. Every archive.org and
+Wayback Machine request goes through `polite_http.py`.
 
 None of these runs the original installer. Scripts that change a game
 executable accept only known, hash-checked builds and record an exact undo.
@@ -23,11 +36,12 @@ executable accept only known, hash-checked builds and record an exact undo.
 | `make_object.py install SPEC MODEL.glb CLIENT` | Adds a new object from a glTF model to a play copy's object database ([custom-objects.md](../docs/custom-objects.md)) |
 | `make_map.py install/serve SPEC CLIENT` | Builds a new map from a JSON spec into a play copy of the client and serves it ([custom-maps.md](../docs/custom-maps.md)) |
 | `station_stub.py` | The stand-in Station and arena server that all of the above run |
+| `dedicated_host.py` | The unattended Linux host: map rotation, fresh process per map, watchdog ([linux-host.md](../docs/linux-host.md)) |
 | `register_activeskin.ps1` | Registers the game's dialog skin control for the current user (no admin) |
 | `make_install.py` / `install_wrapper.py` | The extract and wrapper steps of `setup_game.ps1` |
 | `build_texture_pack.py GAME_DIR` | Builds the 2x skin pack from your own archives with Real-ESRGAN ([texture-pack.md](../docs/texture-pack.md)) |
 | `texture_pack.py` | Installs or removes replacement TGA skins in a game folder |
-| `reel/record.py SHOTS` / `reel/edit.py EDIT` | Films scripted shots of the real client and cuts them into the highlight reel ([hype-reel.md](../docs/hype-reel.md)) |
+| `reel/record.py SHOTS` / `reel/edit.py EDIT` | Films scripted shots of the real client and cuts them into the highlight reel ([hype-reel.md](../docs/hype-reel.md)). Their inputs are `reel/shots.json` and `reel/edit.json`; `reel/bot.py` (scripted pilots), `reel/scout.py` (terrain positions and an F5 capture per map), `reel/client_mem.py` (camera forced in the running process) and `reel/window.py` (window helpers) are their parts. Windows only |
 
 ## Server internals
 
@@ -36,6 +50,19 @@ executable accept only known, hash-checked builds and record an exact undo.
 TCP list), `relay_motion.py` (movement relay), `reliable_window.py` (ordered
 reliable delivery), `host_ops.py` (status file and console), `net_impair.py`
 (lag and loss testing), `decode_trn.py` and `online_terrain.py` (maps).
+
+Arena1a trials, each opt-in on the server: `navigation_buoys.py`
+(navigation buoys on every map), `turret_groups.py` and `turret_trial.py`
+(five disabled turrets), `warp_trial.py` (nine warp gates), with the live
+memory checks `verify_navigation_buoys.py`, `verify_turret_trial.py` and
+`verify_warp_trial.py` ([arena1a-rebuild.md](../docs/arena1a-rebuild.md)).
+`vessel_combat.py` is the per-ship hit point and gun damage table that
+`make_vessel_combat.py` generates (`--check` compares without writing).
+
+Shared helpers: `cli_util.py` (the common command-line conventions: `--help`
+does nothing else, a missing input is one line, `--evidence PATH`) and
+`polite_http.py` (paced archive.org and Wayback requests that back off on
+HTTP 429 and 5xx).
 
 ## Client patches
 
@@ -93,7 +120,8 @@ Assets and maps: `export_assets.py`, `gob2obj.py`, `scene2obj.py`,
 `sco_dump.py`, `decode_scenario.py`, `decode_legacy_layout.py`,
 `arena_inventory.py`, `check_arena_geometry.py`, `audit_*.py`,
 `compare_version_assets.py`, `compare_client_resources.py`. Output goes to the
-ignored `work\` folder and is never committed.
+ignored `work\` folder; the audits replace committed evidence only with
+`--evidence PATH`.
 
 Live debugging of a running client: `crashdbg.py`, `inspect_arena.py`,
 `sample_rendering.py`, `measure_frame_pacing.py`, `client_login.ps1`, and the
@@ -107,11 +135,13 @@ offline-only experiments `prepare_offline_baseline.py`,
 .venv\Scripts\python.exe -I tools\verify_local.py
 ```
 
-`verify_local.py` runs the supported regression gate: the `test_*.py` suites
-and the emulators, about 10 minutes. It does not launch the game, but it needs
-a prepared `game\2.9.2` folder (it reads the original `AOACLIENT.EXE.orig`).
-Run a single suite with `.venv\Scripts\python.exe -I tools\test_station_stub.py`.
+`verify_local.py` runs the supported regression gate: the suites in its
+`SUITES` list (most, not all, of the `test_*.py` files) and the emulators,
+about 10 minutes. It does not launch the game, but it needs a prepared
+`game\2.9.2` folder (it reads the original `AOACLIENT.EXE.orig`). Run a single
+suite with `.venv\Scripts\python.exe -I tools\test_station_stub.py`.
 
-Without the game, the server, relay and host suites still run; the client-patch
-suites fail for lack of the executable. CI runs the game-free list on every
-push and pull request ([`.github/workflows/tests.yml`](../.github/workflows/tests.yml)).
+Without the game, the server, relay and host suites still run; the
+client-patch suites skip or fail for lack of the executable or of `unicorn`,
+`capstone` and `pefile`. CI runs the game-free list on every push and pull
+request ([`.github/workflows/tests.yml`](../.github/workflows/tests.yml)).

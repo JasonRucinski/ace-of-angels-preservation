@@ -169,7 +169,7 @@ Still missing:
 ```
 py -3.12 -m venv .venv && .venv/Scripts/python -m pip install -r requirements.txt
 python -I tools/fetch.py manifest/downloads.json 2.7.1 originals/2.7.1
-python -I tools/inventory.py <installer> <ver> docs/history/2026-10-20-research-handoff.txt work/<ver>
+python -I tools/inventory.py <installer> <ver> [docs/history/2026-10-20-research-handoff.txt] work/<ver>
 python -I tools/version_probe.py | packet_sizes.py | config_records.py | dispatch_table.py | send_sites.py ...
 python -I tools/emulate_cipher.py / emulate_codec.py   (see each script's docstring)
 ```

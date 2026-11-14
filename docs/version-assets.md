@@ -121,12 +121,18 @@ here establishes that old data can be dropped into 2.9.2 unchanged.
 
 ```powershell
 .venv/Scripts/python.exe -I tools/compare_version_assets.py
-.venv/Scripts/python.exe -I tools/compare_client_resources.py
+.venv/Scripts/python.exe -I tools/compare_client_resources.py --reports work/evidence/asset-review
 # Replace VERSION with a complete-installer version:
 .venv/Scripts/python.exe -I tools/export_assets.py work/asset-review/VERSION/assets work/asset-review/VERSION/export
 .venv/Scripts/python.exe -I tools/export_legacy_models.py work/asset-review/2.0.0/export/AOAOBJECTS work/asset-review/2.0.0/legacy-models
 .venv/Scripts/python.exe -I tools/scene2obj.py work/asset-review/2.8.0/export/AOAOBJECTS Arena1a work/asset-review/2.8.0/scenes ../export/TEXTURES
 ```
+
+Both write their reports under `work/evidence/asset-review/`; add
+`--evidence PATH` to replace the committed copies (a folder for
+`compare_version_assets.py`, the `client-resources.json` file for
+`compare_client_resources.py`). Without `--reports`,
+`compare_client_resources.py` reads the committed reports.
 
 The comparison uses pristine installer archives. The existing runtime-derived
 2.9.2 extraction includes 55 additional decoded WAVs; those are not extra

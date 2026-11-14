@@ -11,7 +11,9 @@ in-game yet.
 
 That writes full decodes (with coordinates) to the ignored
 `work/asset-review/level-data/` and a coordinate-free summary to
-`evidence/asset-review/level-data.json`. The decoders are
+`work/evidence/asset-review/level-data.json`. Add
+`--evidence evidence/asset-review/level-data.json` to replace the committed
+summary. The decoders are
 `tools/decode_trn.py`, `tools/decode_scenario.py` and
 `tools/decode_legacy_layout.py`.
 
