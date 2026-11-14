@@ -48,6 +48,7 @@ finding your brief cites by ID.
   test_host_control test_prepare_client test_dedicated_host
   test_client_launcher test_make_map test_make_object
   test_patch_layout test_host_argv test_reel
+  test_cli_help test_polite_http test_install_wrapper test_make_vessel_combat
   plus any test you added. All must pass.
 
 ## Report back (under 400 words)

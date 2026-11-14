@@ -141,12 +141,12 @@ verified without the game: see section 4.
   Done 13 Nov: `tools/test_patch_layout.py`, `tools/test_host_argv.py`,
   `tools/snapshots/`, [baseline-tests.md](baseline-tests.md). Not run: the
   Windows CI job.
-- [ ] **0b Client fixes**: U1, U2, U9; legacy command lines of `patch_client`,
+- [x] **0b Client fixes**: U1, U2, U9; legacy command lines of `patch_client`,
   `local_station` and `physics_timestep` removed (they break a prepared
   client); `setup_game.ps1` fails on an explicit missing `-Wrapper`.
-- [ ] **0c Host fixes**: U5, U6, U7, U8; ban check before the version reply;
+- [x] **0c Host fixes**: U5, U6, U7, U8; ban check before the version reply;
   `host_control.cmd` uses `-I`.
-- [ ] **0d Command-line safety**: U3, U4. Every script gets `main(argv)` and
+- [x] **0d Command-line safety**: U3, U4. Every script gets `main(argv)` and
   argparse; a test runs `--help` on every entry point with the network
   blocked and asserts exit 0 and no file written.
 - [ ] **0e Docs truth**: U10; one `docs/STATUS.md` holds what is verified and

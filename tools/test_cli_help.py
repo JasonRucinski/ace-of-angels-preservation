@@ -35,13 +35,7 @@ TIMEOUT = 60
 
 # Scripts outside this task's files that still act on --help, by finding ID
 # (docs/restructure/audits/). Remove an entry when its script is fixed.
-KNOWN_UNSAFE = {
-    "tools/host_control.py": "H18: opens the Tk window on any argument",
-    "tools/install_wrapper.py": "U3/C24: bare sys.argv, treats --help as the wrapper zip",
-    "tools/make_install.py": "U3/C24: bare sys.argv, treats --help as the installer",
-    "tools/make_vessel_combat.py": "H16: bare sys.argv, traceback on --help",
-    "tools/patch_client.py": "C16: legacy CLI, treats --help as the client to patch",
-}
+KNOWN_UNSAFE = {}
 
 MAIN = re.compile(r"""^if __name__ == ['"]__main__['"]""", re.M)
 MISSING = re.compile(r"ModuleNotFoundError: No module named '([\w.]+)'")

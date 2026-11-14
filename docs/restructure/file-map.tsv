@@ -7,6 +7,7 @@ tools/message_table.py	aoa/analysis/message_table.py
 tools/packet_sizes.py	aoa/analysis/packet_sizes.py		
 tools/pe_util.py	aoa/analysis/pe_util.py		Phase 2: stdlib PE mapper split to aoa/formats/pe.py
 tools/send_sites.py	aoa/analysis/send_sites.py		
+tools/cli_util.py	aoa/cli.py		
 tools/patch_client.py	aoa/client/base.py		Phase 2: base step + asm helpers; PRISTINE hash moves to aoa/builds.py
 tools/build_texture_pack.py	aoa/client/build_texture_pack.py	yes	
 tools/render_clock_experiment.py	aoa/client/experiments/render_clock_experiment.py		byte-identical to frame_clock; Phase 2 repoints its importers (test_frame_clock, test_render_culling) and archives it
@@ -93,6 +94,7 @@ tools/turret_groups.py	aoa/protocol/turret_groups.py
 tools/compare_version_assets.py	aoa/research/compare_version_assets.py		
 tools/fetch.py	aoa/research/fetch.py	yes	
 tools/fetch_known_builds.py	aoa/research/fetch_known_builds.py	yes	Phase 2: merged into manifest-driven fetch
+tools/polite_http.py	aoa/research/http.py		
 tools/ia_disc_find.py	aoa/research/ia_disc_find.py	yes	
 tools/ia_fulltext_context.py	aoa/research/ia_fulltext_context.py		
 tools/ia_fulltext_search.py	aoa/research/ia_fulltext_search.py		
@@ -122,6 +124,7 @@ tools/test_render_motion.py	archive/offline_baseline/test_render_motion.py
 tools/test_aoapack_write.py	tests/test_aoapack_write.py		
 tools/test_asteroid_render.py	tests/test_asteroid_render.py		
 tools/test_build_texture_pack.py	tests/test_build_texture_pack.py		
+tools/test_cli_help.py	tests/test_cli_help.py		
 tools/test_client_extensions.py	tests/test_client_extensions.py		
 tools/test_client_launcher.py	tests/test_client_launcher.py		
 tools/test_combat_delivery.py	tests/test_combat_delivery.py		
@@ -129,11 +132,14 @@ tools/test_cursor_warp.py	tests/test_cursor_warp.py
 tools/test_dedicated_host.py	tests/test_dedicated_host.py		
 tools/test_frame_clock.py	tests/test_frame_clock.py		
 tools/test_guest_admission.py	tests/test_guest_admission.py		
+tools/test_host_argv.py	tests/test_host_argv.py		
 tools/test_host_control.py	tests/test_host_control.py		
+tools/test_install_wrapper.py	tests/test_install_wrapper.py		
 tools/test_internet_play.py	tests/test_internet_play.py		
 tools/test_lan_dogfight.py	tests/test_lan_dogfight.py		
 tools/test_make_map.py	tests/test_make_map.py		
 tools/test_make_object.py	tests/test_make_object.py		
+tools/test_make_vessel_combat.py	tests/test_make_vessel_combat.py		
 tools/test_menu_aspect.py	tests/test_menu_aspect.py		
 tools/test_navigation_buoys.py	tests/test_navigation_buoys.py		
 tools/test_network_bounds.py	tests/test_network_bounds.py		
@@ -141,7 +147,9 @@ tools/test_object_lod.py	tests/test_object_lod.py
 tools/test_object_persistence.py	tests/test_object_persistence.py		
 tools/test_object_persistence_pipeline.py	tests/test_object_persistence_pipeline.py		
 tools/test_online_terrain.py	tests/test_online_terrain.py		
+tools/test_patch_layout.py	tests/test_patch_layout.py		
 tools/test_physics_timestep.py	tests/test_physics_timestep.py		
+tools/test_polite_http.py	tests/test_polite_http.py		
 tools/test_powerup_pickup.py	tests/test_powerup_pickup.py		
 tools/test_powerups.py	tests/test_powerups.py		
 tools/test_prepare_client.py	tests/test_prepare_client.py		
