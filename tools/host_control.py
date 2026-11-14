@@ -5,35 +5,49 @@
 It runs tools/station_stub.py as a child process with --console and
 --status-file. The window reads the status file every second for the
 player/score table and host counters, and sends the server's own console
-commands (kick, ban, end, say, quit). "Load map" stops the host cleanly and
-starts it again on the chosen map; players must quit and rejoin, because a
-client builds terrain only once per flight session.
+commands (kick, ban, end, say, quit). "Load map" checks the new settings,
+then stops the host cleanly and starts it again on the chosen map; players
+must quit and rejoin, because a client builds terrain only once per flight
+session.
 
-Modes: this PC only (local-relay on 127.0.0.1), LAN (lan-dogfight) and VPN
+Modes: this PC only (local-guests on 127.0.0.1, with the guest admission
+and sustained delivery LAN and VPN players get), LAN (lan-dogfight) and VPN
 (vpn-dogfight). The server validates every setting (--print-config) before
 it binds anything. No firewall, hosts-file or client files are changed.
-Settings are remembered in work/host/host_control.json.
+Settings are remembered in work/host/host_control.json, with the mode as its
+profile id; a saved value that is not valid falls back to its default with a
+notice. Any error that stops the window is shown in a message box and
+written to work/logs/host.log.
 """
+import argparse
 import datetime
 import json
+import math
 import queue
 import subprocess
 import sys
 import threading
 import time
+import traceback
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import host_ops  # noqa: E402
 import online_terrain  # noqa: E402
+from station_runtime import HOST_DEFAULTS  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 WORK = ROOT / "work/host"
 SETTINGS_FILE = WORK / "host_control.json"
-MODES = {"This PC only": "local-relay", "LAN": "lan-dogfight", "VPN (internet)": "vpn-dogfight"}
+LOG_FILE = ROOT / "work/logs/host.log"
+LOCAL = "local-guests"
+MODES = {LOCAL: "This PC only", "lan-dogfight": "LAN", "vpn-dogfight": "VPN (internet)"}  # profile -> label
+LABELS = {label: profile for profile, label in MODES.items()}  # also reads files saved with labels
 ALIASES = {"lan-dogfight": "aoalan", "vpn-dogfight": "aoavpn"}
 BACKDROPS = ("spacebkgd", "spacebkgd2", "spacebkgd3", "spacebkgd5", "spacebkgd6")
-DEFAULTS = {"mode": "This PC only", "address": "127.0.0.1", "map": "Arena1a", "terrain": True,
-            "backdrop": "spacebkgd3", "max_players": 4, "kill_limit": 20, "time_limit_min": 10,
+DEFAULTS = {"mode": LOCAL, "address": "127.0.0.1", "map": "Arena1a", "terrain": True,
+            "backdrop": "spacebkgd3", "max_players": HOST_DEFAULTS["max_players"],
+            "kill_limit": HOST_DEFAULTS["kill_limit"], "time_limit_min": HOST_DEFAULTS["time_limit_seconds"] // 60,
             "target_ships": 4, "game": "game/2.9.2",
             "navigation_buoys": True, "turret_trial": False, "warp_trial": False}
 NODE_LABELS = {"navigation_buoys": "Navigation buoys",
@@ -41,6 +55,15 @@ NODE_LABELS = {"navigation_buoys": "Navigation buoys",
                "warp_trial": "Warp gates trial (9 gates; Arena1a, this PC only)"}
 NO_WINDOW = getattr(subprocess, "CREATE_NO_WINDOW", 0)
 RESTARTS_PER_10_MIN = 3
+
+
+def profile_of(mode):
+    """The server profile for a saved mode: a profile id, or a display label from older settings."""
+    if mode in MODES:
+        return mode
+    if mode in LABELS:
+        return LABELS[mode]
+    raise ValueError(f"unknown host mode {mode!r}")
 
 
 def node_availability(settings):
@@ -51,13 +74,13 @@ def node_availability(settings):
                   source.is_dir() and (source.parent / '_export.json').is_file()) else "")
     arena = common or ("Select Arena1a." if settings["map"] != "Arena1a" else "")
     return {"navigation_buoys": common, "turret_trial": arena,
-            "warp_trial": arena or ("Select This PC only mode." if settings["mode"] != "This PC only" else "")}
+            "warp_trial": arena or ("Select This PC only mode." if profile_of(settings["mode"]) != LOCAL else "")}
 
 
 def server_args(settings, extra=()):
     """station_stub.py arguments for these settings; the server validates them."""
-    profile = MODES[settings["mode"]]
-    address = "127.0.0.1" if profile == "local-relay" else settings["address"].strip()
+    profile = profile_of(settings["mode"])
+    address = "127.0.0.1" if profile == LOCAL else settings["address"].strip()
     game = Path(settings["game"])
     game = game if game.is_absolute() else ROOT / game
     args = [str(ROOT / "tools/station_stub.py"), str(game / "SCRTY.BIN"), str(WORK / f"{profile}.jsonl"),
@@ -74,17 +97,19 @@ def server_args(settings, extra=()):
                    if not reason and settings.get(key, DEFAULTS[key])]
         for key in enabled:
             args += ['--' + key.replace('_', '-'), str(source)]
-        if enabled:
+        if enabled or profile == LOCAL:
             args.append('--sustained-delivery')
         _, kind, target, _ = online_terrain.MAPS[online_terrain.MAP_NAMES.index(settings["map"])]
         if kind == online_terrain.TRN:
             # The map's own power-up zones (findings 9.44); layouts have none.
             args += ["--powerup-zones", str(game / target)]
+    elif profile == LOCAL:
+        args.append('--sustained-delivery')
     return args + list(extra)
 
 
 def status_path(settings):
-    return WORK / f"{MODES[settings['mode']]}-status.json"
+    return host_ops.status_path(profile_of(settings["mode"]), WORK)
 
 
 def detect_addresses():
@@ -119,9 +144,8 @@ class HostProcess:
             lines = [l for l in result.stderr.strip().splitlines() if l.strip()]
             raise ValueError(lines[-1] if lines else "invalid settings")
 
-    def start(self, settings, extra=()):
-        if self.running:
-            raise RuntimeError("host already running")
+    def check(self, settings, extra=()):
+        """Everything start() checks, without starting: files, then the server's own validation."""
         game = Path(settings["game"])
         game = game if game.is_absolute() else ROOT / game
         if not (game / "SCRTY.BIN").is_file():
@@ -129,6 +153,12 @@ class HostProcess:
         if settings["terrain"] and settings["map"] == "JRMAP" and not (game / "jrmap292.trn").is_file():
             raise ValueError(f"JRMAP needs: python -I tools/map_viewer.py install {settings['game']}")
         self.validate(settings, extra)
+
+    def start(self, settings, extra=(), checked=False):
+        if self.running:
+            raise RuntimeError("host already running")
+        if not checked:
+            self.check(settings, extra)
         WORK.mkdir(parents=True, exist_ok=True)
         status_path(settings).unlink(missing_ok=True)
         self.proc = subprocess.Popen([sys.executable, "-u", "-I", *server_args(settings, extra)], cwd=ROOT,
@@ -170,21 +200,59 @@ class HostProcess:
         """(status dict or None, age in seconds or None) from this run's status file."""
         if self.settings is None:
             return None, None
-        try:
-            data = json.loads(status_path(self.settings).read_text(encoding="utf-8"))
-            updated = datetime.datetime.fromisoformat(data["updated_utc"])
-        except (OSError, ValueError, KeyError):
-            return None, None
-        age = (datetime.datetime.now(datetime.timezone.utc) - updated).total_seconds()
-        return data, age
+        return host_ops.read_status(status_path(self.settings), self.proc.pid)
 
 
-def load_settings():
+def valid_setting(key, value):
+    """Whether a saved value can be used for this setting (the window's own ranges)."""
+    if key in ("terrain", *NODE_LABELS):
+        return type(value) is bool
+    choices = {"mode": MODES, "map": online_terrain.MAP_NAMES, "backdrop": BACKDROPS}
+    if key in choices:
+        return isinstance(value, str) and value in choices[key]
+    if key in ("address", "game"):
+        return isinstance(value, str) and (key == "address" or bool(value.strip()))
+    if key == "time_limit_min":
+        return type(value) in (int, float) and math.isfinite(value) and 0 <= value <= 1440
+    low, high = {"max_players": (1, 8), "kill_limit": (0, 1000), "target_ships": (0, 20)}[key]
+    return type(value) is int and low <= value <= high
+
+
+def load_map(host, settings, extra=(), notice_seconds=0.5):
+    """Restart `host` on new settings. They are checked first: if they are invalid,
+    this raises before anything is announced or stopped, and the host keeps running."""
+    host.check(settings, extra)
+    host.command(f"say Host is switching to {settings['map']}. Quit the game and rejoin in a minute.")
+    time.sleep(notice_seconds)
+    host.stop()
+    host.start(settings, extra, checked=True)
+
+
+def load_settings(notices=None):
+    """Saved settings, each checked; anything unusable becomes its default and adds a line to `notices`."""
+    notices = [] if notices is None else notices
     try:
         saved = json.loads(SETTINGS_FILE.read_text(encoding="utf-8"))
-        return {k: saved.get(k, v) for k, v in DEFAULTS.items()}
-    except (OSError, ValueError):
+    except FileNotFoundError:
         return dict(DEFAULTS)
+    except (OSError, ValueError) as error:
+        notices.append(f"Could not read {SETTINGS_FILE} ({error}); using the default settings.")
+        return dict(DEFAULTS)
+    if not isinstance(saved, dict):
+        notices.append(f"{SETTINGS_FILE} does not hold settings; using the default settings.")
+        return dict(DEFAULTS)
+    loaded = dict(DEFAULTS)
+    for key, default in DEFAULTS.items():
+        if key not in saved:
+            continue
+        value = saved[key]
+        if key == "mode" and isinstance(value, str):
+            value = LABELS.get(value, value)  # files saved before profile ids
+        if valid_setting(key, value):
+            loaded[key] = value
+        else:
+            notices.append(f"Saved {key.replace('_', ' ')} {saved[key]!r} is not valid; using {default!r}.")
+    return loaded
 
 
 def save_settings(settings):
@@ -200,9 +268,16 @@ def gui(autostart=False, run=True):
     root = tk.Tk()
     root.title("Ace of Angels host")
     root.minsize(860, 640)
-    saved = load_settings()
+
+    def report(*exc):
+        log_error("host window callback failed", exc)
+        messagebox.showerror("Ace of Angels host", f"{exc[1]}\n\nDetails: {LOG_FILE}")
+
+    root.report_callback_exception = report
+    notices = []
+    saved = load_settings(notices)
     addresses = detect_addresses()
-    v = {"mode": tk.StringVar(value=saved["mode"]), "address": tk.StringVar(value=saved["address"]),
+    v = {"mode": tk.StringVar(value=MODES[saved["mode"]]), "address": tk.StringVar(value=saved["address"]),
          "map": tk.StringVar(value=saved["map"]), "terrain": tk.BooleanVar(value=saved["terrain"]),
          "backdrop": tk.StringVar(value=saved["backdrop"]), "max_players": tk.IntVar(value=saved["max_players"]),
          "kill_limit": tk.IntVar(value=saved["kill_limit"]), "time_limit_min": tk.DoubleVar(value=saved["time_limit_min"]),
@@ -219,6 +294,7 @@ def gui(autostart=False, run=True):
             except tk.TclError:
                 raise ValueError(f"{key.replace('_', ' ')} must be a number")
         out["address"] = out["address"].split()[0] if out["address"].strip() else ""
+        out["mode"] = LABELS[out["mode"]]
         return out
 
     # Server settings
@@ -226,7 +302,7 @@ def gui(autostart=False, run=True):
     box.pack(fill="x", padx=8, pady=(8, 4))
     row = 0
     ttk.Label(box, text="Mode").grid(row=row, column=0, sticky="w")
-    mode = ttk.Combobox(box, textvariable=v["mode"], values=list(MODES), state="readonly", width=16)
+    mode = ttk.Combobox(box, textvariable=v["mode"], values=list(LABELS), state="readonly", width=16)
     mode.grid(row=row, column=1, sticky="w", padx=4)
     ttk.Label(box, text="Host address").grid(row=row, column=2, sticky="w", padx=(12, 0))
     address = ttk.Combobox(box, textvariable=v["address"], width=34,
@@ -341,8 +417,8 @@ def gui(autostart=False, run=True):
         start_b.state(["disabled"] if running else ["!disabled"])
         for b in (stop_b, load_b, end_b, say_b, kick_b, ban_b):
             b.state(["!disabled"] if running else ["disabled"])
-        profile = MODES[v["mode"].get()]
-        availability = node_availability({key: v[key].get() for key in ("terrain", "map", "mode")})
+        profile = LABELS[v["mode"].get()]
+        availability = node_availability({"terrain": v["terrain"].get(), "map": v["map"].get(), "mode": profile})
         for key, reason in availability.items():
             node_checks[key].state(["disabled"] if reason else ["!disabled"])
             if reason:
@@ -350,8 +426,8 @@ def gui(autostart=False, run=True):
         reasons = list(dict.fromkeys(reason for reason in availability.values() if reason))
         node_hint.configure(text="Unavailable options: " + " ".join(reasons) if reasons else
                             "Trials are experimental; turret firing stays disabled.")
-        address.state(["disabled"] if profile == "local-relay" else ["!disabled"])
-        if profile == "local-relay":
+        address.state(["disabled"] if profile == LOCAL else ["!disabled"])
+        if profile == LOCAL:
             hint.configure(text="Only clients on this PC can join: log in to 127.0.0.1. "
                                 "Prepare the client with --station localhost.")
         else:
@@ -371,7 +447,7 @@ def gui(autostart=False, run=True):
             write_log(f"[not started: {error}]")
             return False
         save_settings(s)
-        write_log(f"[starting {s['mode']} host: map {s['map']}{' with terrain' if s['terrain'] else ''}]")
+        write_log(f"[starting {MODES[s['mode']]} host: map {s['map']}{' with terrain' if s['terrain'] else ''}]")
         refresh_controls()
         return True
 
@@ -395,11 +471,18 @@ def gui(autostart=False, run=True):
         new = v["map"].get()
         if not confirm_disconnect(f"Load {new}"):
             return
-        host.command(f"say Host is switching to {new}. Quit the game and rejoin in a minute.")
-        time.sleep(0.5)
-        write_log(f"[switching map to {new}]")
-        host.stop()
-        do_start()
+        try:
+            s = settings()
+            write_log(f"[switching map to {new}]")
+            load_map(host, s)
+        except (ValueError, RuntimeError, OSError) as error:
+            messagebox.showerror("Cannot load map", str(error))
+            write_log(f"[map not changed: {error}]" if host.running else f"[not started: {error}]")
+            refresh_controls()
+            return
+        save_settings(s)
+        write_log(f"[starting {MODES[s['mode']]} host: map {s['map']}{' with terrain' if s['terrain'] else ''}]")
+        refresh_controls()
 
     def selected_slot():
         item = table.selection()
@@ -466,7 +549,7 @@ def gui(autostart=False, run=True):
         else:
             uptime = int(data.get("uptime_s", 0))
             stale = " — STATUS NOT UPDATING, host may be stuck" if age is not None and age > 8 else ""
-            status_text.set(f"Running: {host.settings['mode']} on map {data.get('map')}"
+            status_text.set(f"Running: {MODES[host.settings['mode']]} on map {data.get('map')}"
                             f"{' (terrain on)' if host.settings['terrain'] else ''}, "
                             f"match {data.get('match')}, up {uptime // 3600}:{uptime % 3600 // 60:02}:{uptime % 60:02}"
                             + stale)
@@ -506,6 +589,10 @@ def gui(autostart=False, run=True):
 
     root.protocol("WM_DELETE_WINDOW", on_close)
     refresh_controls()
+    for notice in notices:
+        write_log(f"[settings: {notice}]")
+    if notices:
+        root.after(300, lambda: messagebox.showwarning("Saved settings not used", "\n".join(notices)))
     if autostart:
         root.after(200, do_start)
     poll_output()
@@ -517,5 +604,42 @@ def gui(autostart=False, run=True):
     root.mainloop()
 
 
+def log_error(context, exc=None):
+    """Append a traceback (the current exception, or `exc` info) to work/logs/host.log."""
+    text = "".join(traceback.format_exception(*exc)) if exc else traceback.format_exc()
+    try:
+        LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
+        with LOG_FILE.open("a", encoding="utf-8") as stream:
+            stream.write(f"{datetime.datetime.now().isoformat(timespec='seconds')} {context}\n{text}\n")
+    except OSError:
+        print(text, file=sys.stderr)
+
+
+def show_error(title, text):
+    """A message box; stderr when Tk cannot open one (pythonw has no console)."""
+    try:
+        import tkinter as tk
+        from tkinter import messagebox
+        root = tk.Tk()
+        root.withdraw()
+        messagebox.showerror(title, text, parent=root)
+        root.destroy()
+    except Exception:  # noqa: BLE001
+        print(f"{title}: {text}", file=sys.stderr)
+
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument("--autostart", action="store_true", help="start the host with the saved settings")
+    args = parser.parse_args(argv)
+    try:
+        gui(autostart=args.autostart)
+    except Exception as error:  # noqa: BLE001 - under pythonw nothing else would report it
+        log_error("host window failed")
+        show_error("Ace of Angels host", f"The host window stopped: {error}\n\nDetails: {LOG_FILE}")
+        return 1
+    return 0
+
+
 if __name__ == "__main__":
-    gui(autostart="--autostart" in sys.argv[1:])
+    raise SystemExit(main())

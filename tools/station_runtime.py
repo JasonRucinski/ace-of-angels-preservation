@@ -7,6 +7,7 @@ import os
 import queue
 import selectors
 import socket
+import sys
 import threading
 import time
 from pathlib import Path
@@ -19,6 +20,29 @@ PRIVATE_NETWORKS = ("10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16")
 # Tailscale and other overlay networks assign addresses from the shared
 # CGNAT range. Binding one requires it to be this host's own interface.
 VPN_NETWORKS = ("100.64.0.0/10",)
+# The one table of match defaults; host_control and dedicated_host import it.
+HOST_DEFAULTS = {"kill_limit": 20, "time_limit_seconds": 600, "max_players": 8}
+DEFAULT_VESSEL = "Ym Khtat"
+# Every .Sco object in the 2.9.2 AoAObjects.odb with an engine, pods
+# excluded (work/2.9.2/sco.json): the fighters the in-flight menu offers.
+SELECTABLE_VESSELS = frozenset((
+    "AlphaFighter", "Dafusha", "Dasibaz", "Eagle", "Etat'Illraku", "Foushar", "Grathven", "Hartra",
+    "IBCH", "Janha Vari", "Kafic", "MBB", "Meskvak Su", "Mkulat", "N'Goc", "Naroch", "Natak'Illraku",
+    "Rchat", "Rhino", "Saksatar", "Shrike", "Tekan", "Test Missile Boat", "Tholfus", "Ummra Viazyem",
+    "Vagym", "Vasa Chovo", "Vermok", "Vrak Stat", "Yagari", "Ym Khtat", "Zkole"))
+
+
+class ConfigError(ValueError):
+    """An invalid server setting, as argparse's one-line message without the usage text."""
+
+
+class _Parser(argparse.ArgumentParser):
+    raise_errors = False
+
+    def error(self, message):
+        if self.raise_errors:
+            raise ConfigError(message)
+        super().error(message)
 
 
 class DatagramBudget:
@@ -53,15 +77,19 @@ class DatagramBudget:
         return allowed
 
 
-def parse_args(argv=None):
-    parser = argparse.ArgumentParser(description="AoA local diagnostics and private LAN/VPN dogfight relay")
+def parse_args(argv=None, *, raise_errors=False):
+    """Validated server settings. With raise_errors, an invalid setting raises
+    ConfigError for in-process callers instead of printing usage and exiting."""
+    parser = _Parser(description="AoA local diagnostics and private LAN/VPN dogfight relay")
+    parser.raise_errors = raise_errors
     parser.add_argument("key", type=Path, help="256-byte SCRTY.BIN")
     parser.add_argument("log", type=Path, help="rotating JSONL output")
     parser.add_argument("--profile", choices=("diagnostic", "local-relay", "local-guests") + DOGFIGHT_PROFILES,
                         default="diagnostic")
     parser.add_argument("--bind-address", default="127.0.0.1",
                         help="specific local IPv4; LAN profile requires RFC1918, VPN profile also 100.64.0.0/10")
-    parser.add_argument("--advertised-address", help="arena IPv4; defaults to bind address and must match it")
+    # Deprecated: it must equal --bind-address, so it changes nothing.
+    parser.add_argument("--advertised-address", help=argparse.SUPPRESS)
     parser.add_argument("--map", choices=online_terrain.MAP_NAMES, default="CTF_arena",
                         help="advertised terrain; with --experimental-terrain, the map a patched client loads")
     parser.add_argument("--backdrop", choices=("spacebkgd", "spacebkgd2", "spacebkgd3", "spacebkgd5", "spacebkgd6"),
@@ -74,12 +102,15 @@ def parse_args(argv=None):
     parser.add_argument("--pilot", default="testpilot")
     parser.add_argument("--seconds", type=float, default=0)
     parser.add_argument("--peer-timeout", type=float, default=30)
-    parser.add_argument("--max-players", type=int, default=8, help="simultaneous arena admissions, 1..49")
+    parser.add_argument("--max-players", type=int, default=HOST_DEFAULTS["max_players"],
+                        help="simultaneous arena admissions, 1..49")
     parser.add_argument("--spawn-axis", choices=("x", "z"), default="x",
                         help="diagnostic relay spawn line; ships initially face +z")
     parser.add_argument("--spawn-spacing", type=float, default=1000.0, help="distance between relay spawns")
-    parser.add_argument("--kill-limit", type=int, default=20, help="relay match ends at this many kills; 0 disables")
-    parser.add_argument("--time-limit", type=float, default=600.0, help="relay match length in seconds; 0 disables")
+    parser.add_argument("--kill-limit", type=int, default=HOST_DEFAULTS["kill_limit"],
+                        help="relay match ends at this many kills; 0 disables")
+    parser.add_argument("--time-limit", type=float, default=float(HOST_DEFAULTS["time_limit_seconds"]),
+                        help="relay match length in seconds; 0 disables")
     parser.add_argument("--managed-session", action="store_true",
                         help="dedicated controller: warn, drain and exit 75 after a match or admission limit")
     parser.add_argument("--next-map", choices=online_terrain.MAP_NAMES,
@@ -101,8 +132,9 @@ def parse_args(argv=None):
     parser.add_argument("--target-ships", type=int, default=0, metavar="N",
                         help="N passive hostile ships ahead of the spawn that the target keys can select "
                              "(0..98); needs the relay")
-    parser.add_argument("--start-vessel", default="Ym Khtat", metavar="NAME",
-                        help="fighter every pilot starts in until they pick another (default Ym Khtat); needs the relay")
+    parser.add_argument("--start-vessel", default=DEFAULT_VESSEL, choices=sorted(SELECTABLE_VESSELS), metavar="NAME",
+                        help=f"fighter every pilot starts in until they pick another (default {DEFAULT_VESSEL}); "
+                             "needs the relay")
     parser.add_argument("--arena1a-buoys", type=Path, metavar="GOB",
                         help="restore ten native navigation buoys from original Arena1a.Gob; requires Arena1a terrain and sustained delivery")
     parser.add_argument('--navigation-buoys', type=Path, metavar='EXPORT_DIR',
@@ -151,7 +183,7 @@ def parse_args(argv=None):
         parser.error("--target-ships must be 0..98")
     if args.target_ships and not args.experimental_relay:
         parser.error("--target-ships requires the relay")
-    if args.start_vessel != "Ym Khtat" and not args.experimental_relay:
+    if args.start_vessel != DEFAULT_VESSEL and not args.experimental_relay:
         parser.error("--start-vessel requires the relay")
     if args.warp_trial is not None:
         if not (args.profile in ('local-relay', 'local-guests') and args.experimental_relay
@@ -184,6 +216,10 @@ def parse_args(argv=None):
             parser.error('--navigation-buoys reserves slots 90..99; at most 88 target ships')
         if not args.navigation_buoys.is_dir():
             parser.error('--navigation-buoys requires an exported AOAOBJECTS directory')
+        if args.map == 'JRMAP':
+            trn = args.buoy_trn or args.key.parent / 'JRMAP.TRN'
+            if not trn.is_file():
+                parser.error(f'--navigation-buoys on JRMAP needs the original JRMAP.TRN: no file {trn} (see --buoy-trn)')
     if args.map_waypoints is not None:
         if args.arena1a_buoys or args.navigation_buoys:
             parser.error('--map-waypoints replaces the other navigation options')
@@ -203,6 +239,9 @@ def parse_args(argv=None):
         args.spawn_origin = online_terrain.spawn(args.map) if args.experimental_terrain else None
     if args.tcp is None and args.profile in ("local-relay", "local-guests") + DOGFIGHT_PROFILES:
         args.tcp = 5034
+    if args.advertised_address is not None:
+        print("warning: --advertised-address is deprecated and changes nothing; it must equal --bind-address",
+              file=sys.stderr)
     args.advertised_address = args.advertised_address or args.bind_address
     try:
         bind = ipaddress.IPv4Address(args.bind_address)

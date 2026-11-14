@@ -130,10 +130,13 @@ class DedicatedTests(unittest.TestCase):
 
     def test_configuration_and_state(self):
         self.assertEqual(dedicated.load_config(self.config)["maps"], self.settings["maps"])
+        self.config.write_text(json.dumps({**self.settings, "comment": "explicit limits"}))
+        self.assertNotIn("comment", dedicated.load_config(self.config))
         for patch in ({"maps": []}, {"maps": ["../bad"]}, {"maps": ["Arena1a", "Arena1a"]},
                       {"kill_limit": True}, {"time_limit_seconds": float("nan")},
                       {"kill_limit": 0, "time_limit_seconds": 0}, {"recycle_arena_joins": 49},
-                      {"recycle_station_admissions": 64}, {"terrain": False}, {"unknown": 1}):
+                      {"recycle_station_admissions": 64}, {"terrain": False}, {"unknown": 1},
+                      {"comment": 5}):
             with self.subTest(patch=patch):
                 self.config.write_text(json.dumps({**self.settings, **patch}))
                 with self.assertRaises(ValueError):
@@ -145,6 +148,29 @@ class DedicatedTests(unittest.TestCase):
         self.state_path.write_text('{"schema":1,"map":"CTF_arena","sessions_completed":-1}')
         with self.assertRaises(ValueError):
             dedicated.load_state(self.state_path, self.settings["maps"])
+
+    def test_command_line_errors_are_one_line(self):
+        common = [str(self.folder / "key"), str(self.folder / "events.jsonl"), "--config", str(self.config),
+                  "--state-file", str(self.state_path), "--status-file", str(self.status_path), "--check"]
+        for extra, message in (
+                ([], "dedicated_host.py: error: --bind-address is required for vpn-dogfight"),
+                (["--profile", "lan-dogfight"], "--bind-address is required for lan-dogfight"),
+                (["--bind-address", "8.8.8.8"], "Dedicated host failed: station_stub.py settings for map CTF_arena: "
+                                                "vpn-dogfight requires a specific IPv4 address"),
+                (["--bind-address", "100.101.102.103", "--max-players", "9"], "at most eight configured players")):
+            with self.subTest(extra=extra):
+                result = subprocess.run([sys.executable, "-I", str(Path(dedicated.__file__)), *common, *extra],
+                                        capture_output=True, text=True, timeout=30)
+                self.assertNotEqual(result.returncode, 0)
+                self.assertEqual(len(result.stderr.strip().splitlines()), 1, result.stderr)
+                self.assertIn(message, result.stderr)
+                self.assertNotIn("usage:", result.stderr)
+        result = subprocess.run([sys.executable, "-I", str(Path(dedicated.__file__)), *common,
+                                 "--profile", "local-guests"], capture_output=True, text=True, timeout=30)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.config.write_text(json.dumps({**self.settings, "backdrop": "spacebkgd", "mapz": []}))
+        with self.assertRaisesRegex(ValueError, "unknown settings: backdrop, mapz"):
+            dedicated.load_config(self.config)
 
     def test_kill_limit_announces_drains_and_keeps_final_score(self):
         proc = self.launch()

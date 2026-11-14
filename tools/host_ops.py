@@ -15,6 +15,32 @@ HELP = ("commands: status | kick <slot> | ban <slot> (kick and refuse its IP unt
         "end (finish the current match) | say <text> (arena message to all) | quit (stop the host) | help")
 QUIT = "host stopping"
 SAY_LIMIT = 120
+WORK = Path(__file__).resolve().parents[1] / "work/host"
+
+
+def status_path(profile, folder=WORK):
+    """Where a host of this profile writes its status: work/host/<profile>-status.json."""
+    return Path(folder) / f"{profile}-status.json"
+
+
+def read_status(path, pid=None):
+    """(status, age in seconds) from a status file, or (None, None).
+
+    None when the file is missing, unreadable or, given `pid`, written by
+    another process. The age comes from `updated_utc` and is None without it.
+    """
+    try:
+        status = json.loads(Path(path).read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None, None
+    if not isinstance(status, dict) or (pid is not None and status.get("pid") != pid):
+        return None, None
+    try:
+        updated = datetime.datetime.fromisoformat(status["updated_utc"])
+        age = (datetime.datetime.now(datetime.timezone.utc) - updated).total_seconds()
+    except (KeyError, TypeError, ValueError):
+        age = None
+    return status, age
 
 
 def write_status(path, status):

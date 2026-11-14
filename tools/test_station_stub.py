@@ -869,6 +869,65 @@ class ProtocolTests(unittest.TestCase):
             self.assertEqual(aoapack.decompress(reply[4:])[0], expected)
         self.assertEqual(stub.tcp_reply(999), bytes(4))
 
+    def test_banned_ip_gets_no_version_rejection(self):
+        key = bytes(range(256))
+        ports = []
+        for _ in range(2):
+            with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as probe:
+                probe.bind(("127.0.0.1", 0))
+                ports.append(probe.getsockname()[1])
+        station, arena = [("127.0.0.1", port) for port in ports]
+        old = bytearray(request())
+        old[9:13] = (1).to_bytes(4, "little")  # 2.9.1
+        with tempfile.TemporaryDirectory(prefix="aoa-ban-") as tmp:
+            folder = Path(tmp)
+            (folder / "key").write_bytes(key)
+            status = folder / "status.json"
+            proc = subprocess.Popen(
+                [sys.executable, "-I", str(Path(stub.__file__)), str(folder / "key"), str(folder / "log"),
+                 "--profile", "local-relay", "--port", str(ports[0]), "--arena-port", str(ports[1]), "--tcp", "0",
+                 "--console", "--status-file", str(status), "--seconds", "15"],
+                stdin=subprocess.PIPE, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, text=True)
+
+            def replies(sock, seconds):
+                out, end = [], time.monotonic() + seconds
+                while time.monotonic() < end:
+                    ready, _, _ = select.select([sock], [], [], 0.05)
+                    if ready:
+                        out.append(aoanet.decode(sock.recv(512), key))
+                return out
+
+            def rejected(sock):
+                sock.sendto(aoanet.encode(0x0A, bytes(old), key), station)
+                return [m["payload"][6:10] for m in replies(sock, 0.7) if m["type"] == 0x0B]
+
+            try:
+                with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as player, \
+                        socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as probe:
+                    player.bind(("127.0.0.1", 0))
+                    probe.bind(("127.0.0.1", 0))
+                    deadline = time.monotonic() + 5
+                    acks = []
+                    while not acks:
+                        self.assertLess(time.monotonic(), deadline, "Station did not start")
+                        player.sendto(aoanet.encode(0x0A, request(), key), station)
+                        acks = [m for m in replies(player, 0.1) if m["type"] == 0x0B]
+                    while not any(m["type"] == 0x0B for m in replies(player, 0.1)):
+                        self.assertLess(time.monotonic(), deadline, "arena did not admit")
+                        player.sendto(aoanet.encode(0x0A, request()[:31] + acks[0]["payload"][13:], key), arena)
+                    # Before the ban, an old client is told 'Incorrect version.' (result 8).
+                    self.assertEqual(rejected(probe), [struct.pack("<I", 8)])
+                    proc.stdin.write("ban 1\n")
+                    proc.stdin.flush()
+                    while not (status.exists() and json.loads(status.read_text()).get("banned_ips") == 1):
+                        self.assertLess(time.monotonic(), deadline + 5, "ban not applied")
+                        time.sleep(0.05)
+                    # Every loopback endpoint shares the banned IP: no reply at all.
+                    self.assertEqual(rejected(probe), [])
+            finally:
+                proc.kill()
+                proc.communicate(timeout=5)
+
     def test_loopback_exchange(self):
         key = bytes(range(256))
         with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as probe:

@@ -30,14 +30,16 @@ from unittest import mock
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import dedicated_host  # noqa: E402
 import host_control  # noqa: E402
+import host_ops  # noqa: E402
 import map_viewer  # noqa: E402
 import online_terrain  # noqa: E402
+import station_runtime  # noqa: E402
 from station_runtime import parse_args  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 SNAPSHOT = Path(__file__).resolve().parent / "snapshots/host_configs.json"
 DEPLOY = ROOT / "deploy/linux"
-ADDRESSES = {"This PC only": "127.0.0.1", "LAN": "192.168.1.5", "VPN (internet)": "100.101.102.103"}
+ADDRESSES = {"local-guests": "127.0.0.1", "lan-dogfight": "192.168.1.5", "vpn-dogfight": "100.101.102.103"}
 NODES_ON = dict.fromkeys(host_control.NODE_LABELS, True)
 NODES_OFF = dict.fromkeys(host_control.NODE_LABELS, False)
 # One row per mode: name, assets exported, settings changes.
@@ -67,6 +69,7 @@ def make_root(base, assets=True):
     game.mkdir(parents=True)
     (game / "SCRTY.BIN").write_bytes(bytes(256))
     (game / "jrmap292.trn").write_bytes(b"")
+    (game / "JRMAP.TRN").write_bytes(b"")  # navigation buoys on JRMAP
     if assets:
         export = base / "work/2.9.2/export/AOAOBJECTS"
         export.mkdir(parents=True)
@@ -111,8 +114,9 @@ def host_control_cases():
             settings = {**host_control.DEFAULTS, "mode": mode, "address": ADDRESSES[mode], **changes}
             with mock.patch.object(host_control, "ROOT", root), mock.patch.object(host_control, "WORK", root / "work/host"):
                 argv = host_control.server_args(settings)
-            out[f"{mode}: {label}"] = case(argv[1:], [(root, "")], assets_exported=assets, settings=settings,
-                                           script=normalize(argv[0], [(root, "")]))
+            out[f"{host_control.MODES[mode]}: {label}"] = case(
+                argv[1:], [(root, "")], assets_exported=assets, settings=settings,
+                script=normalize(argv[0], [(root, "")]))
     return out
 
 
@@ -164,11 +168,11 @@ def map_viewer_cases():
 
 def ps1_args(HostAddress, Vpn=False, MaxPlayers=2, Map="CTF_arena", Backdrop="spacebkgd3", Terrain=False,
              TestRttMs=0, TestJitterMs=0, TestLossPercent=0, Key="game/2.9.2/SCRTY.BIN", Log=""):
-    """start_lan_dogfight.ps1's $serverArgs (its lines 32-47), mirrored by hand: keep the two in step."""
+    """start_lan_dogfight.ps1's $serverArgs (its lines 33-50), mirrored by hand: keep the two in step."""
     profile = "vpn-dogfight" if Vpn else "lan-dogfight"
-    args = [Key, Log or f"work/{profile}.jsonl", "--profile", profile, "--bind-address", HostAddress,
+    args = [Key, Log or f"work/host/{profile}.jsonl", "--profile", profile, "--bind-address", HostAddress,
             "--max-players", str(MaxPlayers), "--map", Map, "--backdrop", Backdrop,
-            "--console", "--status-file", f"work/{profile}-status.json"]
+            "--console", "--status-file", f"work/host/{profile}-status.json"]
     if Terrain:
         args.append("--experimental-terrain")
     if TestRttMs or TestJitterMs or TestLossPercent:
@@ -251,6 +255,32 @@ class HostArgvTests(unittest.TestCase):
                         effective(host_control.server_args(settings)[1:])
                     except ValueError as error:
                         self.fail(f"{settings}: {error}")
+
+
+class LauncherDefaultsTests(unittest.TestCase):
+    def test_one_defaults_table(self):
+        server = vars(parse_args(["key", "log"]))
+        table = station_runtime.HOST_DEFAULTS
+        self.assertEqual((server["kill_limit"], server["time_limit"], server["max_players"]),
+                         (table["kill_limit"], table["time_limit_seconds"], table["max_players"]))
+        self.assertEqual((host_control.DEFAULTS["kill_limit"], host_control.DEFAULTS["time_limit_min"] * 60,
+                          host_control.DEFAULTS["max_players"]),
+                         (table["kill_limit"], table["time_limit_seconds"], table["max_players"]))
+        self.assertEqual((dedicated_host.DEFAULTS["kill_limit"], dedicated_host.DEFAULTS["time_limit_seconds"]),
+                         (table["kill_limit"], table["time_limit_seconds"]))
+        # The Linux example keeps its own explicit limits.
+        example = json.loads((DEPLOY / "rotation.json.example").read_text())
+        self.assertEqual((example["kill_limit"], example["time_limit_seconds"]), (10, 900))
+        self.assertIn("override", example["comment"])
+
+    def test_start_lan_dogfight_script(self):
+        text = (ROOT / "tools/start_lan_dogfight.ps1").read_text(encoding="utf-8")
+        description = text[text.index(".DESCRIPTION"):text.index(".EXAMPLE")]
+        for command in re.findall(r"(?:^ |\| )(\w+)", host_ops.HELP.split(":", 1)[1]):
+            self.assertIn(command, description)
+        self.assertNotIn("ValidateSet('CTF_arena'", text)  # every map the server accepts (H5)
+        self.assertNotIn("Arena1a terrain", text)  # the map it was given (H4)
+        self.assertNotIn("20 kills / 10 minutes", text)  # limits from --print-config
 
 
 def main():

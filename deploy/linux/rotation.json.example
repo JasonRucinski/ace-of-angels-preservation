@@ -1,4 +1,5 @@
 {
+  "comment": "10 kills / 900 s here override the host defaults of 20 kills / 600 s.",
   "maps": ["CTF_arena", "CTF_arena_b", "ast_fld_a"],
   "kill_limit": 10,
   "time_limit_seconds": 900,

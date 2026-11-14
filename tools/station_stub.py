@@ -64,7 +64,8 @@ import vessel_combat
 import navigation_buoys
 import turret_trial
 import warp_trial
-from station_runtime import DatagramBudget, EventLog, StationTCPServer, parse_args
+from station_runtime import (DEFAULT_VESSEL, SELECTABLE_VESSELS, DatagramBudget, EventLog,
+                             StationTCPServer, parse_args)
 
 NUL = bytes(1)
 SESSION_COMPLETE = 75  # Dedicated controller advances the rotation only on this clean exit.
@@ -73,16 +74,6 @@ SESSION_COMPLETE = 75  # Dedicated controller advances the rotation only on this
 # to ..." commands at 0x442376 onwards use these values).
 RELATION_HOSTILE = 3
 TYPE_NAMES = {0x0A: "SConnectReq", 0x0B: "SAckConnect", 0x94: "type94 (ping/keepalive?)", 0x1B: "wrapper 0x1B"}
-
-
-def connect_req_fields(p):
-    """Decode SConnectReq (0x0A) as described in docs/findings.md section 3."""
-    if len(p) < 0x1F + 20:
-        return {}
-    u32 = lambda o: int.from_bytes(p[o:o + 4], "little")  # noqa: E731
-    handle = p[0x1F:0x1F + 20].split(b"\0")[0].decode("latin1")
-    return {"version": f"{u32(5)}.{u32(1)}.{u32(9)}", "flag_0x0E": p[0x0E], "handle": handle,
-            "login_block_len": len(p) - 0x1F}
 
 
 def ack_connect(req_payload, kind=1, player_id=1, station_id=None, result=0, pilot_name=None):
@@ -116,9 +107,6 @@ def ack_reliable(payload):
     payload starts with that u32 sequence (CAOAComm receive switch, 0x4864E2,
     walks the retry list at +0xF18 comparing entry+0 with payload+0)."""
     return 0x0F, payload[-5:-1]
-
-
-TCP_REQUEST_LEN = 142   # u32 correlation at +0x3C, u8 job +0x80, u8 flag +0x81
 
 
 class StationSessions:
@@ -281,16 +269,6 @@ def udp_replies(message_type, payload, arena=False):
     if message_type == 0x0A and len(payload) == 381:
         replies.append(ack_connect(payload, kind=0 if arena else 1))
     return replies
-
-
-DEFAULT_VESSEL = "Ym Khtat"
-# Every .Sco object in the 2.9.2 AoAObjects.odb with an engine, pods
-# excluded (work/2.9.2/sco.json): the fighters the in-flight menu offers.
-SELECTABLE_VESSELS = frozenset((
-    "AlphaFighter", "Dafusha", "Dasibaz", "Eagle", "Etat'Illraku", "Foushar", "Grathven", "Hartra",
-    "IBCH", "Janha Vari", "Kafic", "MBB", "Meskvak Su", "Mkulat", "N'Goc", "Naroch", "Natak'Illraku",
-    "Rchat", "Rhino", "Saksatar", "Shrike", "Tekan", "Test Missile Boat", "Tholfus", "Ummra Viazyem",
-    "Vagym", "Vasa Chovo", "Vermok", "Vrak Stat", "Yagari", "Ym Khtat", "Zkole"))
 
 
 def ship_config_list():
@@ -1095,26 +1073,12 @@ def server_list_body(population, arena_port=None, mode="Local Arena", available=
     return body
 
 
-def main():
-    args = parse_args()
-    if args.print_config:
-        print(json.dumps(vars(args), default=str, indent=2))
-        return
-    key = args.key.read_bytes()
-    if len(key) != 256:
-        raise ValueError("SCRTY.BIN must contain exactly 256 bytes")
-    try:
-        with EventLog(args.log, args.raw_capture, args.log_max_bytes, args.log_backups) as log, ExitStack() as resources:
-            return run(args, key, log, resources)
-    except KeyboardInterrupt:
-        # systemd uses SIGINT, like a foreground Ctrl+C, so the context
-        # managers close sockets and drain logs before a successful exit.
-        print("Host stopped", flush=True)
-    except OSError as error:
-        raise SystemExit(f"Host I/O failed: {error}. Check that {args.bind_address} belongs to this PC and the ports are free.") from error
+def load_objects(args):
+    """Every map object run() places: (warp gates, warp loads, turret loads, buoy loads).
 
-
-def run(args, key, log, resources):
+    main() calls this before --print-config and before any socket opens, so
+    validation covers the asset files, not only the flags.
+    """
     warp_gates = warp_trial.placements(args.warp_trial) if args.warp_trial else []
     warp = warp_trial.loads(warp_gates)
     trial = turret_trial.loads(turret_trial.placements(args.turret_trial)) if args.turret_trial else []
@@ -1124,6 +1088,36 @@ def run(args, key, log, resources):
             args.navigation_buoys, args.map, args.buoy_trn or args.key.parent / 'JRMAP.TRN'))
     if args.map_waypoints:
         buoys = navigation_buoys.loads(navigation_buoys.trn_placements(args.map_waypoints.read_bytes()))
+    return warp_gates, warp, trial, buoys
+
+
+def main(argv=None):
+    args = parse_args(argv)
+    try:
+        objects = load_objects(args)
+    except (OSError, ValueError, KeyError) as error:
+        # An asset problem, reported as one line like the other setting errors.
+        print(f"{Path(sys.argv[0]).name}: error: map objects: {error}", file=sys.stderr, flush=True)
+        raise SystemExit(2) from None
+    if args.print_config:
+        print(json.dumps(vars(args), default=str, indent=2))
+        return
+    key = args.key.read_bytes()
+    if len(key) != 256:
+        raise ValueError("SCRTY.BIN must contain exactly 256 bytes")
+    try:
+        with EventLog(args.log, args.raw_capture, args.log_max_bytes, args.log_backups) as log, ExitStack() as resources:
+            return run(args, key, log, resources, objects)
+    except KeyboardInterrupt:
+        # systemd uses SIGINT, like a foreground Ctrl+C, so the context
+        # managers close sockets and drain logs before a successful exit.
+        print("Host stopped", flush=True)
+    except OSError as error:
+        raise SystemExit(f"Host I/O failed: {error}. Check that {args.bind_address} belongs to this PC and the ports are free.") from error
+
+
+def run(args, key, log, resources, objects=None):
+    warp_gates, warp, trial, buoys = load_objects(args) if objects is None else objects
     port, seconds, peer_timeout = args.port, args.seconds, args.peer_timeout
     reply, pilot = args.ack, args.pilot
     notifications = queue.Queue(maxsize=1024)
@@ -1679,6 +1673,9 @@ def run(args, key, log, resources):
                "len": len(m["payload"]), "payload": m["payload"].hex()}
         log({"event": "udp_packet", **rec})
         if reply and m["crc_ok"]:
+            if addr[0] in banned_ips:
+                # Before any reply, including reliable acks and version rejections.
+                continue
             message_type, payload = m["type"], m["payload"]
             if message_type == 0x1B:
                 if len(payload) < 5:
@@ -1701,8 +1698,6 @@ def run(args, key, log, resources):
                     receiver.sendto(aoanet.encode(*ack_connect(payload, kind=1 if receiver is s else 0, result=8), key), addr)
                     log({"t": round(time.time(), 3), "event": "admission_rejected", "reason": "unsupported client version"})
                     continue
-            if addr[0] in banned_ips:
-                continue
             if receiver is s:
                 now = time.monotonic()
                 if message_type == 0x0A and len(payload) == 381:
@@ -1892,8 +1887,6 @@ def run(args, key, log, resources):
                             for peer in {addr, loaded.get(killer_slot)} - {None}:
                                 if peer in arena_connections:
                                     deliver(peer, own_record(peer))
-            for rtype, rpay in udp_replies(message_type, payload, arena=receiver is not s):
-                receiver.sendto(aoanet.encode(rtype, rpay, key), addr)
 
 
 if __name__ == "__main__":
