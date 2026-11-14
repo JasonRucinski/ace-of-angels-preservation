@@ -130,10 +130,13 @@ class DedicatedTests(unittest.TestCase):
 
     def test_configuration_and_state(self):
         self.assertEqual(dedicated.load_config(self.config)["maps"], self.settings["maps"])
+        self.config.write_text(json.dumps({**self.settings, "comment": "explicit limits"}))
+        self.assertNotIn("comment", dedicated.load_config(self.config))
         for patch in ({"maps": []}, {"maps": ["../bad"]}, {"maps": ["Arena1a", "Arena1a"]},
                       {"kill_limit": True}, {"time_limit_seconds": float("nan")},
                       {"kill_limit": 0, "time_limit_seconds": 0}, {"recycle_arena_joins": 49},
-                      {"recycle_station_admissions": 64}, {"terrain": False}, {"unknown": 1}):
+                      {"recycle_station_admissions": 64}, {"terrain": False}, {"unknown": 1},
+                      {"comment": 5}):
             with self.subTest(patch=patch):
                 self.config.write_text(json.dumps({**self.settings, **patch}))
                 with self.assertRaises(ValueError):

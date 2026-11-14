@@ -20,6 +20,8 @@ PRIVATE_NETWORKS = ("10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16")
 # Tailscale and other overlay networks assign addresses from the shared
 # CGNAT range. Binding one requires it to be this host's own interface.
 VPN_NETWORKS = ("100.64.0.0/10",)
+# The one table of match defaults; host_control and dedicated_host import it.
+HOST_DEFAULTS = {"kill_limit": 20, "time_limit_seconds": 600, "max_players": 8}
 DEFAULT_VESSEL = "Ym Khtat"
 # Every .Sco object in the 2.9.2 AoAObjects.odb with an engine, pods
 # excluded (work/2.9.2/sco.json): the fighters the in-flight menu offers.
@@ -100,12 +102,15 @@ def parse_args(argv=None, *, raise_errors=False):
     parser.add_argument("--pilot", default="testpilot")
     parser.add_argument("--seconds", type=float, default=0)
     parser.add_argument("--peer-timeout", type=float, default=30)
-    parser.add_argument("--max-players", type=int, default=8, help="simultaneous arena admissions, 1..49")
+    parser.add_argument("--max-players", type=int, default=HOST_DEFAULTS["max_players"],
+                        help="simultaneous arena admissions, 1..49")
     parser.add_argument("--spawn-axis", choices=("x", "z"), default="x",
                         help="diagnostic relay spawn line; ships initially face +z")
     parser.add_argument("--spawn-spacing", type=float, default=1000.0, help="distance between relay spawns")
-    parser.add_argument("--kill-limit", type=int, default=20, help="relay match ends at this many kills; 0 disables")
-    parser.add_argument("--time-limit", type=float, default=600.0, help="relay match length in seconds; 0 disables")
+    parser.add_argument("--kill-limit", type=int, default=HOST_DEFAULTS["kill_limit"],
+                        help="relay match ends at this many kills; 0 disables")
+    parser.add_argument("--time-limit", type=float, default=float(HOST_DEFAULTS["time_limit_seconds"]),
+                        help="relay match length in seconds; 0 disables")
     parser.add_argument("--managed-session", action="store_true",
                         help="dedicated controller: warn, drain and exit 75 after a match or admission limit")
     parser.add_argument("--next-map", choices=online_terrain.MAP_NAMES,

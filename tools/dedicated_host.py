@@ -17,13 +17,13 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import host_ops
 import online_terrain
-from station_runtime import parse_args as server_config
+from station_runtime import HOST_DEFAULTS, parse_args as server_config
 
 SESSION_COMPLETE = 75
 DEFAULTS = {
     "maps": ["CTF_arena", "CTF_arena_b", "ast_fld_a"],
-    "kill_limit": 10,
-    "time_limit_seconds": 900,
+    "kill_limit": HOST_DEFAULTS["kill_limit"],
+    "time_limit_seconds": HOST_DEFAULTS["time_limit_seconds"],
     "restart_warning_seconds": 30,
     "intermission_seconds": 5,
     "idle_recycle_seconds": 300,
@@ -36,8 +36,10 @@ DEFAULTS = {
 
 def load_config(path):
     data = json.loads(Path(path).read_text(encoding="utf-8"))
-    if not isinstance(data, dict) or set(data) - set(DEFAULTS):
+    if not isinstance(data, dict) or set(data) - set(DEFAULTS) - {"comment"}:
         raise ValueError("rotation config must be an object containing only documented settings")
+    if not isinstance(data.pop("comment", ""), str):
+        raise ValueError("comment must be text")
     settings = {**DEFAULTS, **data}
     maps = settings["maps"]
     if (not isinstance(maps, list) or not 1 <= len(maps) <= len(online_terrain.MAP_NAMES)
@@ -169,7 +171,7 @@ def main(argv=None):
     parser.add_argument("--status-file", type=Path, required=True)
     parser.add_argument("--profile", default="vpn-dogfight", choices=("vpn-dogfight", "lan-dogfight", "local-guests"))
     parser.add_argument("--bind-address", default="127.0.0.1")
-    parser.add_argument("--max-players", type=int, default=2)
+    parser.add_argument("--max-players", type=int, default=HOST_DEFAULTS["max_players"])
     parser.add_argument("--port", type=int, default=5033)
     parser.add_argument("--arena-port", type=int, default=5031)
     parser.add_argument("--tcp", type=int, default=5034)

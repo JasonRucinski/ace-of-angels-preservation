@@ -30,8 +30,10 @@ from unittest import mock
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import dedicated_host  # noqa: E402
 import host_control  # noqa: E402
+import host_ops  # noqa: E402
 import map_viewer  # noqa: E402
 import online_terrain  # noqa: E402
+import station_runtime  # noqa: E402
 from station_runtime import parse_args  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -252,6 +254,32 @@ class HostArgvTests(unittest.TestCase):
                         effective(host_control.server_args(settings)[1:])
                     except ValueError as error:
                         self.fail(f"{settings}: {error}")
+
+
+class LauncherDefaultsTests(unittest.TestCase):
+    def test_one_defaults_table(self):
+        server = vars(parse_args(["key", "log"]))
+        table = station_runtime.HOST_DEFAULTS
+        self.assertEqual((server["kill_limit"], server["time_limit"], server["max_players"]),
+                         (table["kill_limit"], table["time_limit_seconds"], table["max_players"]))
+        self.assertEqual((host_control.DEFAULTS["kill_limit"], host_control.DEFAULTS["time_limit_min"] * 60,
+                          host_control.DEFAULTS["max_players"]),
+                         (table["kill_limit"], table["time_limit_seconds"], table["max_players"]))
+        self.assertEqual((dedicated_host.DEFAULTS["kill_limit"], dedicated_host.DEFAULTS["time_limit_seconds"]),
+                         (table["kill_limit"], table["time_limit_seconds"]))
+        # The Linux example keeps its own explicit limits.
+        example = json.loads((DEPLOY / "rotation.json.example").read_text())
+        self.assertEqual((example["kill_limit"], example["time_limit_seconds"]), (10, 900))
+        self.assertIn("override", example["comment"])
+
+    def test_start_lan_dogfight_script(self):
+        text = (ROOT / "tools/start_lan_dogfight.ps1").read_text(encoding="utf-8")
+        description = text[text.index(".DESCRIPTION"):text.index(".EXAMPLE")]
+        for command in re.findall(r"(?:^ |\| )(\w+)", host_ops.HELP.split(":", 1)[1]):
+            self.assertIn(command, description)
+        self.assertNotIn("ValidateSet('CTF_arena'", text)  # every map the server accepts (H5)
+        self.assertNotIn("Arena1a terrain", text)  # the map it was given (H4)
+        self.assertNotIn("20 kills / 10 minutes", text)  # limits from --print-config
 
 
 def main():

@@ -4,9 +4,10 @@ Start the private LAN or VPN dogfight relay. Does not change firewall or client 
 .DESCRIPTION
 -Vpn selects the vpn-dogfight profile for players who reach this PC through a
 private VPN such as Tailscale, ZeroTier or WireGuard (see docs/vpn-dogfight.md).
-The host reads console commands (status, kick, ban, end, help) and rewrites
-work/<profile>-status.json every two seconds. -TestRttMs/-TestJitterMs/
--TestLossPercent add artificial delay and loss for testing only.
+The host reads console commands (status, kick <slot>, ban <slot>, end,
+say <text>, quit, help) and rewrites work/<profile>-status.json every two
+seconds. -TestRttMs/-TestJitterMs/-TestLossPercent add artificial delay and
+loss for testing only.
 .EXAMPLE
 powershell -NoProfile -ExecutionPolicy Bypass -File tools/start_lan_dogfight.ps1 -HostAddress 192.168.1.55
 .EXAMPLE
@@ -16,7 +17,8 @@ param(
     [Parameter(Mandatory = $true)][string]$HostAddress,
     [switch]$Vpn,
     [ValidateRange(1, 8)][int]$MaxPlayers = 2,
-    [ValidateSet('CTF_arena', 'Arena1a')][string]$Map = 'CTF_arena',
+    # Any map the server accepts; --print-config below rejects unknown names.
+    [string]$Map = 'CTF_arena',
     [ValidateSet('spacebkgd', 'spacebkgd2', 'spacebkgd3', 'spacebkgd5', 'spacebkgd6')][string]$Backdrop = 'spacebkgd3',
     [switch]$Terrain,
     [ValidateRange(0, 5000)][double]$TestRttMs = 0,
@@ -53,6 +55,8 @@ try {
         $config
         return
     }
+    # Report the settings the server will actually use, not this script's guesses.
+    $settings = ($config -join "`n") | ConvertFrom-Json
     $address = Get-NetIPAddress -AddressFamily IPv4 -ErrorAction Stop |
                Where-Object { $_.IPAddress -eq $HostAddress -and $_.AddressState -eq "Preferred" } |
                Select-Object -First 1
@@ -63,8 +67,8 @@ try {
     $logDirectory = Split-Path ([System.IO.Path]::GetFullPath($Log)) -Parent
     [System.IO.Directory]::CreateDirectory($logDirectory) | Out-Null
     $alias = if ($Vpn) { "aoavpn" } else { "aoalan" }
-    Write-Host "$(if ($Vpn) { 'VPN' } else { 'LAN' }) Dogfight: $HostAddress on adapter '$($address.InterfaceAlias)' | up to $MaxPlayers players (capacity requires testing)"
-    Write-Host "Map: $Map$(if ($Terrain) { ' with Arena1a terrain' }) | Backdrop: $Backdrop"
+    Write-Host "$(if ($Vpn) { 'VPN' } else { 'LAN' }) Dogfight: $HostAddress on adapter '$($address.InterfaceAlias)' | up to $($settings.max_players) players (capacity requires testing)"
+    Write-Host "Map: $($settings.map)$(if ($settings.experimental_terrain) { " with $($settings.map) terrain" }) | Backdrop: $($settings.backdrop)"
     if ($Map -eq 'Arena1a') { Write-Host "Arena1a validation build: see docs/arena1a.md for unresolved nodes and gameplay." }
     Write-Host "UDP 5033 + 5031; TCP 5034. Firewall rules: docs/$(if ($Vpn) { 'vpn' } else { 'lan' })-dogfight.md"
     Write-Host "Each client hosts-file entry: $HostAddress $alias"
@@ -74,7 +78,9 @@ try {
     } else {
         Write-Host "Restart host and clients for reconnects."
     }
-    Write-Host "20 kills / 10 minutes; score reset only. Status: $status"
+    $kills = if ($settings.kill_limit) { "$($settings.kill_limit) kills" } else { "no kill limit" }
+    $time = if ($settings.time_limit) { "$($settings.time_limit) seconds" } else { "no time limit" }
+    Write-Host "$kills / $time; score reset only. Status: $status"
     if ($testing) { Write-Host "TEST IMPAIRMENT ON: do not use this host for normal play." -ForegroundColor Yellow }
     Write-Host "Type 'help' for host commands. Ctrl+C stops the host."
     $starts = @()

@@ -25,6 +25,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import online_terrain  # noqa: E402
+from station_runtime import HOST_DEFAULTS  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 WORK = ROOT / "work/host"
@@ -33,7 +34,8 @@ MODES = {"This PC only": "local-relay", "LAN": "lan-dogfight", "VPN (internet)":
 ALIASES = {"lan-dogfight": "aoalan", "vpn-dogfight": "aoavpn"}
 BACKDROPS = ("spacebkgd", "spacebkgd2", "spacebkgd3", "spacebkgd5", "spacebkgd6")
 DEFAULTS = {"mode": "This PC only", "address": "127.0.0.1", "map": "Arena1a", "terrain": True,
-            "backdrop": "spacebkgd3", "max_players": 4, "kill_limit": 20, "time_limit_min": 10,
+            "backdrop": "spacebkgd3", "max_players": HOST_DEFAULTS["max_players"],
+            "kill_limit": HOST_DEFAULTS["kill_limit"], "time_limit_min": HOST_DEFAULTS["time_limit_seconds"] // 60,
             "target_ships": 4, "game": "game/2.9.2",
             "navigation_buoys": True, "turret_trial": False, "warp_trial": False}
 NODE_LABELS = {"navigation_buoys": "Navigation buoys",
