@@ -80,7 +80,7 @@ never commit it or substitute a synthetic test key for real play.
 ```powershell
 $LinuxHost = 'your-user@your-linux-host'
 ssh $LinuxHost 'mkdir -p aoa-upload'
-scp -r tools deploy "${LinuxHost}:aoa-upload/"
+scp -r aoa tests tools deploy "${LinuxHost}:aoa-upload/"
 scp game/2.9.2/SCRTY.BIN "${LinuxHost}:aoa-upload/SCRTY.BIN"
 ```
 
@@ -89,9 +89,9 @@ On Linux, install the files with a separate service account:
 ```sh
 id aoa >/dev/null 2>&1 || sudo useradd --system --user-group --home-dir /var/lib/ace-of-angels --shell /usr/sbin/nologin aoa
 sudo install -d -m 0755 /opt/ace-of-angels
-sudo cp -R ~/aoa-upload/tools /opt/ace-of-angels/
-sudo chown -R root:root /opt/ace-of-angels/tools
-sudo chmod -R a+rX /opt/ace-of-angels/tools
+sudo cp -R ~/aoa-upload/aoa ~/aoa-upload/tests ~/aoa-upload/tools /opt/ace-of-angels/
+sudo chown -R root:root /opt/ace-of-angels/aoa /opt/ace-of-angels/tests /opt/ace-of-angels/tools
+sudo chmod -R a+rX /opt/ace-of-angels/aoa /opt/ace-of-angels/tests /opt/ace-of-angels/tools
 sudo install -d -o root -g aoa -m 0750 /etc/ace-of-angels
 sudo install -o root -g aoa -m 0640 ~/aoa-upload/SCRTY.BIN /etc/ace-of-angels/SCRTY.BIN
 sudo install -o root -g aoa -m 0640 ~/aoa-upload/deploy/linux/host.env.example /etc/ace-of-angels/host.env
@@ -107,7 +107,9 @@ the Windows host window does; `start_lan_dogfight.ps1` defaults to 2). Do not re
 an existing configuration during later updates. The rotation example selects
 10 kills or 15 minutes, with native terrain enabled; see section 5 to change it.
 
-The unit file runs `tools/dedicated_host.py` with every path given. If you
+The unit file runs `tools/dedicated_host.py` with every path given. That
+script is a shim for `aoa/host/dedicated.py`, so the host needs `aoa/` as
+well as `tools/` and `deploy/` (`tests/` only for the checks below). If you
 run it by hand: `--bind-address` is required for the `vpn-dogfight` (default)
 and `lan-dogfight` profiles, and must be this machine's own LAN or VPN IPv4;
 only `local-guests` defaults to 127.0.0.1. `--status-file` is optional and
@@ -122,9 +124,7 @@ Run the game-free checks first (synthetic clients on loopback):
 
 ```sh
 cd /opt/ace-of-angels
-python3 -I tools/test_station_runtime.py
-python3 -I tools/test_internet_play.py
-python3 -I tools/test_dedicated_host.py
+python3 -I tools/test.py test_station_runtime test_internet_play test_dedicated_host
 sudo -u aoa wc -c /etc/ace-of-angels/SCRTY.BIN
 sudo systemd-analyze verify /etc/systemd/system/aoa-host.service
 ```

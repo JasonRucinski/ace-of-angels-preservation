@@ -13,21 +13,12 @@ import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-SUITES = ("test_network_bounds.py", "test_relay_motion.py", "test_prepare_client.py",
-          "test_client_launcher.py",
-          "test_station_runtime.py", "test_station_sessions.py", "test_guest_admission.py",
-          "test_relay_recovery.py", "test_station_stub.py", "test_combat_delivery.py",
-          "test_client_extensions.py", "test_lan_dogfight.py", "test_scene_nodes.py",
-          "test_online_terrain.py", "test_host_control.py", "test_asteroid_render.py", "test_solid_world_render.py",
-          "test_station_detail.py", "test_world_detail.py", "test_object_persistence.py",
-          "test_object_persistence_pipeline.py", "test_internet_play.py", "test_cursor_warp.py",
-          "test_texture32.py", "test_aoapack_write.py", "test_frame_clock.py",
-          "test_visibility_fix.py", "test_render_culling.py", "test_third_person.py", "test_powerups.py",
-          "test_powerup_pickup.py", "test_target_ships.py", "test_build_texture_pack.py")
-EMULATORS = ("emulate_station_request.py", "emulate_station_aliases.py", "emulate_reliable_history.py",
-             "emulate_movement.py", "emulate_motion_state.py",
-             "emulate_archive_terminator.py", "emulate_client_extensions.py",
-             "emulate_ordered_events.py", "emulate_terrain_nodes.py")
+sys.path.insert(0, str(ROOT))
+from tests import runner, tiers  # noqa: E402
+
+# The suites and emulation checks are listed in tests/tiers.py (LOCAL, EMULATION).
+SUITES = tiers.LOCAL
+EMULATORS = tiers.EMULATION
 
 
 def main(argv=None):
@@ -38,11 +29,12 @@ def main(argv=None):
     report = {"schema": 1, "started_utc": datetime.datetime.now(datetime.timezone.utc).isoformat(),
               "scope": "synthetic loopback and isolated original-code emulation; excludes real-client UI, combat, collision, internet, clean-machine install and performance release gates",
               "python": sys.version.split()[0], "checks": [], "passed": False}
-    commands = [(name, [sys.executable, "-I", str(ROOT / "tools" / name)], True) for name in SUITES]
+    commands = [(name, runner.command(name), True) for name in SUITES]
     for name in EMULATORS:
         # Reports stay local by default; callers can inspect before committing.
-        output = args.report.parent / (Path(name).stem + ".json")
-        commands.append((name, [sys.executable, "-I", str(ROOT / "tools" / name), str(client), str(output)], False))
+        output = args.report.parent / (name.rpartition(".")[2] + ".json")
+        commands.append((name, [sys.executable, "-I", str(ROOT / "tools/run.py"), name, str(client), str(output)],
+                         False))
     args.report.parent.mkdir(parents=True, exist_ok=True)
     if not client.is_file():
         report["error"] = "missing original 2.9.2 executable"

@@ -4,6 +4,7 @@ name: Tests
 # against synthetic clients on loopback, and the golden snapshots of client
 # patch bytes and server command lines. The other client-patch suites need the
 # user's own 2.9.2 executable and run locally through tools/verify_local.py.
+# Both lists are in tests/tiers.py.
 
 on:
   push:
@@ -37,27 +38,6 @@ jobs:
       - name: Validate Linux service definition
         if: runner.os == 'Linux'
         run: systemd-analyze verify deploy/linux/aoa-host.service
+      # The suite list is tests/tiers.py (CI, plus CI_WINDOWS on Windows).
       - name: Run game-free suites
-        shell: pwsh
-        run: |
-          $suites = @(
-            "test_network_bounds", "test_relay_motion", "test_relay_recovery",
-            "test_station_runtime", "test_station_sessions", "test_station_stub",
-            "test_guest_admission", "test_combat_delivery", "test_client_extensions",
-            "test_lan_dogfight", "test_internet_play", "test_powerups",
-            "test_target_ships", "test_host_control", "test_prepare_client", "test_dedicated_host",
-            "test_client_launcher", "test_make_map", "test_make_object",
-            "test_patch_layout", "test_host_argv", "test_reel",
-            "test_cli_help", "test_polite_http", "test_install_wrapper", "test_make_vessel_combat"
-          )
-          # The texture pack builder is a Windows player tool that needs Pillow
-          # from requirements.txt, which only the Windows job installs.
-          if ($env:RUNNER_OS -eq "Windows") { $suites += "test_build_texture_pack" }
-          $failed = @()
-          foreach ($suite in $suites) {
-            Write-Host "::group::$suite"
-            python -I "tools/$suite.py"
-            if ($LASTEXITCODE -ne 0) { $failed += $suite }
-            Write-Host "::endgroup::"
-          }
-          if ($failed) { throw "Failed: $($failed -join ', ')" }
+        run: python -I tools/test.py --tier ci
