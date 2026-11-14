@@ -17,7 +17,7 @@ from aoa import cli
 from aoa.formats import gob
 from aoa.formats import scene
 from aoa.maps.navigation import ARENA1A_SHA256
-from aoa.client.base import PRISTINE_292
+from aoa.builds import CLIENT_SHA256
 
 from aoa.paths import ROOT
 EVIDENCE = 'evidence/2.9.2/turret_groups_20261026.json'
@@ -61,7 +61,7 @@ def hierarchy(data):
 
 
 def native_checks(client, nodes):
-    if hashlib.sha256(client.read_bytes()).hexdigest() != PRISTINE_292:
+    if hashlib.sha256(client.read_bytes()).hexdigest() != CLIENT_SHA256["2.9.2"]:
         raise ValueError('requires the original 2.9.2 executable')
     from aoa.emulation.emu import Emu, HEAP, SCRATCH
     from aoa.analysis.pe_util import PE
@@ -115,7 +115,7 @@ def main(argv=None):
                'turrets': [n['name'] for n in turrets if n['parent_id'] == flag['node_id']]}
               for flag in flags]
     report = {'scope': 'Hierarchy and native transform verification; no objects spawned',
-              'client_sha256': PRISTINE_292, 'map_sha256': ARENA1A_SHA256,
+              'client_sha256': CLIENT_SHA256["2.9.2"], 'map_sha256': ARENA1A_SHA256,
               'turrets': len(turrets), 'groups': groups,
               'group_size_histogram': dict(collections.Counter(len(g['turrets']) for g in groups)),
               'native_checks': native_checks(ROOT / 'game/2.9.2/AOACLIENT.EXE.orig', nodes),

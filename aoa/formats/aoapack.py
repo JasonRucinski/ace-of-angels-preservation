@@ -37,11 +37,12 @@ from pathlib import Path
 
 from aoa.formats import aoacrypt  # noqa: E402
 from aoa import cli  # noqa: E402
+from aoa.builds import CLIENT_SHA256
 
 BUILTIN_KEY_VA = {  # per client build; located by content search in 2.9.2
-    "b179c3c22e6426d55de52d57476aaa53b7e92622009daf754c5153be0b7503a7": 0x6A0128,
+    CLIENT_SHA256["2.7.1"]: 0x6A0128,
     # Original 2.9.2 static cipher wrappers at 0x52B128 / 0x52B148.
-    "4b6c35e2b3ab473bd98c0afa6538079ee78678d85c28406c07bc27a08cc78c7e": 0x5DE678,
+    CLIENT_SHA256["2.9.2"]: 0x5DE678,
 }
 
 

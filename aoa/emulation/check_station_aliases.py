@@ -14,6 +14,7 @@ from unicorn import UC_HOOK_CODE
 from unicorn.x86_const import UC_X86_REG_EAX, UC_X86_REG_EIP, UC_X86_REG_ESP
 
 from aoa import cli
+from aoa.builds import CLIENT_SHA256
 from aoa.emulation.emu import Emu, HEAP, SCRATCH, STUBS, STOP
 from aoa.analysis.pe_util import PE
 from aoa.host.server import pilot_list
@@ -71,7 +72,7 @@ def main(argv=None):
     source, output = a.source, a.output
     pe = PE(source)
     digest = hashlib.sha256(pe.data).hexdigest()
-    if digest != "4b6c35e2b3ab473bd98c0afa6538079ee78678d85c28406c07bc27a08cc78c7e":
+    if digest != CLIENT_SHA256["2.9.2"]:
         raise ValueError("requires the original, verified 2.9.2 client")
     cases = [check(pe, "testpilot", current) for current in ("", "Offline", "testpilot")]
     cases.append(check(pe, "abcdefghijklmnopqrs", ""))

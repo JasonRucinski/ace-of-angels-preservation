@@ -15,7 +15,8 @@ from pathlib import Path
 from aoa import cli
 from aoa.client.patches import explicit_protection as protection
 from aoa.emulation.emu import Emu, HEAP, SCRATCH, STACK, STUBS, STOP
-from aoa.client.base import Asm, PRISTINE_292, d32, jmp_patch
+from aoa.builds import CLIENT_SHA256
+from aoa.client.base import Asm, d32, jmp_patch
 from aoa.analysis.pe_util import PE
 from unicorn import UC_HOOK_CODE
 from unicorn.x86_const import (UC_X86_REG_EAX, UC_X86_REG_EIP, UC_X86_REG_ESP,
@@ -206,7 +207,7 @@ def main(argv=None):
     a = ap.parse_args(argv)
     path, output = a.source, a.output
     source_hash = hashlib.sha256(path.read_bytes()).hexdigest()
-    if source_hash != PRISTINE_292:
+    if source_hash != CLIENT_SHA256["2.9.2"]:
         raise ValueError("requires pinned pristine 2.9.2 executable")
     result = {"source_sha256": source_hash, **probe(path)}
     output.parent.mkdir(parents=True, exist_ok=True)

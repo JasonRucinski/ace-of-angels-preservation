@@ -3,7 +3,7 @@
 Builds the import graph of aoa/ with the ast module (nested imports count)
 and checks each edge against the layers:
 
-- aoa.paths and aoa.cli are the base every layer may use.
+- aoa.paths, aoa.cli and aoa.builds are the base every layer may use.
 - formats imports nothing else in aoa.
 - protocol and maps may import formats.
 - client and host may import formats, protocol and maps, never each other.
@@ -23,7 +23,7 @@ import unittest
 
 from aoa.paths import ROOT
 
-BASE = {"aoa", "aoa.paths", "aoa.cli"}
+BASE = {"aoa", "aoa.paths", "aoa.cli", "aoa.builds"}
 LEAVES = {"research", "analysis", "emulation", "live", "reel"}
 MAY_IMPORT = {
     "formats": {"formats"},
@@ -46,15 +46,12 @@ KNOWN = {
     ("aoa.maps.make_map", "aoa.client.patches.online_terrain"): "H12: map registry in a client patch",
     ("aoa.maps.map_viewer", "aoa.client.patches.online_terrain"): "H12: map registry in a client patch",
     ("aoa.maps.navigation", "aoa.client.patches.online_terrain"): "H12: map registry in a client patch",
-    # Audit scripts kept as libraries: PRISTINE_292 from patch_client, the emulator
-    # for their CLIs, and the server cycle through warp_routes (R4, H12).
+    # Audit scripts kept as libraries: the emulator for their CLIs, and the
+    # server cycle through warp_routes (R4, H12).
     ("aoa.maps.arena1a_audit", "aoa.analysis.pe_util"): "R4: audit CLI in a library module",
-    ("aoa.maps.arena1a_audit", "aoa.client.base"): "R4: PRISTINE_292 from the client patcher",
     ("aoa.maps.turret_hierarchy", "aoa.analysis.pe_util"): "R4: audit CLI in a library module",
-    ("aoa.maps.turret_hierarchy", "aoa.client.base"): "R4: PRISTINE_292 from the client patcher",
     ("aoa.maps.turret_hierarchy", "aoa.emulation.emu"): "R4: audit CLI in a library module",
     ("aoa.maps.warp_routes", "aoa.analysis.pe_util"): "R4: audit CLI in a library module",
-    ("aoa.maps.warp_routes", "aoa.client.base"): "R4: PRISTINE_292 from the client patcher",
     ("aoa.maps.warp_routes", "aoa.emulation.emu"): "R4: audit CLI in a library module",
     ("aoa.maps.warp_routes", "aoa.host.server"): "H12, R4: the server import cycle",
     ("aoa.maps.warp_routes", "aoa.protocol.motion"): "R4: audit CLI in a library module",

@@ -15,11 +15,11 @@ class SceneNodeTests(unittest.TestCase):
     def test_original_client_prefix_comparison(self):
         from aoa.emulation.emu import Emu, SCRATCH
         from aoa.analysis.pe_util import PE
-        from aoa.client.base import PRISTINE_292
+        from aoa.builds import CLIENT_SHA256
         from unicorn import UC_HOOK_CODE
         from unicorn.x86_const import UC_X86_REG_EAX, UC_X86_REG_EIP, UC_X86_REG_ESP
         client = ROOT / 'game/2.9.2/AOACLIENT.EXE.orig'
-        self.assertEqual(hashlib.sha256(client.read_bytes()).hexdigest(), PRISTINE_292)
+        self.assertEqual(hashlib.sha256(client.read_bytes()).hexdigest(), CLIENT_SHA256["2.9.2"])
         emu = Emu(PE(client))
 
         def crt(uc, address, size, _):

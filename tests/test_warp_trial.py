@@ -12,7 +12,7 @@ from aoa.host import warp_trial
 from aoa.live import verify_warp_trial
 from aoa.host.runtime import parse_args
 from tests import test_navigation_buoys
-from aoa.client.base import PRISTINE_292
+from aoa.builds import CLIENT_SHA256
 
 from aoa.paths import ROOT
 SOURCE = ROOT / 'work/2.9.2/export/AOAOBJECTS'
@@ -74,7 +74,7 @@ class WarpTests(unittest.TestCase):
         from aoa.emulation.emu import Emu, HEAP, SCRATCH
         from aoa.analysis.pe_util import PE
         from unicorn.x86_const import UC_X86_REG_EBP, UC_X86_REG_EDI, UC_X86_REG_EIP
-        self.assertEqual(hashlib.sha256(CLIENT.read_bytes()).hexdigest(), PRISTINE_292)
+        self.assertEqual(hashlib.sha256(CLIENT.read_bytes()).hexdigest(), CLIENT_SHA256["2.9.2"])
         emu = Emu(PE(CLIENT))
         gate = warp_trial.placement(SOURCE)
         packet = warp_trial.loads(gate)[0][1]

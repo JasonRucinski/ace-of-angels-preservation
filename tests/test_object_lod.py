@@ -7,7 +7,7 @@ import unittest
 from aoa.maps.lod import audit
 from aoa.emulation.emu import Emu, SCRATCH, STACK
 from aoa.analysis.pe_util import PE
-from aoa.client.base import PRISTINE_292
+from aoa.builds import CLIENT_SHA256
 from unicorn.x86_const import UC_X86_REG_ESI, UC_X86_REG_ESP, UC_X86_REG_FPCW
 
 from aoa.paths import ROOT
@@ -23,7 +23,7 @@ class ObjectLodTests(unittest.TestCase):
 
     def setUp(self):
         path = ROOT / 'game/2.9.2/AOACLIENT.EXE.orig'
-        self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(), PRISTINE_292)
+        self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(), CLIENT_SHA256["2.9.2"])
         self.emu = Emu(PE(path))
         self.emu.uc.reg_write(UC_X86_REG_FPCW, 0x7F)
 

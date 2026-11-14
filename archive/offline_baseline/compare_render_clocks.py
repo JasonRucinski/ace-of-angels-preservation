@@ -5,7 +5,6 @@ and camera math; it does not exercise scene traversal, LOD or GPU presentation.
 Usage: python -I tools/compare_render_clocks.py OUTPUT.json
 """
 import ctypes
-import hashlib
 import json
 import math
 import struct
@@ -14,6 +13,7 @@ import time
 from pathlib import Path
 
 from aoa import cli
+from aoa.builds import require_build
 from aoa.emulation.emu import Emu, SCRATCH, STOP, STUBS
 from aoa.analysis.pe_util import PE
 from aoa.client.experiments import render_clock_experiment as clock
@@ -45,7 +45,7 @@ def main(argv=None):
                     help='pristine 2.9.2 client (default: %(default)s)')
     a = ap.parse_args(argv)
     pe = PE(a.source)
-    assert hashlib.sha256(pe.data).hexdigest() == '4b6c35e2b3ab473bd98c0afa6538079ee78678d85c28406c07bc27a08cc78c7e'
+    require_build(pe.data, '2.9.2')
     emu = Emu(pe)
     emu.uc.reg_write(UC_X86_REG_FPCW, 0x7F)  # Direct3D single precision
     k = ctypes.WinDLL('kernel32')

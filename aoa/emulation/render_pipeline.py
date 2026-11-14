@@ -17,7 +17,7 @@ from pathlib import Path
 
 from aoa import cli
 from aoa.emulation.emu import Emu, SCRATCH, STUBS, STOP
-from aoa.client.base import PRISTINE_292
+from aoa.builds import CLIENT_SHA256
 from aoa.analysis.pe_util import PE
 from unicorn import UC_HOOK_CODE
 from unicorn.x86_const import UC_X86_REG_EIP, UC_X86_REG_FPCW, UC_X86_REG_ESP
@@ -38,7 +38,7 @@ def run(source, corrected=False, fpcw=0x7F, patch=None):
     A patch with CENTER_VISIBLE = False keeps the original hidden result for a
     node at exactly the camera position (the player's own ship, findings 9.36)."""
     pe = PE(source)
-    if hashlib.sha256(pe.data).hexdigest() != PRISTINE_292:
+    if hashlib.sha256(pe.data).hexdigest() != CLIENT_SHA256["2.9.2"]:
         raise ValueError('requires pristine 2.9.2 executable')
     emu = Emu(pe)
     center_visible = True
@@ -253,7 +253,7 @@ def run(source, corrected=False, fpcw=0x7F, patch=None):
             candidate = PE(path)
             comparisons.append({'path':relative,'sha256':hashlib.sha256(candidate.data).hexdigest(),
                                 'matches_original':{name:candidate.read_va(lo,hi-lo)==pe.read_va(lo,hi-lo) for name,(lo,hi) in spans.items()}})
-    return {'source_sha256':PRISTINE_292,
+    return {'source_sha256':CLIENT_SHA256["2.9.2"],
             'culling_patch_enabled':corrected,
             'fpcw':hex(fpcw),
             'inside_sphere_cases':inside_cases,

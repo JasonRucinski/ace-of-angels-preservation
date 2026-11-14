@@ -16,7 +16,7 @@ from pathlib import Path
 
 from aoa import cli
 from aoa.emulation.emu import Emu, HEAP, STACK, STOP
-from aoa.client.base import PRISTINE_292
+from aoa.builds import CLIENT_SHA256, require_build
 from aoa.analysis.pe_util import PE
 from aoa.formats import scene
 from unicorn import UC_HOOK_CODE
@@ -27,7 +27,7 @@ EVIDENCE = 'evidence/2.9.2/arena1a_rebuild_20261026.json'
 
 
 def probe_gates(client):
-    assert hashlib.sha256(client.read_bytes()).hexdigest() == PRISTINE_292
+    require_build(client, "2.9.2")
     emu = Emu(PE(client))
     stops = {0x497861, 0x4A5960, 0x4964F8, 0x496306}
 
@@ -90,7 +90,7 @@ def main(argv=None):
     assert len(service) == 19
     report = {
         'scope': 'Original-code gate emulation and source-node inventory; allocation, AI and live restoration not tested',
-        'client_sha256': PRISTINE_292,
+        'client_sha256': CLIENT_SHA256["2.9.2"],
         'map_sha256': hashlib.sha256((source / 'Arena1a.Gob').read_bytes()).hexdigest(),
         'root_records': 383, 'expanded_records': len(nodes), 'categories': categories,
         'gate_probes': probe_gates(ROOT / 'game/2.9.2/AOACLIENT.EXE.orig'),

@@ -15,6 +15,7 @@ from unicorn import UcError
 from unicorn.x86_const import UC_X86_REG_EIP, UC_X86_REG_ESP, UC_X86_REG_EBP, UC_X86_REG_EAX
 
 from aoa import cli
+from aoa.builds import CLIENT_SHA256
 from aoa.emulation.emu import Emu, HEAP, SCRATCH, STACK, STOP
 from aoa.analysis.pe_util import PE
 from aoa.host.server import movement_update, reported_motion, motion_snapshot
@@ -34,7 +35,7 @@ def main(argv=None):
     source, output = a.source, a.output
     pe = PE(source)
     digest = hashlib.sha256(pe.data).hexdigest()
-    if digest != "4b6c35e2b3ab473bd98c0afa6538079ee78678d85c28406c07bc27a08cc78c7e":
+    if digest != CLIENT_SHA256["2.9.2"]:
         raise ValueError("requires original 2.9.2 client")
     emu = Emu(pe)
 

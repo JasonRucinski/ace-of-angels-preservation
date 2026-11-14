@@ -18,7 +18,7 @@ from pathlib import Path
 from aoa import cli
 from aoa.maps.turret_hierarchy import hierarchy
 from aoa.maps.navigation import ARENA1A_SHA256
-from aoa.client.base import PRISTINE_292
+from aoa.builds import CLIENT_SHA256
 
 from aoa.paths import ROOT
 EVIDENCE = 'evidence/2.9.2/warp_gates_20261026.json'
@@ -43,7 +43,7 @@ def routes(nodes):
 
 
 def native_checks(client, nodes, links):
-    if hashlib.sha256(client.read_bytes()).hexdigest() != PRISTINE_292:
+    if hashlib.sha256(client.read_bytes()).hexdigest() != CLIENT_SHA256["2.9.2"]:
         raise ValueError('requires the original 2.9.2 executable')
     from aoa.analysis.pe_util import PE
     from aoa.emulation.emu import Emu, HEAP, STACK, SCRATCH, STOP
@@ -202,7 +202,7 @@ def main(argv=None):
     for path in (config, source / (model + '.Gob')):
         assert hashlib.sha256(path.read_bytes()).hexdigest() == hashes[path.name.casefold()]
     report = {'scope': 'Offline original-code research; no live gates spawned or transit tested',
-              'client_sha256': PRISTINE_292, 'map_sha256': ARENA1A_SHA256,
+              'client_sha256': CLIENT_SHA256["2.9.2"], 'map_sha256': ARENA1A_SHA256,
               'gates': [{k: v for k, v in link.items() if k not in ('position', 'destination')} for link in links],
               'native_checks': checks,
               'model_object': 'WarpGate', 'model_gob': model,

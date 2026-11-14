@@ -14,7 +14,7 @@ from pathlib import Path
 from aoa import cli
 from aoa.maps.arena1a_audit import EXPECTED_DISPATCH
 from aoa.emulation.emu import Emu, HEAP, STACK, STOP
-from aoa.client.base import PRISTINE_292
+from aoa.builds import CLIENT_SHA256
 from aoa.analysis.pe_util import PE
 from unicorn import UC_HOOK_CODE
 from unicorn.x86_const import UC_X86_REG_EAX, UC_X86_REG_EDX, UC_X86_REG_EIP, UC_X86_REG_ESP
@@ -26,7 +26,7 @@ def main(argv=None):
     ap.add_argument("output", type=Path, help="JSON report to write")
     a = ap.parse_args(argv)
     source, output = a.source, a.output
-    if hashlib.sha256(source.read_bytes()).hexdigest() != PRISTINE_292:
+    if hashlib.sha256(source.read_bytes()).hexdigest() != CLIENT_SHA256["2.9.2"]:
         raise ValueError("requires original 2.9.2")
     emu = Emu(PE(source))
     stops = set(EXPECTED_DISPATCH)
@@ -67,7 +67,7 @@ def main(argv=None):
         expected = [sum(position[k] * parent[k * 4 + c] for k in range(3)) + parent[12 + c]
                     for c in range(3)]
         assert all(math.isclose(a, b, abs_tol=0.001) for a, b in zip(observed, expected)), (observed, expected)
-    report = {"source_sha256": PRISTINE_292, "category_cases": len(categories), "category_destinations": categories,
+    report = {"source_sha256": CLIENT_SHA256["2.9.2"], "category_cases": len(categories), "category_destinations": categories,
               "parent_position_cases": 32, "parent_transform_matches_row_vector_math": True,
               "scope": "isolated original category switch and nested position arithmetic; no allocation, rendering, online loading, collision or gameplay",
               "all_arena1a_nodes_working": False}

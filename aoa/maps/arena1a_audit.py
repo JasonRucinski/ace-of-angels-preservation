@@ -17,7 +17,7 @@ import sys
 from aoa import cli
 from aoa.formats import scene
 from aoa.maps.arena_geometry import inspect_geometry
-from aoa.client.base import PRISTINE_292
+from aoa.builds import CLIENT_SHA256
 from aoa.analysis.pe_util import PE
 
 from aoa.paths import ROOT
@@ -68,7 +68,7 @@ def main(argv=None):
     output = ROOT / "work/arena1a-review"
     output.mkdir(parents=True, exist_ok=True)
     client = ROOT / "game/2.9.2/AOACLIENT.EXE.orig"
-    if hashlib.sha256(client.read_bytes()).hexdigest() != PRISTINE_292:
+    if hashlib.sha256(client.read_bytes()).hexdigest() != CLIENT_SHA256["2.9.2"]:
         raise ValueError("expected original 2.9.2 client")
     pe = PE(client)
     if [pe.u32(0x496790 + i * 4) for i in range(10)] != EXPECTED_DISPATCH:
@@ -90,7 +90,7 @@ def main(argv=None):
     summary.update(root_node_count=len(nodes), expanded_node_count=len(expanded),
                    previously_omitted_turret_records=80, geometry=inspect_geometry(output / "Arena1a.obj"),
                    native_dispatch={str(i + 1): hex(address) for i, address in enumerate(EXPECTED_DISPATCH)},
-                   original_client_sha256=PRISTINE_292,
+                   original_client_sha256=CLIENT_SHA256["2.9.2"],
                    remaining=["original-client Arena1a loading and collision", "online creation of terrain, navigation and safe zones",
                               "turret attachment transforms, ownership and AI", "warp links and destinations",
                               "repair/shield/missile marker definitions and behavior", "group/dummy semantics",

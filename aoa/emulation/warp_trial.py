@@ -8,7 +8,7 @@ import hashlib
 import struct
 
 from aoa.emulation.emu import Emu, HEAP, STACK, SCRATCH, STUBS, STOP
-from aoa.client.base import PRISTINE_292
+from aoa.builds import CLIENT_SHA256
 from aoa.analysis.pe_util import PE
 from unicorn import UC_HOOK_CODE
 from unicorn.x86_const import (UC_X86_REG_EAX, UC_X86_REG_EBP, UC_X86_REG_EBX,
@@ -29,7 +29,7 @@ class NativeWarp:
                 LOWER: 'CRT lowercase', SPRINTF: 'CRT sprintf', QUEUE: 'event queue availability'}
 
     def __init__(self, client):
-        if hashlib.sha256(client.read_bytes()).hexdigest() != PRISTINE_292:
+        if hashlib.sha256(client.read_bytes()).hexdigest() != CLIENT_SHA256["2.9.2"]:
             raise ValueError('requires original 2.9.2 executable')
         self.emu = Emu(PE(client))
         self.emu.uc.mem_map(0, 0x1000)  # SEH chain storage; no OS execution.

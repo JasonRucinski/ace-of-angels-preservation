@@ -17,8 +17,9 @@ from pathlib import Path
 
 from aoa import cli  # noqa: E402
 from aoa.analysis.pe_util import PE  # noqa: E402
+from aoa.builds import CLIENT_SHA256
 
-PRISTINE_292 = "4b6c35e2b3ab473bd98c0afa6538079ee78678d85c28406c07bc27a08cc78c7e"
+PRISTINE_292 = CLIENT_SHA256["2.9.2"]
 BASE, STRIDE = 0x5D62CC, 36
 LEVEL_IDS = (250, 280, 310, 360, 410, 460, 550, 650, 750, 850)
 # (record offset, struct format, weapon-object destination or meaning)

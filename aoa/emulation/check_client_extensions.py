@@ -15,7 +15,7 @@ from aoa import cli
 from aoa.client.patches import explicit_protection as protection
 from aoa.client import prepare
 from aoa.emulation.emu import Emu, HEAP, SCRATCH, STACK, STOP
-from aoa.client.base import PRISTINE_292
+from aoa.builds import CLIENT_SHA256
 from aoa.analysis.pe_util import PE
 from unicorn import UC_HOOK_CODE
 from unicorn.x86_const import (UC_X86_REG_EIP, UC_X86_REG_ESP, UC_X86_REG_ESI,
@@ -238,13 +238,13 @@ def main(argv=None):
     a = ap.parse_args(argv)
     source, output = a.source, a.output
     original = source.read_bytes()
-    if hashlib.sha256(original).hexdigest() != PRISTINE_292:
+    if hashlib.sha256(original).hexdigest() != CLIENT_SHA256["2.9.2"]:
         raise ValueError("requires hash-pinned original 2.9.2 client")
     prepared = prepare.configure(original, experimental_protection=True)
     with tempfile.TemporaryDirectory(prefix="aoa-extension-probe-") as tmp:
         patched = Path(tmp) / "patched.exe"
         patched.write_bytes(prepared)
-        result = {"source_sha256": PRISTINE_292,
+        result = {"source_sha256": CLIENT_SHA256["2.9.2"],
                   "patched_sha256": hashlib.sha256(prepared).hexdigest(),
                   "patch": protection.NAME,
                   "original_protection": protection_probe(source, False),

@@ -27,7 +27,9 @@ heap (found with tools/crashdbg.py --guard-heap):
 import hashlib
 import struct
 
-PRISTINE_292 = "4b6c35e2b3ab473bd98c0afa6538079ee78678d85c28406c07bc27a08cc78c7e"
+from aoa.builds import CLIENT_SHA256
+
+PRISTINE_292 = CLIENT_SHA256["2.9.2"]
 IMAGE_BASE = 0x400000
 
 IAT_SLEEP = 0x58C068

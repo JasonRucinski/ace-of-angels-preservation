@@ -4,7 +4,7 @@ import struct
 import unittest
 
 from aoa.protocol import turret_groups
-from aoa.client.base import PRISTINE_292
+from aoa.builds import CLIENT_SHA256
 from aoa.paths import ROOT
 
 CLIENT = ROOT / 'game/2.9.2/AOACLIENT.EXE.orig'
@@ -28,7 +28,7 @@ class GroupTests(unittest.TestCase):
     def test_native_disable_counts_and_terminator(self):
         from aoa.emulation.emu import Emu, HEAP, SCRATCH
         from aoa.analysis.pe_util import PE
-        self.assertEqual(hashlib.sha256(CLIENT.read_bytes()).hexdigest(), PRISTINE_292)
+        self.assertEqual(hashlib.sha256(CLIENT.read_bytes()).hexdigest(), CLIENT_SHA256["2.9.2"])
         emu = Emu(PE(CLIENT))
         world, controller, objects = HEAP, HEAP + 0x100000, HEAP + 0x110000
         emu.write(world + 0xdf03c, struct.pack('<I', controller))
@@ -54,7 +54,7 @@ class GroupTests(unittest.TestCase):
         from aoa.analysis.pe_util import PE
         from unicorn import UC_HOOK_CODE
         from unicorn.x86_const import UC_X86_REG_EIP, UC_X86_REG_ESP, UC_X86_REG_EDI, UC_X86_REG_EBX
-        self.assertEqual(hashlib.sha256(CLIENT.read_bytes()).hexdigest(), PRISTINE_292)
+        self.assertEqual(hashlib.sha256(CLIENT.read_bytes()).hexdigest(), CLIENT_SHA256["2.9.2"])
         emu = Emu(PE(CLIENT))
         def stop(uc, address, size, _):
             if address in (0x4e9720, 0x4e9297):

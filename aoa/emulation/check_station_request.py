@@ -9,6 +9,7 @@ import sys
 from pathlib import Path
 
 from aoa import cli
+from aoa.builds import CLIENT_SHA256
 from aoa.emulation.emu import Emu, SCRATCH, STACK, STOP
 from aoa.analysis.pe_util import PE
 from aoa.host.server import ack_connect
@@ -80,7 +81,7 @@ def main(argv=None):
     source, output = a.source, a.output
     pe = PE(source)
     digest = hashlib.sha256(pe.data).hexdigest()
-    if digest != "4b6c35e2b3ab473bd98c0afa6538079ee78678d85c28406c07bc27a08cc78c7e":
+    if digest != CLIENT_SHA256["2.9.2"]:
         raise ValueError("requires original 2.9.2 client")
     result = {"source_sha256": digest, "record_copy": "0x49DB20",
               "request_packing": "0x4302A6..0x43044B",
