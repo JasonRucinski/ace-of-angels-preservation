@@ -3,7 +3,8 @@
 Reads the extracted installers under work/asset-review/<version>/ and
 writes full decodes to work/asset-review/level-data/ (ignored: they hold
 coordinates) plus a summary without coordinates to
-evidence/asset-review/level-data.json.
+work/evidence/asset-review/level-data.json, or to --evidence PATH (the
+committed copy is evidence/asset-review/level-data.json).
 
 Checks:
   - every .AOA/.ODB archive: bytes not covered by any directory entry
@@ -12,7 +13,7 @@ Checks:
   - SCRIPTS.AOA entries: hashes, changes between versions
   - layout Gobs: hashes per version; 2.0.0 TestScene via decode_legacy_layout
 
-Usage: python -I tools/audit_level_data.py
+Usage: python -I tools/audit_level_data.py [--evidence PATH]
 """
 import hashlib
 import json
@@ -20,6 +21,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import cli_util  # noqa: E402
 import decode_legacy_layout  # noqa: E402
 import decode_scenario  # noqa: E402
 import decode_trn  # noqa: E402
@@ -27,7 +29,7 @@ import decode_trn  # noqa: E402
 ROOT = Path(__file__).resolve().parent.parent
 REVIEW = ROOT / "work" / "asset-review"
 OUT = REVIEW / "level-data"
-EVIDENCE = ROOT / "evidence" / "asset-review" / "level-data.json"
+EVIDENCE = "evidence/asset-review/level-data.json"
 VERSIONS = ["2.0.0", "2.7.1", "2.8.0", "2.8.2", "2.9.2"]
 LAYOUTS = ("arena1a ctf_arena ctf_arena_b newterrain outerchange ast_fld_a ast_fld_b ast_fld_c "
            "ast_fld_d ctf_base hu_base_a hu_base_b hy_base_test hy_winga hybase2lay irrosa01 "
@@ -48,7 +50,14 @@ def archive_gaps(index):
     return {"entries": len(ents), "bytes": size, "uncovered_bytes": gaps + max(0, size - pos)}
 
 
-def main():
+def main(argv=None):
+    ap = cli_util.parser(__doc__)
+    cli_util.add_evidence_option(ap, EVIDENCE)
+    a = ap.parse_args(argv)
+    missing = [v for v in VERSIONS if not (REVIEW / v).is_dir()]
+    if missing:
+        sys.exit(f"audit_level_data: no extracted installer under {REVIEW} for {', '.join(missing)} "
+                 "(run compare_version_assets.py first)")
     OUT.mkdir(parents=True, exist_ok=True)
     report = {"versions": {}, "layout_sha256": {}}
     for v in VERSIONS:
@@ -93,13 +102,14 @@ def main():
                                 "links": dec["link_count"], "consumed_exactly": dec["consumed_exactly"],
                                 "objects": dict(sorted(kinds.items()))}
         report["versions"][v] = rec
-    EVIDENCE.write_text(json.dumps(report, indent=1) + "\n", encoding="utf-8")
+    target = cli_util.evidence_target(a.evidence, EVIDENCE)
+    target.write_text(json.dumps(report, indent=1) + "\n", encoding="utf-8")
     gaps = sum(a["uncovered_bytes"] for r in report["versions"].values() for a in r["archives"].values())
     print(json.dumps({"archives": sum(len(r["archives"]) for r in report["versions"].values()),
                       "uncovered_archive_bytes": gaps,
                       "jrmap_hashes": sorted({r["jrmap_trn"]["sha256"] for r in report["versions"].values()}),
-                      "evidence": EVIDENCE.relative_to(ROOT).as_posix()}, indent=1))
+                      "evidence": cli_util.shown(target)}, indent=1))
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(cli_util.run(main))

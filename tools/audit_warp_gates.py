@@ -4,8 +4,10 @@ No live process writes, packets, asset changes or gate activation. Optional
 full coordinates stay in a local report; committed evidence contains names
 and checks. The emulated layout stops before object allocation, and the
 collision probe stops before sound/network calls.
+
+The report goes to work/evidence/2.9.2/warp_gates_20261026.json unless
+--evidence names the file (the committed copy is evidence/2.9.2/...).
 """
-import argparse
 import hashlib
 import json
 import math
@@ -14,11 +16,13 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import cli_util
 from audit_turret_groups import hierarchy
 from navigation_buoys import ARENA1A_SHA256
 from patch_client import PRISTINE_292
 
 ROOT = Path(__file__).resolve().parents[1]
+EVIDENCE = 'evidence/2.9.2/warp_gates_20261026.json'
 
 
 def routes(nodes):
@@ -181,10 +185,11 @@ def relay_checks(links):
             'host_authorizes_gate_transit': False}
 
 
-def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--local-report', type=Path)
-    args = parser.parse_args()
+def main(argv=None):
+    parser = cli_util.parser(__doc__)
+    parser.add_argument('--local-report', type=Path, help='also write the full route coordinates here')
+    cli_util.add_evidence_option(parser, EVIDENCE)
+    args = parser.parse_args(argv)
     nodes = hierarchy((ROOT / 'work/2.9.2/export/AOAOBJECTS/Arena1a.Gob').read_bytes())
     links = routes(nodes)
     checks = native_checks(ROOT / 'game/2.9.2/AOACLIENT.EXE.orig', nodes, links)
@@ -211,10 +216,10 @@ def main():
     if args.local_report:
         args.local_report.parent.mkdir(parents=True, exist_ok=True)
         args.local_report.write_text(json.dumps({'summary': report, 'routes': links}, indent=2) + '\n')
-    path = ROOT / 'evidence/2.9.2/warp_gates_20261026.json'
+    path = cli_util.evidence_target(args.evidence, EVIDENCE)
     path.write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
     print(json.dumps(report, indent=2))
 
 
 if __name__ == '__main__':
-    main()
+    sys.exit(cli_util.run(main))

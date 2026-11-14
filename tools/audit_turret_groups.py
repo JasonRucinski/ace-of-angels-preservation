@@ -2,8 +2,10 @@
 
 Read-only research: no host packets or client patches. Coordinates are written
 only to an optional local report, not the committed count-only evidence.
+
+The report goes to work/evidence/2.9.2/turret_groups_20261026.json unless
+--evidence names the file (the committed copy is evidence/2.9.2/...).
 """
-import argparse
 import collections
 import hashlib
 import json
@@ -12,12 +14,14 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import cli_util
 import gob2obj
 import scene2obj
 from navigation_buoys import ARENA1A_SHA256
 from patch_client import PRISTINE_292
 
 ROOT = Path(__file__).resolve().parents[1]
+EVIDENCE = 'evidence/2.9.2/turret_groups_20261026.json'
 
 
 def hierarchy(data):
@@ -97,10 +101,11 @@ def native_checks(client, nodes):
             'maximum_matrix_error': max(errors), 'load_object_turret_kind': 1}
 
 
-def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--local-report', type=Path)
-    args = parser.parse_args()
+def main(argv=None):
+    parser = cli_util.parser(__doc__)
+    parser.add_argument('--local-report', type=Path, help='also write the full node coordinates here')
+    cli_util.add_evidence_option(parser, EVIDENCE)
+    args = parser.parse_args(argv)
     nodes = hierarchy((ROOT / 'work/2.9.2/export/AOAOBJECTS/Arena1a.Gob').read_bytes())
     by_id = {n['node_id']: n for n in nodes}
     turrets = [n for n in nodes if n['category'] == 1]
@@ -121,10 +126,10 @@ def main():
     if args.local_report:
         args.local_report.parent.mkdir(parents=True, exist_ok=True)
         args.local_report.write_text(json.dumps({'summary': report, 'nodes': nodes}, indent=2) + '\n')
-    path = ROOT / 'evidence/2.9.2/turret_groups_20261026.json'
+    path = cli_util.evidence_target(args.evidence, EVIDENCE)
     path.write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
     print(json.dumps(report, indent=2))
 
 
 if __name__ == '__main__':
-    main()
+    sys.exit(cli_util.run(main))

@@ -2,9 +2,11 @@
 
 Runs original x86 branches up to (but never through) allocation. No process
 memory is changed. Local per-node coordinates remain under ignored work/.
+
+The report goes to work/evidence/2.9.2/arena1a_rebuild_20261026.json unless
+--evidence names the file (the committed copy is evidence/2.9.2/...).
 """
 import collections
-import argparse
 import hashlib
 import json
 import math
@@ -13,6 +15,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import cli_util
 from emulate_codec import Emu, HEAP, STACK, STOP
 from patch_client import PRISTINE_292
 from pe_util import PE
@@ -21,6 +24,7 @@ from unicorn import UC_HOOK_CODE
 from unicorn.x86_const import UC_X86_REG_EAX, UC_X86_REG_EBX, UC_X86_REG_EBP, UC_X86_REG_EDI, UC_X86_REG_EIP, UC_X86_REG_ESP
 
 ROOT = Path(__file__).resolve().parents[1]
+EVIDENCE = 'evidence/2.9.2/arena1a_rebuild_20261026.json'
 
 
 def probe_gates(client):
@@ -72,12 +76,13 @@ def probe_gates(client):
     return results
 
 
-def main():
-    parser = argparse.ArgumentParser(description=__doc__)
+def main(argv=None):
+    parser = cli_util.parser(__doc__)
     live_source = parser.add_mutually_exclusive_group()
     live_source.add_argument('--pid', type=int, help='read-only snapshot of a client already flying Arena1a')
     live_source.add_argument('--snapshot', type=Path, help='previously captured inspect_arena --objects snapshot')
-    args = parser.parse_args()
+    cli_util.add_evidence_option(parser, EVIDENCE)
+    args = parser.parse_args(argv)
     source = ROOT / 'work/2.9.2/export/AOAOBJECTS'
     nodes = list(scene2obj.expanded_nodes(source, 'Arena1a', True))
     categories = dict(collections.Counter(n['category'] for n in nodes))
@@ -133,10 +138,10 @@ def main():
                                'cube_home': 1, 'group_or_link_helpers': 17, 'nested_layout_reference': 1},
             'limitations': 'Read-only live snapshot; collision flag is not a collision-play test; no nodes restored yet',
         }
-    output = ROOT / 'evidence/2.9.2/arena1a_rebuild_20261026.json'
+    output = cli_util.evidence_target(args.evidence, EVIDENCE)
     output.write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
     print(json.dumps(report, indent=2))
 
 
 if __name__ == '__main__':
-    main()
+    sys.exit(cli_util.run(main))

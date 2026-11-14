@@ -2,6 +2,11 @@
 
 Writes an asset-review manifest under ignored work/ and a compact evidence report.
 No game assets or executables are modified. This is not in-game acceptance.
+
+    python -I tools/audit_arena1a.py [--evidence PATH]
+
+The report goes to work/evidence/2.9.2/arena1a_audit_20261021.json unless
+--evidence names the file (the committed copy is evidence/2.9.2/...).
 """
 import collections
 import hashlib
@@ -11,12 +16,14 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import cli_util
 import scene2obj
 from check_arena_geometry import inspect_geometry
 from patch_client import PRISTINE_292
 from pe_util import PE
 
 ROOT = Path(__file__).resolve().parents[1]
+EVIDENCE = "evidence/2.9.2/arena1a_audit_20261021.json"
 EXPECTED_DISPATCH = [0x4964F8, 0x496423, 0x4964F8, 0x496280, 0x4964F8,
                      0x4962F7, 0x4963E4, 0x4964F8, 0x496141, 0x4964F8]
 
@@ -55,7 +62,10 @@ def classify(node, objects, source):
     return {"group": "other_category", "status": "blocked", "reason": "Native category semantics not established for this node."}
 
 
-def main():
+def main(argv=None):
+    ap = cli_util.parser(__doc__)
+    cli_util.add_evidence_option(ap, EVIDENCE)
+    a = ap.parse_args(argv)
     source = ROOT / "work/2.9.2/export/AOAOBJECTS"
     output = ROOT / "work/arena1a-review"
     output.mkdir(parents=True, exist_ok=True)
@@ -88,9 +98,9 @@ def main():
                               "repair/shield/missile marker definitions and behavior", "group/dummy semantics",
                               "map-specific spawn acceptance"],
                    preview_coordinates="OBJ negates game Z; nested matrices compose child * parent; root marker hierarchy is not fully decoded")
-    (ROOT / "evidence/2.9.2/arena1a_audit_20261021.json").write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
+    cli_util.evidence_target(a.evidence, EVIDENCE).write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(summary, indent=2))
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(cli_util.run(main))
