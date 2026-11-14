@@ -21,9 +21,12 @@ overflow the stack in the shim engine (AcGenral.dll) with dgVoodoo.
 For the current supported local workflow, use
 [client-setup.md](client-setup.md). `prepare_client.py` now composes the logger,
 physics and configurable Station-host fixes with exact undo and a checked
-launcher. The setup script below calls it. The separate patch commands later
-in this document describe earlier experiments; do not mix them with a recorded
-prepared client, because unrecorded executable changes are rejected.
+launcher. The setup script below calls it. `patch_client.py`,
+`local_station.py` and `physics_timestep.py` are now libraries only: their
+standalone command lines were removed on 13 November 2026, because they
+changed the executable without updating `_client_setup.json` and broke a
+prepared client. Where this document mentions them, it describes earlier
+experiments.
 
 Run this yourself in a normal PowerShell window (not from a sandboxed agent
 shell — its registry writes are invisible to programs you launch, and the
@@ -44,15 +47,20 @@ and the log stops at `(LoginTrace) Restore()..End` without
 `initializing login dialog` (MFC's `DoModal` for dialog 127 fails because the
 ActiveSkin controls cannot be created).
 
-This builds `game\2.9.2\` (gitignored) from
-`originals\2.9.2\aoa_2.9.2_installer_2.11.1.exe` without running the installer,
+It needs the project's `.venv` and stops with the commands to create it if
+`.venv` is missing. This builds `game\2.9.2\` (gitignored) from
+`originals\2.9.2\aoa_2.9.2_installer_2.11.1.exe`, or, if that file is absent,
+from `builds\v2.9.2_2004_FamilyGamePack3\aoa-current.exe` where
+`fetch_known_builds.py` saves it, without running the installer,
 patches the client, registers the skin control for the current user, and
 installs the wrapper from `originals\wrappers\dgvoodoo2-2.87.5\dgVoodoo2_87_5.zip`
 (official GitHub release v2.87.5, 9,268,078 bytes, SHA-256
 `5ffde6927f7355ca3fdd5d785b581256a8e6539fa13e395a891ade6ba1040850`) plus an
 `AOACLIENT.EXE.manifest` declaring DPI awareness (without it, at 125% scaling
 the game renders at 1536x864 and is upscaled). Pass `-Wrapper ""` for native
-DirectX 7. Then
+DirectX 7. If the default wrapper zip is absent, it continues with native
+DirectX 7 and prints how to add the wrapper later; a `-Wrapper` path you name
+must exist, or it stops. Then
 run `game\2.9.2\AOACLIENT.EXE` and choose **Play Offline** → **Play**, or
 **Tutorial Mode**. Undo the registration with
 `tools\register_activeskin.ps1 game\2.9.2\ACTIVESKIN.OCX -Unregister`.
@@ -96,7 +104,8 @@ and dummy login values with the loopback server running. Exact undo is the
 `prepare_client.py undo` action described in the setup runbook.
 
 Historically, `local_station.py` made the isolated 12-byte hostname edit at
-file offset `0x1C5C60`; its standalone `--undo` belongs to that older tool.
+file offset `0x1C5C60`; its standalone command line and `--undo` no longer
+exist.
 The subsequent user-operated run reached Station with Play Online. A separate
 Play failure was traced to the stub's
 nonexistent backdrop and corrected by advertising bundled assets. A local
@@ -111,20 +120,13 @@ movement. A live breakpoint confirmed zero time steps; the original
 instructions also reproduce the failure in Unicorn. A bounded patched run
 recorded no invalid values in 300 samples, versus 38 of 100 before the fix.
 
-The consolidated preparation above includes this guard. For reproducing the
-earlier standalone experiment on an unrecorded working copy, the command was:
-
-```powershell
-.venv/Scripts/python.exe -I tools/physics_timestep.py game/2.9.2/AOACLIENT.EXE
-```
-
-This optional, reversible guard skips physics only when the elapsed time
-is zero. It accepts only the known stability-patched 2.9.2 image (original
-or localhost hostname), checks the entire image hash, and leaves positive
-time steps on the original path. Use the same command with `--undo` to
-restore the prior bytes. Remove this guard before using `local_station.py`
-to change or undo the hostname; that older tool requires the prior hash.
-This does not implement missing multiplayer gameplay. See findings 9.10.
+The consolidated preparation above includes this guard. The guard skips
+physics only when the elapsed time is zero and leaves positive time steps on
+the original path. It was first tried as a standalone command
+(`tools/physics_timestep.py EXE`, with `--undo`); that command line was
+removed on 13 November 2026 and `prepare_client.py` is now the only way to
+apply it. This does not implement missing multiplayer gameplay. See
+findings 9.10.
 
 ### Other leftovers
 

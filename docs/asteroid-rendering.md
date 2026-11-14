@@ -1,5 +1,14 @@
 # Arena1a asteroid rendering investigation
 
+> **Since 13 November 2026** each per-tool command below
+> (`asteroid_render.py`, `solid_world_render.py`, `station_detail.py`,
+> `world_detail.py`, `object_persistence.py`) is one `prepare_client.py
+> prepare` that names only its own option; every other option keeps its
+> installed state. `--undo` turns that option off. The tools no longer write
+> `.EXE.before-*` backups or `_*.json` records, and the options can be turned
+> off in any order. The launcher checkboxes do the same. The dated text below
+> is kept as it was written except where it gave instructions.
+
 The user reports asteroid silhouettes changing size while approaching, then
 stabilizing close up. Forcing the wrapper's minimum depth buffer to 24 bits
 resolved the base issue but did not resolve this symptom.
@@ -93,15 +102,13 @@ With the client closed:
 
 ```powershell
 .venv\Scripts\python.exe -I tools/solid_world_render.py game/2.9.2/AOACLIENT.EXE
-# Restore exactly the prior client, including asteroid-only mode if installed:
+# Turn it off (asteroid-only mode does not come back):
 .venv\Scripts\python.exe -I tools/solid_world_render.py game/2.9.2/AOACLIENT.EXE --undo
 .venv\Scripts\python.exe -I tools/test_solid_world_render.py
 ```
 
-The `.EXE.before-solid-world-render` backup preserves the working asteroid-only
-client. `_solid_world_render.json` records hashes and pending visual acceptance.
 Normal preparation preserves the installed mode; a fresh preparation does not
-enable it. Undo broad mode before using the older asteroid-only patch tool.
+enable it. Turning on asteroid-only mode replaces it, and the reverse.
 
 Five new regression methods cover the original/patched x86 gate at three FPU
 precisions, register/flag preservation, caller and byte-change scope, migration,
@@ -135,9 +142,8 @@ than the station's lower-resolution rock textures.
 .venv\Scripts\python.exe -I tools/test_station_detail.py
 ```
 
-The exact prior client is saved as `.EXE.before-station-detail`. Preparation
-preserves this optional selection and recognizes `station-full-detail-v1`.
-Undo station detail before undoing the underlying solid-world patch.
+Preparation preserves this optional selection and recognizes
+`station-full-detail-v1`.
 
 Five tests execute original child traversal/selection with the six extracted
 station thresholds around 200, 750 and 1024 at three FPU precision settings;
@@ -185,9 +191,8 @@ or mip-filter override.
 .venv\Scripts\python.exe -I tools/test_world_detail.py
 ```
 
-Exact rollback is `.EXE.before-world-detail`; `_world_detail.json` records
-the installed hash. Undo this layer before undoing station detail or the
-solid-world distance patch. Normal preparation preserves the selected mode.
+Normal preparation preserves the selected mode. Turning on station-only
+detail replaces it, and the reverse.
 
 Five tests cover the complete 154-model close-up selection across authored
 boundaries, the measured four-dock threshold split, retained small-object
@@ -227,14 +232,13 @@ Close the client first, then run from the repository root:
 
 ```powershell
 .venv\Scripts\python.exe -I tools/object_persistence.py game/2.9.2/AOACLIENT.EXE
-# Exact rollback of this layer:
+# Turn it off:
 .venv\Scripts\python.exe -I tools/object_persistence.py game/2.9.2/AOACLIENT.EXE --undo
 .venv\Scripts\python.exe -I tools/test_object_persistence.py
 ```
 
-The input must already have a recorded client preparation. The exact prior
-executable is retained as `.EXE.before-object-persistence`. The new mode
-composes with the older asteroid-only, solid-world, station-detail and
+On a client never prepared before, the command first applies the default
+preparation. The new mode composes with the older asteroid-only, solid-world, station-detail and
 world-detail modes. Normal preparation preserves it. Patch version 22 also
 accepts `prepare --distant-objects` and `prepare --no-distant-objects`; it
 remains off for fresh preparations unless explicitly selected.

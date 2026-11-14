@@ -89,6 +89,8 @@ port fails startup. Existing diagnostic/local profiles still bind `127.0.0.1`.
 .venv/Scripts/python.exe -I tools/prepare_client.py check game/2.9.2/AOACLIENT.EXE
 ```
 
+It changes only the Station and switches the protection probe off; every other
+client option keeps its installed state.
 The short `aoalan` alias fits the client's 11-character startup hostname field.
 Verify resolution returns the host address:
 

@@ -51,6 +51,13 @@ images, so the original upscale source folders are not needed. The existing
 `<ARCHIVE>.before-texture-pack` backups are retained. Do not delete the launcher
 cache if you want to re-enable the pack. No assets are downloaded.
 
+If the client carries an older variant of a patch (an older chase camera,
+ship-menu model or terrain hook), the launcher shows that option as on and
+says that **Apply** or **Play** updates it. The launcher has no control for
+the `--experimental-protection` probe, which works only with a loopback
+Station: if you set a remote Station, Apply switches the probe off and says
+so.
+
 The launcher preflights the selected patches and rolls back changed files if
 an apply operation fails. Existing setup backups and verification are retained.
 New visual patch entries should be added to `client_launcher.PATCHES`; this
@@ -71,6 +78,15 @@ Close the game first. Run from the repository root:
 .venv\Scripts\python.exe -I tools/prepare_client.py check game/2.9.2/AOACLIENT.EXE
 .venv\Scripts\python.exe -I tools/prepare_client.py launch game/2.9.2/AOACLIENT.EXE
 ```
+
+`prepare` changes only what you name. An option you leave out, and the
+Station when `--station` is omitted, keep their installed state. The
+defaults (Station `localhost`; frame clock, visibility math, chase camera,
+power-up pickup and menu framing on; the rest off) apply only to a client
+that was never prepared. Asking for both halves of a pair that shares code
+(solid-world and asteroid-only rendering, or world and station-only detail)
+is an error; asking for one replaces the other if it is installed. The
+`--station` and option flags are accepted only with `prepare`.
 
 `prepare` accepts the exact original 2.9.2 executable, or the recognized
 stability/localhost/physics variants. It composes the logger allocation fix,
@@ -93,11 +109,13 @@ The source executable SHA-256 is
 Patch version 22 is recorded in `_client_setup.json`, with input/output and
 undo-backup hashes, hostname, patch IDs, wrapper and transaction status.
 `check` requires the physics guard, background-network fix, archive
-terminator, cursor-warp fix and online terrain hook, so an older setup must be
-prepared again. Ship-menu framing is optional (`--no-menu-framing` or the
-launcher checkbox). That upgrade happens in place and keeps the original undo backup. The prepared localhost executable is
-`78c5bd395c436776742e632d0cde8404aec8c38a37aeafcb55be481ad284680f` (patch version 12,
-no optional rendering patches).
+terminator, cursor-warp fix and the current online terrain hook. It fails
+with "re-run prepare" when the client carries an older variant of the
+terrain hook, the chase camera or the ship-menu model, so an older setup must
+be prepared again. That upgrade happens in place and keeps the original undo
+backup. Ship-menu framing is optional (`--no-menu-framing` or the launcher
+checkbox). The prepared executable's hash depends on the options chosen, so
+none is listed here; `_client_setup.json` records the one you have.
 The existing `.orig` and `_patches.json` research artifacts are left intact.
 
 The online terrain hook activates only on an explicit flight-entry marker sent
@@ -215,7 +233,9 @@ current-user registration step in [the Windows runbook](running-on-windows-11.md
 
 For the private LAN dogfight, use the short `aoalan` alias and hosts-file mapping
 in [the LAN runbook](lan-dogfight.md). It preserves this field's size limit and
-requires disabling the optional localhost protection probe.
+requires disabling the optional localhost protection probe. A `prepare`
+without `--station` keeps the Station already installed; name
+`--station localhost` to go back to single-PC play.
 
 ```powershell
 .venv\Scripts\python.exe -I tools/prepare_client.py prepare game/2.9.2/AOACLIENT.EXE --station 127.0.0.1
@@ -225,8 +245,8 @@ The recovered hostname field supports at most **11 ASCII characters** plus
 NUL. Longer hostnames/IPv4 strings and IPv6 are rejected; there is no silent
 truncation or unverified relocation patch. This modifies startup discovery
 only. It does not add non-loopback server binding or secure internet transport.
-The current server remains local. Reapplying preparation is idempotent, and
-changing the host preserves both stability fixes and the physics guard.
+Reapplying preparation is idempotent, and changing the host preserves the
+stability fixes, the physics guard and every other installed option.
 
 ## Exact undo and interrupted operations
 
@@ -238,7 +258,8 @@ The first preparation saves exact input bytes in
 `AOACLIENT.EXE.setup-original`; later changes never replace that backup. Undo
 restores those bytes, including any recognized patches present before first
 preparation. It does not uninstall wrappers or unregister ActiveSkin. The
-launcher refuses an undone client until it is prepared again.
+launcher still opens an undone client; it shows the options the restored executable carries (normally all off), and
+**Apply** or **Play** prepares it again with the boxes as shown.
 
 Writes use same-directory temporary files, flush/fsync and atomic replacement.
 A pending record contains both allowed hashes before executable replacement.
@@ -247,6 +268,17 @@ is running, the old executable remains intact. Close the game and repeat
 `prepare` to finish, or `undo` to restore. An invalid backup or unrecorded
 executable change is rejected; do not delete the record to bypass that check.
 
+## Optional rendering patches: one command each
+
+The launcher checkboxes are the simplest way to turn these on and off. Each
+also has its own command, which is one `prepare` that names only that option:
+every other option keeps its installed state. `--undo` turns that option off.
+They write no backups or records of their own; `prepare`'s
+`AOACLIENT.EXE.setup-original` and `_client_setup.json` cover undo, and the
+options can be turned off in any order. `.EXE.before-*` files and `_*.json`
+records left by these tools before 13 November 2026 are no longer used, and
+nothing deletes them.
+
 ## Optional asteroid rendering comparison
 
 For the Arena1a distance-dependent shape popping investigation, close the
@@ -254,7 +286,7 @@ client and run:
 
 ```powershell
 .venv\Scripts\python.exe -I tools/asteroid_render.py game/2.9.2/AOACLIENT.EXE
-# Exact reversal of only this change:
+# Turn it off again:
 .venv\Scripts\python.exe -I tools/asteroid_render.py game/2.9.2/AOACLIENT.EXE --undo
 ```
 
@@ -262,8 +294,7 @@ This opt-in patch keeps `Astr-*` / `Astr_*` models on their original mesh path
 out to 900,000 surface-distance units instead of switching to cached billboards
 at 61,000. Other model names, asteroid texture LOD, transforms, and assets are
 unchanged. Preparation recognizes and preserves the selection; it does not
-enable this experiment by default. The adjacent `.EXE.before-asteroid-render`
-backup and `_asteroid_render.json` record rollback and installed hashes.
+enable this experiment by default. Turning on solid-world rendering replaces it.
 
 Live read-only snapshots found identical draw buffers across asteroid detail
 variants and active asteroid billboards. Original-code tests verify the new
@@ -279,15 +310,14 @@ retaining the sprite/particle/effect renderer, close the client and run:
 
 ```powershell
 .venv\Scripts\python.exe -I tools/solid_world_render.py game/2.9.2/AOACLIENT.EXE
-# Restore the exact previous client (including asteroid-only mode):
+# Turn it off (this does not bring back asteroid-only mode):
 .venv\Scripts\python.exe -I tools/solid_world_render.py game/2.9.2/AOACLIENT.EXE --undo
 ```
 
 This replaces the asteroid name filter with the same 900,000-unit mesh cutoff
-for world models. Texture LOD and other culling gates remain active. The
-`.EXE.before-solid-world-render` backup and `_solid_world_render.json` record
-rollback and installed hashes. Preparation preserves the chosen mode.
-Undo this mode before running the older asteroid-only tool. The user confirmed
+for world models. Texture LOD and other culling gates remain active.
+Preparation preserves the chosen mode. Turning on asteroid-only rendering
+replaces it. The user confirmed
 stable ships/stations and normal effects in flight; performance is unbenchmarked.
 
 ## Optional station full detail
@@ -297,14 +327,13 @@ the client and run:
 
 ```powershell
 .venv\Scripts\python.exe -I tools/station_detail.py game/2.9.2/AOACLIENT.EXE
-# Restore the exact previous client:
+# Turn it off:
 .venv\Scripts\python.exe -I tools/station_detail.py game/2.9.2/AOACLIENT.EXE --undo
 ```
 
 This selects the station's high-detail mesh set at all visible distances.
-Other model LODs and effect rendering are unchanged. The backup is
-`.EXE.before-station-detail`; hashes are in `_station_detail.json`.
-Undo station detail before undoing the underlying solid-world patch.
+Other model LODs and effect rendering are unchanged. Turning on full world
+detail replaces it.
 The reported brightness jump persisted: live inspection identified the
 affected sections as `newdock`, not `Hy_base1`. Prefer full world detail below.
 
@@ -314,7 +343,7 @@ With the client closed:
 
 ```powershell
 .venv\Scripts\python.exe -I tools/world_detail.py game/2.9.2/AOACLIENT.EXE
-# Restore the exact previous client:
+# Turn it off (this does not bring back station-only detail):
 .venv\Scripts\python.exe -I tools/world_detail.py game/2.9.2/AOACLIENT.EXE --undo
 ```
 
@@ -324,14 +353,13 @@ cutoffs that still sent distant dock sections to cached images. The original
 5-unit small-object threshold, far horizon, texture filtering, and independent
 sprite/particle/effect renderer remain active. It is not a global mip-filter
 override. All 154 parsed mesh models retain a valid close-up selection.
-The exact backup is `.EXE.before-world-detail`; hashes are in
-`_world_detail.json`. Undo this layer before the older rendering patches.
 Real-flight brightness confirmation remains pending.
 
 ## Optional wrapper image quality (23 October 2026)
 
-`game/2.9.2/dgVoodoo.conf` now overrides five `[DirectX]` settings that were
-`appdriven`/`false`. No executable bytes change:
+The launcher's graphics-quality checkboxes set five `[DirectX]` settings in
+`game/2.9.2/dgVoodoo.conf` that are `appdriven`/`false` by default. No
+executable bytes change:
 
 | Key | Value | Purpose |
 |---|---|---|
@@ -341,14 +369,10 @@ Real-flight brightness confirmation remains pending.
 | `Mipmapping` | `autogen_bilinear` | The client creates no mip chains (`Logs/DxGfx*.log`), so distant textures shimmer |
 | `PhongShadingWhenPossible` | `true` | Per-pixel instead of per-vertex fixed-function lighting |
 
-The exact prior file is `dgVoodoo.conf.before-quality`. Restore it with the
-client closed:
-
-```powershell
-Copy-Item game/2.9.2/dgVoodoo.conf.before-quality game/2.9.2/dgVoodoo.conf
-```
-
-Fresh wrapper installs still use the plain defaults. Flight acceptance and
+To go back, untick them, or use **Original visuals (all off)**. No tool
+writes a `dgVoodoo.conf.before-quality` copy. Fresh wrapper installs use the
+plain defaults, and re-running `install_wrapper.py` keeps the values already
+in an existing `dgVoodoo.conf`. Flight acceptance and
 performance are pending. Phong can change the brightness of some objects.
 Autogenerated mipmaps may bleed between images packed into the same texture
 atlas. Neither has been observed yet.
@@ -368,8 +392,9 @@ alpha 0 to alpha 8, so it creates ARGB8888 (`0x554970`). The 32-bit surface's
 24-bit converter `0x558B80` ORs `0xFF000000` into every pixel.
 
 ```powershell
-# Close the client first:
+# Close the client first (or use the launcher's 32-bit textures checkbox):
 .venv\Scripts\python.exe -I tools/texture32.py game/2.9.2/AOACLIENT.EXE
+# Turn it off:
 .venv\Scripts\python.exe -I tools/texture32.py game/2.9.2/AOACLIENT.EXE --undo
 .venv\Scripts\python.exe -I tools/test_texture32.py
 ```
@@ -378,8 +403,7 @@ The six tests run the original and patched loader for source depths
 0..64, the existing-view bypass and AllocTexture's format dispatch in
 emulation. They also check the converter table and installation, idempotence,
 exact undo, byte scope and corruption rejection. Normal preparation preserves
-the patch (`texture-argb8888-v1`). The exact backup is
-`.EXE.before-texture32`, with hashes in `_texture32.json`.
+the patch (`texture-argb8888-v1`).
 Installed 23 October 2026. In the first live session, all 17 TGA views
 loaded as `Format(8888)` with no graphics-log warnings. That covers 24-bit
 world/ship skins and the 32-bit HUD/effect images that were ARGB4444.

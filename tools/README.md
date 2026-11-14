@@ -14,9 +14,9 @@ executable accept only known, hash-checked builds and record an exact undo.
 | Script | Does |
 |---|---|
 | `fetch_known_builds.py DIR` | Downloads the verified 2.8.2 and 2.9.2 installers from archive.org and checks their hashes |
-| `setup_game.ps1` | Builds a playable `game\2.9.2` folder: extract, patch, register, wrapper ([play.md](../docs/play.md)) |
-| `prepare_client.py prepare/check/undo/launch EXE` | Applies every client fix with an exact undo, verifies the result, and launches the game |
-| `client_launcher.cmd` / `client_launcher.py` | Client window with saved visual checkboxes, original-visuals preset, Apply and Play |
+| `setup_game.ps1` | Builds a playable `game\2.9.2` folder: extract, patch, register, wrapper ([play.md](../docs/play.md)). Needs `.venv`; stops if a `-Wrapper` path you name is missing |
+| `prepare_client.py prepare/check/undo/launch EXE` | Applies every client fix with an exact undo, verifies the result, and launches the game. `prepare` changes only the options you name |
+| `client_launcher.cmd` / `client_launcher.py` | Client window with saved visual checkboxes, original-visuals preset, Apply and Play. The `.cmd` keeps a console open, so an error before the window appears stays readable |
 | `host_control.cmd` / `host_control.py` | The host window: start, watch players, message, kick, switch maps, stop |
 | `start_lan_dogfight.ps1` | Starts the LAN or VPN dogfight server from the command line |
 | `map_viewer.py serve MAP` | Serves one recovered map for flying around |
@@ -41,6 +41,12 @@ reliable delivery), `host_ops.py` (status file and console), `net_impair.py`
 
 Each is a library used by `prepare_client.py`, with a matching `test_*.py`.
 Details and addresses are in [client-setup.md](../docs/client-setup.md).
+`patch_client.py`, `physics_timestep.py` and `local_station.py` have no
+command line of their own any more. The optional rendering modules
+(`asteroid_render.py`, `solid_world_render.py`, `station_detail.py`,
+`world_detail.py`, `texture32.py`, `object_persistence.py`) keep a
+`CLIENT [--undo]` command that runs one `prepare` naming only that option;
+`--undo` turns it off. They write no backups or records of their own.
 
 | Module | Fixes or adds |
 |---|---|

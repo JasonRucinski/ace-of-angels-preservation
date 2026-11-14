@@ -110,7 +110,8 @@ Windows `hosts` file under the short alias, then re-points their client:
 .venv\Scripts\python.exe -I tools\prepare_client.py prepare game\2.9.2\AOACLIENT.EXE --station aoalan --no-experimental-protection
 ```
 
-The guides give the exact firewall and `hosts` commands.
+It changes only the Station and switches the protection probe off; every other
+client option keeps its installed state. The guides give the exact firewall and `hosts` commands.
 
 Matches are free-for-all: 20 kills or 10 minutes, then scores reset and play
 continues. Separate PCs have played over a LAN only through the

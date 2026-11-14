@@ -49,7 +49,9 @@ exact release.
 ## 3. Turn on 32-bit textures
 
 The game normally squeezes textures down to 16-bit colour, which would throw
-the extra detail away. This client fix stops that:
+the extra detail away. This client fix stops that. The easiest way is the
+**32-bit textures** checkbox in `tools\client_launcher.cmd` (tick it,
+then **Apply**). Or, with the game closed:
 
 ```powershell
 .venv\Scripts\python.exe -I tools\texture32.py game\2.9.2\AOACLIENT.EXE
@@ -101,15 +103,18 @@ You should see `(512 512 24) Format(8888)`. The old size is `(256 256 24)`.
 
 ## Removing it
 
-With the game closed:
+The launcher's replacement texture pack and **32-bit textures** checkboxes turn
+both off; the launcher keeps a copy of the pack so you can turn it back on.
+Or, with the game closed:
 
 ```powershell
 .venv\Scripts\python.exe -I tools\texture_pack.py game\2.9.2 --undo
 .venv\Scripts\python.exe -I tools\texture32.py game\2.9.2\AOACLIENT.EXE --undo
 ```
 
-The first command puts back the original archives exactly. The second
-removes the 32-bit fix; you can keep that one if you like.
+The first command puts back the original archives exactly. The second turns
+the 32-bit fix off and leaves your other client options as they are; you can
+keep that one if you like.
 
 ## Troubleshooting
 

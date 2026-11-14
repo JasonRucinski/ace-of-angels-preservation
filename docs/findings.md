@@ -623,6 +623,11 @@ repeatedly afterward. This confirms the missing precondition identified
 in 9.9. Breakpoints change timing; the comparison run below omitted this
 physics breakpoint. Raw trace: ignored `work/physics-client.txt`.
 
+(Historical note, 13 November 2026: the standalone command line of
+`physics_timestep.py` described here, like those of `patch_client.py` and
+`local_station.py`, was removed; the modules are libraries that
+`prepare_client.py` applies. The findings below are unchanged.)
+
 `tools/physics_timestep.py` adds a reversible guard at `0x48AE71`. After
 the original tick bookkeeping, it checks the calculated time step at
 `[esp+0x38]`. Zero takes the existing balanced epilogue at `0x48CE9F`;

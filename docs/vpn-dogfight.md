@@ -110,6 +110,9 @@ If the host PC also plays, it is a client like the others. Use the same
 .venv/Scripts/python.exe -I tools/prepare_client.py launch game/2.9.2/AOACLIENT.EXE
 ```
 
+   It changes only the Station and switches the protection probe off; every other
+   client option keeps its installed state.
+
 5. Log in with dummy values, choose Play Online, your temporary pilot and
    **VPN Dogfight**.
 
