@@ -137,8 +137,12 @@ the trial to bind 127.0.0.2 while the regular host uses 127.0.0.1. Wildcard
 and LAN addresses remain rejected for these profiles.
 
 ```powershell
-.venv/Scripts/python.exe -I tools/station_stub.py game/2.9.2/SCRTY.BIN work/turret-host.jsonl --profile local-relay --bind-address 127.0.0.2 --map Arena1a --experimental-terrain --sustained-delivery --navigation-buoys work/2.9.2/export/AOAOBJECTS --turret-trial work/2.9.2/export/AOAOBJECTS --target-ships 0 --spawn-at 145041 -29123 100278 --seconds 1800
+.venv/Scripts/python.exe -I tools/station_stub.py game/2.9.2/SCRTY.BIN work/turret-host.jsonl --profile local-relay --bind-address 127.0.0.2 --advertised-address 127.0.0.2 --map Arena1a --experimental-terrain --sustained-delivery --navigation-buoys work/2.9.2/export/AOAOBJECTS --turret-trial work/2.9.2/export/AOAOBJECTS --target-ships 0 --spawn-at 145041 -29123 100278 --seconds 1800
 ```
+
+`--advertised-address` in this command is deprecated and changes nothing (it
+must equal `--bind-address`); the server prints a deprecation line and runs
+the same without it.
 
 Connect the prepared client to Station IP 127.0.0.2. Once flying,
 `verify_turret_trial.py <PID> <export-directory> <output.json>` checks the
@@ -267,8 +271,10 @@ gate crossings. Visual geometry/orientation, actual collision entry/exit,
 observer synchronization and map cleanup require live checks.
 
 ```powershell
-.venv/Scripts/python.exe -I tools/station_stub.py game/2.9.2/SCRTY.BIN work/warp-research/host.jsonl --profile local-relay --bind-address 127.0.0.2 --map Arena1a --experimental-terrain --sustained-delivery --navigation-buoys work/2.9.2/export/AOAOBJECTS --warp-trial work/2.9.2/export/AOAOBJECTS --target-ships 0 --spawn-at 19018.6543 0 -3742.1543 --status-file work/warp-research/status.json --seconds 1800
+.venv/Scripts/python.exe -I tools/station_stub.py game/2.9.2/SCRTY.BIN work/warp-research/host.jsonl --profile local-relay --bind-address 127.0.0.2 --advertised-address 127.0.0.2 --map Arena1a --experimental-terrain --sustained-delivery --navigation-buoys work/2.9.2/export/AOAOBJECTS --warp-trial work/2.9.2/export/AOAOBJECTS --target-ships 0 --spawn-at 19018.6543 0 -3742.1543 --status-file work/warp-research/status.json --seconds 1800
 ```
+
+As above, `--advertised-address` is deprecated and can be left out.
 
 Connect the prepared client to Station IP 127.0.0.2, select Local Relay and
 press Play. The spawn is 6,000 units behind the gate along +Z. Once flying:

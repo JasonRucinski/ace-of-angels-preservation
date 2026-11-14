@@ -1,7 +1,10 @@
 # Internet multiplayer and hosting checklist
 
-Updated 21 October 2026. This is a proposed implementation roadmap, not a
-claim that the current server is internet-ready. Check items only when their
+Updated 21 October 2026; reviewed 14 November 2026, when "implemented by"
+notes were added to items done since, without ticking any whose acceptance
+is not recorded. Current verified status is in [STATUS.md](STATUS.md). This
+is a proposed implementation roadmap, not a claim that the current server is
+internet-ready. Check items only when their
 acceptance evidence is recorded. Modernization has a separate checklist in
 [modernization-todo.md](modernization-todo.md).
 
@@ -27,6 +30,9 @@ Latest LAN implementation verification: **65 tests and eight emulators passed**
 ([gate](../evidence/2.9.2/local_gate_20261021_lan_dogfight.json)); a
 [same-PC LAN-address smoke check](../evidence/2.9.2/lan_binding_20261021.json)
 also passed. Separate-PC networking and real-client dogfight acceptance are pending.
+(14 Nov 2026: two separate PCs have since fought on a LAN through the Linux
+host; Windows-hosted separate-PC play is still unrecorded. See
+[STATUS.md](STATUS.md).)
 
 The approved authoritative completion plan starts with the
 [client-extension gate](client-extension-gate.md). An opt-in protection setter
@@ -356,6 +362,10 @@ and loss. Expanding the current raw relay is not sufficient by itself.
   an approved asset, or remove the unsupported map from the playable list.
 - [ ] Add map selection, rotation, round transitions and cleanup without
   stale objects, scores or collision from the previous map.
+  Implemented in part by `tools/dedicated_host.py` (26 Oct 2026): rotation
+  with kill/time limits and a fresh process per map, so nothing carries over
+  ([linux-host.md](linux-host.md)). Players must relaunch; real-client
+  rejoin with the next map's terrain is not verified.
 - [ ] Validate each remaining layout individually. Keep a matrix of visual,
   collision, spawn, mode, dependency and load/performance test results.
 
@@ -400,6 +410,8 @@ and return to a previous working version using documented steps.
 
 - [ ] Start with one dedicated host with a stable reachable address, rather
   than requiring every player to expose a home machine.
+  Implemented by the Linux host ([linux-host.md](linux-host.md)), verified on
+  a LAN on 26 Oct 2026; not yet reached over a VPN or the internet.
 - [ ] Make bind address, advertised address, ports and Station hostname
   distinct configuration fields; reject advertising loopback for public play.
   Not needed for the VPN route: the host binds and advertises its VPN address.

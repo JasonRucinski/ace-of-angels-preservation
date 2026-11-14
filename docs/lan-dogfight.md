@@ -72,7 +72,7 @@ and player count the server reports.
 The equivalent Python command is:
 
 ```powershell
-.venv/Scripts/python.exe -I tools/station_stub.py game/2.9.2/SCRTY.BIN work/host/lan-dogfight.jsonl --profile lan-dogfight --bind-address 192.168.0.61 --max-players 2
+.venv/Scripts/python.exe -I tools/station_stub.py game/2.9.2/SCRTY.BIN work/lan-dogfight.jsonl --profile lan-dogfight --bind-address 192.168.0.61 --max-players 2
 ```
 
 All three listeners bind the `--bind-address`, and the server list gives

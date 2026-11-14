@@ -2087,7 +2087,7 @@ default; `--no-third-person` opts out):
   same game tick (`0x5E8E5C`), so spectate frames and other camera objects
   are unaffected.
 - F2 is unbound in the default key map (wrong: plain F2 is "Toggle Mentor"; see
-  [9.47](#947-an-orbit-camera-on-f4-f2-was-never-unbound-26-october-2026)). The toggle bit flips on every press,
+  [9.47](#947-an-orbit-camera-on-f4-f2-was-never-unbound-2627-october-2026)). The toggle bit flips on every press,
   so no state is kept beyond the key state itself.
 
 **Verification:**

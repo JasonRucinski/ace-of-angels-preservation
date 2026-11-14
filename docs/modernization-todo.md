@@ -1,6 +1,8 @@
 # Game modernization checklist
 
-Updated 21 October 2026. Recommendations, not promises or completed work.
+Updated 21 October 2026; reviewed 14 November 2026, when "implemented by"
+notes were added to items done since (none ticked). Recommendations, not
+promises or completed work.
 The playable-server prerequisites and measurable performance gates are in
 [internet-server-todo.md](internet-server-todo.md).
 
@@ -71,6 +73,8 @@ replacement or an engine rewrite before checking compatibility and budgets.
   before upscale work; an unbound high-resolution image fixes nothing.
 - [ ] Test a small texture set at 2× resolution, comparing motion and common
   camera distances. Adopt larger sizes only where visibly useful.
+  Implemented by the 2x texture pack ([texture-pack.md](texture-pack.md));
+  only the player's own ship has been confirmed loading at the new size.
 - [ ] Compare careful repainting, conventional resampling and AI upscaling;
   inspect invented markings, seams, inconsistent panel lines and text.
 - [ ] Rebuild typography, insignia and logos from clean artwork rather than
@@ -113,10 +117,19 @@ replacement or an engine rewrite before checking compatibility and budgets.
 
 - [ ] Establish a stable borderless/windowed path, proper resolution and DPI,
   aspect ratio, field of view and alt-tab behavior first.
+  Implemented in part by the dgVoodoo2 windowed setup with a DPI-aware
+  manifest and the ship-menu aspect fix ([play.md](play.md),
+  [client-setup.md](client-setup.md)); field of view is unchanged.
 - [ ] Improve frame pacing, VSync/frame-cap choices and high-refresh support;
   keep simulation and input independent from render frequency.
+  Frame pacing implemented by `frame-clock-v1`
+  ([findings 9.35](findings.md#935-frame-pacing-a-millisecond-game-clock-and-the-timer-frame-gate-23-october-2026));
+  VSync, frame caps and high refresh are not addressed.
 - [ ] Add scalable anti-aliasing and anisotropic filtering, verified against
   cockpit text, star fields and thin geometry.
+  Implemented as the launcher's wrapper quality options
+  ([client-setup.md](client-setup.md#optional-wrapper-image-quality-23-october-2026));
+  the verification asked for here is not done.
 - [ ] Upgrade lighting and exposure carefully so ships and targets remain
   readable against backgrounds; preserve the original visual mood.
 - [ ] Improve engine trails, muzzle flashes, impacts, shield hits and
