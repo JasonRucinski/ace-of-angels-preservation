@@ -343,8 +343,12 @@ def gui(folder=DEFAULT_GAME, run=True):
     return root, variables, checks
 
 
-if __name__ == "__main__":
+def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("game", type=Path, nargs="?", default=DEFAULT_GAME)
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
     gui(args.game)
+
+
+if __name__ == "__main__":
+    main()
