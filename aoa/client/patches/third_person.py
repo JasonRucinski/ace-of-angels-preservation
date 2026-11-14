@@ -67,11 +67,8 @@ Library use only (prepare_client.py composes it); no file is written here.
 """
 import math
 import struct
-import sys
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-from patch_client import Asm, jmp_patch  # noqa: E402
+from aoa.client.base import Asm, jmp_patch  # noqa: E402
 
 NAME = "third-person-camera-v3"
 VK_TOGGLE = 0x71                 # F2: chase; bound by default only to Toggle Mentor

@@ -12,12 +12,11 @@ import struct
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import cli_util
-import explicit_protection as protection
-from emulate_codec import Emu, HEAP, SCRATCH, STACK, STUBS, STOP
-from patch_client import Asm, PRISTINE_292, d32, jmp_patch
-from pe_util import PE
+from aoa import cli
+from aoa.client.patches import explicit_protection as protection
+from aoa.emulation.emu import Emu, HEAP, SCRATCH, STACK, STUBS, STOP
+from aoa.client.base import Asm, PRISTINE_292, d32, jmp_patch
+from aoa.analysis.pe_util import PE
 from unicorn import UC_HOOK_CODE
 from unicorn.x86_const import (UC_X86_REG_EAX, UC_X86_REG_EIP, UC_X86_REG_ESP,
                                UC_X86_REG_ESI, UC_X86_REG_EDI, UC_X86_REG_EBX,
@@ -201,7 +200,7 @@ def probe(path):
 
 
 def main(argv=None):
-    ap = cli_util.parser(__doc__)
+    ap = cli.parser(__doc__)
     ap.add_argument("source", type=Path, help="pristine 2.9.2 client (AOACLIENT.EXE.orig)")
     ap.add_argument("output", type=Path, help="JSON report to write")
     a = ap.parse_args(argv)
@@ -216,4 +215,4 @@ def main(argv=None):
 
 
 if __name__ == "__main__":
-    sys.exit(cli_util.run(main))
+    sys.exit(cli.run(main))

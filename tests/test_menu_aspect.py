@@ -1,16 +1,14 @@
 """Execute both ship-menu hooks in x86, checking framing and ABI preservation."""
 import math
 import struct
-import sys
 import unittest
-from pathlib import Path
 
 from unicorn import Uc, UC_ARCH_X86, UC_MODE_32
 from unicorn.x86_const import UC_X86_REG_EAX, UC_X86_REG_ECX, UC_X86_REG_EDX, UC_X86_REG_EBP, UC_X86_REG_ESP
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import menu_aspect
-import prepare_client
+from aoa.client.patches import menu_aspect
+from aoa.client import prepare
+from aoa.paths import ROOT
 
 
 class MenuAspectTests(unittest.TestCase):
@@ -44,10 +42,10 @@ class MenuAspectTests(unittest.TestCase):
                         self.assertAlmostEqual(fov, 2 * math.atan((width // 2) / focal), places=6)
 
     def test_reversible_and_rejects_corruption(self):
-        path = Path(__file__).resolve().parents[1] / "game/2.9.2/AOACLIENT.EXE.orig"
-        source = prepare_client.configure(path.read_bytes())
+        path = ROOT / "game/2.9.2/AOACLIENT.EXE.orig"
+        source = prepare.configure(path.read_bytes())
         source = menu_aspect.configure(source, False)
-        prepare_client.inspect(source)
+        prepare.inspect(source)
         patched = menu_aspect.configure(source)
         self.assertEqual(menu_aspect.configure(patched), patched)
         self.assertEqual(menu_aspect.configure(patched, False), source)

@@ -192,8 +192,6 @@ class ToolBehaviour(unittest.TestCase):
     """In-process checks of the command-line fixes (no network, temp files only)."""
 
     def setUp(self):
-        sys.path.insert(0, str(TOOLS))
-        self.addCleanup(sys.path.remove, str(TOOLS))
         tmp = tempfile.TemporaryDirectory(prefix="aoa-cli-behaviour-")
         self.addCleanup(tmp.cleanup)
         self.tmp = Path(tmp.name)
@@ -215,28 +213,28 @@ class ToolBehaviour(unittest.TestCase):
         # R19: a mismatch used to print a warning and write the file anyway.
         import contextlib
         import io
-        import wise_extract
+        from aoa.formats import wise
         import zlib
         data = b"Ace of Angels notes\r\n" * 20
         installer = self.fake_installer(data, zlib.crc32(data) ^ 1)
         out = self.tmp / "out"
         with contextlib.redirect_stdout(io.StringIO()), self.assertRaises(SystemExit) as caught:
-            wise_extract.main([str(installer), str(out)])
+            wise.main([str(installer), str(out)])
         self.assertIn("CRC", str(caught.exception.code))
         self.assertEqual(list(out.iterdir()), [])
         with contextlib.redirect_stdout(io.StringIO()):
-            wise_extract.main([str(installer), str(out), "--force"])
+            wise.main([str(installer), str(out), "--force"])
         self.assertEqual((out / "AOANOTES.TXT").read_bytes(), data)
 
     def test_wise_extract_good_crc(self):
         import contextlib
         import io
-        import wise_extract
+        from aoa.formats import wise
         import zlib
         data = b"intact member" * 10
         out = self.tmp / "out"
         with contextlib.redirect_stdout(io.StringIO()):
-            wise_extract.main([str(self.fake_installer(data, zlib.crc32(data))), str(out)])
+            wise.main([str(self.fake_installer(data, zlib.crc32(data))), str(out)])
         self.assertEqual((out / "AOANOTES.TXT").read_bytes(), data)
 
     def test_inventory_without_appendix_c(self):
@@ -245,7 +243,7 @@ class ToolBehaviour(unittest.TestCase):
         import io
         import json
         import zipfile
-        import inventory
+        from archive.analysis import inventory
         installer = self.tmp / "setup.exe"
         with zipfile.ZipFile(installer, "w") as zf:
             zf.writestr("AOANOTES.TXT", b"notes")
@@ -262,11 +260,11 @@ class ToolBehaviour(unittest.TestCase):
 
     def test_audits_default_to_work(self):
         # R8: audits wrote committed evidence/ on every run.
-        import cli_util
+        from aoa import cli
         committed = "evidence/2.9.2/example.json"
-        self.assertEqual(cli_util.evidence_target(self.tmp / "x" / "e.json", committed), self.tmp / "x" / "e.json")
-        default = cli_util.WORK / committed
-        self.assertEqual(default.relative_to(cli_util.ROOT).parts[0], "work")
+        self.assertEqual(cli.evidence_target(self.tmp / "x" / "e.json", committed), self.tmp / "x" / "e.json")
+        default = cli.WORK / committed
+        self.assertEqual(default.relative_to(cli.ROOT).parts[0], "work")
 
 
 def _add_tests():

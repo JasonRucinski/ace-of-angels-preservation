@@ -9,11 +9,8 @@ chases the cursor into that corner. The cave asks Windows for the current
 origin with ScreenToClient (already imported) on the main window handle
 (0x5E6DE8). If that fails, the original cached-origin arithmetic is kept.
 """
-import sys
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-from patch_client import Asm, jmp_patch
+from aoa.client.base import Asm, jmp_patch
 
 NAME = "cursor-warp-origin-v1"
 CAVE = 0x58B300  # free .text padding between logger lock and physics guard

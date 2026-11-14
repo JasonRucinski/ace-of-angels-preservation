@@ -8,13 +8,12 @@ import subprocess
 import tempfile
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import aoacrypt
-import aoanet
-import aoapack
-import station_stub
-from station_runtime import DatagramBudget
-from test_station_stub import request
+from aoa.formats import aoacrypt
+from aoa.protocol import codec
+from aoa.formats import aoapack
+from aoa.host.runtime import DatagramBudget
+from tests.test_station_stub import request
+from aoa import paths
 
 KEY = bytes(range(256))
 
@@ -38,7 +37,7 @@ class NetworkBoundsTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp, socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as peer:
             folder = Path(tmp)
             (folder / "key").write_bytes(KEY)
-            proc = subprocess.Popen([sys.executable, "-I", str(Path(station_stub.__file__)), str(folder / "key"),
+            proc = subprocess.Popen([sys.executable, "-I", str(paths.entry("station_stub")), str(folder / "key"),
                                      str(folder / "log"), "--port", "0", "--ack", "--seconds", "5"],
                                     stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
             try:
@@ -49,12 +48,12 @@ class NetworkBoundsTests(unittest.TestCase):
                     peer.sendto(data, endpoint)
                 invalid = bytearray(request())
                 struct.pack_into("<I", invalid, 1, 8)
-                peer.sendto(aoanet.encode(10, invalid, KEY), endpoint)
-                rejected = aoanet.decode(peer.recv(512), KEY)
+                peer.sendto(codec.encode(10, invalid, KEY), endpoint)
+                rejected = codec.decode(peer.recv(512), KEY)
                 self.assertEqual(struct.unpack_from("<I", rejected["payload"], 6)[0], 8)
                 self.assertEqual(rejected["payload"][13:], bytes(350))
-                peer.sendto(aoanet.encode(10, request(), KEY), endpoint)
-                accepted = aoanet.decode(peer.recv(512), KEY)
+                peer.sendto(codec.encode(10, request(), KEY), endpoint)
+                accepted = codec.decode(peer.recv(512), KEY)
                 self.assertEqual(struct.unpack_from("<I", accepted["payload"], 6)[0], 0)
                 self.assertEqual(struct.unpack_from("<I", accepted["payload"], 136)[0], 1)
                 self.assertIsNone(proc.poll())
@@ -68,20 +67,20 @@ class NetworkBoundsTests(unittest.TestCase):
         for size in (0, 1, 12, 129, 191, 320, 363, 381, 438, 508):
             payload = rng.randbytes(size)
             for compressed in (False, True):
-                message = aoanet.decode(aoanet.encode(31, payload, KEY, compressed), KEY)
+                message = codec.decode(codec.encode(31, payload, KEY, compressed), KEY)
                 self.assertTrue(message["crc_ok"])
                 self.assertEqual((message["type"], message["payload"]), (31, payload))
-        self.assertEqual(len(aoanet.decode(aoanet.encode(31, bytes(509), KEY), KEY)["payload"]), 509)
+        self.assertEqual(len(codec.decode(codec.encode(31, bytes(509), KEY), KEY)["payload"]), 509)
         for kind, payload, key in ((256, b"", KEY), (-1, b"", KEY), (1, bytes(510), KEY), (1, b"", b"x")):
             with self.assertRaises(ValueError):
-                aoanet.encode(kind, payload, key)
+                codec.encode(kind, payload, key)
         with self.assertRaises(ValueError):
-            aoanet.encode(1, bytes(509), KEY, compress=False)
+            codec.encode(1, bytes(509), KEY, compress=False)
 
     def test_malformed_trailers_and_expansion(self):
         for wire in (b"", b"x", b"xx", bytes(513), aoacrypt.encrypt(b"\0\0\x10", KEY)):
             with self.assertRaises(ValueError):
-                aoanet.decode(wire, KEY)
+                codec.decode(wire, KEY)
         for data in (b"", b"\x08", b"\0\x08", b"\x01"):
             with self.assertRaises(ValueError):
                 aoapack.decompress(data, max_output=512)
@@ -89,24 +88,24 @@ class NetworkBoundsTests(unittest.TestCase):
             bomb = aoapack.compress(bytes(size))
             self.assertLessEqual(len(bomb), 512)
             with self.assertRaises(ValueError):
-                aoanet.decode(aoacrypt.encrypt(bomb, KEY), KEY)
+                codec.decode(aoacrypt.encrypt(bomb, KEY), KEY)
         # Both CRC layers matter when the optional compression CRC is used.
         inner = b"hello\x05" + aoapack.crc16_xmodem(b"hello").to_bytes(2, "little")
         packed = bytearray(aoapack.compress(inner, with_crc=True))
         packed[-2] ^= 1
         with self.assertRaises(ValueError):
-            aoanet.decode(aoacrypt.encrypt(packed, KEY), KEY)
+            codec.decode(aoacrypt.encrypt(packed, KEY), KEY)
 
     def test_seeded_fuzz_has_only_bounded_results_or_value_errors(self):
         rng = random.Random(9417)
         cases = [rng.randbytes(rng.randrange(514)) for _ in range(2000)]
         for _ in range(2000):
-            wire = bytearray(aoanet.encode(rng.randrange(256), rng.randbytes(rng.randrange(450)), KEY))
+            wire = bytearray(codec.encode(rng.randrange(256), rng.randbytes(rng.randrange(450)), KEY))
             wire[rng.randrange(len(wire))] ^= rng.randrange(1, 256)
             cases.append(bytes(wire))
         for wire in cases:
             try:
-                decoded = aoanet.decode(wire, KEY)
+                decoded = codec.decode(wire, KEY)
             except ValueError:
                 continue
             self.assertLessEqual(len(decoded["payload"]), 509)

@@ -5,9 +5,9 @@ host-authorized transit or restore editor orientation.
 """
 import struct
 
-import navigation_buoys
-from audit_turret_groups import hierarchy
-from audit_warp_gates import routes
+from aoa.maps import navigation
+from aoa.maps.turret_hierarchy import hierarchy
+from aoa.maps.warp_routes import routes
 
 FIRST_INDEX, COUNT = 71, 9
 INDEX = FIRST_INDEX  # First-gate diagnostic compatibility.
@@ -32,7 +32,7 @@ def placement(source):
 
 
 def placements(source):
-    navigation_buoys.map_placements(source, 'Arena1a')
+    navigation.map_placements(source, 'Arena1a')
     nodes = hierarchy((source / 'Arena1a.Gob').read_bytes())
     gates = routes(nodes)
     if tuple((g['name'], g['destination_node']) for g in gates) != ROUTES:

@@ -1,17 +1,15 @@
 """Original world-model LOD execution across the complete parsed asset set."""
 import struct
-import sys
 import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import patch as mock_patch
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import prepare_client
-import world_detail as patch
-import station_detail
-import test_station_detail as fixture
-from audit_object_lod import audit
+from aoa.client import prepare
+from aoa.client.patches import world_detail as patch
+from aoa.client.patches import station_detail
+from tests import test_station_detail as fixture
+from aoa.maps.lod import audit
 from unicorn.x86_const import UC_X86_REG_ECX, UC_X86_REG_ESP
 
 
@@ -70,39 +68,39 @@ class WorldDetailTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as folder:
             exe = Path(folder) / 'AOACLIENT.EXE'
             exe.write_bytes(fixture.SOURCE.read_bytes())
-            prepare_client.prepare(exe, experimental_solids=True, experimental_station_detail=True)
+            prepare.prepare(exe, experimental_solids=True, experimental_station_detail=True)
             before = exe.read_bytes()
             patch.install(exe)
             after = exe.read_bytes()
-            self.assertEqual(prepare_client.configure(after), after)
-            self.assertIn(patch.NAME, prepare_client.check(exe, require_assets=False)['patches'])
-            self.assertNotIn(station_detail.NAME, prepare_client.inspect(after)['patches'])
+            self.assertEqual(prepare.configure(after), after)
+            self.assertIn(patch.NAME, prepare.check(exe, require_assets=False)['patches'])
+            self.assertNotIn(station_detail.NAME, prepare.inspect(after)['patches'])
             patch.install(exe)
             self.assertEqual(exe.read_bytes(), after)
             # Undo turns world detail off; the station-only patch it replaced stays off.
             patch.install(exe, undo=True)
-            self.assertEqual(exe.read_bytes(), prepare_client.configure(before, experimental_station_detail=False))
+            self.assertEqual(exe.read_bytes(), prepare.configure(before, experimental_station_detail=False))
             self.assertEqual(sorted(p.name for p in Path(folder).iterdir()),
                              ['AOACLIENT.EXE', 'AOACLIENT.EXE.setup-original', '_client_setup.json'])
 
     def test_byte_scope_and_corruption_rejection(self):
-        before = prepare_client.configure(fixture.SOURCE.read_bytes(), experimental_solids=True)
-        after = prepare_client.configure(before, experimental_world_detail=True)
+        before = prepare.configure(fixture.SOURCE.read_bytes(), experimental_solids=True)
+        after = prepare.configure(before, experimental_world_detail=True)
         allowed = {i for off, old, _ in patch.regions() for i in range(off, off + len(old))}
         self.assertTrue(all(a == b or i in allowed for i, (a, b) in enumerate(zip(before, after))))
         for offset in (patch.OFFSET, patch.RANGE_SITE - 0x400000, station_detail.CAVE - 0x400000, 0x12345):
             broken = bytearray(after)
             broken[offset] ^= 1
             with self.assertRaises(ValueError):
-                prepare_client.inspect(bytes(broken))
+                prepare.inspect(bytes(broken))
         partial = bytearray(before)
         partial[patch.OFFSET:patch.OFFSET + 6] = patch.PATCHED
         with self.assertRaises(ValueError):
             patch.configure(bytes(partial))
-        self.assertNotIn(patch.NAME, prepare_client.inspect(
-            prepare_client.configure(after, experimental_station_detail=True))['patches'])
+        self.assertNotIn(patch.NAME, prepare.inspect(
+            prepare.configure(after, experimental_station_detail=True))['patches'])
         with self.assertRaisesRegex(ValueError, f"{station_detail.NAME} and {patch.NAME}"):
-            prepare_client.configure(before, experimental_station_detail=True, experimental_world_detail=True)
+            prepare.configure(before, experimental_station_detail=True, experimental_world_detail=True)
 
 
 if __name__ == '__main__':

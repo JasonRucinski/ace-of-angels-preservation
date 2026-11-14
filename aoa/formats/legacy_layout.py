@@ -18,8 +18,7 @@ import struct
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import cli_util  # noqa: E402
+from aoa import cli  # noqa: E402
 
 TAG = struct.pack("<I", 0x05765768)
 POS = 0x4D
@@ -48,7 +47,7 @@ def decode(data):
 
 
 def main(argv=None):
-    ap = cli_util.parser(__doc__)
+    ap = cli.parser(__doc__)
     ap.add_argument("layout", type=Path, help="2.0.0-format layout .Gob")
     ap.add_argument("out", type=Path, nargs="?", help="JSON file to write (default: print it)")
     a = ap.parse_args(argv)
@@ -62,4 +61,4 @@ def main(argv=None):
 
 
 if __name__ == "__main__":
-    sys.exit(cli_util.run(main))
+    sys.exit(cli.run(main))

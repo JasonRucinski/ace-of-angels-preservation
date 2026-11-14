@@ -13,13 +13,13 @@ import time
 import unittest
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import aoanet
-import relay_motion
-import station_stub as stub
-import vessel_combat
-import test_station_stub
-from test_station_stub import request
+from aoa.protocol import codec
+from aoa.protocol import motion
+from aoa.host import server as stub
+from aoa.host import vessel_combat
+from tests import test_station_stub
+from tests.test_station_stub import request
+from aoa import paths
 
 fire_missile = test_station_stub.ProtocolTests.fire_missile  # Module import keeps its tests out of this run
 
@@ -67,13 +67,13 @@ class PerceivedDamageTests(unittest.TestCase):
     def test_real_upload(self):
         prefix = stub.movement_update(HIT_REPORT, 1)
         mask = struct.unpack_from("<I", HIT_REPORT, 4)[0]
-        self.assertEqual(relay_motion.perceived_damage(HIT_REPORT, len(prefix), mask), HIT_ENTRIES)
+        self.assertEqual(motion.perceived_damage(HIT_REPORT, len(prefix), mask), HIT_ENTRIES)
         with self.assertRaises(ValueError):
-            relay_motion.perceived_damage(HIT_REPORT[:-1], len(prefix), mask)
+            motion.perceived_damage(HIT_REPORT[:-1], len(prefix), mask)
         # No 0x80000000 block, or one without submask 2: no entries.
-        self.assertEqual(relay_motion.perceived_damage(HIT_REPORT, len(prefix), mask & 0x7FFFFFFF), [])
+        self.assertEqual(motion.perceived_damage(HIT_REPORT, len(prefix), mask & 0x7FFFFFFF), [])
         no_list = HIT_REPORT[:len(prefix)] + struct.pack("<I", 0x100) + bytes(12)
-        self.assertEqual(relay_motion.perceived_damage(no_list, len(prefix), mask), [])
+        self.assertEqual(motion.perceived_damage(no_list, len(prefix), mask), [])
 
 
 class DamageTests(unittest.TestCase):
@@ -154,7 +154,7 @@ class RelayTests(unittest.TestCase):
                 probe.bind(("127.0.0.1", 0))
                 endpoint = probe.getsockname()
             process = subprocess.Popen(
-                [sys.executable, "-I", str(Path(stub.__file__)), str(folder / "key"), str(folder / "log"),
+                [sys.executable, "-I", str(paths.entry("station_stub")), str(folder / "key"), str(folder / "log"),
                  "--port", "0", "--arena", "--arena-port", str(endpoint[1]), "--ack", "--experimental-relay",
                  "--target-ships", "3", "--spawn-at", "0", "0", "-30000", "--peer-timeout", "8", "--seconds", "20"],
                 stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -162,7 +162,7 @@ class RelayTests(unittest.TestCase):
             messages = {p: [] for p in peers}
 
             def send(peer, kind, body):
-                peer.sendto(aoanet.encode(kind, body, key), endpoint)
+                peer.sendto(codec.encode(kind, body, key), endpoint)
 
             def pump(duration):
                 until = time.monotonic() + duration
@@ -170,7 +170,7 @@ class RelayTests(unittest.TestCase):
                     ready, _, _ = select.select(peers, [], [], min(0.05, max(0, until - time.monotonic())))
                     for peer in ready:
                         try:
-                            message = aoanet.decode(peer.recv(512), key)
+                            message = codec.decode(peer.recv(512), key)
                         except ConnectionResetError:
                             continue
                         if message["type"] == 8:

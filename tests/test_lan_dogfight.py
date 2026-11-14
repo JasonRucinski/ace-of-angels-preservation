@@ -8,20 +8,17 @@ import io
 import select
 import socket
 import struct
-import sys
 import threading
 import time
 import unittest
-from pathlib import Path
 from unittest.mock import patch
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import aoanet
-import station_stub as stub
-from station_runtime import parse_args
-from test_station_runtime import job_request, read_reply
-import test_station_stub
-from test_station_stub import request
+from aoa.protocol import codec
+from aoa.host import server as stub
+from aoa.host.runtime import parse_args
+from tests.test_station_runtime import job_request, read_reply
+from tests import test_station_stub
+from tests.test_station_stub import request
 
 
 class LanDogfightTests(unittest.TestCase):
@@ -110,7 +107,7 @@ class LanDogfightTests(unittest.TestCase):
             slots = {peer: index + 1 for index, peer in enumerate(peers)}
 
             def send(peer, endpoint, kind, body):
-                peer.sendto(aoanet.encode(kind, body, key), endpoint)
+                peer.sendto(codec.encode(kind, body, key), endpoint)
 
             def pump(duration):
                 deadline = time.monotonic() + duration
@@ -118,7 +115,7 @@ class LanDogfightTests(unittest.TestCase):
                     ready, _, _ = select.select(peers, [], [], min(.01, max(0, deadline - time.monotonic())))
                     for peer in ready:
                         wire, source = peer.recvfrom(512)
-                        msg = aoanet.decode(wire, key)
+                        msg = codec.decode(wire, key)
                         self.assertTrue(msg["crc_ok"])
                         kind, body = msg["type"], msg["payload"]
                         if kind == 8:

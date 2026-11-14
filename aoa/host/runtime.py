@@ -13,7 +13,7 @@ import time
 from pathlib import Path
 from collections import Counter, OrderedDict
 
-import online_terrain
+from aoa.client.patches import online_terrain
 
 DOGFIGHT_PROFILES = ("lan-dogfight", "vpn-dogfight")
 PRIVATE_NETWORKS = ("10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16")

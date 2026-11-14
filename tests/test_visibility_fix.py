@@ -1,15 +1,13 @@
 """visibility-math-v1: original visibility code run with the patch in Unicorn."""
-import sys
 import unittest
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-from audit_render_pipeline import run  # noqa: E402
-import prepare_client  # noqa: E402
-import render_culling_experiment  # noqa: E402
-import visibility_fix  # noqa: E402
+from aoa.emulation.render_pipeline import run  # noqa: E402
+from aoa.client import prepare  # noqa: E402
+from aoa.client.experiments import render_culling_experiment  # noqa: E402
+from aoa.client.patches import visibility_fix  # noqa: E402
+from aoa.paths import ROOT
 
-ORIGINAL = Path(__file__).resolve().parents[1] / "game/2.9.2/AOACLIENT.EXE.orig"
+ORIGINAL = ROOT / "game/2.9.2/AOACLIENT.EXE.orig"
 
 
 class VisibilityFixTests(unittest.TestCase):
@@ -55,12 +53,12 @@ class VisibilityFixTests(unittest.TestCase):
 
     def test_preparation_applies_and_undoes_exactly(self):
         raw = ORIGINAL.read_bytes()
-        on = prepare_client.configure(raw)
-        off = prepare_client.configure(raw, bounded_visibility=False)
-        self.assertIn(visibility_fix.NAME, prepare_client.inspect(on)["patches"])
-        self.assertNotIn(visibility_fix.NAME, prepare_client.inspect(off)["patches"])
+        on = prepare.configure(raw)
+        off = prepare.configure(raw, bounded_visibility=False)
+        self.assertIn(visibility_fix.NAME, prepare.inspect(on)["patches"])
+        self.assertNotIn(visibility_fix.NAME, prepare.inspect(off)["patches"])
         self.assertEqual(visibility_fix.configure(on, False), off)
-        self.assertEqual(prepare_client.configure(on), on)
+        self.assertEqual(prepare.configure(on), on)
         allowed = {i for o, old, new in visibility_fix.regions() for i in range(o, o + len(old))}
         self.assertTrue(all(i in allowed for i, (a, b) in enumerate(zip(on, off)) if a != b))
         for o, old, new in visibility_fix.regions():
@@ -73,8 +71,8 @@ class VisibilityFixTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 visibility_fix.state(bytes(partial))
         # Coexists with the asteroid/solid-world hook in the same routine.
-        both = prepare_client.configure(raw, experimental_asteroids=True)
-        self.assertTrue({visibility_fix.NAME, "asteroid-mesh-distance-v1"} <= set(prepare_client.inspect(both)["patches"]))
+        both = prepare.configure(raw, experimental_asteroids=True)
+        self.assertTrue({visibility_fix.NAME, "asteroid-mesh-distance-v1"} <= set(prepare.inspect(both)["patches"]))
 
 
 if __name__ == "__main__":

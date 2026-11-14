@@ -37,14 +37,12 @@ import json
 import math
 import shutil
 import struct
-import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import gob2obj  # noqa: E402
+from aoa.formats import gob as formats_gob  # noqa: E402
 
-ROOT = Path(__file__).resolve().parents[1]
-TAG = gob2obj.TAG
+from aoa.paths import ROOT
+TAG = formats_gob.TAG
 BACKUP = ".before-custom-objects"
 TEMPLATE = "Astr-C"
 TEMPLATE_GOB, TEMPLATE_SCO = "Astr-C.Gob", "Astr-C.Sco"
@@ -180,16 +178,16 @@ def tagged(text):
 
 
 def _strings(data, text):
-    return [(start, after) for start, after, s in gob2obj.strings(data) if s == text]
+    return [(start, after) for start, after, s in formats_gob.strings(data) if s == text]
 
 
 def write_gob(template, model, texture, verts, faces):
     """Template Gob with a new name, boxes, node translation, mesh and texture."""
-    meshes = gob2obj.parse(template)
+    meshes = formats_gob.parse(template)
     if len(meshes) != 1:
         raise ValueError("template must hold exactly one mesh")
     mesh = meshes[0]
-    (name_start, name_after), = [(s, a) for s, a, t in gob2obj.strings(template)[:1]]
+    (name_start, name_after), = [(s, a) for s, a, t in formats_gob.strings(template)[:1]]
     (node_start, node_after), = _strings(template, TEMPLATE_NODE)
     textures = _strings(template, TEMPLATE_TEXTURE)
     if len(textures) != 2 or not (textures[0][1] < node_start < mesh["offset"] < textures[1][0]):
@@ -205,7 +203,7 @@ def write_gob(template, model, texture, verts, faces):
     out = (bytes(head) + tagged(model) + box + template[name_after + 24:textures[0][0]] + tagged(texture)
            + template[textures[0][1]:node_after] + bytes(node) + mesh_block(verts, faces)
            + template[mesh["end"]:textures[1][0]] + tagged(texture) + template[textures[1][1]:])
-    check = gob2obj.parse(out)
+    check = formats_gob.parse(out)
     if len(check) != 1 or len(check[0]["verts"]) != len(verts) or len(check[0]["faces"]) != len(faces) \
             or check[0]["texture"] != texture:
         raise ValueError("written Gob does not parse back")
@@ -216,7 +214,7 @@ def write_sco(template, obj, model):
     (o_start, o_after), = _strings(template, TEMPLATE)
     (g_start, g_after), = _strings(template, TEMPLATE_SCO_GOB)
     out = template[:o_start] + tagged(obj) + template[o_after:g_start] + tagged(model) + template[g_after:]
-    s = [t for _, _, t in gob2obj.strings(out)]
+    s = [t for _, _, t in formats_gob.strings(out)]
     if s[0] != obj or s[4] != model:
         raise ValueError("written Sco does not parse back")
     return out
@@ -254,7 +252,7 @@ def build(spec, glb, templates):
 
 
 def _archive(client):
-    import aoapack
+    from aoa.formats import aoapack
     return aoapack, aoapack.builtin_key(client / "AOACLIENT.EXE")
 
 

@@ -20,8 +20,7 @@ import sys
 import zlib
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import cli_util  # noqa: E402
+from aoa import cli  # noqa: E402
 
 
 def entries(data):
@@ -40,7 +39,7 @@ def entries(data):
 
 
 def main(argv=None):
-    ap = cli_util.parser(__doc__)
+    ap = cli.parser(__doc__)
     ap.add_argument("installer", help="Wise installer to read (never run)")
     ap.add_argument("out", nargs="?", help="folder to extract into (default: only list)")
     ap.add_argument("--force", action="store_true", help="write entries whose CRC does not match")
@@ -78,4 +77,4 @@ def main(argv=None):
 
 
 if __name__ == "__main__":
-    sys.exit(cli_util.run(main))
+    sys.exit(cli.run(main))

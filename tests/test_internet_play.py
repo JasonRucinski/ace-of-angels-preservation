@@ -23,16 +23,15 @@ from collections import deque
 from pathlib import Path
 from unittest.mock import patch
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import aoanet
-import host_ops
-import station_stub as stub
-from net_impair import Impairment, MeteredSocket, TrafficMeter
-from reliable_window import WindowedReliable
-from station_runtime import parse_args
-from test_station_runtime import job_request, read_reply
-import test_station_stub
-from test_station_stub import request
+from aoa.protocol import codec
+from aoa.host import ops
+from aoa.host import server as stub
+from aoa.host.net_impair import Impairment, MeteredSocket, TrafficMeter
+from aoa.host.delivery import WindowedReliable
+from aoa.host.runtime import parse_args
+from tests.test_station_runtime import job_request, read_reply
+from tests import test_station_stub
+from tests.test_station_stub import request
 
 VPN_ADDRESS = "100.101.102.103"
 
@@ -226,17 +225,17 @@ class ImpairmentTests(unittest.TestCase):
 
 class HostOpsTests(unittest.TestCase):
     def test_commands_status_and_table(self):
-        self.assertEqual(host_ops.parse_command(" KICK 3 "), ("kick", 3))
-        self.assertEqual(host_ops.parse_command("status"), ("status", None))
+        self.assertEqual(ops.parse_command(" KICK 3 "), ("kick", 3))
+        self.assertEqual(ops.parse_command("status"), ("status", None))
         for bad in ("kick", "kick 0", "kick 50", "ban x", "reboot", "status now"):
-            self.assertEqual(host_ops.parse_command(bad), (None, host_ops.HELP))
-        self.assertEqual(host_ops.parse_command("   "), (None, ""))
+            self.assertEqual(ops.parse_command(bad), (None, ops.HELP))
+        self.assertEqual(ops.parse_command("   "), (None, ""))
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "nested" / "status.json"
-            host_ops.write_status(path, {"players": []})
+            ops.write_status(path, {"players": []})
             self.assertEqual(json.loads(path.read_text())["players"], [])
             self.assertFalse(path.with_name("status.json.tmp").exists())
-        table = host_ops.player_table([{"slot": 2, "pilot": "testpilot-02", "kills": 1, "deaths": 0,
+        table = ops.player_table([{"slot": 2, "pilot": "testpilot-02", "kills": 1, "deaths": 0,
                                         "ping_ms": None, "in_kbps": 1.5, "out_kbps": 2.0, "idle_s": 0.1}])
         self.assertIn("testpilot-02", table)
 
@@ -254,7 +253,7 @@ class SyntheticClient:
         self.acks = {}
 
     def send(self, endpoint, kind, body):
-        self.sock.sendto(aoanet.encode(kind, body, self.key), endpoint)
+        self.sock.sendto(codec.encode(kind, body, self.key), endpoint)
 
     def send_reliable(self, endpoint, kind, body):
         packet = body + struct.pack("<I", self.sequence) + bytes([kind])
@@ -263,7 +262,7 @@ class SyntheticClient:
         self.send(endpoint, 0x1B, packet)
 
     def handle(self, wire, source):
-        message = aoanet.decode(wire, self.key)
+        message = codec.decode(wire, self.key)
         assert message["crc_ok"]
         kind, body = message["type"], message["payload"]
         if kind == 0x1B:

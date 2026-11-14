@@ -12,11 +12,9 @@ name starting with "-" is refused. Requests go through tools/polite_http.py
 import hashlib
 import os
 import sys
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import cli_util  # noqa: E402
-from polite_http import polite_open  # noqa: E402
+from aoa import cli  # noqa: E402
+from aoa.research.http import polite_open  # noqa: E402
 
 BUILDS = [
     ("v2.8.2_2002-03_CD-Action-06-2002", "96c852b07a7d55c7894dbdda624fa3db",
@@ -49,8 +47,8 @@ def fetch(url, dest):
 
 
 def main(argv=None):
-    ap = cli_util.parser(__doc__)
-    ap.add_argument("out_dir", type=cli_util.output_dir, help="folder to save the builds in, e.g. builds/")
+    ap = cli.parser(__doc__)
+    ap.add_argument("out_dir", type=cli.output_dir, help="folder to save the builds in, e.g. builds/")
     a = ap.parse_args(argv)
     ok = True
     for name, want, url in BUILDS:
@@ -74,4 +72,4 @@ def main(argv=None):
 
 
 if __name__ == "__main__":
-    sys.exit(cli_util.run(main))
+    sys.exit(cli.run(main))

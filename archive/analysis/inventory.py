@@ -20,8 +20,7 @@ import sys
 import zipfile
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import cli_util  # noqa: E402
+from aoa import cli  # noqa: E402
 
 EXTRACT = {
     "AOACLIENT.EXE", "AOADEFAULTS.PRF", "SCRTY.BIN", "SCENARIOS.AOA", "SCRIPTS.AOA",
@@ -47,7 +46,7 @@ def appendix_c(handoff: str, version: str):
 
 
 def main(argv=None) -> int:
-    ap = cli_util.parser(__doc__)
+    ap = cli.parser(__doc__)
     ap.add_argument("installer", help="Wise/ZIP self-extracting installer")
     ap.add_argument("version", help="client version, e.g. 2.9.2")
     ap.add_argument("handoff", nargs="?", help="handoff text with an Appendix C inventory to compare against")
@@ -111,4 +110,4 @@ def main(argv=None) -> int:
 
 
 if __name__ == "__main__":
-    sys.exit(cli_util.run(main))
+    sys.exit(cli.run(main))

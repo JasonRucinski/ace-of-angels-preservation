@@ -17,12 +17,10 @@ import argparse
 import hashlib
 import json
 import struct
-import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import aoapack
-import prepare_client
+from aoa.formats import aoapack
+from aoa.client import prepare
 
 ARCHIVES = ("TEXTURES.AOA", "DATA.AOA")
 SUFFIX = ".before-texture-pack"
@@ -34,7 +32,7 @@ def sha(data):
 
 
 def pinned(name):
-    return json.loads(prepare_client.ASSET_MANIFEST.read_text(encoding="utf-8"))["required"][name]["sha256"]
+    return json.loads(prepare.ASSET_MANIFEST.read_text(encoding="utf-8"))["required"][name]["sha256"]
 
 
 def check_tga(name, data):
@@ -113,17 +111,17 @@ def install(folder, replacements):
             files[entry] = data
         backup = folder / (name + SUFFIX)
         if not backup.exists():
-            prepare_client.atomic_write(backup, base)
+            prepare.atomic_write(backup, base)
         outputs[name] = aoapack.rebuild(backup, key0, files)
         record["archives"][name] = {
             "original_sha256": pinned(name), "sha256": sha(outputs[name]), "bytes": len(outputs[name]),
             "entries": {e: {"sha256": sha(d), "size": list(struct.unpack_from("<HH", d, 12))}
                         for e, d in sorted(files.items())}}
     # Record first: an interrupted write leaves a mismatch that check reports.
-    prepare_client.atomic_write(folder / RECORD, (json.dumps(record, indent=2) + "\n").encode())
+    prepare.atomic_write(folder / RECORD, (json.dumps(record, indent=2) + "\n").encode())
     for name, data in outputs.items():
         if (folder / name).read_bytes() != data:
-            prepare_client.atomic_write(folder / name, data)
+            prepare.atomic_write(folder / name, data)
     verified(folder)
     return record
 
@@ -134,7 +132,7 @@ def undo(folder):
     for name in ARCHIVES:
         data = original(folder, name)
         if (folder / name).read_bytes() != data:
-            prepare_client.atomic_write(folder / name, data)
+            prepare.atomic_write(folder / name, data)
         restored[name] = sha(data)
     (folder / RECORD).unlink(missing_ok=True)
     return {"restored": restored}

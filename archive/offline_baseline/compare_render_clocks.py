@@ -13,11 +13,10 @@ import sys
 import time
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import cli_util
-from emulate_codec import Emu, SCRATCH, STOP, STUBS
-from pe_util import PE
-import render_clock_experiment as clock
+from aoa import cli
+from aoa.emulation.emu import Emu, SCRATCH, STOP, STUBS
+from aoa.analysis.pe_util import PE
+from aoa.client.experiments import render_clock_experiment as clock
 from unicorn import UC_HOOK_CODE
 from unicorn.x86_const import UC_X86_REG_FPCW, UC_X86_REG_EIP, UC_X86_REG_ESP, UC_X86_REG_EAX
 
@@ -40,9 +39,9 @@ def project(matrix, point):
 
 
 def main(argv=None):
-    ap = cli_util.parser(__doc__)
+    ap = cli.parser(__doc__)
     ap.add_argument('output', type=Path, help='JSON report to write')
-    ap.add_argument('--source', type=Path, default=cli_util.ROOT / 'game/2.9.2/AOACLIENT.EXE.orig',
+    ap.add_argument('--source', type=Path, default=cli.ROOT / 'game/2.9.2/AOACLIENT.EXE.orig',
                     help='pristine 2.9.2 client (default: %(default)s)')
     a = ap.parse_args(argv)
     pe = PE(a.source)
@@ -114,4 +113,4 @@ def main(argv=None):
 
 
 if __name__ == '__main__':
-    sys.exit(cli_util.run(main))
+    sys.exit(cli.run(main))

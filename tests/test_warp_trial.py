@@ -4,20 +4,17 @@ import copy
 import hashlib
 import io
 import struct
-import sys
 import unittest
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import navigation_buoys
-import turret_trial
-import warp_trial
-import verify_warp_trial
-from station_runtime import parse_args
-import test_navigation_buoys
-from patch_client import PRISTINE_292
+from aoa.maps import navigation
+from aoa.host import turret_trial
+from aoa.host import warp_trial
+from aoa.live import verify_warp_trial
+from aoa.host.runtime import parse_args
+from tests import test_navigation_buoys
+from aoa.client.base import PRISTINE_292
 
-ROOT = Path(__file__).resolve().parents[1]
+from aoa.paths import ROOT
 SOURCE = ROOT / 'work/2.9.2/export/AOAOBJECTS'
 CLIENT = ROOT / 'game/2.9.2/AOACLIENT.EXE.orig'
 
@@ -64,7 +61,7 @@ class WarpTests(unittest.TestCase):
             tags.append(warp_trial.tag(gate))
         self.assertEqual(tags, [0x40010000 | i for i in range(71, 80)])
         other = turret_trial.loads(turret_trial.placements(SOURCE))
-        other += navigation_buoys.loads(navigation_buoys.map_placements(SOURCE, 'Arena1a'))
+        other += navigation.loads(navigation.map_placements(SOURCE, 'Arena1a'))
         other_tags = {struct.unpack_from('<I', p, 96)[0] for k, p in other if k == 0x25}
         self.assertTrue(set(tags).isdisjoint(other_tags))
         self.assertNotEqual(tags[2], tags[3])  # Both objects display Home_Rail.
@@ -74,8 +71,8 @@ class WarpTests(unittest.TestCase):
 
     @unittest.skipUnless(CLIENT.exists(), 'requires original client')
     def test_original_client_receives_trial_destination(self):
-        from emulate_codec import Emu, HEAP, SCRATCH
-        from pe_util import PE
+        from aoa.emulation.emu import Emu, HEAP, SCRATCH
+        from aoa.analysis.pe_util import PE
         from unicorn.x86_const import UC_X86_REG_EBP, UC_X86_REG_EDI, UC_X86_REG_EIP
         self.assertEqual(hashlib.sha256(CLIENT.read_bytes()).hexdigest(), PRISTINE_292)
         emu = Emu(PE(CLIENT))
@@ -91,7 +88,7 @@ class WarpTests(unittest.TestCase):
         self.assertEqual(emu.read(HEAP + 0x2fb, 1), b'\1')
 
     def test_first_late_join_and_gate_ack_loss_with_other_nodes(self):
-        expected = navigation_buoys.loads(navigation_buoys.map_placements(SOURCE, 'Arena1a'))
+        expected = navigation.loads(navigation.map_placements(SOURCE, 'Arena1a'))
         expected += turret_trial.loads(turret_trial.placements(SOURCE))
         gates = warp_trial.placements(SOURCE)
         expected += warp_trial.loads(gates)

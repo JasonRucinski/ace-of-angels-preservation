@@ -13,16 +13,14 @@ import hashlib
 import json
 import re
 import sys
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import cli_util
-import scene2obj
-from check_arena_geometry import inspect_geometry
-from patch_client import PRISTINE_292
-from pe_util import PE
+from aoa import cli
+from aoa.formats import scene
+from aoa.maps.arena_geometry import inspect_geometry
+from aoa.client.base import PRISTINE_292
+from aoa.analysis.pe_util import PE
 
-ROOT = Path(__file__).resolve().parents[1]
+from aoa.paths import ROOT
 EVIDENCE = "evidence/2.9.2/arena1a_audit_20261021.json"
 EXPECTED_DISPATCH = [0x4964F8, 0x496423, 0x4964F8, 0x496280, 0x4964F8,
                      0x4962F7, 0x4963E4, 0x4964F8, 0x496141, 0x4964F8]
@@ -51,7 +49,7 @@ def classify(node, objects, source):
             obj = objects[token.casefold()]
             return {"group": "named_object", "status": "asset_resolved", "object": obj["object"], "model": obj["gob"]}
         nested = next((p for p in source.glob("*.Gob") if p.stem.casefold() == token.casefold()), None)
-        if nested and scene2obj.is_scene(nested.read_bytes()):
+        if nested and scene.is_scene(nested.read_bytes()):
             return {"group": "nested_layout", "status": "preview_expanded", "layout": nested.stem,
                     "reason": "Preview uses child * parent transform; client recursion exists at 0x496279. Online acceptance pending."}
         group = ("service_marker" if name.startswith(("ZA", "ZMissile", "ZRepair", "ZShield")) else
@@ -63,8 +61,8 @@ def classify(node, objects, source):
 
 
 def main(argv=None):
-    ap = cli_util.parser(__doc__)
-    cli_util.add_evidence_option(ap, EVIDENCE)
+    ap = cli.parser(__doc__)
+    cli.add_evidence_option(ap, EVIDENCE)
     a = ap.parse_args(argv)
     source = ROOT / "work/2.9.2/export/AOAOBJECTS"
     output = ROOT / "work/arena1a-review"
@@ -75,12 +73,12 @@ def main(argv=None):
     pe = PE(client)
     if [pe.u32(0x496790 + i * 4) for i in range(10)] != EXPECTED_DISPATCH:
         raise ValueError("terrain dispatch differs from recovered evidence")
-    objects = scene2obj.sco_models(source)
-    nodes = scene2obj.read_nodes((source / "Arena1a.Gob").read_bytes())
+    objects = scene.sco_models(source)
+    nodes = scene.read_nodes((source / "Arena1a.Gob").read_bytes())
     classified = [{**node, **classify(node, objects, source)} for node in nodes]
     expanded = [{**node, **classify(node, objects, source)}
-                for node in scene2obj.expanded_nodes(source, "Arena1a", True)]
-    scene2obj.export(source, "Arena1a", output, "../2.9.2/TEXTURES", objects, {}, True)
+                for node in scene.expanded_nodes(source, "Arena1a", True)]
+    scene.export(source, "Arena1a", output, "../2.9.2/TEXTURES", objects, {}, True)
     manifest = {"scope": "Static node/asset inventory and original-code branch evidence; not online loading or gameplay",
                 "source_sha256": hashlib.sha256((source / "Arena1a.Gob").read_bytes()).hexdigest(),
                 "root_nodes": classified, "expanded_nodes": expanded,
@@ -98,9 +96,9 @@ def main(argv=None):
                               "repair/shield/missile marker definitions and behavior", "group/dummy semantics",
                               "map-specific spawn acceptance"],
                    preview_coordinates="OBJ negates game Z; nested matrices compose child * parent; root marker hierarchy is not fully decoded")
-    cli_util.evidence_target(a.evidence, EVIDENCE).write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
+    cli.evidence_target(a.evidence, EVIDENCE).write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(summary, indent=2))
 
 
 if __name__ == "__main__":
-    sys.exit(cli_util.run(main))
+    sys.exit(cli.run(main))

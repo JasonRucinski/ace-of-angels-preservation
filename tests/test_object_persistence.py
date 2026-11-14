@@ -1,28 +1,26 @@
 """Execute world visibility and child selection together in the original x86."""
 import math
 import struct
-import sys
 import tempfile
 import unittest
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import asteroid_render
-import object_persistence as patch
-import prepare_client
-import solid_world_render
-import station_detail
-import visibility_fix
-import world_detail
-from audit_object_lod import audit
-from emulate_codec import Emu, SCRATCH, STACK, STUBS
-from pe_util import Disasm, PE
+from aoa.client.patches import asteroid_render
+from aoa.client.patches import object_persistence as patch
+from aoa.client import prepare
+from aoa.client.patches import solid_world_render
+from aoa.client.patches import station_detail
+from aoa.client.patches import visibility_fix
+from aoa.client.patches import world_detail
+from aoa.maps.lod import audit
+from aoa.emulation.emu import Emu, SCRATCH, STACK, STUBS
+from aoa.analysis.pe_util import Disasm, PE
 from unicorn import UC_HOOK_CODE
 from unicorn.x86_const import (UC_X86_REG_ECX, UC_X86_REG_ESP, UC_X86_REG_FPCW,
                                UC_X86_REG_EAX, UC_X86_REG_EDX, UC_X86_REG_EFLAGS,
                                UC_X86_REG_EDI)
 
-ROOT = Path(__file__).resolve().parents[1]
+from aoa.paths import ROOT
 SOURCE = ROOT / "game/2.9.2/AOACLIENT.EXE.orig"
 
 
@@ -146,11 +144,11 @@ class ObjectPersistenceTests(unittest.TestCase):
         for options in ({}, {"experimental_asteroids": True}, {"experimental_solids": True},
                         {"experimental_station_detail": True},
                         {"experimental_solids": True, "experimental_world_detail": True}):
-            before = prepare_client.configure(raw, **options)
-            after = prepare_client.configure(before, distant_objects=True)
-            self.assertEqual(prepare_client.configure(after), after)
-            self.assertEqual(prepare_client.configure(after, distant_objects=False), before)
-            self.assertIn(patch.NAME, prepare_client.inspect(after)["patches"])
+            before = prepare.configure(raw, **options)
+            after = prepare.configure(before, distant_objects=True)
+            self.assertEqual(prepare.configure(after), after)
+            self.assertEqual(prepare.configure(after, distant_objects=False), before)
+            self.assertIn(patch.NAME, prepare.inspect(after)["patches"])
         dock = next(m["meshes"] for m in self.models if m["model"] == "newdock")
         for extra in (asteroid_render, solid_world_render, station_detail, world_detail):
             result = GroupProbe(True, (extra,)).run(dock, distance=192_000)
@@ -201,13 +199,13 @@ class ObjectPersistenceTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as folder:
             exe = Path(folder) / "AOACLIENT.EXE"
             exe.write_bytes(SOURCE.read_bytes())
-            prepare_client.prepare(exe, host="127.0.0.1", smooth_frame_clock=False,
+            prepare.prepare(exe, host="127.0.0.1", smooth_frame_clock=False,
                                    chase_camera=False, powerup_pickups=False)
             before = exe.read_bytes()
             patch.install(exe)
             after = exe.read_bytes()
             self.assertEqual(patch.configure(after, False), before)
-            self.assertIn(patch.NAME, prepare_client.check(exe, require_assets=False)["patches"])
+            self.assertIn(patch.NAME, prepare.check(exe, require_assets=False)["patches"])
             patch.install(exe)
             self.assertEqual(exe.read_bytes(), after)
             patch.install(exe, undo=True)
@@ -218,23 +216,23 @@ class ObjectPersistenceTests(unittest.TestCase):
                              ["AOACLIENT.EXE", "AOACLIENT.EXE.setup-original", "_client_setup.json"])
 
     def test_byte_scope_partial_corruption_and_backup_rejection(self):
-        before = prepare_client.configure(SOURCE.read_bytes())
-        after = prepare_client.configure(before, distant_objects=True)
+        before = prepare.configure(SOURCE.read_bytes())
+        after = prepare.configure(before, distant_objects=True)
         allowed = {i for off, old, _ in patch.regions() for i in range(off, off + len(old))}
         self.assertTrue(all(a == b or i in allowed for i, (a, b) in enumerate(zip(before, after))))
         for offset, old, new in patch.regions():
             partial = bytearray(before)
             partial[offset:offset + len(new)] = new
             with self.assertRaises(ValueError):
-                prepare_client.inspect(bytes(partial))
+                prepare.inspect(bytes(partial))
             corrupt = bytearray(after)
             corrupt[offset] ^= 1
             with self.assertRaises(ValueError):
-                prepare_client.inspect(bytes(corrupt))
+                prepare.inspect(bytes(corrupt))
         unrelated = bytearray(after)
         unrelated[0x12345] ^= 1
         with self.assertRaises(ValueError):
-            prepare_client.inspect(bytes(unrelated))
+            prepare.inspect(bytes(unrelated))
 
 
 if __name__ == "__main__":

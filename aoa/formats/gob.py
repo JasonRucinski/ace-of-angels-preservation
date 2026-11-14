@@ -32,8 +32,7 @@ import struct
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import cli_util  # noqa: E402
+from aoa import cli  # noqa: E402
 
 TAG = b"hWv\x05"
 
@@ -125,7 +124,7 @@ def write_obj(mesh, stem, out_dir, tex_dir):
 
 
 def main(argv=None):
-    ap = cli_util.parser(__doc__)
+    ap = cli.parser(__doc__)
     ap.add_argument("src", type=Path, help="a .Gob file or a folder of them")
     ap.add_argument("out_dir", type=Path, help="folder to write OBJ/MTL files to")
     ap.add_argument("texture_dir", nargs="?", help="texture folder the MTL files point to")
@@ -157,4 +156,4 @@ def main(argv=None):
 
 
 if __name__ == "__main__":
-    sys.exit(cli_util.run(main))
+    sys.exit(cli.run(main))

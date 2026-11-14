@@ -13,22 +13,21 @@ import struct
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import cli_util
-import gob2obj
-import scene2obj
-from navigation_buoys import ARENA1A_SHA256
-from patch_client import PRISTINE_292
+from aoa import cli
+from aoa.formats import gob
+from aoa.formats import scene
+from aoa.maps.navigation import ARENA1A_SHA256
+from aoa.client.base import PRISTINE_292
 
-ROOT = Path(__file__).resolve().parents[1]
+from aoa.paths import ROOT
 EVIDENCE = 'evidence/2.9.2/turret_groups_20261026.json'
 
 
 def hierarchy(data):
     if hashlib.sha256(data).hexdigest() != ARENA1A_SHA256:
         raise ValueError('requires the original Arena1a.Gob')
-    nodes = scene2obj.read_nodes(data)
-    ends = {start: end for start, end, _ in gob2obj.strings(data)}
+    nodes = scene.read_nodes(data)
+    ends = {start: end for start, end, _ in gob.strings(data)}
     for node in nodes:
         at = ends[node['source_offset']]
         if struct.unpack_from('<II', data, at + 0x18) != (0x8237, 0x10003):
@@ -51,7 +50,7 @@ def hierarchy(data):
         if parent != 0xffff:
             if parent not in by_id:
                 raise ValueError('missing parent')
-            matrix = scene2obj.compose(matrix, resolve(by_id[parent], visiting | {node['node_id']}))
+            matrix = scene.compose(matrix, resolve(by_id[parent], visiting | {node['node_id']}))
         node['world_matrix'] = matrix
         node['world_position'] = matrix[12:15]
         return matrix
@@ -64,8 +63,8 @@ def hierarchy(data):
 def native_checks(client, nodes):
     if hashlib.sha256(client.read_bytes()).hexdigest() != PRISTINE_292:
         raise ValueError('requires the original 2.9.2 executable')
-    from emulate_codec import Emu, HEAP, SCRATCH
-    from pe_util import PE
+    from aoa.emulation.emu import Emu, HEAP, SCRATCH
+    from aoa.analysis.pe_util import PE
     emu = Emu(PE(client))
     # Original animation writer: parent pointer +0x18 serializes its ID +8;
     # own ID +8 follows the animation-key array. No hooks or game calls needed.
@@ -102,9 +101,9 @@ def native_checks(client, nodes):
 
 
 def main(argv=None):
-    parser = cli_util.parser(__doc__)
+    parser = cli.parser(__doc__)
     parser.add_argument('--local-report', type=Path, help='also write the full node coordinates here')
-    cli_util.add_evidence_option(parser, EVIDENCE)
+    cli.add_evidence_option(parser, EVIDENCE)
     args = parser.parse_args(argv)
     nodes = hierarchy((ROOT / 'work/2.9.2/export/AOAOBJECTS/Arena1a.Gob').read_bytes())
     by_id = {n['node_id']: n for n in nodes}
@@ -126,10 +125,10 @@ def main(argv=None):
     if args.local_report:
         args.local_report.parent.mkdir(parents=True, exist_ok=True)
         args.local_report.write_text(json.dumps({'summary': report, 'nodes': nodes}, indent=2) + '\n')
-    path = cli_util.evidence_target(args.evidence, EVIDENCE)
+    path = cli.evidence_target(args.evidence, EVIDENCE)
     path.write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
     print(json.dumps(report, indent=2))
 
 
 if __name__ == '__main__':
-    sys.exit(cli_util.run(main))
+    sys.exit(cli.run(main))

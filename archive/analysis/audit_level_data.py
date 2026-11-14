@@ -20,13 +20,12 @@ import json
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import cli_util  # noqa: E402
-import decode_legacy_layout  # noqa: E402
-import decode_scenario  # noqa: E402
-import decode_trn  # noqa: E402
+from aoa import cli  # noqa: E402
+from aoa.formats import legacy_layout  # noqa: E402
+from aoa.formats import scenario  # noqa: E402
+from aoa.formats import trn as formats_trn  # noqa: E402
 
-ROOT = Path(__file__).resolve().parent.parent
+from aoa.paths import ROOT
 REVIEW = ROOT / "work" / "asset-review"
 OUT = REVIEW / "level-data"
 EVIDENCE = "evidence/asset-review/level-data.json"
@@ -51,8 +50,8 @@ def archive_gaps(index):
 
 
 def main(argv=None):
-    ap = cli_util.parser(__doc__)
-    cli_util.add_evidence_option(ap, EVIDENCE)
+    ap = cli.parser(__doc__)
+    cli.add_evidence_option(ap, EVIDENCE)
     a = ap.parse_args(argv)
     missing = [v for v in VERSIONS if not (REVIEW / v).is_dir()]
     if missing:
@@ -70,7 +69,7 @@ def main(argv=None):
                 rec["scripts"] = {e["name"]: e["sha256"] for e in index["entries"]}
             if idx.parent.name == "SCENARIOS":
                 for e in index["entries"]:
-                    dec = decode_scenario.decode(Path(ROOT / e["extracted_to"]).read_bytes())
+                    dec = scenario.decode(Path(ROOT / e["extracted_to"]).read_bytes())
                     (OUT / f"{e['name']}-{v}.json").write_text(json.dumps(dec, indent=1), encoding="utf-8")
                     rec["scenarios"][e["name"]] = {
                         "sha256": dec["sha256"], "consumed_exactly": dec["consumed_exactly"],
@@ -86,13 +85,13 @@ def main(argv=None):
                     if e["name"].lower().endswith(".gob") and stem in LAYOUTS:
                         report["layout_sha256"].setdefault(stem, {})[v] = e["sha256"]
                         if v == "2.0.0" and stem == "testscene":
-                            dec = decode_legacy_layout.decode(Path(ROOT / e["extracted_to"]).read_bytes())
+                            dec = legacy_layout.decode(Path(ROOT / e["extracted_to"]).read_bytes())
                             (OUT / "TestScene-2.0.0.json").write_text(json.dumps(dec, indent=1), encoding="utf-8")
                             rec["testscene"] = {"sha256": dec["sha256"], "nodes": dec["node_count"],
                                                 "skipped": [s["name"] for s in dec["skipped_names"]]}
         trn = sorted((base / "members").glob("*_JRMAP.TRN"))
         if trn:
-            dec = decode_trn.decode(trn[0].read_bytes())
+            dec = formats_trn.decode(trn[0].read_bytes())
             (OUT / f"JRMAP-{v}.json").write_text(json.dumps(dec, indent=1), encoding="utf-8")
             kinds = {}
             for r in dec["records"]:
@@ -102,14 +101,14 @@ def main(argv=None):
                                 "links": dec["link_count"], "consumed_exactly": dec["consumed_exactly"],
                                 "objects": dict(sorted(kinds.items()))}
         report["versions"][v] = rec
-    target = cli_util.evidence_target(a.evidence, EVIDENCE)
+    target = cli.evidence_target(a.evidence, EVIDENCE)
     target.write_text(json.dumps(report, indent=1) + "\n", encoding="utf-8")
     gaps = sum(a["uncovered_bytes"] for r in report["versions"].values() for a in r["archives"].values())
     print(json.dumps({"archives": sum(len(r["archives"]) for r in report["versions"].values()),
                       "uncovered_archive_bytes": gaps,
                       "jrmap_hashes": sorted({r["jrmap_trn"]["sha256"] for r in report["versions"].values()}),
-                      "evidence": cli_util.shown(target)}, indent=1))
+                      "evidence": cli.shown(target)}, indent=1))
 
 
 if __name__ == "__main__":
-    sys.exit(cli_util.run(main))
+    sys.exit(cli.run(main))

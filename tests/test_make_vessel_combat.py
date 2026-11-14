@@ -2,17 +2,15 @@
 import contextlib
 import io
 import json
-import sys
 import tempfile
 import unittest
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import make_vessel_combat  # noqa: E402
-import vessel_combat  # noqa: E402
-from station_runtime import SELECTABLE_VESSELS  # noqa: E402
+from aoa.host import make_vessel_combat  # noqa: E402
+from aoa.host import vessel_combat  # noqa: E402
+from aoa.host.runtime import SELECTABLE_VESSELS  # noqa: E402
 
-ROOT = Path(__file__).resolve().parents[1]
+from aoa.paths import ROOT
 SCO = ROOT / "work/2.9.2/sco.json"
 GUN_TABLE = ROOT / "evidence/2.9.2/gun_table.json"
 

@@ -9,11 +9,11 @@ import time
 import unittest
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import aoanet
-import station_stub as stub
-import test_station_stub
-from test_station_stub import request
+from aoa.protocol import codec
+from aoa.host import server as stub
+from tests import test_station_stub
+from tests.test_station_stub import request
+from aoa import paths
 
 
 class CombatDeliveryTests(unittest.TestCase):
@@ -26,7 +26,7 @@ class CombatDeliveryTests(unittest.TestCase):
                 probe.bind(("127.0.0.1", 0))
                 endpoint = probe.getsockname()
             process = subprocess.Popen(
-                [sys.executable, "-I", str(Path(stub.__file__)), str(folder / "key"),
+                [sys.executable, "-I", str(paths.entry("station_stub")), str(folder / "key"),
                  str(folder / "log"), "--port", "0", "--arena", "--arena-port", str(endpoint[1]),
                  "--ack", "--experimental-relay", "--experimental-reliable-combat",
                  "--peer-timeout", "8", "--seconds", "30"],
@@ -38,7 +38,7 @@ class CombatDeliveryTests(unittest.TestCase):
             hold_launch_ack = True
 
             def send(peer, kind, body):
-                peer.sendto(aoanet.encode(kind, body, key), endpoint)
+                peer.sendto(codec.encode(kind, body, key), endpoint)
 
             def pump(duration):
                 until = time.monotonic() + duration
@@ -46,7 +46,7 @@ class CombatDeliveryTests(unittest.TestCase):
                     ready, _, _ = select.select(peers, [], [], min(0.05, max(0, until - time.monotonic())))
                     for peer in ready:
                         try:
-                            message = aoanet.decode(peer.recv(512), key)
+                            message = codec.decode(peer.recv(512), key)
                         except ConnectionResetError:
                             continue
                         self.assertTrue(message["crc_ok"])

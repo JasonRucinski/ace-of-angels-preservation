@@ -12,13 +12,11 @@ import hashlib
 import json
 import re
 import sys
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import cli_util
-import scene2obj
+from aoa import cli
+from aoa.formats import scene
 
-ROOT = Path(__file__).resolve().parents[1]
+from aoa.paths import ROOT
 EVIDENCE = 'evidence/2.9.2/map_nodes_20261026.json'
 
 
@@ -49,16 +47,16 @@ def classify(node, objects):
 
 
 def main(argv=None):
-    ap = cli_util.parser(__doc__)
-    cli_util.add_evidence_option(ap, EVIDENCE)
+    ap = cli.parser(__doc__)
+    cli.add_evidence_option(ap, EVIDENCE)
     a = ap.parse_args(argv)
     source = ROOT / 'work/2.9.2/export/AOAOBJECTS'
     if not source.is_dir():
         sys.exit(f'audit_map_nodes: export folder not found: {source} (run export_assets.py first)')
     out = ROOT / 'work/map-node-review'
     out.mkdir(parents=True, exist_ok=True)
-    objects = scene2obj.sco_models(source)
-    layouts, ordered = scene2obj.layout_catalog(source)
+    objects = scene.sco_models(source)
+    layouts, ordered = scene.layout_catalog(source)
     if not layouts or not ordered:
         raise ValueError('requires exported assets with complete _export.json archive order')
     report = {'scope': 'Static asset resolution; no gameplay or live-client changes',
@@ -66,7 +64,7 @@ def main(argv=None):
                                   '0x5270C0 query-length case-insensitive comparison'],
               'maps': {}}
     for path in layouts:
-        nodes = list(scene2obj.expanded_nodes(source, path.stem, True))
+        nodes = list(scene.expanded_nodes(source, path.stem, True))
         for node in nodes:
             node['resolution'] = classify(node, objects)
         (out / (path.stem + '_nodes.json')).write_text(json.dumps(nodes, indent=2) + '\n', encoding='utf-8')
@@ -74,16 +72,16 @@ def main(argv=None):
                      n['layout_lookup'].casefold() != n['nested_layout'].casefold()]
         report['maps'][path.stem] = {
             'sha256': hashlib.sha256(path.read_bytes()).hexdigest(),
-            'root_records': len(scene2obj.read_nodes(path.read_bytes())),
+            'root_records': len(scene.read_nodes(path.read_bytes())),
             'expanded_records': len(nodes),
             'resolution_counts': dict(collections.Counter(n['resolution'] for n in nodes)),
             'recovered_prefix_references': [{'node': n['name'], 'layout': n['nested_layout']} for n in recovered],
             'unresolved_references': sorted({n['name'] for n in nodes if n['resolution'] == 'unresolved_reference'}),
         }
-    target = cli_util.evidence_target(a.evidence, EVIDENCE)
+    target = cli.evidence_target(a.evidence, EVIDENCE)
     target.write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
     print(json.dumps(report, indent=2))
 
 
 if __name__ == '__main__':
-    sys.exit(cli_util.run(main))
+    sys.exit(cli.run(main))

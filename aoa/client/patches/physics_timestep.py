@@ -6,12 +6,9 @@ line was removed because it wrote the executable with no setup record,
 which a prepared client then rejects.
 """
 import hashlib
-import sys
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-from local_station import OFFSET, ORIGINAL, LOCAL, STABLE_SHA256
-from patch_client import Asm, jmp_patch
+from aoa.client.patches.station_host import OFFSET, ORIGINAL, LOCAL, STABLE_SHA256
+from aoa.client.base import Asm, jmp_patch
 
 SITE, SITE_OFFSET = 0x48AE71, 0x8AE71
 CAVE, CAVE_OFFSET = 0x58B400, 0x18B400

@@ -25,11 +25,9 @@ import math
 import argparse
 import re
 import struct
-import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import gob2obj  # noqa: E402
+from aoa.formats import gob as formats_gob  # noqa: E402
 
 NODE_MATRIX, NODE_POS = 0xF8, 0x4C
 
@@ -37,7 +35,7 @@ NODE_MATRIX, NODE_POS = 0xF8, 0x4C
 def sco_models(src):
     out = {}
     for p in src.glob("*.[Ss]co"):
-        s = [t for _, _, t in gob2obj.strings(p.read_bytes())]
+        s = [t for _, _, t in formats_gob.strings(p.read_bytes())]
         if len(s) >= 5 and s[4]:
             out[s[0].lower()] = {"object": s[0], "class": s[1], "faction": s[2], "gob": s[4]}
     return out
@@ -47,13 +45,13 @@ def best_mesh(src, gob, cache):
     key = gob.lower()
     if key not in cache:
         path = next((p for p in src.glob("*.[Gg]ob") if p.stem.lower() == key), None)
-        meshes = gob2obj.parse(path.read_bytes()) if path else []
+        meshes = formats_gob.parse(path.read_bytes()) if path else []
         cache[key] = max(meshes, key=lambda m: len(m["verts"])) if meshes else None
     return cache[key]
 
 
 def is_scene(d):
-    return not gob2obj.parse(d) and any(t == "Category" for _, _, t in gob2obj.strings(d))
+    return not formats_gob.parse(d) and any(t == "Category" for _, _, t in formats_gob.strings(d))
 
 
 def read_nodes(d):
@@ -62,7 +60,7 @@ def read_nodes(d):
     Category is the u32 immediately after the tagged Category string in the
     same record. Retain offsets/matrices for auditing, not inferred game rules.
     """
-    strings = gob2obj.strings(d)
+    strings = formats_gob.strings(d)
     candidates = []
     for i, (start, after, name) in enumerate(strings[1:], 1):
         if not name or name == "Category" or "\n" in name or after + NODE_MATRIX + 64 > len(d):

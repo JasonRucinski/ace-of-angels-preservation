@@ -11,13 +11,13 @@ import struct
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import cli_util
-import render_clock_experiment
+from aoa import cli
+from aoa.client.experiments import render_clock_experiment
+from aoa.paths import ROOT
 
 
 def main(argv=None):
-    ap = cli_util.parser(__doc__)
+    ap = cli.parser(__doc__)
     ap.add_argument('pid', type=int, help='process id of the offline-baseline client')
     a = ap.parse_args(argv)
     if sys.platform != 'win32':
@@ -38,7 +38,7 @@ def main(argv=None):
         length = wintypes.DWORD(len(path))
         if not k.QueryFullProcessImageNameW(h, 0, path, ctypes.byref(length)):
             raise ctypes.WinError(ctypes.get_last_error())
-        expected = Path(__file__).resolve().parents[1] / 'game/offline-baseline-2.9.2/AOACLIENT.EXE'
+        expected = ROOT / 'game/offline-baseline-2.9.2/AOACLIENT.EXE'
         if Path(path.value).resolve() != expected.resolve():
             raise ValueError('fixture is restricted to the isolated offline baseline')
         render_clock_experiment.configure(expected.read_bytes(), False)  # whole-image gate
@@ -64,4 +64,4 @@ def main(argv=None):
 
 
 if __name__ == '__main__':
-    sys.exit(cli_util.run(main))
+    sys.exit(cli.run(main))

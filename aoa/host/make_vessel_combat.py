@@ -23,8 +23,7 @@ import re
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-from station_runtime import SELECTABLE_VESSELS  # noqa: E402
+from aoa.host.runtime import SELECTABLE_VESSELS  # noqa: E402
 
 TARGET = Path(__file__).resolve().with_name("vessel_combat.py")
 

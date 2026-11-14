@@ -11,11 +11,10 @@ import unittest
 from pathlib import Path
 from unittest import mock
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import decode_trn
-import make_map
+from aoa.formats import trn as formats_trn
+from aoa.maps import make_map
 
-ROOT = Path(__file__).resolve().parents[1]
+from aoa.paths import ROOT
 SPEC = ROOT / "config/maps/crucible.json"
 GAME = ROOT / "game/2.9.2"
 try:
@@ -33,17 +32,17 @@ def one(entry):
 class RecordTests(unittest.TestCase):
     def test_model_record_matches_editor_layout(self):
         r = one({"object": "Wall", "name": "Gate", "pos": [100.0, -200.0, 300.0]})
-        self.assertEqual(len(r), decode_trn.REC_292)
-        self.assertEqual(decode_trn.cstr(r[0:0x40]), "AoAObjects.odb")
-        self.assertEqual(decode_trn.cstr(r[0x40:0x80]), "Wall")
-        self.assertEqual(decode_trn.cstr(r[0x80:0x98]), "Gate")
+        self.assertEqual(len(r), formats_trn.REC_292)
+        self.assertEqual(formats_trn.cstr(r[0:0x40]), "AoAObjects.odb")
+        self.assertEqual(formats_trn.cstr(r[0x40:0x80]), "Wall")
+        self.assertEqual(formats_trn.cstr(r[0x80:0x98]), "Gate")
         # JRMAP's editor identity: x axis (1,0,0), z axis (0,0,1).
         self.assertEqual(struct.unpack_from("<6f", r, 0x98), (1, 0, 0, 0, 0, 1))
         self.assertEqual(struct.unpack_from("<3f", r, 0xC4), (100, -200, 300))
         self.assertEqual(struct.unpack_from("<f", r, 0x100)[0], 1.0)
         self.assertEqual(struct.unpack_from("<3f", r, 0x104), (100, -200, 300))
         self.assertEqual(struct.unpack_from("<3I", r, 0x200), (0, 4, 0))
-        self.assertEqual(struct.unpack_from("<I", r, 0x218)[0], decode_trn.SENTINEL)
+        self.assertEqual(struct.unpack_from("<I", r, 0x218)[0], formats_trn.SENTINEL)
 
     def test_yaw_matches_editor_flag_record(self):
         # JRMAP flag3 (record 47) stores (c,0,s),(-s,0,c) with c=-0.5384, s=0.8427.
@@ -65,36 +64,36 @@ class RecordTests(unittest.TestCase):
 
     def test_zones(self):
         safe = one({"zone": "safe", "pos": [1, 2, 3], "half": 2500})
-        self.assertEqual(decode_trn.cstr(safe[0x40:0x80]), "Cube")
+        self.assertEqual(formats_trn.cstr(safe[0x40:0x80]), "Cube")
         self.assertEqual(struct.unpack_from("<3f", safe, 0x104), (2500, 2, 3))
         self.assertEqual(struct.unpack_from("<2I", safe, 0x200), (2, 4))
         pu = one({"zone": "powerup", "pos": [10, 20, 30], "half": 500, "type": 4})
         self.assertEqual(pu[0:0x80], bytes(0x80))
         self.assertEqual(struct.unpack_from("<2I", pu, 0x200), (6, 0))
-        zones = decode_trn.powerup_zones_292(struct.pack("<I", 1) + pu)
+        zones = formats_trn.powerup_zones_292(struct.pack("<I", 1) + pu)
         self.assertEqual(zones, [{"position": (10, 20, 30), "half": 500, "type": 4}])
 
     def test_waypoint_reaches_the_relay(self):
-        import navigation_buoys
+        from aoa.maps import navigation
         r = one({"nav": "Far Yards", "object": "NavMarkerBlue", "pos": [5.0, 6.0, 7.0]})
-        self.assertEqual(decode_trn.cstr(r[0x40:0x80]), "NavMarkerBlue")
-        self.assertEqual(decode_trn.cstr(r[0x80:0x98]), "Far Yards")
+        self.assertEqual(formats_trn.cstr(r[0x40:0x80]), "NavMarkerBlue")
+        self.assertEqual(formats_trn.cstr(r[0x80:0x98]), "Far Yards")
         self.assertEqual(struct.unpack_from("<2I", r, 0x200), (3, 0))
         data = make_map.build({"name": "t", "spawn": [0, 0, 0], "objects": [
             {"object": "Wall", "pos": [0, 0, 0]}, {"nav": "Home", "pos": [1, 2, 3]}]})
-        nodes = navigation_buoys.trn_placements(data)
+        nodes = navigation.trn_placements(data)
         self.assertEqual(nodes, [{"name": "Home", "model_object": "Buoy", "position": [1, 2, 3]}])
-        (kind, packet), = navigation_buoys.loads(nodes)
+        (kind, packet), = navigation.loads(nodes)
         self.assertEqual(kind, 0x25)
         self.assertEqual(packet[:4], b"Buoy")
         self.assertEqual(struct.unpack_from("<II", packet, 0x60), (0x40010000 | 90, 3))
         many = make_map.build({"name": "t", "spawn": [0, 0, 0],
                                "objects": [{"nav": f"N{i}", "pos": [i, 0, 0]} for i in range(11)]})
         with self.assertRaises(ValueError):
-            navigation_buoys.trn_placements(many)
+            navigation.trn_placements(many)
 
     def test_waypoint_options(self):
-        from station_runtime import parse_args
+        from aoa.host.runtime import parse_args
         with tempfile.TemporaryDirectory() as tmp:
             trn = Path(tmp) / "m.trn"
             trn.write_bytes(make_map.build({"name": "t", "spawn": [0, 0, 0],
@@ -155,7 +154,7 @@ class CrucibleTests(unittest.TestCase):
         for entry, rec in zip(self.spec["objects"], records):
             for got, want in zip(rec["position"], entry["pos"]):
                 self.assertAlmostEqual(got, want, delta=0.01)
-        zones = decode_trn.powerup_zones_292(self.data)
+        zones = formats_trn.powerup_zones_292(self.data)
         self.assertEqual(sorted(z["type"] for z in zones), [0, 0, 2, 3, 3, 4, 4, 4])
         names = [e["name"] for e in self.spec["objects"] if "nav" not in e]
         navs = [e["nav"] for e in self.spec["objects"] if "nav" in e]

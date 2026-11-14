@@ -2,18 +2,17 @@
 import contextlib
 import io
 import json
-import sys
 import tempfile
 import time
 import unittest
 from unittest import mock
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import host_control  # noqa: E402
-import host_ops  # noqa: E402
+from aoa.launchers import host_control  # noqa: E402
+from aoa.host import ops  # noqa: E402
+from aoa.paths import ROOT
 
-GAME = Path(__file__).resolve().parents[1] / "game/2.9.2"
+GAME = ROOT / "game/2.9.2"
 EPHEMERAL = ("--port", "0", "--arena-port", "0", "--tcp", "0")
 
 
@@ -23,30 +22,30 @@ def settings(**changes):
 
 class ConsoleCommandTests(unittest.TestCase):
     def test_say_and_quit_parsing(self):
-        self.assertEqual(host_ops.parse_command("say Map change in 1 minute"), ("say", "Map change in 1 minute"))
-        self.assertEqual(host_ops.parse_command(" QUIT "), ("quit", None))
-        for bad in ("say " + "x" * (host_ops.SAY_LIMIT + 1), "say café", "quit now"):
-            self.assertIsNone(host_ops.parse_command(bad)[0])
-        self.assertEqual(host_ops.parse_command("say"), (None, host_ops.HELP))
+        self.assertEqual(ops.parse_command("say Map change in 1 minute"), ("say", "Map change in 1 minute"))
+        self.assertEqual(ops.parse_command(" QUIT "), ("quit", None))
+        for bad in ("say " + "x" * (ops.SAY_LIMIT + 1), "say café", "quit now"):
+            self.assertIsNone(ops.parse_command(bad)[0])
+        self.assertEqual(ops.parse_command("say"), (None, ops.HELP))
 
 
 class StatusFileTests(unittest.TestCase):
     def test_one_status_path_and_reader(self):
         with tempfile.TemporaryDirectory() as temp:
-            path = host_ops.status_path("lan-dogfight", temp)
+            path = ops.status_path("lan-dogfight", temp)
             self.assertEqual(path, Path(temp) / "lan-dogfight-status.json")
-            self.assertEqual(host_ops.status_path("vpn-dogfight").parent, host_ops.WORK)
+            self.assertEqual(ops.status_path("vpn-dogfight").parent, ops.WORK)
             self.assertEqual(host_control.status_path({"mode": "LAN"}).parent, host_control.WORK)
-            self.assertEqual(host_ops.read_status(path), (None, None))
-            host_ops.write_status(path, {"pid": 7, "map": "Arena1a"})
-            status, age = host_ops.read_status(path, 7)
+            self.assertEqual(ops.read_status(path), (None, None))
+            ops.write_status(path, {"pid": 7, "map": "Arena1a"})
+            status, age = ops.read_status(path, 7)
             self.assertEqual(status["map"], "Arena1a")
             self.assertLess(age, 5)
-            self.assertEqual(host_ops.read_status(path, 8), (None, None))  # an older run's file
+            self.assertEqual(ops.read_status(path, 8), (None, None))  # an older run's file
             path.write_text('{"pid": 7}')
-            self.assertEqual(host_ops.read_status(path, 7), ({"pid": 7}, None))
+            self.assertEqual(ops.read_status(path, 7), ({"pid": 7}, None))
             path.write_text("[1, 2]")
-            self.assertEqual(host_ops.read_status(path), (None, None))
+            self.assertEqual(ops.read_status(path), (None, None))
 
 
 class StartupTests(unittest.TestCase):
@@ -286,7 +285,7 @@ class HostProcessTests(unittest.TestCase):
         time.sleep(0.3)
         text = "\n".join(self.output())
         self.assertIn("said to 0 player(s)", text)
-        self.assertIn(host_ops.QUIT, text)
+        self.assertIn(ops.QUIT, text)
         self.assertIn("traffic:", text)  # ExitStack cleanup ran
         self.assertFalse(self.host.running)
 

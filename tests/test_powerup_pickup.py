@@ -5,20 +5,18 @@ naming, positioning and logging stubbed; SetTerrainType and the countdown
 (0x49ABD0) with its show/hide (0x49CD70 -> 0x542A90) run unmodified.
 """
 import struct
-import sys
 import unittest
-from pathlib import Path
 
 import pefile
 from unicorn import Uc, UC_ARCH_X86, UC_MODE_32, UC_HOOK_CODE
 from unicorn.x86_const import (UC_X86_REG_EAX, UC_X86_REG_EBX, UC_X86_REG_ECX, UC_X86_REG_EDI,
                                UC_X86_REG_EBP, UC_X86_REG_ESI, UC_X86_REG_ESP, UC_X86_REG_EIP)
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import powerup_pickup
-import prepare_client
+from aoa.client.patches import powerup_pickup
+from aoa.client import prepare
+from aoa.paths import ROOT
 
-ORIGINAL = Path(__file__).resolve().parents[1] / "game/2.9.2/AOACLIENT.EXE.orig"
+ORIGINAL = ROOT / "game/2.9.2/AOACLIENT.EXE.orig"
 SPAWN, COUNTDOWN, SHOW = 0x431D30, 0x49ABD0, 0x49CD70
 WORLD_PTR, FLIGHT_VIEW_PTR = 0x5E7728, 0x5E6E58
 PACKET, OBJ, GFX, WORLD, VIEW = 0x800000, 0x810000, 0x820000, 0x900000, 0x830000
@@ -97,7 +95,7 @@ def tick(image, countdown, elapsed, hidden=True):
 class PowerupPickupTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.prepared = prepare_client.configure(ORIGINAL.read_bytes())
+        cls.prepared = prepare.configure(ORIGINAL.read_bytes())
         cls.unpatched = powerup_pickup.configure(cls.prepared, False)
 
     def test_spawn_is_collidable_only_with_the_patch(self):
@@ -130,10 +128,10 @@ class PowerupPickupTests(unittest.TestCase):
             self.assertEqual(tick(image, 0, 16, hidden=False), (1, 1, 0))
 
     def test_prepared_by_default_reversible_and_rejects_corruption(self):
-        self.assertIn(powerup_pickup.NAME, prepare_client.inspect(self.prepared)["patches"])
-        self.assertNotIn(powerup_pickup.NAME, prepare_client.inspect(self.unpatched)["patches"])
-        self.assertEqual(prepare_client.configure(ORIGINAL.read_bytes(), powerup_pickups=False), self.unpatched)
-        self.assertEqual(prepare_client.configure(self.unpatched), self.prepared)
+        self.assertIn(powerup_pickup.NAME, prepare.inspect(self.prepared)["patches"])
+        self.assertNotIn(powerup_pickup.NAME, prepare.inspect(self.unpatched)["patches"])
+        self.assertEqual(prepare.configure(ORIGINAL.read_bytes(), powerup_pickups=False), self.unpatched)
+        self.assertEqual(prepare.configure(self.unpatched), self.prepared)
         self.assertEqual(powerup_pickup.configure(self.prepared), self.prepared)
         for va in (powerup_pickup.SPAWN_SITE, powerup_pickup.CAVE, powerup_pickup.EXPIRY_SITE + 6):
             bad = bytearray(self.prepared)
@@ -141,7 +139,7 @@ class PowerupPickupTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 powerup_pickup.configure(bytes(bad))
             with self.assertRaises(ValueError):
-                prepare_client.inspect(bytes(bad))
+                prepare.inspect(bytes(bad))
 
 
 if __name__ == "__main__":

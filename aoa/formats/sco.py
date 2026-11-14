@@ -21,15 +21,14 @@ import struct
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import cli_util  # noqa: E402
-import gob2obj  # noqa: E402
+from aoa import cli  # noqa: E402
+from aoa.formats import gob  # noqa: E402
 
 SYSTEM_BLOCK = 284
 
 
 def decode(d):
-    st = gob2obj.strings(d)
+    st = gob.strings(d)
     head = [t for _, _, t in st[:5]]
     out = {"name": head[0], "class": head[1], "faction": head[2], "model": head[4] if len(head) > 4 else "",
            "systems": []}
@@ -55,7 +54,7 @@ def decode(d):
 
 
 def main(argv=None):
-    ap = cli_util.parser(__doc__)
+    ap = cli.parser(__doc__)
     ap.add_argument("src", type=Path, help="exported AOAOBJECTS folder")
     ap.add_argument("out_json", type=Path, help="JSON file to write")
     ap.add_argument("summary", type=Path, nargs="?", help="Markdown summary table to write")
@@ -82,4 +81,4 @@ def main(argv=None):
 
 
 if __name__ == "__main__":
-    sys.exit(cli_util.run(main))
+    sys.exit(cli.run(main))

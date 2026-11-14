@@ -18,10 +18,9 @@ import json
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import cli_util  # noqa: E402
+from aoa import cli  # noqa: E402
 
-EVIDENCE = cli_util.ROOT / "evidence"
+EVIDENCE = cli.ROOT / "evidence"
 
 
 def load(p):
@@ -47,7 +46,7 @@ def sends(p):
 
 
 def main(argv=None):
-    ap = cli_util.parser(__doc__)
+    ap = cli.parser(__doc__)
     ap.add_argument("out", help="Markdown file to write (docs/message-types.md is the committed copy)")
     a = ap.parse_args(argv)
     out = a.out
@@ -101,4 +100,4 @@ def main(argv=None):
 
 
 if __name__ == "__main__":
-    sys.exit(cli_util.run(main))
+    sys.exit(cli.run(main))

@@ -1,15 +1,13 @@
 """Execute the experimental clock with controlled Windows counter results."""
 import struct
-import sys
 import unittest
 from itertools import product
-from pathlib import Path
 from unicorn import Uc, UC_ARCH_X86, UC_MODE_32, UC_HOOK_CODE
 from unicorn.x86_const import UC_X86_REG_EAX, UC_X86_REG_ECX, UC_X86_REG_EDX, UC_X86_REG_ESP, UC_X86_REG_FPCW
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import render_clock_experiment as clock
-import prepare_client
+from aoa.client.experiments import render_clock_experiment as clock
+from aoa.client import prepare
+from aoa.paths import ROOT
 
 
 class ClockTests(unittest.TestCase):
@@ -45,9 +43,9 @@ class ClockTests(unittest.TestCase):
                     self.assertEqual(u.reg_read(UC_X86_REG_FPCW), cw)
 
     def test_reversible(self):
-        p = Path(__file__).resolve().parents[1] / 'game/2.9.2/AOACLIENT.EXE.orig'
+        p = ROOT / 'game/2.9.2/AOACLIENT.EXE.orig'
         # The experiment shares the clock sites with frame-clock-v1; test it alone.
-        original = prepare_client.configure(p.read_bytes(), smooth_frame_clock=False)
+        original = prepare.configure(p.read_bytes(), smooth_frame_clock=False)
         patched = clock.configure(original)
         self.assertEqual(clock.configure(patched), patched)
         self.assertEqual(clock.configure(patched, False), original)

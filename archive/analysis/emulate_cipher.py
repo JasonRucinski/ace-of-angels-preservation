@@ -15,10 +15,9 @@ from pathlib import Path
 from unicorn import UC_ARCH_X86, UC_MODE_32, Uc
 from unicorn.x86_const import UC_X86_REG_ECX, UC_X86_REG_EIP, UC_X86_REG_ESP
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import aoacrypt  # noqa: E402
-import cli_util  # noqa: E402
-from pe_util import PE  # noqa: E402
+from aoa.formats import aoacrypt  # noqa: E402
+from aoa import cli  # noqa: E402
+from aoa.analysis.pe_util import PE  # noqa: E402
 
 STACK, BUF, TAB, STOP = 0x00100000, 0x00200000, 0x00300000, 0x00400000 - 0x1000
 
@@ -39,7 +38,7 @@ def run(uc, fn_va, buf, table):
 
 
 def main(argv=None):
-    ap = cli_util.parser(__doc__)
+    ap = cli.parser(__doc__)
     ap.add_argument("client", help="client executable")
     ap.add_argument("key", help="256-byte cipher table such as SCRTY.BIN")
     ap.add_argument("enc_va", help="VA (hex) of the encrypt routine")
@@ -79,4 +78,4 @@ def main(argv=None):
 
 
 if __name__ == "__main__":
-    sys.exit(cli_util.run(main))
+    sys.exit(cli.run(main))

@@ -16,12 +16,12 @@ import time
 import unittest
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import aoacrypt
-import aoanet
-import aoapack
-import station_stub as stub
-import relay_motion
+from aoa.formats import aoacrypt
+from aoa.protocol import codec
+from aoa.formats import aoapack
+from aoa.host import server as stub
+from aoa.protocol import motion as protocol_motion
+from aoa import paths
 
 
 def request():
@@ -311,7 +311,7 @@ class ProtocolTests(unittest.TestCase):
                 probe.bind(("127.0.0.1", 0))
                 endpoint = ("127.0.0.1", probe.getsockname()[1])
             proc = subprocess.Popen(
-                [sys.executable, "-I", str(Path(stub.__file__)), str(folder / "key"),
+                [sys.executable, "-I", str(paths.entry("station_stub")), str(folder / "key"),
                  str(folder / "log"), "--port", str(endpoint[1]), "--ack", "--seconds", "4"],
                 stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
             try:
@@ -325,7 +325,7 @@ class ProtocolTests(unittest.TestCase):
                             ready, _, _ = select.select([a, b], [], [], 0.05)
                             for peer in ready:
                                 try:
-                                    received[peer].append(aoanet.decode(peer.recv(512), key))
+                                    received[peer].append(codec.decode(peer.recv(512), key))
                                 except ConnectionResetError:
                                     pass
 
@@ -333,15 +333,15 @@ class ProtocolTests(unittest.TestCase):
                     b.bind(("127.0.0.1", 0))
                     deadline = time.monotonic() + 3
                     while not any(m["type"] == 0x0B for m in received[a]):
-                        a.sendto(aoanet.encode(0x0A, request(), key), endpoint)
+                        a.sendto(codec.encode(0x0A, request(), key), endpoint)
                         pump(0.1)
                         self.assertLess(time.monotonic(), deadline, "Station did not start")
-                    b.sendto(aoanet.encode(0x0A, request(), key), endpoint)
+                    b.sendto(codec.encode(0x0A, request(), key), endpoint)
                     pump(0.2)
                     # The same ID from another endpoint is independent.
                     quit_packet = b"\x00" + struct.pack("<I", 7) + b"\x4e"
                     for peer in (a, a, a, b):
-                        peer.sendto(aoanet.encode(0x1B, quit_packet, key), endpoint)
+                        peer.sendto(codec.encode(0x1B, quit_packet, key), endpoint)
                     pump(0.3)
                     for peer, copies in ((a, 3), (b, 1)):
                         acks = [m["payload"] for m in received[peer] if m["type"] == 0x0F]
@@ -363,7 +363,7 @@ class ProtocolTests(unittest.TestCase):
                 probe.bind(("127.0.0.1", 0))
                 endpoint = ("127.0.0.1", probe.getsockname()[1])
             proc = subprocess.Popen(
-                [sys.executable, "-I", str(Path(stub.__file__)), str(folder / "key"),
+                [sys.executable, "-I", str(paths.entry("station_stub")), str(folder / "key"),
                  str(folder / "log"), "--port", "0", "--arena", "--arena-port",
                  str(endpoint[1]), "--ack", "--experimental-relay", "--peer-timeout", "2",
                  "--seconds", "30"], stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
@@ -377,7 +377,7 @@ class ProtocolTests(unittest.TestCase):
             muted_acks = set()
 
             def send(peer, kind, payload):
-                peer.sendto(aoanet.encode(kind, payload, key), endpoint)
+                peer.sendto(codec.encode(kind, payload, key), endpoint)
 
             def pump(seconds):
                 end = time.monotonic() + seconds
@@ -385,7 +385,7 @@ class ProtocolTests(unittest.TestCase):
                     ready, _, _ = select.select(peers, [], [], min(0.1, max(0, end - time.monotonic())))
                     for peer in ready:
                         try:
-                            message = aoanet.decode(peer.recv(512), key)
+                            message = codec.decode(peer.recv(512), key)
                         except ConnectionResetError:
                             continue
                         self.assertTrue(message["crc_ok"])
@@ -514,7 +514,7 @@ class ProtocolTests(unittest.TestCase):
                     probe.bind(("127.0.0.1", 0))
                     endpoint = ("127.0.0.1", probe.getsockname()[1])
                 proc = subprocess.Popen(
-                    [sys.executable, "-I", str(Path(stub.__file__)), str(folder / "key"),
+                    [sys.executable, "-I", str(paths.entry("station_stub")), str(folder / "key"),
                      str(folder / "log"), "--port", "0", "--arena", "--arena-port",
                      str(endpoint[1]), "--ack", mode, "--seconds", "20"],
                     stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
@@ -533,10 +533,10 @@ class ProtocolTests(unittest.TestCase):
                         # postpone bootstrap. The initial request is wrapped.
                         while not entered and time.monotonic() < deadline:
                             if time.monotonic() >= next_retry:
-                                peer.sendto(aoanet.encode(0x1B, wrapped, key), endpoint)
+                                peer.sendto(codec.encode(0x1B, wrapped, key), endpoint)
                                 next_retry = time.monotonic() + 0.2
                             try:
-                                message = aoanet.decode(peer.recv(512), key)
+                                message = codec.decode(peer.recv(512), key)
                             except (socket.timeout, ConnectionResetError):
                                 continue
                             if message["type"] == 0x0B:
@@ -552,18 +552,18 @@ class ProtocolTests(unittest.TestCase):
                         self.assertEqual(entered, 1, "retries postponed or bypassed flight initialization")
                         # Both direct and wrapped retries after flight must
                         # retain the tag and must never reload the ship.
-                        peer.sendto(aoanet.encode(0x0A, request(), key), endpoint)
-                        peer.sendto(aoanet.encode(0x1B, wrapped, key), endpoint)
+                        peer.sendto(codec.encode(0x0A, request(), key), endpoint)
+                        peer.sendto(codec.encode(0x1B, wrapped, key), endpoint)
                         changed = bytearray(request())
                         changed[31:40] = b"different"
-                        peer.sendto(aoanet.encode(0x0A, bytes(changed), key), endpoint)
+                        peer.sendto(codec.encode(0x0A, bytes(changed), key), endpoint)
                         nested = bytes(changed) + sequence + b"\x0a" + sequence + b"\x1b"
-                        peer.sendto(aoanet.encode(0x1B, nested, key), endpoint)
+                        peer.sendto(codec.encode(0x1B, nested, key), endpoint)
                         deadline = time.monotonic() + 3.8
                         saw_retry_ack = False
                         while time.monotonic() < deadline:
                             try:
-                                message = aoanet.decode(peer.recv(512), key)
+                                message = codec.decode(peer.recv(512), key)
                             except socket.timeout:
                                 continue
                             self.assertNotIn(message["type"], (0x27, 0x2C), "retry restarted flight")
@@ -623,7 +623,7 @@ class ProtocolTests(unittest.TestCase):
             folder = Path(tmp)
             (folder / "key").write_bytes(key)
             proc = subprocess.Popen(
-                [sys.executable, "-I", str(Path(stub.__file__)), str(folder / "key"),
+                [sys.executable, "-I", str(paths.entry("station_stub")), str(folder / "key"),
                  str(folder / "log"), "--port", "0", "--arena", "--arena-port", str(arena_port),
                  "--ack", "--experimental-relay", "--experimental-object", "--seconds", "15"],
                 stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
@@ -633,24 +633,24 @@ class ProtocolTests(unittest.TestCase):
                     a.settimeout(0.2)
                     deadline = time.monotonic() + 5
                     while True:
-                        a.sendto(aoanet.encode(10, request(), key), endpoint)
+                        a.sendto(codec.encode(10, request(), key), endpoint)
                         try:
-                            ack_a = aoanet.decode(a.recv(512), key)
+                            ack_a = codec.decode(a.recv(512), key)
                             break
                         except (socket.timeout, ConnectionResetError):
                             if time.monotonic() > deadline or proc.poll() is not None:
                                 self.fail("relay did not start")
                     a.settimeout(5)
                     b.settimeout(5)
-                    b.sendto(aoanet.encode(10, request(), key), endpoint)
-                    ack_b = aoanet.decode(b.recv(512), key)
+                    b.sendto(codec.encode(10, request(), key), endpoint)
+                    ack_b = codec.decode(b.recv(512), key)
                     self.assertEqual(int.from_bytes(ack_a["payload"][2:6], "little"), 0x80010001)
                     self.assertEqual(int.from_bytes(ack_b["payload"][2:6], "little"), 0x80010002)
                     for peer in (a, b):
                         seen_players = set()
                         entered_flight = False
                         while True:
-                            message = aoanet.decode(peer.recv(512), key)
+                            message = codec.decode(peer.recv(512), key)
                             self.assertTrue(message["crc_ok"])
                             if message["type"] == 0x26:
                                 seen_players.add(int.from_bytes(message["payload"][0x28:0x2C], "little"))
@@ -665,18 +665,18 @@ class ProtocolTests(unittest.TestCase):
                     unsafe = bytearray(position)
                     unsafe[7] = 0x80
                     unsafe += struct.pack("<I", 1) + bytes(32)
-                    a.sendto(aoanet.encode(0x1F, bytes(unsafe), key), endpoint)
+                    a.sendto(codec.encode(0x1F, bytes(unsafe), key), endpoint)
                     while True:
-                        forwarded = aoanet.decode(b.recv(512), key)
+                        forwarded = codec.decode(b.recv(512), key)
                         if (forwarded["type"] == 0x1F and
                                 struct.unpack_from("<I", forwarded["payload"], 4)[0] & 0x400):
                             break
-                    state, _, _ = relay_motion.update(position, relay_motion.initial((0, 0, 0)))
+                    state, _, _ = protocol_motion.update(position, protocol_motion.initial((0, 0, 0)))
                     # Server-owned stats ride along: no kills/deaths yet, nothing reported.
                     self.assertEqual(forwarded["payload"],
-                                     relay_motion.snapshot(1, state, include_control=True, stats=(0, 0, 0, 0)))
+                                     protocol_motion.snapshot(1, state, include_control=True, stats=(0, 0, 0, 0)))
                     while True:
-                        ping = aoanet.decode(b.recv(512), key)
+                        ping = codec.decode(b.recv(512), key)
                         if ping["type"] == 8:
                             break
                     self.assertTrue(ping["crc_ok"])
@@ -686,16 +686,16 @@ class ProtocolTests(unittest.TestCase):
                     # coordinates and a full velocity seed, not A's spawn.
                     motion = ((1250.0, -250.0, 80.0), (12.0, -4.0, 7.0))
                     rtype, rpay = stub.motion_snapshot(1, motion)
-                    a.sendto(aoanet.encode(rtype, rpay, key), endpoint)
-                    while aoanet.decode(b.recv(512), key)["type"] != 0x1F:
+                    a.sendto(codec.encode(rtype, rpay, key), endpoint)
+                    while codec.decode(b.recv(512), key)["type"] != 0x1F:
                         pass
                     with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as c:
                         c.settimeout(5)
-                        c.sendto(aoanet.encode(10, request(), key), endpoint)
+                        c.sendto(codec.encode(10, request(), key), endpoint)
                         seen_position = seed = local_position = None
                         entered_flight = False
                         while True:
-                            message = aoanet.decode(c.recv(512), key)
+                            message = codec.decode(c.recv(512), key)
                             p = message["payload"]
                             if message["type"] == 0x26 and struct.unpack_from("<I", p, 0x28)[0] == 0x80010001:
                                 seen_position = struct.unpack_from("<3f", p, 0x1A4)
@@ -757,7 +757,7 @@ class ProtocolTests(unittest.TestCase):
             folder = Path(tmp)
             (folder / "key").write_bytes(key)
             proc = subprocess.Popen(
-                [sys.executable, "-I", str(Path(stub.__file__)), str(folder / "key"),
+                [sys.executable, "-I", str(paths.entry("station_stub")), str(folder / "key"),
                  str(folder / "log"), "--port", "0", "--arena", "--arena-port", str(arena_port),
                  "--ack", "--experimental-relay", "--seconds", "20"],
                 stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
@@ -765,7 +765,7 @@ class ProtocolTests(unittest.TestCase):
 
             def until(peer, kind):
                 while True:
-                    message = aoanet.decode(peer.recv(512), key)
+                    message = codec.decode(peer.recv(512), key)
                     if message["type"] == kind:
                         return message["payload"]
 
@@ -775,7 +775,7 @@ class ProtocolTests(unittest.TestCase):
                     a.settimeout(0.2)
                     deadline = time.monotonic() + 5
                     while True:
-                        a.sendto(aoanet.encode(10, request(), key), endpoint)
+                        a.sendto(codec.encode(10, request(), key), endpoint)
                         try:
                             a.recv(512)
                             break
@@ -784,7 +784,7 @@ class ProtocolTests(unittest.TestCase):
                                 self.fail("relay did not start")
                     a.settimeout(5)
                     b.settimeout(5)
-                    b.sendto(aoanet.encode(10, request(), key), endpoint)
+                    b.sendto(codec.encode(10, request(), key), endpoint)
                     self.assertEqual(until(a, 0x27)[:64], b"Ym Khtat".ljust(64, b"\0"))
                     until(a, 0x2C)
                     until(b, 0x2C)
@@ -792,10 +792,10 @@ class ProtocolTests(unittest.TestCase):
                     # the relay counts B as loaded (it then pings B).
                     until(b, 8)
                     unknown = struct.pack("<I", 0) + b"Death Star".ljust(32, b"\0") + b"\0"
-                    a.sendto(aoanet.encode(0xA0, unknown, key), endpoint)
+                    a.sendto(codec.encode(0xA0, unknown, key), endpoint)
                     choice = struct.pack("<I", 0) + b"Vermok".ljust(32, b"\0") + b"\0"
                     # The client may send it reliably; the wrapper is ACKed.
-                    a.sendto(aoanet.encode(0x1B, choice + struct.pack("<I", 7) + b"\xa0", key), endpoint)
+                    a.sendto(codec.encode(0x1B, choice + struct.pack("<I", 7) + b"\xa0", key), endpoint)
                     self.assertEqual(until(a, 0x0F), struct.pack("<I", 7))
                     own = until(a, 0x27)
                     self.assertEqual((own[:64], own[128]), (b"Vermok".ljust(64, b"\0"), 0))
@@ -807,10 +807,10 @@ class ProtocolTests(unittest.TestCase):
                         c.settimeout(5)
                         joining = bytearray(request())
                         struct.pack_into("<I", joining, 31 + 0x7B, 0x1234)  # Station ID
-                        c.sendto(aoanet.encode(10, bytes(joining), key), endpoint)
+                        c.sendto(codec.encode(10, bytes(joining), key), endpoint)
                         vessels, ids, own = {}, {}, None
                         while True:
-                            message = aoanet.decode(c.recv(512), key)
+                            message = codec.decode(c.recv(512), key)
                             p = message["payload"]
                             self.assertNotEqual(message["type"], 0x42)  # No record refresh mid-flight setup.
                             if message["type"] == 0x26:
@@ -884,7 +884,7 @@ class ProtocolTests(unittest.TestCase):
             (folder / "key").write_bytes(key)
             status = folder / "status.json"
             proc = subprocess.Popen(
-                [sys.executable, "-I", str(Path(stub.__file__)), str(folder / "key"), str(folder / "log"),
+                [sys.executable, "-I", str(paths.entry("station_stub")), str(folder / "key"), str(folder / "log"),
                  "--profile", "local-relay", "--port", str(ports[0]), "--arena-port", str(ports[1]), "--tcp", "0",
                  "--console", "--status-file", str(status), "--seconds", "15"],
                 stdin=subprocess.PIPE, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, text=True)
@@ -894,11 +894,11 @@ class ProtocolTests(unittest.TestCase):
                 while time.monotonic() < end:
                     ready, _, _ = select.select([sock], [], [], 0.05)
                     if ready:
-                        out.append(aoanet.decode(sock.recv(512), key))
+                        out.append(codec.decode(sock.recv(512), key))
                 return out
 
             def rejected(sock):
-                sock.sendto(aoanet.encode(0x0A, bytes(old), key), station)
+                sock.sendto(codec.encode(0x0A, bytes(old), key), station)
                 return [m["payload"][6:10] for m in replies(sock, 0.7) if m["type"] == 0x0B]
 
             try:
@@ -910,11 +910,11 @@ class ProtocolTests(unittest.TestCase):
                     acks = []
                     while not acks:
                         self.assertLess(time.monotonic(), deadline, "Station did not start")
-                        player.sendto(aoanet.encode(0x0A, request(), key), station)
+                        player.sendto(codec.encode(0x0A, request(), key), station)
                         acks = [m for m in replies(player, 0.1) if m["type"] == 0x0B]
                     while not any(m["type"] == 0x0B for m in replies(player, 0.1)):
                         self.assertLess(time.monotonic(), deadline, "arena did not admit")
-                        player.sendto(aoanet.encode(0x0A, request()[:31] + acks[0]["payload"][13:], key), arena)
+                        player.sendto(codec.encode(0x0A, request()[:31] + acks[0]["payload"][13:], key), arena)
                     # Before the ban, an old client is told 'Incorrect version.' (result 8).
                     self.assertEqual(rejected(probe), [struct.pack("<I", 8)])
                     proc.stdin.write("ban 1\n")
@@ -940,7 +940,7 @@ class ProtocolTests(unittest.TestCase):
             folder = Path(tmp)
             (folder / "key").write_bytes(key)
             proc = subprocess.Popen(
-                [sys.executable, "-I", str(Path(stub.__file__)), str(folder / "key"),
+                [sys.executable, "-I", str(paths.entry("station_stub")), str(folder / "key"),
                  str(folder / "log"), "--port", str(udp_port), "--tcp", str(tcp_port),
                  "--ack", "--seconds", "15"], stdout=subprocess.DEVNULL,
                 stderr=subprocess.PIPE)
@@ -957,8 +957,8 @@ class ProtocolTests(unittest.TestCase):
                 with tcp, socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as udp:
                     udp.settimeout(3)
                     endpoint = ("127.0.0.1", udp_port)
-                    udp.sendto(aoanet.encode(0x0A, request(), key), endpoint)
-                    ack = aoanet.decode(udp.recvfrom(512)[0], key)
+                    udp.sendto(codec.encode(0x0A, request(), key), endpoint)
+                    ack = codec.decode(udp.recvfrom(512)[0], key)
                     self.assertTrue(ack["crc_ok"])
                     self.assertEqual((ack["type"], ack["payload"][1]), (0x0B, 1))
                     # TCP framing must tolerate a fragmented request.
@@ -971,9 +971,9 @@ class ProtocolTests(unittest.TestCase):
                         length = int.from_bytes(stream.read(4), "little")
                         body = aoapack.decompress(stream.read(length))[0]
                     self.assertEqual(body, stub.server_list_body(0, station_population=1))
-                    aliases = aoanet.decode(udp.recvfrom(512)[0], key)
+                    aliases = codec.decode(udp.recvfrom(512)[0], key)
                     while aliases["type"] == 8:
-                        aliases = aoanet.decode(udp.recvfrom(512)[0], key)
+                        aliases = codec.decode(udp.recvfrom(512)[0], key)
                     self.assertEqual(aliases["type"], 0x9A)
                     self.assertTrue(aliases["crc_ok"])
                     self.assertEqual(aliases["payload"], stub.pilot_list())
@@ -981,13 +981,13 @@ class ProtocolTests(unittest.TestCase):
                     # must be ignored, as must a short reliable wrapper.
                     bad = request() + b"\x0a" + (aoapack.crc16_xmodem(request()) ^ 1).to_bytes(2, "little")
                     udp.sendto(aoacrypt.encrypt(aoapack.compress(bad), key), endpoint)
-                    udp.sendto(aoanet.encode(0x1B, b"\x00", key), endpoint)
+                    udp.sendto(codec.encode(0x1B, b"\x00", key), endpoint)
                     udp.settimeout(0.7)
                     deadline = time.monotonic() + 0.7
                     while time.monotonic() < deadline:
                         udp.settimeout(max(0.01, deadline - time.monotonic()))
                         try:
-                            packet = aoanet.decode(udp.recvfrom(512)[0], key)
+                            packet = codec.decode(udp.recvfrom(512)[0], key)
                         except socket.timeout:
                             break
                         self.assertEqual(packet["type"], 8)  # Scheduled heartbeat only.

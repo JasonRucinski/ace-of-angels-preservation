@@ -9,12 +9,11 @@ import time
 import unittest
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import aoanet
-import station_stub
-from station_runtime import parse_args
-from test_station_runtime import job_request, read_reply
-from test_station_stub import request
+from aoa.protocol import codec
+from aoa.host.runtime import parse_args
+from tests.test_station_runtime import job_request, read_reply
+from tests.test_station_stub import request
+from aoa import paths
 
 
 class GuestAdmissionTests(unittest.TestCase):
@@ -28,7 +27,7 @@ class GuestAdmissionTests(unittest.TestCase):
             with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as probe:
                 probe.bind(("127.0.0.1", 0))
                 arena = probe.getsockname()
-            proc = subprocess.Popen([sys.executable, "-I", str(Path(station_stub.__file__)), str(folder / "key"),
+            proc = subprocess.Popen([sys.executable, "-I", str(paths.entry("station_stub")), str(folder / "key"),
                                      str(folder / "log"), "--profile", "local-guests", "--port", "0", "--tcp", "0",
                                      "--arena-port", str(arena[1]), "--peer-timeout", "3", "--seconds", "20"],
                                     stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
@@ -43,13 +42,13 @@ class GuestAdmissionTests(unittest.TestCase):
                 slots = {s1: 1, s2: 1, a1: 1, a2: 2}
 
                 def send(peer, endpoint, kind, data):
-                    peer.sendto(aoanet.encode(kind, data, key), endpoint)
+                    peer.sendto(codec.encode(kind, data, key), endpoint)
 
                 def receive(peer, expected, timeout=5):
                     deadline = time.monotonic() + timeout
                     while time.monotonic() < deadline:
                         try:
-                            message = aoanet.decode(peer.recv(512), key)
+                            message = codec.decode(peer.recv(512), key)
                         except socket.timeout:
                             continue
                         if message["type"] == 8 and peer in slots:

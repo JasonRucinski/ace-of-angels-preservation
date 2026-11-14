@@ -27,16 +27,15 @@ import unittest
 from pathlib import Path
 from unittest import mock
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import dedicated_host  # noqa: E402
-import host_control  # noqa: E402
-import host_ops  # noqa: E402
-import map_viewer  # noqa: E402
-import online_terrain  # noqa: E402
-import station_runtime  # noqa: E402
-from station_runtime import parse_args  # noqa: E402
+from aoa.host import dedicated  # noqa: E402
+from aoa.launchers import host_control  # noqa: E402
+from aoa.host import ops  # noqa: E402
+from aoa.maps import map_viewer  # noqa: E402
+from aoa.client.patches import online_terrain  # noqa: E402
+from aoa.host import runtime  # noqa: E402
+from aoa.host.runtime import parse_args  # noqa: E402
 
-ROOT = Path(__file__).resolve().parents[1]
+from aoa.paths import ROOT
 SNAPSHOT = Path(__file__).resolve().parent / "snapshots/host_configs.json"
 DEPLOY = ROOT / "deploy/linux"
 ADDRESSES = {"local-guests": "127.0.0.1", "lan-dogfight": "192.168.1.5", "vpn-dogfight": "100.101.102.103"}
@@ -142,11 +141,11 @@ def deploy_cases():
                     a = str(prefix / a[len(published) + 1:])
             local.append(a)
         seen = []
-        with mock.patch.object(dedicated_host, "run", side_effect=lambda args, settings: seen.append((args, settings))):
-            if dedicated_host.main(local) is not None or len(seen) != 1:
+        with mock.patch.object(dedicated, "run", side_effect=lambda args, settings: seen.append((args, settings))):
+            if dedicated.main(local) is not None or len(seen) != 1:
                 raise ValueError("dedicated_host did not reach its run loop")
         args, settings = seen[0]
-        return {f"aoa-host.service: {name}": case(dedicated_host.child_args(args, settings, name), prefixes)
+        return {f"aoa-host.service: {name}": case(dedicated.child_args(args, settings, name), prefixes)
                 for name in settings["maps"]}
 
 
@@ -260,13 +259,13 @@ class HostArgvTests(unittest.TestCase):
 class LauncherDefaultsTests(unittest.TestCase):
     def test_one_defaults_table(self):
         server = vars(parse_args(["key", "log"]))
-        table = station_runtime.HOST_DEFAULTS
+        table = runtime.HOST_DEFAULTS
         self.assertEqual((server["kill_limit"], server["time_limit"], server["max_players"]),
                          (table["kill_limit"], table["time_limit_seconds"], table["max_players"]))
         self.assertEqual((host_control.DEFAULTS["kill_limit"], host_control.DEFAULTS["time_limit_min"] * 60,
                           host_control.DEFAULTS["max_players"]),
                          (table["kill_limit"], table["time_limit_seconds"], table["max_players"]))
-        self.assertEqual((dedicated_host.DEFAULTS["kill_limit"], dedicated_host.DEFAULTS["time_limit_seconds"]),
+        self.assertEqual((dedicated.DEFAULTS["kill_limit"], dedicated.DEFAULTS["time_limit_seconds"]),
                          (table["kill_limit"], table["time_limit_seconds"]))
         # The Linux example keeps its own explicit limits.
         example = json.loads((DEPLOY / "rotation.json.example").read_text())
@@ -276,7 +275,7 @@ class LauncherDefaultsTests(unittest.TestCase):
     def test_start_lan_dogfight_script(self):
         text = (ROOT / "tools/start_lan_dogfight.ps1").read_text(encoding="utf-8")
         description = text[text.index(".DESCRIPTION"):text.index(".EXAMPLE")]
-        for command in re.findall(r"(?:^ |\| )(\w+)", host_ops.HELP.split(":", 1)[1]):
+        for command in re.findall(r"(?:^ |\| )(\w+)", ops.HELP.split(":", 1)[1]):
             self.assertIn(command, description)
         self.assertNotIn("ValidateSet('CTF_arena'", text)  # every map the server accepts (H5)
         self.assertNotIn("Arena1a terrain", text)  # the map it was given (H4)

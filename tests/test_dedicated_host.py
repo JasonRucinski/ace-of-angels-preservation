@@ -13,13 +13,13 @@ import time
 import unittest
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import dedicated_host as dedicated
-import online_terrain
-import station_stub as stub
-from test_internet_play import SyntheticClient
-from test_station_runtime import job_request, read_reply
-from test_station_stub import request
+from aoa.host import dedicated
+from aoa.client.patches import online_terrain
+from aoa.host import server as stub
+from tests.test_internet_play import SyntheticClient
+from tests.test_station_runtime import job_request, read_reply
+from tests.test_station_stub import request
+from aoa import paths
 
 
 class DedicatedTests(unittest.TestCase):
@@ -56,7 +56,7 @@ class DedicatedTests(unittest.TestCase):
             client.sock.close()
 
     def launch(self, controller=False, extra=()):
-        tool = "dedicated_host.py" if controller else "station_stub.py"
+        tool = "dedicated_host" if controller else "station_stub"
         arguments = [str(self.folder / "key"), str(self.folder / "events.jsonl"),
                      "--profile", "local-guests", "--port", str(self.ports[0]),
                      "--arena-port", str(self.ports[1]), "--tcp", str(self.ports[2]),
@@ -68,7 +68,7 @@ class DedicatedTests(unittest.TestCase):
                           "--experimental-terrain", "--kill-limit", "1", "--time-limit", "0",
                           "--idle-recycle", "0", "--restart-warning", "1.5", "--seconds", "20"]
         stream = (self.folder / f"process-{len(self.processes)}.log").open("w+")
-        proc = subprocess.Popen([sys.executable, "-I", "-S", "-u", str(Path(__file__).with_name(tool)),
+        proc = subprocess.Popen([sys.executable, "-I", "-S", "-u", str(paths.entry(tool)),
                                  *arguments, *extra], stdin=subprocess.DEVNULL,
                                 stdout=stream, stderr=subprocess.STDOUT,
                                 creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
@@ -159,13 +159,13 @@ class DedicatedTests(unittest.TestCase):
                                                 "vpn-dogfight requires a specific IPv4 address"),
                 (["--bind-address", "100.101.102.103", "--max-players", "9"], "at most eight configured players")):
             with self.subTest(extra=extra):
-                result = subprocess.run([sys.executable, "-I", str(Path(dedicated.__file__)), *common, *extra],
+                result = subprocess.run([sys.executable, "-I", str(paths.entry("dedicated_host")), *common, *extra],
                                         capture_output=True, text=True, timeout=30)
                 self.assertNotEqual(result.returncode, 0)
                 self.assertEqual(len(result.stderr.strip().splitlines()), 1, result.stderr)
                 self.assertIn(message, result.stderr)
                 self.assertNotIn("usage:", result.stderr)
-        result = subprocess.run([sys.executable, "-I", str(Path(dedicated.__file__)), *common,
+        result = subprocess.run([sys.executable, "-I", str(paths.entry("dedicated_host")), *common,
                                  "--profile", "local-guests"], capture_output=True, text=True, timeout=30)
         self.assertEqual(result.returncode, 0, result.stderr)
         self.config.write_text(json.dumps({**self.settings, "backdrop": "spacebkgd", "mapz": []}))

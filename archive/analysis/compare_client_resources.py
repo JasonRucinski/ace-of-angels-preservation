@@ -13,22 +13,21 @@ from pathlib import Path
 import sys
 import pefile
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import cli_util  # noqa: E402
+from aoa import cli  # noqa: E402
 
 EVIDENCE = 'evidence/asset-review/client-resources.json'
 
 
 def main(argv=None):
-    ap = cli_util.parser(__doc__)
+    ap = cli.parser(__doc__)
     ap.add_argument('--reports', type=Path, default=Path('evidence/asset-review'),
                     help='folder of compare_version_assets.py reports, repo-relative '
                          '(default: %(default)s; a fresh run writes work/evidence/asset-review)')
-    cli_util.add_evidence_option(ap, EVIDENCE)
+    cli.add_evidence_option(ap, EVIDENCE)
     a = ap.parse_args(argv)
     target = a.evidence.resolve() if a.evidence else None
     # The reports below record repo-relative paths; keep them that way.
-    os.chdir(cli_util.ROOT)
+    os.chdir(cli.ROOT)
     reports = {}
     for path in sorted(a.reports.glob('*.json')):
         info = json.loads(path.read_text())
@@ -64,8 +63,8 @@ def main(argv=None):
         for row in rows:
             row['content_in_2.9.2'] = row['sha256'] in baseline
         print(version, len(rows), 'resources;', sum(not r['content_in_2.9.2'] for r in rows), 'different/absent')
-    cli_util.evidence_target(target, EVIDENCE).write_text(json.dumps(reports, indent=2) + '\n')
+    cli.evidence_target(target, EVIDENCE).write_text(json.dumps(reports, indent=2) + '\n')
 
 
 if __name__ == '__main__':
-    sys.exit(cli_util.run(main))
+    sys.exit(cli.run(main))

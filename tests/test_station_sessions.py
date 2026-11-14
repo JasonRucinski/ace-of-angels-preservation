@@ -10,11 +10,11 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import aoanet
-import station_stub as stub
-from test_station_runtime import job_request, read_reply
-from test_station_stub import request
+from aoa.protocol import codec
+from aoa.host import server as stub
+from tests.test_station_runtime import job_request, read_reply
+from tests.test_station_stub import request
+from aoa import paths
 
 
 class StationSessionTests(unittest.TestCase):
@@ -61,7 +61,7 @@ class StationSessionTests(unittest.TestCase):
             station_port, arena_port = [probe.getsockname()[1] for probe in probes]
             for probe in probes:
                 probe.close()
-            proc = subprocess.Popen([sys.executable, "-I", str(Path(stub.__file__)), str(folder / "key"),
+            proc = subprocess.Popen([sys.executable, "-I", str(paths.entry("station_stub")), str(folder / "key"),
                                      str(folder / "log"), "--profile", "local-relay", "--port", str(station_port),
                                      "--arena-port", str(arena_port), "--tcp", "0", "--seconds", "12"],
                                     stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
@@ -77,15 +77,15 @@ class StationSessionTests(unittest.TestCase):
                             data, source = client.recvfrom(512)
                         except (socket.timeout, ConnectionResetError):
                             continue
-                        got.append((source[1], aoanet.decode(data, key)["type"]))
+                        got.append((source[1], codec.decode(data, key)["type"]))
                     return got
 
                 deadline = time.monotonic() + 5
                 while not any(kind == 11 for _, kind in collect(0.2)):
-                    client.sendto(aoanet.encode(10, request(), key), ("127.0.0.1", station_port))
+                    client.sendto(codec.encode(10, request(), key), ("127.0.0.1", station_port))
                     self.assertLess(time.monotonic(), deadline, "Station did not start")
                 self.assertIn((station_port, 8), collect(2.2), "Station pings before arena entry")
-                client.sendto(aoanet.encode(10, request(), key), ("127.0.0.1", arena_port))
+                client.sendto(codec.encode(10, request(), key), ("127.0.0.1", arena_port))
                 after = collect(2.5)
                 self.assertIn((arena_port, 11), after)
                 self.assertNotIn((station_port, 8), after, "Station still pings the shared socket")
@@ -147,7 +147,7 @@ class StationSessionTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp, contextlib.ExitStack() as resources:
             folder = Path(tmp)
             (folder / "key").write_bytes(key)
-            proc = subprocess.Popen([sys.executable, "-I", str(Path(stub.__file__)),
+            proc = subprocess.Popen([sys.executable, "-I", str(paths.entry("station_stub")),
                                      str(folder / "key"), str(folder / "log"), "--ack",
                                      "--port", "0", "--tcp", "0", "--peer-timeout", "3", "--seconds", "15"],
                                     stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
@@ -165,19 +165,19 @@ class StationSessionTests(unittest.TestCase):
                 def receive(client, expected):
                     deadline = time.monotonic() + 2
                     while time.monotonic() < deadline:
-                        packet = aoanet.decode(client.recv(1024), key)
+                        packet = codec.decode(client.recv(1024), key)
                         self.assertTrue(packet["crc_ok"])
                         if packet["type"] == 8:
                             bounce = bytearray(packet["payload"])
                             bounce[6] = 1
-                            client.sendto(aoanet.encode(9, bounce, key), endpoint)
+                            client.sendto(codec.encode(9, bounce, key), endpoint)
                         else:
                             self.assertEqual(packet["type"], expected)
                             return packet["payload"]
                     self.fail("expected response did not arrive")
 
                 def join(client):
-                    client.sendto(aoanet.encode(10, request(), key), endpoint)
+                    client.sendto(codec.encode(10, request(), key), endpoint)
                     return struct.unpack_from("<I", receive(client, 11), 13 + 0x7B)[0]
 
                 def listing(identity, job=5):
@@ -198,7 +198,7 @@ class StationSessionTests(unittest.TestCase):
                 self.assertEqual(listing(999), b"")
                 self.assertEqual(listing(first_id, 255), b"")
 
-                first.sendto(aoanet.encode(0x1B, request() + struct.pack("<I", 123) + b"\x0a", key), endpoint)
+                first.sendto(codec.encode(0x1B, request() + struct.pack("<I", 123) + b"\x0a", key), endpoint)
                 self.assertEqual(receive(first, 15), struct.pack("<I", 123))
                 self.assertEqual(struct.unpack_from("<I", receive(first, 11), 13 + 0x7B)[0], first_id)
                 self.assertEqual(struct.unpack_from("<I", listing(first_id), 0x74)[0], 2)
@@ -209,7 +209,7 @@ class StationSessionTests(unittest.TestCase):
                 partial = resources.enter_context(socket.create_connection(("127.0.0.1", tcp_port), timeout=2))
                 pending = job_request(identity=first_id)
                 partial.sendall(pending[:71])
-                first.sendto(aoanet.encode(0x4E, b"\0", key), endpoint)
+                first.sendto(codec.encode(0x4E, b"\0", key), endpoint)
                 deadline = time.monotonic() + 1
                 while struct.unpack_from("<I", listing(second_id), 0x74)[0] != 1:
                     self.assertLess(time.monotonic(), deadline)
@@ -226,11 +226,11 @@ class StationSessionTests(unittest.TestCase):
                 deadline = time.monotonic() + 5
                 while True:
                     try:
-                        packet = aoanet.decode(second.recv(1024), key)
+                        packet = codec.decode(second.recv(1024), key)
                         self.assertEqual(packet["type"], 8)  # No cross-session/duplicate alias.
                         bounce = bytearray(packet["payload"])
                         bounce[6] = 1
-                        second.sendto(aoanet.encode(9, bounce, key), endpoint)
+                        second.sendto(codec.encode(9, bounce, key), endpoint)
                     except socket.timeout:
                         pass
                     body = listing(second_id)

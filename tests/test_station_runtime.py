@@ -16,12 +16,12 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import aoanet
-import aoapack
-import station_stub as stub
-from station_runtime import EventLog, StationTCPServer, parse_args
-from test_station_stub import request
+from aoa.protocol import codec
+from aoa.formats import aoapack
+from aoa.host import server as stub
+from aoa.host.runtime import EventLog, StationTCPServer, parse_args
+from tests.test_station_stub import request
+from aoa import paths
 
 
 def read_reply(client):
@@ -62,7 +62,7 @@ class RuntimeTests(unittest.TestCase):
                 probe.bind(("127.0.0.1", 0))
                 station_port = probe.getsockname()[1]
             proc = subprocess.Popen(
-                [sys.executable, "-I", "-u", str(Path(stub.__file__)),
+                [sys.executable, "-I", "-u", str(paths.entry("station_stub")),
                  str(folder / "key"), str(folder / "log"), "--profile", "local-guests",
                  "--sustained-delivery", "--port", str(station_port), "--arena-port", "0", "--tcp", "0",
                  "--status-file", str(status)],
@@ -78,7 +78,7 @@ class RuntimeTests(unittest.TestCase):
                 self.assertEqual(json.loads(status.read_text())["players"], [])
                 with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as client:
                     client.settimeout(2)
-                    client.sendto(aoanet.encode(0x0A, request(), key), ("127.0.0.1", station_port))
+                    client.sendto(codec.encode(0x0A, request(), key), ("127.0.0.1", station_port))
                     self.assertTrue(client.recv(512), "host did not answer the Station handshake")
                 proc.send_signal(signal.SIGINT)
                 stdout, stderr = proc.communicate(timeout=10)
@@ -121,7 +121,7 @@ class RuntimeTests(unittest.TestCase):
                         probe_options + ["--max-players", "2"]):
             with contextlib.redirect_stderr(io.StringIO()), self.assertRaises(SystemExit):
                 parse_args(base + options)
-        result = subprocess.run([sys.executable, "-I", str(Path(stub.__file__)),
+        result = subprocess.run([sys.executable, "-I", str(paths.entry("station_stub")),
                                  "nonexistent.key", "nonexistent.log", "--profile", "local-relay", "--print-config"],
                                 capture_output=True, text=True, timeout=5)
         self.assertEqual(result.returncode, 0, result.stderr)
@@ -166,7 +166,7 @@ class RuntimeTests(unittest.TestCase):
                                      ([str(key), str(folder / "log"), "--profile", "local-relay",
                                        "--start-vessel", "Bogus"], "invalid choice: 'Bogus'")):
                 with self.subTest(command=command[2:]):
-                    result = subprocess.run([sys.executable, "-I", str(Path(stub.__file__)), *command, "--print-config"],
+                    result = subprocess.run([sys.executable, "-I", str(paths.entry("station_stub")), *command, "--print-config"],
                                             capture_output=True, text=True, timeout=20)
                     self.assertEqual(result.returncode, 2)
                     self.assertIn(message, result.stderr.strip().splitlines()[-1])
@@ -324,7 +324,7 @@ class RuntimeTests(unittest.TestCase):
             station_port, arena_port = [probe.getsockname()[1] for probe in probes]
             for probe in probes:
                 probe.close()
-            proc = subprocess.Popen([sys.executable, "-I", str(Path(stub.__file__)), str(folder / "key"),
+            proc = subprocess.Popen([sys.executable, "-I", str(paths.entry("station_stub")), str(folder / "key"),
                                      str(folder / "log"), "--profile", "local-relay", "--port", str(station_port),
                                      "--arena-port", str(arena_port), "--tcp", "0", "--seconds", "4"],
                                     stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
@@ -335,8 +335,8 @@ class RuntimeTests(unittest.TestCase):
                 tcp_port = int(line.strip().rsplit(":", 1)[1])
                 station = resources.enter_context(socket.socket(socket.AF_INET, socket.SOCK_DGRAM))
                 station.settimeout(2)
-                station.sendto(aoanet.encode(10, request(), key), ("127.0.0.1", station_port))
-                ack = aoanet.decode(station.recv(512), key)
+                station.sendto(codec.encode(10, request(), key), ("127.0.0.1", station_port))
+                ack = codec.decode(station.recv(512), key)
                 identity = struct.unpack_from("<I", ack["payload"], 13 + 0x7B)[0]
 
                 def listing():
@@ -358,15 +358,15 @@ class RuntimeTests(unittest.TestCase):
                 for index in range(49):
                     peer = resources.enter_context(socket.socket(socket.AF_INET, socket.SOCK_DGRAM))
                     peer.settimeout(2)
-                    peer.sendto(aoanet.encode(10, request(), key), endpoint)
-                    ack = aoanet.decode(peer.recv(512), key)
+                    peer.sendto(codec.encode(10, request(), key), endpoint)
+                    ack = codec.decode(peer.recv(512), key)
                     self.assertEqual(ack["type"], 11)
                     if index == 0:
                         self.assertEqual(population(), 1)
-                        peer.sendto(aoanet.encode(10, request(), key), endpoint)
-                        self.assertEqual(aoanet.decode(peer.recv(512), key)["type"], 11)
+                        peer.sendto(codec.encode(10, request(), key), endpoint)
+                        self.assertEqual(codec.decode(peer.recv(512), key)["type"], 11)
                         self.assertEqual(population(), 1)
-                    peer.sendto(aoanet.encode(0x4E, b"\0", key), endpoint)
+                    peer.sendto(codec.encode(0x4E, b"\0", key), endpoint)
                     # A subsequent handshake is a same-socket processing barrier;
                     # retired endpoint receives no ACK, so use the next admission
                     # or polling of the immutable list snapshot for synchronization.

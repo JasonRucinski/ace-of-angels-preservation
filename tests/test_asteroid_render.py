@@ -1,19 +1,17 @@
 """Original-x86 distance-gate regression; no game launch or GPU claim."""
 import struct
-import sys
 import tempfile
 import unittest
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import asteroid_render as patch
-import prepare_client
-from emulate_codec import Emu, SCRATCH, STACK, STUBS
-from pe_util import PE
+from aoa.client.patches import asteroid_render as patch
+from aoa.client import prepare
+from aoa.emulation.emu import Emu, SCRATCH, STACK, STUBS
+from aoa.analysis.pe_util import PE
 from unicorn.x86_const import (UC_X86_REG_ESI, UC_X86_REG_ESP, UC_X86_REG_EAX,
                                UC_X86_REG_EFLAGS, UC_X86_REG_FPCW)
 
-ROOT = Path(__file__).resolve().parents[1]
+from aoa.paths import ROOT
 SOURCE = ROOT / 'game/2.9.2/AOACLIENT.EXE.orig'
 
 
@@ -74,16 +72,16 @@ class AsteroidRenderTests(unittest.TestCase):
         self.assertEqual(e.uc.reg_read(UC_X86_REG_ESP), STACK + 0x8000)
 
     def test_exact_undo_idempotence_and_corruption_rejection(self):
-        before = prepare_client.configure(SOURCE.read_bytes())
-        after = prepare_client.configure(before, experimental_asteroids=True)
+        before = prepare.configure(SOURCE.read_bytes())
+        after = prepare.configure(before, experimental_asteroids=True)
         self.assertEqual(patch.configure(after, False), before)
-        self.assertEqual(prepare_client.configure(after), after)
-        self.assertIn(patch.NAME, prepare_client.inspect(after)['patches'])
+        self.assertEqual(prepare.configure(after), after)
+        self.assertIn(patch.NAME, prepare.inspect(after)['patches'])
         for offset in (patch.SITE - 0x400000, patch.CAVE - 0x400000, 0x12345):
             broken = bytearray(after)
             broken[offset] ^= 1
             with self.assertRaises(ValueError):
-                prepare_client.inspect(bytes(broken))
+                prepare.inspect(bytes(broken))
         partial = bytearray(before)
         offset, _, new = patch.regions()[0]
         partial[offset:offset + len(new)] = new
@@ -96,11 +94,11 @@ class AsteroidRenderTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as folder:
             exe = Path(folder) / 'AOACLIENT.EXE'
             exe.write_bytes(SOURCE.read_bytes())
-            prepare_client.prepare(exe)
+            prepare.prepare(exe)
             before = exe.read_bytes()
-            prepare_client.prepare(exe, experimental_asteroids=True)
-            self.assertIn(patch.NAME, prepare_client.check(exe, require_assets=False)['patches'])
-            prepare_client.prepare(exe, experimental_asteroids=False)
+            prepare.prepare(exe, experimental_asteroids=True)
+            self.assertIn(patch.NAME, prepare.check(exe, require_assets=False)['patches'])
+            prepare.prepare(exe, experimental_asteroids=False)
             self.assertEqual(exe.read_bytes(), before)
 
 

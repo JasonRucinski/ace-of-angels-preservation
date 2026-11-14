@@ -1,25 +1,23 @@
 """Execute terrain hook branches in x86 emulation; native rendering is manual."""
 import struct
-import sys
 import unittest
 import contextlib
 import io
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
 from unicorn import UC_HOOK_CODE
 from unicorn.x86_const import (UC_X86_REG_EAX, UC_X86_REG_EBX, UC_X86_REG_ECX,
                                UC_X86_REG_EDX, UC_X86_REG_ESI, UC_X86_REG_EDI,
                                UC_X86_REG_EBP, UC_X86_REG_ESP, UC_X86_REG_EIP)
-from emulate_codec import Emu, SCRATCH, STACK
-from pe_util import PE
-from patch_client import jmp_patch
-import online_terrain as terrain
-import prepare_client
-from station_stub import flight_bootstrap
-from station_runtime import parse_args
+from aoa.emulation.emu import Emu, SCRATCH, STACK
+from aoa.analysis.pe_util import PE
+from aoa.client.base import jmp_patch
+from aoa.client.patches import online_terrain as terrain
+from aoa.client import prepare
+from aoa.host.server import flight_bootstrap
+from aoa.host.runtime import parse_args
+from aoa.paths import ROOT
 
-SOURCE = Path(__file__).resolve().parents[1] / "game/2.9.2/AOACLIENT.EXE.orig"
+SOURCE = ROOT / "game/2.9.2/AOACLIENT.EXE.orig"
 
 
 class TerrainTests(unittest.TestCase):
@@ -136,10 +134,10 @@ class TerrainTests(unittest.TestCase):
         self.assertEqual(terrain.installed_name(terrain.configure(original)), terrain.NAME)
         self.assertIsNone(terrain.installed_name(original))
         self.assertEqual(terrain.configure(v2), terrain.configure(original))
-        prepared = bytearray(prepare_client.configure(original))
+        prepared = bytearray(prepare.configure(original))
         prepared[terrain.CAVE_OFFSET:terrain.CAVE_OFFSET + terrain.REGION] = terrain.v2_code()
-        self.assertIn(terrain.V2_NAME, prepare_client.inspect(bytes(prepared))['patches'])
-        self.assertEqual(prepare_client.configure(bytes(prepared)), prepare_client.configure(original))
+        self.assertIn(terrain.V2_NAME, prepare.inspect(bytes(prepared))['patches'])
+        self.assertEqual(prepare.configure(bytes(prepared)), prepare.configure(original))
 
     def test_legacy_v1_still_matches_and_upgrades(self):
         self.assertEqual(self.probe(code=terrain.legacy_code()), [terrain.LOOKUP, terrain.LOAD])
@@ -162,9 +160,9 @@ class TerrainTests(unittest.TestCase):
             bad[offset] ^= 1
             with self.assertRaises(ValueError):
                 terrain.configure(bad)
-        prepared = prepare_client.configure(original)
-        self.assertIn(terrain.NAME, prepare_client.inspect(prepared)['patches'])
-        self.assertEqual(prepare_client.configure(prepared), prepared)
+        prepared = prepare.configure(original)
+        self.assertIn(terrain.NAME, prepare.inspect(prepared)['patches'])
+        self.assertEqual(prepare.configure(prepared), prepared)
 
     def test_server_marker_and_scope(self):
         self.assertEqual(flight_bootstrap()[1], (0x2C, bytes(4)))

@@ -3,17 +3,15 @@ import json
 import argparse
 import math
 import struct
-import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import navigation_buoys
-from inspect_arena import snapshot
+from aoa.maps import navigation
+from aoa.live.arena import snapshot
 
 
 def verify(live, nodes, map_name='Arena1a'):
     found = []
-    for index, node in enumerate(nodes, navigation_buoys.FIRST_INDEX):
+    for index, node in enumerate(nodes, navigation.FIRST_INDEX):
         tag = hex(0x40010000 | index)
         matches = [o for o in live['active_objects'] if o['tag'] == tag]
         if len(matches) != 1:
@@ -29,7 +27,7 @@ def verify(live, nodes, map_name='Arena1a'):
         found.append({'name': node['name'], 'tag': tag, 'kind': obj['kind'],
                       'position_error': error, 'graphics_present': True,
                       'visible_flag': True, 'collidable_flag': True})
-    tour = json.loads((navigation_buoys.ROOT / 'evidence/2.9.2/map_viewer_tour_20261023.json').read_text())
+    tour = json.loads((navigation.ROOT / 'evidence/2.9.2/map_viewer_tour_20261023.json').read_text())
     baseline = 23 if map_name == 'JRMAP' else tour['maps'][map_name]['terrain_objects']
     if len(live['terrain_objects']) != baseline or not live['terrain_list_complete']:
         raise ValueError(f'{map_name} terrain baseline changed')
@@ -43,11 +41,11 @@ def main(argv=None):
     parser.add_argument('pid', type=int)
     parser.add_argument('source', type=Path)
     parser.add_argument('output', type=Path)
-    parser.add_argument('--map', default='Arena1a', choices=navigation_buoys.online_terrain.MAP_NAMES)
+    parser.add_argument('--map', default='Arena1a', choices=navigation.online_terrain.MAP_NAMES)
     parser.add_argument('--trn', type=Path)
     args = parser.parse_args(argv)
-    nodes = (navigation_buoys.placements(args.source) if args.source.is_file() and args.map == 'Arena1a' else
-             navigation_buoys.map_placements(args.source, args.map, args.trn))
+    nodes = (navigation.placements(args.source) if args.source.is_file() and args.map == 'Arena1a' else
+             navigation.map_placements(args.source, args.map, args.trn))
     result = verify(snapshot(args.pid, include_objects=True), nodes, args.map)
     args.output.write_text(json.dumps(result, indent=2) + '\n', encoding='utf-8')
     print(json.dumps(result, indent=2))

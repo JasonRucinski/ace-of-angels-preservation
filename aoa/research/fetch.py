@@ -19,18 +19,17 @@ import stat
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import cli_util  # noqa: E402
-from polite_http import polite_open  # noqa: E402
+from aoa import cli  # noqa: E402
+from aoa.research.http import polite_open  # noqa: E402
 
-LOG = cli_util.ROOT / "evidence" / "download_log.jsonl"
+LOG = cli.ROOT / "evidence" / "download_log.jsonl"
 
 
 def main(argv=None) -> int:
-    ap = cli_util.parser(__doc__)
+    ap = cli.parser(__doc__)
     ap.add_argument("manifest", help="manifest/downloads.json")
     ap.add_argument("version", help="runtime_version of the entry to fetch")
-    ap.add_argument("out_dir", type=cli_util.output_dir, help="folder to save the file in")
+    ap.add_argument("out_dir", type=cli.output_dir, help="folder to save the file in")
     ap.add_argument("--client", action="store_true", help="fetch the direct client instead of the installer")
     a = ap.parse_args(argv)
     manifest_path, version, out_dir, want_client = a.manifest, a.version, a.out_dir, a.client
@@ -92,4 +91,4 @@ def main(argv=None) -> int:
 
 
 if __name__ == "__main__":
-    sys.exit(cli_util.run(main))
+    sys.exit(cli.run(main))

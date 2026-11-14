@@ -21,11 +21,11 @@ import subprocess
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import decode_trn  # noqa: E402
-import online_terrain  # noqa: E402
+from aoa.formats import trn  # noqa: E402
+from aoa.client.patches import online_terrain  # noqa: E402
 
-ROOT = Path(__file__).resolve().parents[1]
+from aoa.paths import ROOT
+from aoa import paths
 JRMAP_SHA256 = "e3da8fbbdfb84ac7c830314e62bd8ceb7dfbdf9d90cd5fef614601133f23c5c4"
 # Native terrain objects a real client built on flight entry (23 Oct 2026).
 NOTES = {
@@ -46,7 +46,7 @@ def install(game):
     if hashlib.sha256(data).hexdigest() != JRMAP_SHA256:
         raise SystemExit(f"{source}: unexpected contents; expected the shipped JRMAP.TRN")
     target = Path(game) / online_terrain.MAPS[online_terrain.MAP_NAMES.index("JRMAP")][2]
-    converted = decode_trn.convert_292(data)
+    converted = trn.convert_292(data)
     target.write_bytes(converted)
     print(f"wrote {target} ({len(converted)} bytes, sha256 {hashlib.sha256(converted).hexdigest()})")
 
@@ -76,7 +76,7 @@ def main():
         raise SystemExit(f"run: python -I tools/map_viewer.py install {args.game}")
     log = ROOT / "work/map-viewer" / f"{args.map}.jsonl"
     log.parent.mkdir(parents=True, exist_ok=True)
-    command = [sys.executable, "-I", str(ROOT / "tools/station_stub.py"), str(args.game / "SCRTY.BIN"), str(log),
+    command = [sys.executable, "-I", str(paths.entry("station_stub", ROOT)), str(args.game / "SCRTY.BIN"), str(log),
                "--profile", "local-relay", "--map", args.map, "--backdrop", args.backdrop,
                "--experimental-terrain"]
     if args.spawn_at:

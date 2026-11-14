@@ -26,12 +26,9 @@ With F2 off, and for every part the menu never touched, behaviour is unchanged.
 Library use only (prepare_client.py composes it); no file is written here.
 """
 import struct
-import sys
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-from patch_client import Asm, jmp_patch  # noqa: E402
-from third_person import CHASE_FLAG, TICK  # noqa: E402
+from aoa.client.base import Asm, jmp_patch  # noqa: E402
+from aoa.client.patches.third_person import CHASE_FLAG, TICK  # noqa: E402
 
 NAME = "own-ship-menu-model-v1"
 LEGACY_NAME = "own-ship-menu-model-legacy"   # the first cave, without the +0x245 restore

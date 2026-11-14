@@ -31,12 +31,12 @@ import time
 import traceback
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import host_ops  # noqa: E402
-import online_terrain  # noqa: E402
-from station_runtime import HOST_DEFAULTS  # noqa: E402
+from aoa.host import ops  # noqa: E402
+from aoa.client.patches import online_terrain  # noqa: E402
+from aoa.host.runtime import HOST_DEFAULTS  # noqa: E402
 
-ROOT = Path(__file__).resolve().parents[1]
+from aoa.paths import ROOT
+from aoa import paths
 WORK = ROOT / "work/host"
 SETTINGS_FILE = WORK / "host_control.json"
 LOG_FILE = ROOT / "work/logs/host.log"
@@ -83,7 +83,7 @@ def server_args(settings, extra=()):
     address = "127.0.0.1" if profile == LOCAL else settings["address"].strip()
     game = Path(settings["game"])
     game = game if game.is_absolute() else ROOT / game
-    args = [str(ROOT / "tools/station_stub.py"), str(game / "SCRTY.BIN"), str(WORK / f"{profile}.jsonl"),
+    args = [str(paths.entry("station_stub", ROOT)), str(game / "SCRTY.BIN"), str(WORK / f"{profile}.jsonl"),
             "--profile", profile, "--bind-address", address, "--max-players", str(int(settings["max_players"])),
             "--map", settings["map"], "--backdrop", settings["backdrop"],
             "--kill-limit", str(int(settings["kill_limit"])),
@@ -109,7 +109,7 @@ def server_args(settings, extra=()):
 
 
 def status_path(settings):
-    return host_ops.status_path(profile_of(settings["mode"]), WORK)
+    return ops.status_path(profile_of(settings["mode"]), WORK)
 
 
 def detect_addresses():
@@ -200,7 +200,7 @@ class HostProcess:
         """(status dict or None, age in seconds or None) from this run's status file."""
         if self.settings is None:
             return None, None
-        return host_ops.read_status(status_path(self.settings), self.proc.pid)
+        return ops.read_status(status_path(self.settings), self.proc.pid)
 
 
 def valid_setting(key, value):

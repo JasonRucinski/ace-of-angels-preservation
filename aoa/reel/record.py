@@ -28,14 +28,12 @@ import threading
 import time
 from pathlib import Path
 
-HERE = Path(__file__).resolve().parent
-ROOT = HERE.parents[1]
-sys.path.insert(0, str(HERE))
-sys.path.insert(0, str(ROOT / "tools"))
-import bot  # noqa: E402
-import client_mem  # noqa: E402
-import online_terrain  # noqa: E402
-import window  # noqa: E402
+from aoa.paths import ROOT
+from aoa.reel import bot  # noqa: E402
+from aoa.reel import client_mem  # noqa: E402
+from aoa.client.patches import online_terrain  # noqa: E402
+from aoa.reel import window  # noqa: E402
+from aoa import paths
 
 GAME = ROOT / "game/2.9.2"
 EXE = GAME / "AOACLIENT.EXE"
@@ -57,7 +55,7 @@ def kill_clients():
 
 
 def start_host(shot, log):
-    command = [sys.executable, "-I", str(ROOT / "tools/station_stub.py"), str(GAME / "SCRTY.BIN"), str(log),
+    command = [sys.executable, "-I", str(paths.entry("station_stub", ROOT)), str(GAME / "SCRTY.BIN"), str(log),
                "--profile", "local-relay", "--bind-address", "127.0.0.1", "--map", shot["map"],
                "--backdrop", shot.get("backdrop", "spacebkgd3"), "--experimental-terrain",
                "--kill-limit", "0", "--time-limit", "0",
@@ -103,7 +101,7 @@ def enter_flight():
     deadline = time.monotonic() + 60
     while True:
         result = subprocess.run(["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File",
-                                 str(ROOT / "tools/client_login.ps1"), "-Station", "127.0.0.1"],
+                                 str(ROOT / "tools/dev/client_login.ps1"), "-Station", "127.0.0.1"],
                                 capture_output=True, text=True).stdout
         if "pressed Play Online" in result:
             break

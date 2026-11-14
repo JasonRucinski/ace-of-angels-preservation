@@ -7,12 +7,10 @@ import hashlib
 import json
 import math
 import sys
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import cli_util  # noqa: E402
+from aoa import cli  # noqa: E402
 
-ROOT = Path(__file__).resolve().parents[1]
+from aoa.paths import ROOT
 
 
 def inspect_geometry(path):
@@ -52,7 +50,7 @@ def inspect_geometry(path):
 
 
 def main(argv=None):
-    cli_util.parser(__doc__).parse_args(argv)
+    cli.parser(__doc__).parse_args(argv)
     scene = ROOT / "work/2.9.2/scenes"
     nodes_path = scene / "CTF_arena_nodes.json"
     nodes = json.loads(nodes_path.read_text(encoding="utf-8"))
@@ -76,4 +74,4 @@ def main(argv=None):
 
 
 if __name__ == "__main__":
-    sys.exit(cli_util.run(main))
+    sys.exit(cli.run(main))

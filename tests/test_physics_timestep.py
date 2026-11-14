@@ -4,22 +4,20 @@ Reads game/2.9.2/AOACLIENT.EXE.orig without modifying it and skips without
 it. Instruction-level checks are in emulate_movement.py; these verify
 supported inputs and reversible edits.
 """
-import sys
 import unittest
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import patch_client  # noqa: E402
-from physics_timestep import configure, SITE_OFFSET, CAVE_OFFSET, guard_code  # noqa: E402
-from local_station import OFFSET, ORIGINAL, LOCAL  # noqa: E402
+from aoa.client import base  # noqa: E402
+from aoa.client.patches.physics_timestep import configure, SITE_OFFSET, CAVE_OFFSET, guard_code  # noqa: E402
+from aoa.client.patches.station_host import OFFSET, ORIGINAL, LOCAL  # noqa: E402
+from aoa.paths import ROOT
 
-SOURCE = Path(__file__).resolve().parents[1] / "game/2.9.2/AOACLIENT.EXE.orig"
+SOURCE = ROOT / "game/2.9.2/AOACLIENT.EXE.orig"
 
 
 @unittest.skipUnless(SOURCE.is_file(), "requires user's original 2.9.2 executable")
 class PhysicsTimestepTests(unittest.TestCase):
     def test_hostname_variants_undo_idempotence_bounds_and_corruption(self):
-        baseline = configure(patch_client.configure(SOURCE.read_bytes())[0], undo=True)
+        baseline = configure(base.configure(SOURCE.read_bytes())[0], undo=True)
         allowed = set(range(SITE_OFFSET, SITE_OFFSET + 6))
         allowed.update(range(CAVE_OFFSET, CAVE_OFFSET + len(guard_code())))
         for hostname in (ORIGINAL, LOCAL):

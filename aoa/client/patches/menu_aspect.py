@@ -4,11 +4,8 @@ The menu is authored for a 90-degree horizontal FOV at 4:3. Keep its
 effective focal length min(width/2, height*2/3) for layout and rendering.
 Flight projection is untouched. Requires the existing mapped .text padding.
 """
-import sys
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-from patch_client import Asm, jmp_patch
+from aoa.client.base import Asm, jmp_patch
 
 NAME = "ship-menu-aspect-v1"
 CAVE = 0x58B500

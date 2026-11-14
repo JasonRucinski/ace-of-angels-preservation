@@ -1,11 +1,9 @@
 """Pin Hy_base1 child mesh selection to its original closest detail level."""
 import argparse
 import json
-import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-from patch_client import Asm, jmp_patch
+from aoa.client.base import Asm, jmp_patch
 
 NAME = "station-full-detail-v1"
 SITE, CAVE = 0x546BE4, 0x58BB00
@@ -62,8 +60,8 @@ def install(exe, undo=False):
     Every other option keeps its installed state; prepare's own backup and
     record (_client_setup.json) cover undo.
     """
-    import prepare_client
-    return prepare_client.prepare(exe, experimental_station_detail=not undo)
+    from aoa.client import prepare
+    return prepare.prepare(exe, experimental_station_detail=not undo)
 
 
 def main():

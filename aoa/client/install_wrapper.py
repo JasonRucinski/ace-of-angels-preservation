@@ -24,7 +24,6 @@ import sys
 import zipfile
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 ZIP_SHA256 = "5ffde6927f7355ca3fdd5d785b581256a8e6539fa13e395a891ade6ba1040850"  # dgVoodoo2 2.87.5
 CONF_CHANGES = [
@@ -88,7 +87,7 @@ def main(argv=None):
     parser.add_argument("zip", type=Path, help="dgVoodoo2 2.87.5 release zip")
     parser.add_argument("game_dir", type=Path, help="game folder holding AOACLIENT.EXE")
     args = parser.parse_args(argv)
-    from prepare_client import atomic_write
+    from aoa.client.prepare import atomic_write
     zip_path, game_dir = args.zip, args.game_dir
     try:
         if hashlib.sha256(zip_path.read_bytes()).hexdigest() != ZIP_SHA256:

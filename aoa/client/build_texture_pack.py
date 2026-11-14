@@ -23,17 +23,15 @@ import json
 import re
 import struct
 import subprocess
-import sys
 import tempfile
 import time
 import zipfile
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import aoapack
-import texture_pack
+from aoa.formats import aoapack
+from aoa.client import texture_pack
 
-ROOT = Path(__file__).resolve().parents[1]
+from aoa.paths import ROOT
 MANIFEST = ROOT / "config/texture-pack.json"
 ESRGAN_ZIP = ROOT / "originals/tools/realesrgan-ncnn-vulkan-20220424/realesrgan-ncnn-vulkan-20220424-windows.zip"
 ESRGAN_SHA256 = "abc02804e17982a3be33675e4d471e91ea374e65b70167abc09e31acb412802d"

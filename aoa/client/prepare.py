@@ -9,31 +9,30 @@ import json
 import os
 import re
 import subprocess
-import sys
 import tempfile
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import archive_terminator
-import cursor_warp
-import explicit_protection
-import frame_clock
-import visibility_fix
-import patch_client
-import physics_timestep
-import menu_aspect
-import online_terrain
-import asteroid_render
-import solid_world_render
-import station_detail
-import texture32
-import third_person
-import own_ship_model
-import own_ship_menu
-import powerup_pickup
-import world_detail
-import object_persistence
-from local_station import OFFSET, ORIGINAL, STABLE_SHA256
+from aoa.client.patches import archive_terminator
+from aoa.client.patches import cursor_warp
+from aoa.client.patches import explicit_protection
+from aoa.client.patches import frame_clock
+from aoa.client.patches import visibility_fix
+from aoa.client import base
+from aoa.client.patches import physics_timestep
+from aoa.client.patches import menu_aspect
+from aoa.client.patches import online_terrain
+from aoa.client.patches import asteroid_render
+from aoa.client.patches import solid_world_render
+from aoa.client.patches import station_detail
+from aoa.client.patches import texture32
+from aoa.client.patches import third_person
+from aoa.client.patches import own_ship_model
+from aoa.client.patches import own_ship_menu
+from aoa.client.patches import powerup_pickup
+from aoa.client.patches import world_detail
+from aoa.client.patches import object_persistence
+from aoa.client.patches.station_host import OFFSET, ORIGINAL, STABLE_SHA256
+from aoa.paths import ROOT
 
 PATCH_VERSION = 22
 # Wakeup-timer callback 0x446E70: `jne` at 0x446EAF skips the frame while the
@@ -42,7 +41,7 @@ PATCH_VERSION = 22
 # stopped reading UDP. NOPs let the 66 ms timer run the frame. Verified only
 # with the dgVoodoo windowed wrapper (findings 9.24).
 BACKGROUND_OFFSET, BACKGROUND_JNE, BACKGROUND_NOP = 0x46EAF, b"\x75\x34", b"\x90\x90"
-ASSET_MANIFEST = Path(__file__).resolve().parents[1] / "config/client-2.9.2.json"
+ASSET_MANIFEST = ROOT / "config/client-2.9.2.json"
 WRAPPERS = {
     "DDraw.dll": "612a24408a090a3c6f3886557fa18034ee742e94ad0a40ebdf854d2816176c2e",
     "D3DImm.dll": "93c534f2d17419ea78f15551f7e0aac78b3c503733a840914fa063708a5afe8e",
@@ -80,7 +79,7 @@ def background_site(data, enabled):
 
 
 def inspect(data):
-    if sha(data) == patch_client.PRISTINE_292:
+    if sha(data) == base.PRISTINE_292:
         return {"source": "original-2.9.2", "host": "aoahost.com", "patches": []}
     distant = object_persistence.state(data)
     data = object_persistence.configure(data, False)
@@ -210,7 +209,7 @@ def configure(data, host=None, experimental_protection=None, experimental_astero
     if protection and host not in LOOPBACK:
         raise ValueError("experimental protection requires a loopback Station")
     data = explicit_protection.configure(data, False)
-    stable = (patch_client.configure(data)[0] if not state["patches"]
+    stable = (base.configure(data)[0] if not state["patches"]
               else archive_terminator.configure(background_site(data, False), False))
     normalized = stable[:OFFSET] + ORIGINAL + stable[OFFSET + 12:]
     guarded = physics_timestep.configure(normalized)
@@ -268,7 +267,7 @@ def check_assets(folder):
         if not path.is_file():
             raise ValueError(f"missing game dependency: {name}")
         if path.stat().st_size != expected["bytes"] or sha(path.read_bytes()) != expected["sha256"]:
-            import texture_pack
+            from aoa.client import texture_pack
             record = texture_pack.verified(folder) if name in texture_pack.ARCHIVES else None
             if record is None or name not in record["archives"]:
                 raise ValueError(f"modified or incompatible game dependency: {name}")

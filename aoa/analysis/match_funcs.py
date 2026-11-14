@@ -16,9 +16,8 @@ from pathlib import Path
 
 import capstone
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import cli_util  # noqa: E402
-from pe_util import PE, Disasm  # noqa: E402
+from aoa import cli  # noqa: E402
+from aoa.analysis.pe_util import PE, Disasm  # noqa: E402
 
 
 def masked(pe, d, start, limit=0x600):
@@ -55,7 +54,7 @@ def to_regex(code, mask):
 
 
 def main(argv=None):
-    ap = cli_util.parser(__doc__)
+    ap = cli.parser(__doc__)
     ap.add_argument("ref", help="reference executable (2.7.1)")
     ap.add_argument("ref_cache", help="disassembly cache (.pkl) for the reference")
     ap.add_argument("other", help="executable to search")
@@ -99,4 +98,4 @@ def main(argv=None):
 
 
 if __name__ == "__main__":
-    sys.exit(cli_util.run(main))
+    sys.exit(cli.run(main))

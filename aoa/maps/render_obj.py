@@ -10,12 +10,10 @@ the face normal. Meant for eyeballing converted geometry, not for beauty.
 import math
 import argparse
 import struct
-import sys
 import zlib
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-from export_assets import png  # noqa: E402
+from aoa.maps.export_assets import png  # noqa: E402
 
 
 def read_png(path):

@@ -7,15 +7,13 @@ Reads the first HEAD bytes to parse the directory tree (Joliet names when
 present), then copies target extents as the stream passes them. Never seeks.
 """
 import sys, os, re, struct
-from pathlib import Path
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import cli_util  # noqa: E402
+from aoa import cli  # noqa: E402
 HEAD = 96 * 1024 * 1024
 SS = 2048
 def main(argv=None):
-    ap = cli_util.parser(__doc__)
+    ap = cli.parser(__doc__)
     ap.add_argument("pattern", help="regex matched against each file's path in the image")
-    ap.add_argument("out", type=cli_util.output_dir, help="folder to write matching files to")
+    ap.add_argument("out", type=cli.output_dir, help="folder to write matching files to")
     a = ap.parse_args(argv)
     pat, out = re.compile(a.pattern), a.out
     inp = sys.stdin.buffer
@@ -78,4 +76,4 @@ def main(argv=None):
     for f in opened.values(): f.close()
     print("done at byte", pos)
 if __name__ == "__main__":
-    sys.exit(cli_util.run(main))
+    sys.exit(cli.run(main))

@@ -1,16 +1,14 @@
 """World model gate emulation and exact migration/rollback; no GPU claim."""
-import sys
 import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import patch as mock_patch
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import asteroid_render
-import solid_world_render as patch
-import prepare_client
-import test_asteroid_render as fixture
-from pe_util import Disasm, PE
+from aoa.client.patches import asteroid_render
+from aoa.client.patches import solid_world_render as patch
+from aoa.client import prepare
+from tests import test_asteroid_render as fixture
+from aoa.analysis.pe_util import Disasm, PE
 
 
 class SolidWorldRenderTests(unittest.TestCase):
@@ -31,49 +29,49 @@ class SolidWorldRenderTests(unittest.TestCase):
             dis = Disasm(pe, Path(directory) / 'code.pkl')
             self.assertEqual(dis.refs_to_func(0x543000), [0x546BCE])
             self.assertEqual(dis.refs_to_func(0x546B20), [0x49BCC2, 0x4A4E36])
-        before = prepare_client.configure(pe.data)
-        after = prepare_client.configure(before, experimental_solids=True)
+        before = prepare.configure(pe.data)
+        after = prepare.configure(before, experimental_solids=True)
         # Every byte outside this one comparison is identical, including all
         # sprite/effect submission, cached-image code, LOD and depth settings.
         self.assertEqual(before[:patch.OFFSET], after[:patch.OFFSET])
         self.assertEqual(before[patch.OFFSET + 6:], after[patch.OFFSET + 6:])
 
     def test_legacy_migration_preservation_and_exact_undo(self):
-        clean = prepare_client.configure(fixture.SOURCE.read_bytes())
-        legacy = prepare_client.configure(clean, experimental_asteroids=True)
-        broad = prepare_client.configure(legacy, experimental_solids=True)
-        self.assertEqual(broad, prepare_client.configure(clean, experimental_solids=True))
-        self.assertEqual(prepare_client.configure(broad), broad)
+        clean = prepare.configure(fixture.SOURCE.read_bytes())
+        legacy = prepare.configure(clean, experimental_asteroids=True)
+        broad = prepare.configure(legacy, experimental_solids=True)
+        self.assertEqual(broad, prepare.configure(clean, experimental_solids=True))
+        self.assertEqual(prepare.configure(broad), broad)
         self.assertEqual(patch.configure(broad, False), clean)
-        self.assertEqual(prepare_client.configure(broad, experimental_solids=False,
+        self.assertEqual(prepare.configure(broad, experimental_solids=False,
                                                 experimental_asteroids=True), legacy)
-        self.assertIn(patch.NAME, prepare_client.inspect(broad)['patches'])
-        self.assertNotIn(asteroid_render.NAME, prepare_client.inspect(broad)['patches'])
-        self.assertEqual(prepare_client.configure(broad, experimental_asteroids=True), legacy)
+        self.assertIn(patch.NAME, prepare.inspect(broad)['patches'])
+        self.assertNotIn(asteroid_render.NAME, prepare.inspect(broad)['patches'])
+        self.assertEqual(prepare.configure(broad, experimental_asteroids=True), legacy)
         with self.assertRaisesRegex(ValueError, f"{asteroid_render.NAME} and {patch.NAME}"):
-            prepare_client.configure(clean, experimental_asteroids=True, experimental_solids=True)
+            prepare.configure(clean, experimental_asteroids=True, experimental_solids=True)
 
     def test_corruption_and_abandoned_cave_rejected(self):
-        broad = prepare_client.configure(fixture.SOURCE.read_bytes(), experimental_solids=True)
+        broad = prepare.configure(fixture.SOURCE.read_bytes(), experimental_solids=True)
         for offset in (patch.OFFSET, asteroid_render.CAVE - 0x400000, 0x12345):
             broken = bytearray(broad)
             broken[offset] ^= 1
             with self.assertRaises(ValueError):
-                prepare_client.inspect(bytes(broken))
+                prepare.inspect(bytes(broken))
 
     def test_install_reapply_and_undo_turns_it_off(self):
         with tempfile.TemporaryDirectory() as directory:
             exe = Path(directory) / 'AOACLIENT.EXE'
             exe.write_bytes(fixture.SOURCE.read_bytes())
-            prepare_client.prepare(exe, experimental_asteroids=True)
+            prepare.prepare(exe, experimental_asteroids=True)
             before = exe.read_bytes()
             patch.install(exe)
             after = exe.read_bytes()
             patch.install(exe)
             self.assertEqual(exe.read_bytes(), after)
-            self.assertIn(patch.NAME, prepare_client.check(exe, require_assets=False)['patches'])
+            self.assertIn(patch.NAME, prepare.check(exe, require_assets=False)['patches'])
             # Undo turns solid-world off; the asteroid-only patch it replaced stays off.
-            off = prepare_client.configure(before, experimental_asteroids=False)
+            off = prepare.configure(before, experimental_asteroids=False)
             patch.install(exe, undo=True)
             self.assertEqual(exe.read_bytes(), off)
             patch.install(exe, undo=True)

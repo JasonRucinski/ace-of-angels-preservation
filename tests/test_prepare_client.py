@@ -2,21 +2,20 @@
 import hashlib
 import io
 import json
-import sys
 import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import archive_terminator
-import explicit_protection
-import patch_client
-import physics_timestep
-import prepare_client as setup
-from local_station import STABLE_SHA256
+from aoa.client.patches import archive_terminator
+from aoa.client.patches import explicit_protection
+from aoa.client import base
+from aoa.client.patches import physics_timestep
+from aoa.client import prepare as setup
+from aoa.client.patches.station_host import STABLE_SHA256
+from aoa.paths import ROOT
 
-SOURCE = Path(__file__).resolve().parents[1] / "game/2.9.2/AOACLIENT.EXE.orig"
+SOURCE = ROOT / "game/2.9.2/AOACLIENT.EXE.orig"
 
 
 @unittest.skipUnless(SOURCE.is_file(), "requires user's original 2.9.2 executable")
@@ -24,8 +23,8 @@ class ClientPreparationTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.original = SOURCE.read_bytes()
-        assert hashlib.sha256(cls.original).hexdigest() == patch_client.PRISTINE_292
-        cls.stable = patch_client.configure(cls.original)[0]
+        assert hashlib.sha256(cls.original).hexdigest() == base.PRISTINE_292
+        cls.stable = base.configure(cls.original)[0]
 
     def test_composed_patches_and_host_changes(self):
         self.assertEqual(setup.sha(self.stable), STABLE_SHA256)
@@ -175,12 +174,12 @@ class SyntheticClientTests(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        import test_patch_layout
+        from tests import test_patch_layout
         cls.pristine = test_patch_layout.synthetic_pristine()
         pristine_sha = hashlib.sha256(cls.pristine).hexdigest()
-        with patch.object(patch_client, "PRISTINE_292", pristine_sha):
-            stable_sha = hashlib.sha256(patch_client.configure(cls.pristine)[0]).hexdigest()
-        cls.hashes = (patch.object(patch_client, "PRISTINE_292", pristine_sha),
+        with patch.object(base, "PRISTINE_292", pristine_sha):
+            stable_sha = hashlib.sha256(base.configure(cls.pristine)[0]).hexdigest()
+        cls.hashes = (patch.object(base, "PRISTINE_292", pristine_sha),
                       patch.object(setup, "STABLE_SHA256", stable_sha),
                       patch.object(physics_timestep, "STABLE_SHA256", stable_sha))
 
@@ -267,8 +266,8 @@ class SyntheticClientTests(unittest.TestCase):
                                  ["AOACLIENT.EXE", "AOACLIENT.EXE.setup-original", "_client_setup.json"])
 
     def test_older_camera_variants_are_named_and_fail_check(self):
-        import own_ship_menu
-        import third_person
+        from aoa.client.patches import own_ship_menu
+        from aoa.client.patches import third_person
         setup.prepare(self.exe)
         on = self.exe.read_bytes()
         setup.prepare(self.exe, chase_camera=False)

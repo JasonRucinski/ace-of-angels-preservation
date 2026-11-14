@@ -14,10 +14,10 @@ import sys
 import time
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import host_ops
-import online_terrain
-from station_runtime import HOST_DEFAULTS, ConfigError, parse_args as server_config
+from aoa.host import ops
+from aoa.client.patches import online_terrain
+from aoa.host.runtime import HOST_DEFAULTS, ConfigError, parse_args as server_config
+from aoa import paths as aoa_paths
 
 SESSION_COMPLETE = 75
 DEFAULTS = {
@@ -123,24 +123,24 @@ def monitor(proc, status_path, timeout):
             mtime = status_path.stat().st_mtime_ns
         except OSError:
             mtime = None
-        status, _ = host_ops.read_status(status_path, proc.pid)
+        status, _ = ops.read_status(status_path, proc.pid)
         if status is not None and mtime != last_mtime:
             last_update, last_mtime, latest = time.monotonic(), mtime, status
         if time.monotonic() - last_update >= timeout:
             raise RuntimeError(f"game process {proc.pid} has not updated its status for {timeout:g}s")
         time.sleep(0.25)
     # The final state is written immediately before a planned exit.
-    status, _ = host_ops.read_status(status_path, proc.pid)
+    status, _ = ops.read_status(status_path, proc.pid)
     return proc.returncode, status or latest
 
 
 def run(args, settings):
     state = load_state(args.state_file, settings["maps"])
-    host_ops.write_status(args.state_file, state)
+    ops.write_status(args.state_file, state)
     while True:
         name = state["map"]
         args.status_file.unlink(missing_ok=True)
-        command = [sys.executable, "-I", "-u", str(Path(__file__).with_name("station_stub.py")),
+        command = [sys.executable, "-I", "-u", str(aoa_paths.entry("station_stub")),
                    *child_args(args, settings, name)]
         print(f"Starting map {name}; completed sessions={state['sessions_completed']}", flush=True)
         proc = None
@@ -156,7 +156,7 @@ def run(args, settings):
                  "map": settings["maps"][(settings["maps"].index(name) + 1) % len(settings["maps"])],
                  "sessions_completed": state["sessions_completed"] + 1,
                  "last_map": name, "last_reason": status["lifecycle"]["restart_reason"]}
-        host_ops.write_status(args.state_file, state)
+        ops.write_status(args.state_file, state)
         print(f"Session complete ({state['last_reason']}); next map {state['map']}", flush=True)
         time.sleep(settings["intermission_seconds"])
 
@@ -184,7 +184,7 @@ def main(argv=None):
                            "(this host's own LAN or VPN IPv4 address)\n")
         args.bind_address = "127.0.0.1"
     if args.status_file is None:
-        args.status_file = host_ops.status_path(args.profile)
+        args.status_file = ops.status_path(args.profile)
     try:
         paths = [args.key, args.log, args.config, args.state_file, args.status_file]
         if len({path.resolve() for path in paths}) != len(paths):

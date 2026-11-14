@@ -21,14 +21,11 @@ import math
 import select
 import socket
 import struct
-import sys
 import time
 from pathlib import Path
 
-TOOLS = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(TOOLS))
-import aoanet  # noqa: E402
-import aoapack  # noqa: E402
+from aoa.protocol import codec  # noqa: E402
+from aoa.formats import aoapack  # noqa: E402
 
 HOST = "127.0.0.1"
 STATION, ARENA, TCP = 5033, 5031, 5034
@@ -98,19 +95,19 @@ class Pilot:
         self.loaded = self.hull_sent = False
 
     def send(self, port, kind, body):
-        self.sock.sendto(aoanet.encode(kind, body, self.key), (HOST, port))
+        self.sock.sendto(codec.encode(kind, body, self.key), (HOST, port))
 
     def receive(self):
         wire, source = self.sock.recvfrom(1024)
-        msg = aoanet.decode(wire, self.key)
+        msg = codec.decode(wire, self.key)
         kind, body = msg["type"], msg["payload"]
         if kind == 0x1B and len(body) >= 5:
-            self.sock.sendto(aoanet.encode(0x0F, body[-5:-1], self.key), source)
+            self.sock.sendto(codec.encode(0x0F, body[-5:-1], self.key), source)
             kind, body = body[-1], body[:-5]
         if kind == 8:
             reply = bytearray(body)
             reply[6] = self.slot or 0
-            self.sock.sendto(aoanet.encode(9, bytes(reply), self.key), source)
+            self.sock.sendto(codec.encode(9, bytes(reply), self.key), source)
         elif kind == 0x26 and len(body) >= 0x46 + 0x7F and self.identity:
             # Only the pilot's own record carries its Station ID (load_player).
             if struct.unpack_from("<I", body, 0x46 + 0x7B)[0] == self.identity:

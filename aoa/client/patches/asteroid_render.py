@@ -6,11 +6,9 @@ Visual acceptance and performance require a real flight test.
 """
 import argparse
 import json
-import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-from patch_client import Asm, jmp_patch
+from aoa.client.base import Asm, jmp_patch
 
 NAME = "asteroid-mesh-distance-v1"
 SITE, CAVE = 0x543222, 0x58BA00
@@ -74,8 +72,8 @@ def install(exe, undo=False):
     Every other option keeps its installed state; prepare's own backup and
     record (_client_setup.json) cover undo.
     """
-    import prepare_client
-    return prepare_client.prepare(exe, experimental_asteroids=not undo)
+    from aoa.client import prepare
+    return prepare.prepare(exe, experimental_asteroids=not undo)
 
 
 def main():

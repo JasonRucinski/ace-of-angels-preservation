@@ -1,21 +1,19 @@
 """Execute the original child LOD traversal with extracted station thresholds."""
 import struct
-import sys
 import tempfile
 import unittest
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import station_detail as patch
-import prepare_client
-import gob2obj
-from audit_object_lod import mesh_nodes
-from emulate_codec import Emu, SCRATCH, STACK
-from pe_util import PE
+from aoa.client.patches import station_detail as patch
+from aoa.client import prepare
+from aoa.formats import gob
+from aoa.maps.lod import mesh_nodes
+from aoa.emulation.emu import Emu, SCRATCH, STACK
+from aoa.analysis.pe_util import PE
 from unicorn.x86_const import (UC_X86_REG_ESI, UC_X86_REG_ESP, UC_X86_REG_EAX,
                                UC_X86_REG_ECX, UC_X86_REG_EFLAGS, UC_X86_REG_FPCW)
 
-ROOT = Path(__file__).resolve().parents[1]
+from aoa.paths import ROOT
 SOURCE = ROOT / 'game/2.9.2/AOACLIENT.EXE.orig'
 
 
@@ -25,7 +23,7 @@ class StationDetailTests(unittest.TestCase):
         data = (ROOT / 'work/2.9.2/export/AOAOBJECTS/Hy_base1.Gob').read_bytes()
         nodes = mesh_nodes(data)
         self.meshes = [(m, max((n for n in nodes if n['start'] < m['offset']), key=lambda n:n['start']))
-                       for m in gob2obj.parse(data)]
+                       for m in gob.parse(data)]
         self.assertEqual(len(self.meshes), 6)
 
     def select(self, name, size, enabled=True, control=0x7F):
@@ -96,12 +94,12 @@ class StationDetailTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as folder:
             exe = Path(folder) / 'AOACLIENT.EXE'
             exe.write_bytes(SOURCE.read_bytes())
-            prepare_client.prepare(exe, experimental_solids=True)
+            prepare.prepare(exe, experimental_solids=True)
             before = exe.read_bytes()
             patch.install(exe)
             after = exe.read_bytes()
-            self.assertEqual(prepare_client.configure(after), after)
-            self.assertIn(patch.NAME, prepare_client.check(exe, require_assets=False)['patches'])
+            self.assertEqual(prepare.configure(after), after)
+            self.assertIn(patch.NAME, prepare.check(exe, require_assets=False)['patches'])
             patch.install(exe)
             self.assertEqual(exe.read_bytes(), after)
             patch.install(exe, undo=True)
@@ -113,13 +111,13 @@ class StationDetailTests(unittest.TestCase):
                              ['AOACLIENT.EXE', 'AOACLIENT.EXE.setup-original', '_client_setup.json'])
 
     def test_partial_corruption_rejection(self):
-        before = prepare_client.configure(SOURCE.read_bytes(), experimental_solids=True)
-        after = prepare_client.configure(before, experimental_station_detail=True)
+        before = prepare.configure(SOURCE.read_bytes(), experimental_solids=True)
+        after = prepare.configure(before, experimental_station_detail=True)
         for offset in (patch.SITE - 0x400000, patch.CAVE - 0x400000, 0x12345):
             broken = bytearray(after)
             broken[offset] ^= 1
             with self.assertRaises(ValueError):
-                prepare_client.inspect(bytes(broken))
+                prepare.inspect(bytes(broken))
         partial = bytearray(before)
         off, _, new = patch.regions()[0]
         partial[off:off + len(new)] = new

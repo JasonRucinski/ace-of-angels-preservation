@@ -6,9 +6,9 @@ combat is enabled. LoadObject currently initializes orientation to zero.
 """
 import struct
 
-import navigation_buoys
-from audit_turret_groups import hierarchy
-from turret_groups import status
+from aoa.maps import navigation
+from aoa.maps.turret_hierarchy import hierarchy
+from aoa.protocol.turret_groups import status
 
 FIRST_INDEX, COUNT = 80, 5
 GROUP = 'Flag ND1-C'
@@ -16,7 +16,7 @@ GROUP = 'Flag ND1-C'
 
 def placements(source):
     # Reuse the full original-asset inventory/hash/order validation.
-    navigation_buoys.map_placements(source, 'Arena1a')
+    navigation.map_placements(source, 'Arena1a')
     nodes = hierarchy((source / 'Arena1a.Gob').read_bytes())
     parent = next(n for n in nodes if n['name'] == GROUP and n['category'] == 5)
     children = [n for n in nodes if n['category'] == 1 and n['parent_id'] == parent['node_id']]

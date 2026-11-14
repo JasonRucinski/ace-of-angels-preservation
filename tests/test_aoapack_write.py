@@ -1,15 +1,13 @@
 """Archive rebuild round trip against the user's original 2.9.2 archives."""
 import hashlib
 import json
-import sys
 import unittest
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import aoacrypt
-import aoapack
+from aoa.formats import aoacrypt
+from aoa.formats import aoapack
 
-ROOT = Path(__file__).resolve().parents[1]
+from aoa.paths import ROOT
 GAME = ROOT / 'game/2.9.2'
 KEY_CLIENT = ROOT / 'work/2.7.1/members/15_AOACLIENT.EXE'
 MANIFEST = json.loads((ROOT / 'config/client-2.9.2.json').read_text(encoding='utf-8'))['required']
@@ -74,7 +72,7 @@ class ArchiveWriteTests(unittest.TestCase):
         import shutil
         import struct
         import tempfile
-        import texture_pack
+        from aoa.client import texture_pack
 
         def enlarged(archive):
             d, key, _, entries = aoapack.read_archive(original(archive), self.key0)

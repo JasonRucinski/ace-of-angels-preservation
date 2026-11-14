@@ -14,15 +14,14 @@ import struct
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import cli_util  # noqa: E402
-from pe_util import PE, Disasm  # noqa: E402
+from aoa import cli  # noqa: E402
+from aoa.analysis.pe_util import PE, Disasm  # noqa: E402
 
 NAME = re.compile(rb"^[A-Za-z0-9_]{2,}\0+$")
 
 
 def main(argv=None):
-    ap = cli_util.parser(__doc__)
+    ap = cli.parser(__doc__)
     ap.add_argument("client", help="client executable")
     ap.add_argument("cache", help="disassembly cache (.pkl) for that executable")
     ap.add_argument("name_len", type=int, help="record name length (64 for 2.7.1 and later, 32 for 2.0.0)")
@@ -65,4 +64,4 @@ def main(argv=None):
 
 
 if __name__ == "__main__":
-    sys.exit(cli_util.run(main))
+    sys.exit(cli.run(main))

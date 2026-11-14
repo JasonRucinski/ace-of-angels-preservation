@@ -13,17 +13,15 @@ name starting with "-" is refused. Requests go through tools/polite_http.py
 Edit `queries` below to change what is searched.
 """
 import json, sys, urllib.parse, os
-from pathlib import Path
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import cli_util  # noqa: E402
-from polite_http import polite_get  # noqa: E402
+from aoa import cli  # noqa: E402
+from aoa.research.http import polite_get  # noqa: E402
 HITS = "ia_fulltext_hits.json"
 queries = ['"ace of angels" "flying rock"', '"flying rock enterprises"', '"aceofangels.com"', '"aceofangels"',
            '"flyingrockllc"', '"ace of angels" beta', '"ace of angels" demo', '"ace of angels" space',
            '"ace of angels" simulator', '"flying rock" angels space']
 def main(argv=None):
-    ap = cli_util.parser(__doc__)
-    ap.add_argument("out", type=cli_util.output_dir, help=f"existing folder to write {HITS} to, e.g. data/")
+    ap = cli.parser(__doc__)
+    ap.add_argument("out", type=cli.output_dir, help=f"existing folder to write {HITS} to, e.g. data/")
     ap.add_argument("--hits", default=HITS, help="output file name inside OUT (default: %(default)s)")
     a = ap.parse_args(argv)
     out = a.out
@@ -47,4 +45,4 @@ def main(argv=None):
         json.dump([{"identifier": k[0], "filename": k[1], **{**v, "queries": sorted(v["queries"])}} for k, v in hits.items()],
                   f, indent=1)
 if __name__ == "__main__":
-    sys.exit(cli_util.run(main))
+    sys.exit(cli.run(main))

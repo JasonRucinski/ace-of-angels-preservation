@@ -16,14 +16,14 @@ import time
 import unittest
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import aoanet
-import relay_motion
-import station_stub
-import warp_trial
-from test_station_stub import request
+from aoa.protocol import codec
+from aoa.protocol import motion
+from aoa.host import server
+from aoa.host import warp_trial
+from tests.test_station_stub import request
 
-ROOT = Path(__file__).resolve().parents[1]
+from aoa.paths import ROOT
+from aoa import paths
 SOURCE = ROOT / 'work/2.9.2/export/AOAOBJECTS'
 CLIENT = ROOT / 'game/2.9.2/AOACLIENT.EXE.orig'
 RESULTS = {}
@@ -33,7 +33,7 @@ RESULTS = {}
 class HeadlessWarpTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        from emulate_warp_trial import NativeWarp
+        from aoa.emulation.warp_trial import NativeWarp
         cls.native_type = NativeWarp
         cls.gate = warp_trial.placement(SOURCE)
         cls.packet = warp_trial.loads(cls.gate)[0][1]
@@ -127,8 +127,8 @@ class HeadlessWarpTests(unittest.TestCase):
                                          'sound_and_send_calls': 'stopped before these calls'}
 
     def test_udp_transit_observer_loss_late_join_and_reconnect(self):
-        from emulate_motion_state import decoder, receive, compare
-        from pe_util import PE
+        from aoa.emulation.check_motion_state import decoder, receive, compare
+        from aoa.analysis.pe_util import PE
         key = bytes(range(256))
         with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as probe:
             probe.bind(('127.0.0.1', 0))
@@ -136,7 +136,7 @@ class HeadlessWarpTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             folder = Path(tmp)
             (folder / 'key').write_bytes(key)
-            process = subprocess.Popen([sys.executable, '-I', str(ROOT / 'tools/station_stub.py'),
+            process = subprocess.Popen([sys.executable, '-I', str(paths.entry("station_stub", ROOT)),
                 str(folder / 'key'), str(folder / 'log'), '--profile', 'local-relay',
                 '--port', '0', '--tcp', '0', '--arena-port', str(endpoint[1]),
                 '--map', 'Arena1a', '--experimental-terrain', '--sustained-delivery',
@@ -150,20 +150,20 @@ class HeadlessWarpTests(unittest.TestCase):
             slots = {peer: i + 1 for i, peer in enumerate(peers)}
             gate_clients = {peer: self.native_type(CLIENT) for peer in peers}
             observers = {peer: decoder(PE(CLIENT)) for peer in peers}
-            states = {peer: relay_motion.initial((0., 0., 0.)) for peer in peers}
+            states = {peer: motion.initial((0., 0., 0.)) for peer in peers}
             dropped = False
             drop_position = None
             pilot, observer, late, rejoined = peers
 
             def send(peer, kind, body):
-                peer.sendto(aoanet.encode(kind, body, key), endpoint)
+                peer.sendto(codec.encode(kind, body, key), endpoint)
 
             def pump():
                 nonlocal dropped
                 ready, _, _ = select.select(peers, [], [], .02)
                 for peer in ready:
                     try:
-                        message = aoanet.decode(peer.recv(512), key)
+                        message = codec.decode(peer.recv(512), key)
                     except ConnectionResetError:
                         continue
                     self.assertTrue(message['crc_ok'])
@@ -184,8 +184,8 @@ class HeadlessWarpTests(unittest.TestCase):
                         self.assertIn(body, self.packets)
                         gate_clients[peer].load(body)
                     if kind == 0x1f and struct.unpack_from('<H', body, 2)[0] == 1:
-                        filtered = station_stub.movement_update(body, 1)
-                        state, _, missing = relay_motion.update(filtered, states[peer])
+                        filtered = server.movement_update(body, 1)
+                        state, _, missing = motion.update(filtered, states[peer])
                         self.assertFalse(missing)
                         if peer is observer and not dropped and state[0x40] == drop_position:
                             dropped = True
@@ -208,7 +208,7 @@ class HeadlessWarpTests(unittest.TestCase):
                     pump()
                     self.assertLess(time.monotonic(), deadline)
                 ack = next(body for kind, body in records[peer] if kind == 11)
-                self.assertEqual(struct.unpack_from('<I', ack, 2)[0], station_stub.player_tag(slots[peer]))
+                self.assertEqual(struct.unpack_from('<I', ack, 2)[0], server.player_tag(slots[peer]))
                 until(lambda: gate_clients[peer].allocations == 9)
                 self.assertTrue(any(kind == 0x2c for kind, _ in records[peer]))
 
@@ -218,13 +218,13 @@ class HeadlessWarpTests(unittest.TestCase):
                 velocity = (0., 0., 100.)
                 for packet in self.packets:
                     origin = gate_clients[pilot].load(packet)['position']
-                    send(pilot, *station_stub.motion_snapshot(1, (origin, velocity)))
+                    send(pilot, *server.motion_snapshot(1, (origin, velocity)))
                     until(lambda: states[observer][0x40] == origin)
                     transit = gate_clients[pilot].overlap(origin, velocity)
                     self.assertTrue(transit['warped'])
                     drop_position = transit['position']
                     dropped = False
-                    send(pilot, *station_stub.motion_snapshot(1, (drop_position, velocity)))
+                    send(pilot, *server.motion_snapshot(1, (drop_position, velocity)))
                     until(lambda: dropped)
                     self.assertEqual(states[observer][0x40], origin)
                     # No second upload: periodic absolute refresh recovers loss.
@@ -233,7 +233,7 @@ class HeadlessWarpTests(unittest.TestCase):
                 join(late)
                 until(lambda: states[late][0x40] == drop_position)
                 loads = [body for kind, body in records[late] if kind == 0x26 and
-                         struct.unpack_from('<I', body, 0x28)[0] == station_stub.player_tag(1)]
+                         struct.unpack_from('<I', body, 0x28)[0] == server.player_tag(1)]
                 self.assertTrue(loads)
                 self.assertEqual(struct.unpack_from('<3f', loads[-1], 0x1a4), drop_position)
                 self.assertEqual(states[late][1], velocity)

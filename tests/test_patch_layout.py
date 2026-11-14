@@ -25,35 +25,34 @@ import unittest
 from pathlib import Path
 from unittest import mock
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import archive_terminator  # noqa: E402
-import asteroid_render  # noqa: E402
-import cursor_warp  # noqa: E402
-import explicit_protection  # noqa: E402
-import frame_clock  # noqa: E402
-import local_station  # noqa: E402
-import menu_aspect  # noqa: E402
-import object_persistence  # noqa: E402
-import online_terrain  # noqa: E402
-import own_ship_menu  # noqa: E402
-import own_ship_model  # noqa: E402
-import patch_client  # noqa: E402
-import physics_timestep  # noqa: E402
-import powerup_pickup  # noqa: E402
-import prepare_client  # noqa: E402
-import render_clock_experiment  # noqa: E402
-import render_culling_experiment  # noqa: E402
-import solid_world_render  # noqa: E402
-import station_detail  # noqa: E402
-import texture32  # noqa: E402
-import third_person  # noqa: E402
-import visibility_fix  # noqa: E402
-import world_detail  # noqa: E402
+from aoa.client.patches import archive_terminator  # noqa: E402
+from aoa.client.patches import asteroid_render  # noqa: E402
+from aoa.client.patches import cursor_warp  # noqa: E402
+from aoa.client.patches import explicit_protection  # noqa: E402
+from aoa.client.patches import frame_clock  # noqa: E402
+from aoa.client.patches import station_host  # noqa: E402
+from aoa.client.patches import menu_aspect  # noqa: E402
+from aoa.client.patches import object_persistence  # noqa: E402
+from aoa.client.patches import online_terrain  # noqa: E402
+from aoa.client.patches import own_ship_menu  # noqa: E402
+from aoa.client.patches import own_ship_model  # noqa: E402
+from aoa.client import base  # noqa: E402
+from aoa.client.patches import physics_timestep  # noqa: E402
+from aoa.client.patches import powerup_pickup  # noqa: E402
+from aoa.client import prepare  # noqa: E402
+from aoa.client.experiments import render_clock_experiment  # noqa: E402
+from aoa.client.experiments import render_culling_experiment  # noqa: E402
+from aoa.client.patches import solid_world_render  # noqa: E402
+from aoa.client.patches import station_detail  # noqa: E402
+from aoa.client.patches import texture32  # noqa: E402
+from aoa.client.patches import third_person  # noqa: E402
+from aoa.client.patches import visibility_fix  # noqa: E402
+from aoa.client.patches import world_detail  # noqa: E402
 
-ROOT = Path(__file__).resolve().parents[1]
+from aoa.paths import ROOT
 SNAPSHOT = Path(__file__).resolve().parent / "snapshots/patch_regions.json"
 PE_FACTS = ROOT / "evidence/2.9.2/pe_facts.json"
-BASE = patch_client.IMAGE_BASE
+BASE = base.IMAGE_BASE
 TEXT_PADDING = (0x58B200, 0x58C000)   # .text zero padding mapped by logger-size-v1 (C5)
 DATA_TAIL = (0x60D200, 0x60E000)      # zero-filled .data tail mapped by logger-size-v1 (C5)
 # Original bytes at patch_client's sites, as its configure() expects them.
@@ -142,8 +141,8 @@ def patch_client_record():
     image = pe_image()
     for va, old in PATCH_CLIENT_SITES.items():
         image[va - BASE:va - BASE + len(old) // 2] = bytes.fromhex(old)
-    with mock.patch.object(patch_client, "PRISTINE_292", hashlib.sha256(image).hexdigest()):
-        return patch_client.configure(bytes(image))[1]["patches"]
+    with mock.patch.object(base, "PRISTINE_292", hashlib.sha256(image).hexdigest()):
+        return base.configure(bytes(image))[1]["patches"]
 
 
 def collect():
@@ -163,23 +162,23 @@ def collect():
         (size if entry["patch"] == "dxgfx-logger-size" else lock).append(triple)
     add("logger-size-v1", "patch_client", {"current": size}, pe_header=header)
     add("logger-lock-v1", "patch_client", {"current": lock},
-        runtime_data=[runtime(patch_client.LOCK_OWNER, 4, "lock owner"),
-                      runtime(patch_client.LOCK_DEPTH, 4, "lock depth")])
+        runtime_data=[runtime(base.LOCK_OWNER, 4, "lock owner"),
+                      runtime(base.LOCK_DEPTH, 4, "lock depth")])
     add("station-hostname", "local_station + prepare_client.host_field",
-        {"current": [(local_station.OFFSET, local_station.ORIGINAL, prepare_client.host_field("localhost"))]})
+        {"current": [(station_host.OFFSET, station_host.ORIGINAL, prepare.host_field("localhost"))]})
     m = physics_timestep
     add("zero-time-physics-v1", "physics_timestep", {"current": [
-        (m.SITE_OFFSET, m.DISPLACED, patch_client.jmp_patch(m.SITE, m.CAVE, len(m.DISPLACED))),
+        (m.SITE_OFFSET, m.DISPLACED, base.jmp_patch(m.SITE, m.CAVE, len(m.DISPLACED))),
         (m.CAVE_OFFSET, bytes(len(m.guard_code())), m.guard_code())]})
     add("background-network-v1", "prepare_client", {"current": [
-        (prepare_client.BACKGROUND_OFFSET, prepare_client.BACKGROUND_JNE, prepare_client.BACKGROUND_NOP)]})
+        (prepare.BACKGROUND_OFFSET, prepare.BACKGROUND_JNE, prepare.BACKGROUND_NOP)]})
     for name, m in (("archive-terminator-v1", archive_terminator), (explicit_protection.NAME, explicit_protection)):
         code = m.cave_code()
         add(name, m.__name__, {"current": [
-            (m.SITE_OFFSET, m.DISPLACED, patch_client.jmp_patch(m.SITE, m.CAVE, len(m.DISPLACED))),
+            (m.SITE_OFFSET, m.DISPLACED, base.jmp_patch(m.SITE, m.CAVE, len(m.DISPLACED))),
             (m.CAVE_OFFSET, bytes(len(code)), code)]})
     m = online_terrain
-    jump = (m.SITE_OFFSET, m.DISPLACED, patch_client.jmp_patch(m.SITE, m.CAVE, len(m.DISPLACED)))
+    jump = (m.SITE_OFFSET, m.DISPLACED, base.jmp_patch(m.SITE, m.CAVE, len(m.DISPLACED)))
     add(m.NAME, "online_terrain", {
         label: [jump, (m.CAVE_OFFSET, bytes(m.REGION), cave)]
         for label, cave in (("current", m.cave_code()), (m.V2_NAME, m.v2_code()), (m.LEGACY_NAME, m.legacy_code()))})
@@ -303,8 +302,8 @@ class PatchLayoutTests(unittest.TestCase):
 
     def test_prepare_client_composition_writes_only_these_regions(self):
         pristine_sha = hashlib.sha256(self.pristine).hexdigest()
-        with mock.patch.object(patch_client, "PRISTINE_292", pristine_sha):
-            logger = patch_client.configure(self.pristine)[0]
+        with mock.patch.object(base, "PRISTINE_292", pristine_sha):
+            logger = base.configure(self.pristine)[0]
         stable_sha = hashlib.sha256(logger).hexdigest()
         always = ["station-hostname", "zero-time-physics-v1", "background-network-v1", "archive-terminator-v1",
                   online_terrain.NAME, cursor_warp.NAME]
@@ -321,15 +320,15 @@ class PatchLayoutTests(unittest.TestCase):
              [menu_aspect.NAME, frame_clock.NAME, visibility_fix.NAME, *chase, powerup_pickup.NAME,
               solid_world_render.NAME, world_detail.NAME]),
         )
-        with mock.patch.object(patch_client, "PRISTINE_292", pristine_sha), \
-                mock.patch.object(prepare_client, "STABLE_SHA256", stable_sha), \
+        with mock.patch.object(base, "PRISTINE_292", pristine_sha), \
+                mock.patch.object(prepare, "STABLE_SHA256", stable_sha), \
                 mock.patch.object(physics_timestep, "STABLE_SHA256", stable_sha):
             for options, chosen in cases:
                 with self.subTest(options=options):
                     expected = logger
                     for name in always + chosen:
                         expected = apply(expected, self.patches[name]["variants"]["current"])
-                    self.assertEqual(prepare_client.configure(self.pristine, **options), expected)
+                    self.assertEqual(prepare.configure(self.pristine, **options), expected)
 
 
 def main():

@@ -12,7 +12,8 @@ import subprocess
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+from aoa.paths import ROOT
+from aoa import paths
 CANDIDATES = {
     "Arena1a": ("RingPan", "Ring structures close-up", "Ring structures, asteroids, docks and a distant base."),
     "CTF_arena": (None, None, "Asteroid layout with exported turret and flag geometry. Both base nodes are unresolved."),
@@ -59,7 +60,7 @@ def main(argv=None):
         images = []
         for suffix, title, yaw, pitch, focus in views:
             output = args.out / f"{name}-{suffix}.png"
-            command = [sys.executable, "-I", str(ROOT / "tools/render_obj.py"), str(obj), str(output),
+            command = [sys.executable, "-I", str(paths.entry("render_obj", ROOT)), str(obj), str(output),
                        str(args.size), str(yaw), str(pitch)]
             if focus:
                 command += ["--focus", focus]

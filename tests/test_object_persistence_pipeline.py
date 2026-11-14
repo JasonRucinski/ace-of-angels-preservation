@@ -6,13 +6,10 @@ No real Direct3D device or GPU is exercised.
 """
 import math
 import struct
-import sys
 import unittest
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-from emulate_codec import SCRATCH, STACK, STOP
-from test_object_persistence import GroupProbe
+from aoa.emulation.emu import SCRATCH, STACK, STOP
+from tests.test_object_persistence import GroupProbe
 from unicorn.x86_const import (UC_X86_REG_EBX, UC_X86_REG_ESI, UC_X86_REG_EDI,
                                UC_X86_REG_EBP, UC_X86_REG_ESP, UC_X86_REG_EIP,
                                UC_X86_REG_FPCW, UC_X86_REG_FPSW, UC_X86_REG_EDX)

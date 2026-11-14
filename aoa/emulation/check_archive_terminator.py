@@ -15,12 +15,11 @@ import sys
 import tempfile
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import aoapack  # noqa: E402
-import cli_util  # noqa: E402
-import prepare_client  # noqa: E402
-from emulate_codec import Emu, HEAP, SCRATCH  # noqa: E402
-from pe_util import PE  # noqa: E402
+from aoa.formats import aoapack  # noqa: E402
+from aoa import cli  # noqa: E402
+from aoa.client import prepare  # noqa: E402
+from aoa.emulation.emu import Emu, HEAP, SCRATCH  # noqa: E402
+from aoa.analysis.pe_util import PE  # noqa: E402
 
 CTOR, DECOMPRESS = 0x52A0B0, 0x52A630
 
@@ -39,7 +38,7 @@ def run(image_path, packed):
 
 
 def main(argv=None):
-    ap = cli_util.parser(__doc__)
+    ap = cli.parser(__doc__)
     ap.add_argument("source", type=Path, help="pristine 2.9.2 client (AOACLIENT.EXE.orig)")
     ap.add_argument("output", type=Path, help="JSON report to write")
     a = ap.parse_args(argv)
@@ -50,7 +49,7 @@ def main(argv=None):
     result = {"client_sha256": hashlib.sha256(original).hexdigest(), "decompressor": hex(DECOMPRESS),
               "body_bytes": len(body), "packed_bytes": len(packed)}
     with tempfile.TemporaryDirectory() as tmp:
-        for name, image in (("original", original), ("patched", prepare_client.configure(original))):
+        for name, image in (("original", original), ("patched", prepare.configure(original))):
             path = Path(tmp) / f"{name}.exe"
             path.write_bytes(image)
             data, after = run(path, packed)
@@ -64,4 +63,4 @@ def main(argv=None):
 
 
 if __name__ == "__main__":
-    sys.exit(cli_util.run(main))
+    sys.exit(cli.run(main))

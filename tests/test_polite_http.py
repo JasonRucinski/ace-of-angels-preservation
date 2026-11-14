@@ -10,13 +10,11 @@ import email.message
 import email.utils
 import io
 import socket
-import sys
 import unittest
 import urllib.error
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import polite_http  # noqa: E402
+from aoa.research import http as research_http  # noqa: E402
 
 
 class Clock:
@@ -61,7 +59,7 @@ def client(outcomes, **kwargs):
     clock = Clock()
     opener = FakeOpener(clock, outcomes)
     kwargs.setdefault("min_interval", 2.0)
-    http = polite_http.Polite(opener=opener, sleep=clock.sleep, clock=clock.time,
+    http = research_http.Polite(opener=opener, sleep=clock.sleep, clock=clock.time,
                               log=lambda message: None, **kwargs)
     return http, opener, clock
 
@@ -97,8 +95,8 @@ class Pacing(unittest.TestCase):
     def test_one_project_user_agent(self):
         http, opener, _ = client([b"a"])
         http.get("https://archive.org/x", headers={"User-Agent": "something else"})
-        self.assertEqual(opener.requests[0][1], polite_http.USER_AGENT)
-        self.assertNotIn("@", polite_http.USER_AGENT)
+        self.assertEqual(opener.requests[0][1], research_http.USER_AGENT)
+        self.assertNotIn("@", research_http.USER_AGENT)
 
 
 class Backoff(unittest.TestCase):
@@ -117,7 +115,7 @@ class Backoff(unittest.TestCase):
     def test_retry_after_http_date(self):
         when = email.utils.format_datetime(email.utils.localtime().replace(microsecond=0))
         error = urllib.error.HTTPError("u", 429, "x", headers(Retry_After=when), None)
-        delay = polite_http.retry_after(error)
+        delay = research_http.retry_after(error)
         self.assertIsNotNone(delay)
         self.assertLess(delay, 5)
 
@@ -168,8 +166,8 @@ class GivingUp(unittest.TestCase):
         with self.assertRaises(urllib.error.HTTPError):
             http.call("https://web.archive.org/web/1id_/x", send)
         self.assertEqual(len(attempts), 3)
-        self.assertTrue(polite_http.retryable(urllib.error.HTTPError("u", 503, "x", None, None)))
-        self.assertFalse(polite_http.retryable(urllib.error.HTTPError("u", 404, "x", None, None)))
+        self.assertTrue(research_http.retryable(urllib.error.HTTPError("u", 503, "x", None, None)))
+        self.assertFalse(research_http.retryable(urllib.error.HTTPError("u", 404, "x", None, None)))
 
 
 class FakeConnection:
@@ -204,14 +202,14 @@ class RestoreWebArchive(unittest.TestCase):
     """A throttled capture stays pending; a real 404 is marked missing (R17)."""
 
     def mirror(self, status, tmp):
-        import restore_web_archive as rwa
+        from aoa.research import restore_web_archive as rwa
         self.addCleanup(setattr, rwa, "STORE", rwa.STORE)
         rwa.STORE = Path(tmp)
         clock = Clock()
         m = object.__new__(rwa.Mirror)
         m.rows = {}
         m.ledger_path = Path(tmp) / "ledger.json"
-        m.http = polite_http.Polite(min_interval=0.0, retries=2, base_delay=1.0,
+        m.http = research_http.Polite(min_interval=0.0, retries=2, base_delay=1.0,
                                     sleep=clock.sleep, clock=clock.time, log=lambda message: None)
         m.connection = FakeConnection(status)
         return m

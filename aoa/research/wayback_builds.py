@@ -27,11 +27,9 @@ import os
 import re
 import sys
 import urllib.parse
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import cli_util  # noqa: E402
-import polite_http  # noqa: E402
+from aoa import cli  # noqa: E402
+from aoa.research import http  # noqa: E402
 
 DOMAINS = ["aceofangels.com", "flyingrockllc.com", "flyingrock.com"]
 CDX = "https://web.archive.org/cdx/search/cdx"
@@ -39,7 +37,7 @@ FIELDS = "timestamp,original,mimetype,statuscode,digest,length"
 BUILD_EXT = re.compile(r"\.(exe|zip|msi|cab|rar|7z|ace|lzh|tgz|gz|sit|bin)$", re.I)
 BUILD_MIME = re.compile(r"application/(x-)?(msdownload|msdos-program|dosexec|zip|"
                         r"zip-compressed|octet-stream|x-msi|rar|7z)", re.I)
-HTTP = polite_http.Polite(min_interval=4.0)
+HTTP = http.Polite(min_interval=4.0)
 
 
 def get(url):
@@ -63,8 +61,8 @@ def is_build(row):
 
 
 def main(argv=None):
-    ap = cli_util.parser(__doc__)
-    ap.add_argument("--out", required=True, type=cli_util.output_dir, help="folder for the listings and downloads")
+    ap = cli.parser(__doc__)
+    ap.add_argument("--out", required=True, type=cli.output_dir, help="folder for the listings and downloads")
     ap.add_argument("--domains", nargs="*", default=DOMAINS)
     ap.add_argument("--cdx-file", help="parse a saved CDX JSON dump instead of querying")
     ap.add_argument("--download", action="store_true")
@@ -131,4 +129,4 @@ def main(argv=None):
 
 
 if __name__ == "__main__":
-    sys.exit(cli_util.run(main))
+    sys.exit(cli.run(main))

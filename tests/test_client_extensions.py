@@ -7,10 +7,9 @@ import time
 import unittest
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import aoanet
-import station_stub
-from test_station_stub import request
+from aoa.protocol import codec
+from tests.test_station_stub import request
+from aoa import paths
 
 
 class ExtensionTransportTests(unittest.TestCase):
@@ -23,7 +22,7 @@ class ExtensionTransportTests(unittest.TestCase):
                 probe.bind(("127.0.0.1", 0))
                 endpoint = probe.getsockname()
             process = subprocess.Popen(
-                [sys.executable, "-I", station_stub.__file__, str(folder / "key"), str(folder / "log"),
+                [sys.executable, "-I", str(paths.entry("station_stub")), str(folder / "key"), str(folder / "log"),
                  "--port", "0", "--arena", "--arena-port", str(endpoint[1]), "--ack",
                  "--experimental-flight", "--max-players", "1", "--experimental-protection-probe",
                  "--seconds", "25"], stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
@@ -35,9 +34,9 @@ class ExtensionTransportTests(unittest.TestCase):
                     deadline = time.monotonic() + 22
                     while len(values) < 4 and time.monotonic() < deadline:
                         if not connected:
-                            peer.sendto(aoanet.encode(10, request(), key), endpoint)
+                            peer.sendto(codec.encode(10, request(), key), endpoint)
                         try:
-                            message = aoanet.decode(peer.recv(512), key)
+                            message = codec.decode(peer.recv(512), key)
                         except (socket.timeout, ConnectionResetError):
                             continue
                         self.assertTrue(message["crc_ok"])
@@ -49,7 +48,7 @@ class ExtensionTransportTests(unittest.TestCase):
                         elif kind == 8:
                             bounce = bytearray(body)
                             bounce[6] = 1
-                            peer.sendto(aoanet.encode(9, bytes(bounce), key), endpoint)
+                            peer.sendto(codec.encode(9, bytes(bounce), key), endpoint)
                         elif kind == 0x1B:
                             self.assertTrue(entered)
                             self.assertEqual((len(body), body[-1]), (6, 0x81))
@@ -59,7 +58,7 @@ class ExtensionTransportTests(unittest.TestCase):
                                 values.append(body[0])
                             # Lose the first ACK for the first enable.
                             if len(copies) > 1 or copies[sequence] > 1:
-                                peer.sendto(aoanet.encode(0x0F, sequence, key), endpoint)
+                                peer.sendto(codec.encode(0x0F, sequence, key), endpoint)
                     self.assertEqual(values, [1, 1, 0, 0])
                     self.assertGreaterEqual(next(iter(copies.values())), 2)
                     self.assertIsNone(process.poll())

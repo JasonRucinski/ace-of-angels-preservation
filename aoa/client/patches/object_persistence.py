@@ -7,11 +7,9 @@ authored minimum so distant groups still have meshes to draw.
 import argparse
 import json
 import struct
-import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-from patch_client import Asm, jmp_patch
+from aoa.client.base import Asm, jmp_patch
 
 NAME = "distant-world-objects-v1"
 HORIZON = 4_500_000.0
@@ -88,8 +86,8 @@ def install(exe, undo=False):
     Every other option keeps its installed state; prepare's own backup and
     record (_client_setup.json) cover undo.
     """
-    import prepare_client
-    return prepare_client.prepare(exe, distant_objects=not undo)
+    from aoa.client import prepare
+    return prepare.prepare(exe, distant_objects=not undo)
 
 
 def main():

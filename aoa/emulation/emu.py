@@ -22,10 +22,9 @@ from unicorn import UC_ARCH_X86, UC_HOOK_CODE, UC_MODE_32, Uc
 from unicorn.x86_const import (UC_X86_REG_EAX, UC_X86_REG_ECX, UC_X86_REG_EIP,
                                UC_X86_REG_ESP)
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import aoapack  # noqa: E402
-import cli_util  # noqa: E402
-from pe_util import PE  # noqa: E402
+from aoa.formats import aoapack  # noqa: E402
+from aoa import cli  # noqa: E402
+from aoa.analysis.pe_util import PE  # noqa: E402
 
 STACK, HEAP, SCRATCH, STUBS = 0x10000000, 0x20000000, 0x30000000, 0x40000000
 STOP = STUBS + 0x100
@@ -137,7 +136,7 @@ SENDTO, RECVFROM = STUBS + 0x30, STUBS + 0x40
 
 
 def ccomm_check(path, key_path, out):
-    import aoanet
+    from aoa.protocol import codec
     pe = PE(path)
     emu = Emu(pe)
     key = Path(key_path).read_bytes()
@@ -189,11 +188,11 @@ def ccomm_check(path, key_path, out):
         captured.clear()
         emu.thiscall(0x60DDB0, comm, 0x1234, pkt, 0)
         wire = captured[0]
-        res["client_wire_eq_python"] += wire == aoanet.encode(ptype, data, key)
-        d = aoanet.decode(wire, key)
+        res["client_wire_eq_python"] += wire == codec.encode(ptype, data, key)
+        d = codec.decode(wire, key)
         res["python_decodes_client"] += d["payload"] == data and d["type"] == ptype and d["crc_ok"]
         for compressed in (True, False):
-            inject["bytes"] = aoanet.encode(ptype, data, key, compress=compressed)
+            inject["bytes"] = codec.encode(ptype, data, key, compress=compressed)
             emu.write(pkt, b"\0" * 0x600)
             ok = emu.thiscall(0x60DEF0, comm, 0x1234, pkt) & 0xFF
             n = int.from_bytes(emu.read(pkt + 0x494, 4), "little")
@@ -208,7 +207,7 @@ def ccomm_check(path, key_path, out):
 
 
 def main(argv=None):
-    ap = cli_util.parser(__doc__)
+    ap = cli.parser(__doc__)
     ap.add_argument("client", help="the 2.7.1 client executable")
     ap.add_argument("out", help="JSON file to write")
     ap.add_argument("key", nargs="?", help="256-byte cipher table: run the CComm framing check instead")
@@ -220,4 +219,4 @@ def main(argv=None):
 
 
 if __name__ == "__main__":
-    sys.exit(cli_util.run(main))
+    sys.exit(cli.run(main))

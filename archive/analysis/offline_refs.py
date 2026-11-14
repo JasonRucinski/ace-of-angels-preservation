@@ -15,15 +15,14 @@ import re
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import cli_util  # noqa: E402
-from pe_util import PE, Disasm  # noqa: E402
+from aoa import cli  # noqa: E402
+from aoa.analysis.pe_util import PE, Disasm  # noqa: E402
 
 REG8 = {"eax": "al", "ebx": "bl", "ecx": "cl", "edx": "dl"}
 
 
 def main(argv=None):
-    ap = cli_util.parser(__doc__)
+    ap = cli.parser(__doc__)
     ap.add_argument("client", help="client executable")
     ap.add_argument("cache", help="disassembly cache (.pkl) for that executable")
     ap.add_argument("flags_va", help="VA (hex) of the global flag word")
@@ -73,4 +72,4 @@ def main(argv=None):
 
 
 if __name__ == "__main__":
-    sys.exit(cli_util.run(main))
+    sys.exit(cli.run(main))

@@ -12,8 +12,7 @@ from pathlib import Path
 
 import pefile
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import cli_util  # noqa: E402
+from aoa import cli  # noqa: E402
 
 ATOMS = {0x80: "Button", 0x81: "Edit", 0x82: "Static", 0x83: "ListBox", 0x84: "ScrollBar", 0x85: "ComboBox"}
 
@@ -67,7 +66,7 @@ def parse(b):
 
 
 def main(argv=None):
-    ap = cli_util.parser(__doc__)
+    ap = cli.parser(__doc__)
     ap.add_argument("client", help="executable whose resources to read")
     ap.add_argument("out", help="JSON file to write")
     ap.add_argument("want", nargs="*", help="control IDs (hex) to look for")
@@ -101,4 +100,4 @@ def main(argv=None):
 
 
 if __name__ == "__main__":
-    sys.exit(cli_util.run(main))
+    sys.exit(cli.run(main))

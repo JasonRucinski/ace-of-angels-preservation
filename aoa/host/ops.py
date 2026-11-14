@@ -10,12 +10,13 @@ import os
 import queue
 import threading
 from pathlib import Path
+from aoa.paths import ROOT
 
 HELP = ("commands: status | kick <slot> | ban <slot> (kick and refuse its IP until restart) | "
         "end (finish the current match) | say <text> (arena message to all) | quit (stop the host) | help")
 QUIT = "host stopping"
 SAY_LIMIT = 120
-WORK = Path(__file__).resolve().parents[1] / "work/host"
+WORK = ROOT / "work/host"
 
 
 def status_path(profile, folder=WORK):

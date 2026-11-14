@@ -10,16 +10,12 @@ so this works with the display off.
 import argparse
 import json
 import shutil
-import sys
 import time
 from pathlib import Path
 
-HERE = Path(__file__).resolve().parent
-sys.path.insert(0, str(HERE))
-sys.path.insert(0, str(HERE.parent))
-import inspect_arena  # noqa: E402
-import record  # noqa: E402
-import window  # noqa: E402
+from aoa.live import arena  # noqa: E402
+from aoa.reel import record  # noqa: E402
+from aoa.reel import window  # noqa: E402
 
 CAPTURES = record.GAME / "Capture Images"
 
@@ -39,7 +35,7 @@ def scout(name, out, spawn_at=None, camera="cockpit"):
         client = record.enter_flight()
         time.sleep(7)
         client.camera(camera)
-        snap = inspect_arena.snapshot(client.pid, include_objects=True)
+        snap = arena.snapshot(client.pid, include_objects=True)
         before = latest_capture()
         window.key(window.main_window(), 0x74)  # F5
         deadline = time.monotonic() + 10

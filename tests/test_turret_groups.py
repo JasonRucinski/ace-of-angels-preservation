@@ -1,15 +1,13 @@
 """Turret-group packet boundaries and original-client receiver behavior."""
 import hashlib
 import struct
-import sys
 import unittest
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import turret_groups
-from patch_client import PRISTINE_292
+from aoa.protocol import turret_groups
+from aoa.client.base import PRISTINE_292
+from aoa.paths import ROOT
 
-CLIENT = Path(__file__).resolve().parents[1] / 'game/2.9.2/AOACLIENT.EXE.orig'
+CLIENT = ROOT / 'game/2.9.2/AOACLIENT.EXE.orig'
 
 
 class GroupTests(unittest.TestCase):
@@ -28,8 +26,8 @@ class GroupTests(unittest.TestCase):
 
     @unittest.skipUnless(CLIENT.exists(), 'requires original 2.9.2 client')
     def test_native_disable_counts_and_terminator(self):
-        from emulate_codec import Emu, HEAP, SCRATCH
-        from pe_util import PE
+        from aoa.emulation.emu import Emu, HEAP, SCRATCH
+        from aoa.analysis.pe_util import PE
         self.assertEqual(hashlib.sha256(CLIENT.read_bytes()).hexdigest(), PRISTINE_292)
         emu = Emu(PE(CLIENT))
         world, controller, objects = HEAP, HEAP + 0x100000, HEAP + 0x110000
@@ -52,8 +50,8 @@ class GroupTests(unittest.TestCase):
 
     @unittest.skipUnless(CLIENT.exists(), 'requires original 2.9.2 client')
     def test_native_firing_gate(self):
-        from emulate_codec import Emu, HEAP, STACK, STOP
-        from pe_util import PE
+        from aoa.emulation.emu import Emu, HEAP, STACK, STOP
+        from aoa.analysis.pe_util import PE
         from unicorn import UC_HOOK_CODE
         from unicorn.x86_const import UC_X86_REG_EIP, UC_X86_REG_ESP, UC_X86_REG_EDI, UC_X86_REG_EBX
         self.assertEqual(hashlib.sha256(CLIENT.read_bytes()).hexdigest(), PRISTINE_292)

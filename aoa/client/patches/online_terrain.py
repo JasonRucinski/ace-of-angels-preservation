@@ -20,7 +20,7 @@ holds, so repeating the walk is harmless.
 """
 import struct
 
-from patch_client import Asm, jmp_patch
+from aoa.client.base import Asm, jmp_patch
 
 NAME = "online-terrain-v3"
 V2_NAME = "online-terrain-v2"

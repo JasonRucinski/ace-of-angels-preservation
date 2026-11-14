@@ -22,11 +22,8 @@ app +0x30), so the timer still drives a background window.
 Library use only (prepare_client.py composes it); no file is written here.
 """
 import struct
-import sys
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-from patch_client import Asm  # noqa: E402
+from aoa.client.base import Asm  # noqa: E402
 
 NAME = "frame-clock-v1"
 CLOCK = 0x58B600

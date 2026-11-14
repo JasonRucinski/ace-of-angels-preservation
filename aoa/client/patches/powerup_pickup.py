@@ -21,11 +21,8 @@ Two 2.9.2 changes stop the power-up loop the relay hosts (findings 9.44):
 
 Library use only (prepare_client.py composes it); no file is written here.
 """
-import sys
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-from patch_client import Asm, jmp_patch  # noqa: E402
+from aoa.client.base import Asm, jmp_patch  # noqa: E402
 
 NAME = "powerup-pickup-v1"
 SPAWN_SITE = 0x431E19                 # mov dword [edi+0x200], 4

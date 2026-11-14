@@ -16,10 +16,8 @@ import struct
 import sys
 import time
 from ctypes import wintypes
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import window  # noqa: E402
+from aoa.reel import window  # noqa: E402
 
 k = window.dll("kernel32")
 k.OpenProcess.argtypes = [wintypes.DWORD, wintypes.BOOL, wintypes.DWORD]

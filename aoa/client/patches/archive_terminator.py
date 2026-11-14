@@ -12,11 +12,8 @@ the data; binary callers ignore it.
 Library use only (prepare_client.py composes it); no file is written here.
 """
 import struct
-import sys
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-from patch_client import Asm, jmp_patch  # noqa: E402
+from aoa.client.base import Asm, jmp_patch  # noqa: E402
 
 SITE, SITE_OFFSET = 0x52A6E3, 0x12A6E3
 CAVE, CAVE_OFFSET = 0x58B440, 0x18B440

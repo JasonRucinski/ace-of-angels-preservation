@@ -10,11 +10,10 @@ import time
 import unittest
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import aoanet
-import relay_motion
-import station_stub
-from test_station_stub import request
+from aoa.protocol import codec
+from aoa.protocol import motion
+from tests.test_station_stub import request
+from aoa import paths
 
 
 class RelayRecoveryTests(unittest.TestCase):
@@ -26,7 +25,7 @@ class RelayRecoveryTests(unittest.TestCase):
             with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as probe:
                 probe.bind(("127.0.0.1", 0))
                 endpoint = probe.getsockname()
-            proc = subprocess.Popen([sys.executable, "-I", str(Path(station_stub.__file__)), str(folder / "key"),
+            proc = subprocess.Popen([sys.executable, "-I", str(paths.entry("station_stub")), str(folder / "key"),
                                      str(folder / "log"), "--port", "0", "--arena", "--arena-port", str(endpoint[1]),
                                      "--ack", "--experimental-relay", "--max-players", "2", "--seconds", "15"],
                                     stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
@@ -38,13 +37,13 @@ class RelayRecoveryTests(unittest.TestCase):
                 self.assertIn("station stub on", proc.stdout.readline())
 
                 def send(peer, kind, payload):
-                    peer.sendto(aoanet.encode(kind, payload, key), endpoint)
+                    peer.sendto(codec.encode(kind, payload, key), endpoint)
 
                 def receive(peer, predicate):
                     deadline = time.monotonic() + 5
                     while time.monotonic() < deadline:
                         try:
-                            message = aoanet.decode(peer.recv(512), key)
+                            message = codec.decode(peer.recv(512), key)
                         except socket.timeout:
                             continue
                         self.assertTrue(message["crc_ok"])
@@ -74,22 +73,22 @@ class RelayRecoveryTests(unittest.TestCase):
                 self.assertEqual(slots, {a: 1, b: 2})
                 for peer in (a, b):
                     receive(peer, lambda m: m["type"] == 0x24)
-                initial = relay_motion.initial((100, 200, 300))
+                initial = motion.initial((100, 200, 300))
                 initial.update({8: (10, 20, 30), 0x40000: (1, 2, 3),
                                 0x200000: (0.1, 0.2, 0.3), 0x1000000: (0.4, 0.5, 0.6)})
-                baseline = relay_motion.snapshot(1, initial)
-                expected, _, _ = relay_motion.update(baseline, {})
+                baseline = motion.snapshot(1, initial)
+                expected, _, _ = motion.update(baseline, {})
                 send(a, 31, baseline)
 
                 def is_state(message, state):
                     # Relayed snapshots carry server-owned stats (none yet; 9.30).
-                    return message["type"] == 31 and message["payload"] == relay_motion.snapshot(
+                    return message["type"] == 31 and message["payload"] == motion.snapshot(
                         1, state, stats=(0, 0, 0, 0))
 
                 receive(b, lambda m: is_state(m, expected))
                 delta = struct.pack("<HHI3b3h3b", 0x8000, 1, 4 | 0x400000 | 0x4000000,
                                     1, -2, 3, 200, -300, 400, 4, -5, 6)
-                expected, _, _ = relay_motion.update(delta, expected)
+                expected, _, _ = motion.update(delta, expected)
                 send(a, 31, delta)
                 receive(b, lambda m: is_state(m, expected))  # Discard immediate delivery.
                 # No more movement input: this match must come from periodic refresh.

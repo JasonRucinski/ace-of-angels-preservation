@@ -7,12 +7,10 @@ Logger timestamps and random seeding retain GetTickCount. No physics changes.
 import struct
 import argparse
 import json
-import sys
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-from patch_client import Asm
-import prepare_client
+from aoa.client.base import Asm
+from aoa.client import prepare
+from aoa.paths import ROOT
 
 CAVE = 0x58B600
 
@@ -51,7 +49,7 @@ def configure(data, enabled=True):
         original[off:off + len(old)] = old
     if len(set(states)) != 1:
         raise ValueError("partial clock experiment")
-    prepare_client.inspect(bytes(original))
+    prepare.inspect(bytes(original))
     out = bytearray(original)
     if enabled:
         for off, old, new in regions():
@@ -65,23 +63,23 @@ def main(argv=None):
     args = parser.parse_args(argv)
     # Intentionally no arbitrary executable argument: this remains an offline
     # rendering experiment, not an unvalidated upgrade to networked clients.
-    exe = Path(__file__).resolve().parents[1] / 'game/offline-baseline-2.9.2/AOACLIENT.EXE'
+    exe = ROOT / 'game/offline-baseline-2.9.2/AOACLIENT.EXE'
     source = exe.read_bytes()
     original = configure(source, False)
     backup = exe.with_suffix('.EXE.before-clock')
     if backup.exists() and backup.read_bytes() != original:
         raise ValueError('clock undo backup does not match normalized executable')
     if not backup.exists():
-        prepare_client.atomic_write(backup, original)
+        prepare.atomic_write(backup, original)
     result = configure(source, not args.undo)
     if result != source:
-        prepare_client.atomic_write(exe, result)
+        prepare.atomic_write(exe, result)
     if exe.read_bytes() != result:
         raise ValueError('clock patch verification failed')
     record = {'clock': 'GetTickCount' if args.undo else 'QPC milliseconds, extended precision conversion',
-              'sha256': prepare_client.sha(result), 'undo_sha256': prepare_client.sha(original),
+              'sha256': prepare.sha(result), 'undo_sha256': prepare.sha(original),
               'scope': 'isolated offline baseline; multiplayer unverified'}
-    prepare_client.atomic_write(exe.parent / '_render_clock.json', (json.dumps(record, indent=2)+'\n').encode())
+    prepare.atomic_write(exe.parent / '_render_clock.json', (json.dumps(record, indent=2)+'\n').encode())
     print(json.dumps(record, indent=2))
 
 

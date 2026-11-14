@@ -15,9 +15,8 @@ import struct
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import cli_util  # noqa: E402
-import gob2obj  # noqa: E402
+from aoa import cli  # noqa: E402
+from aoa.formats import gob  # noqa: E402
 
 
 def mesh_record(mesh, node):
@@ -43,7 +42,7 @@ def mesh_nodes(data):
     After name: bounds +0, affine matrix +0x44, size thresholds +0x84,
     tagged metadata +0x8C. Validate framing and matrix before using offsets.
     """
-    strings = gob2obj.strings(data)
+    strings = gob.strings(data)
     result = []
     for (start, after, name), (next_start, _, metadata) in zip(strings, strings[1:]):
         if next_start != after + 0x8C:
@@ -60,7 +59,7 @@ def audit(source):
     models, layouts = [], []
     for path in sorted(source.glob('*.[Gg]ob')):
         data = path.read_bytes()
-        parsed = gob2obj.parse(data)
+        parsed = gob.parse(data)
         nodes = mesh_nodes(data) if parsed else []
         meshes = [mesh_record(m, max((n for n in nodes if n['start'] < m['offset']), key=lambda n:n['start'])) for m in parsed]
         if not meshes:
@@ -93,9 +92,9 @@ def audit(source):
 
 
 def main(argv=None):
-    ap = cli_util.parser(__doc__)
+    ap = cli.parser(__doc__)
     ap.add_argument('output', type=Path, help='JSON report to write')
-    ap.add_argument('--source', type=Path, default=cli_util.WORK / '2.9.2/export/AOAOBJECTS',
+    ap.add_argument('--source', type=Path, default=cli.WORK / '2.9.2/export/AOAOBJECTS',
                     help='exported AOAOBJECTS folder (default: %(default)s)')
     a = ap.parse_args(argv)
     if not a.source.is_dir():
@@ -112,4 +111,4 @@ def main(argv=None):
 
 
 if __name__ == '__main__':
-    sys.exit(cli_util.run(main))
+    sys.exit(cli.run(main))

@@ -20,11 +20,10 @@ import time
 import urllib.error
 import urllib.parse as U
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import cli_util  # noqa: E402
-import polite_http  # noqa: E402
+from aoa import cli  # noqa: E402
+from aoa.research import http as research_http  # noqa: E402
 
-ROOT = Path(__file__).resolve().parents[1]
+from aoa.paths import ROOT
 STORE = ROOT / 'wb/site-archive'
 BUILD = STORE / 'build'
 HOSTS = {'aceofangels.com', 'flyingrockllc.com', 'aoahost.com'}
@@ -86,7 +85,7 @@ class Mirror:
         (STORE / 'raw').mkdir(exist_ok=True)
         self.ledger_path = STORE / 'ledger.json'
         self.rows = json.loads(self.ledger_path.read_text('utf-8')) if self.ledger_path.exists() else {}
-        self.http = polite_http.Polite(min_interval=pause)
+        self.http = research_http.Polite(min_interval=pause)
         self.connection = http.client.HTTPSConnection('web.archive.org', timeout=35)
 
     def save(self):
@@ -188,7 +187,7 @@ class Mirror:
             parsed = U.urlsplit(replay)
             if parsed.hostname != 'web.archive.org':
                 raise ValueError('Replay redirected away from the archive')
-            self.connection.request('GET', U.urlunsplit(('', '', parsed.path, parsed.query, '')), headers={'User-Agent': polite_http.USER_AGENT, 'Connection': 'keep-alive'})
+            self.connection.request('GET', U.urlunsplit(('', '', parsed.path, parsed.query, '')), headers={'User-Agent': research_http.USER_AGENT, 'Connection': 'keep-alive'})
             response = self.connection.getresponse()
             if response.status in {301, 302, 303, 307, 308}:
                 location = response.headers.get('Location', '')
@@ -228,7 +227,7 @@ class Mirror:
         try:
             self.http.call(replay, lambda url: self.replay(row, url))
         except urllib.error.HTTPError as error:
-            if polite_http.retryable(error):
+            if research_http.retryable(error):
                 # Still throttled or failing after the backoff: keep it queued.
                 row.update(state='pending', error=f'HTTP {error.code}')
                 self.save()
@@ -464,7 +463,7 @@ UNAVAILABLE = '''<!doctype html><html lang="en"><meta charset="utf-8"><meta name
 
 
 def main(argv=None):
-    ap = cli_util.parser(__doc__)
+    ap = cli.parser(__doc__)
     ap.add_argument('--recover', action='store_true')
     ap.add_argument('--limit', type=int, default=2000)
     ap.add_argument('--retry-missing', action='store_true')
@@ -488,4 +487,4 @@ def main(argv=None):
 
 
 if __name__ == '__main__':
-    sys.exit(cli_util.run(main))
+    sys.exit(cli.run(main))

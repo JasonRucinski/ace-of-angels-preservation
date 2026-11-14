@@ -48,10 +48,8 @@ import subprocess
 import sys
 import time
 from collections import Counter
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import cli_util  # noqa: E402
+from aoa import cli  # noqa: E402
 
 k32 = None  # kernel32, bound by load_kernel32() (Windows only)
 
@@ -633,7 +631,7 @@ class Session:
 
 
 def main(argv=None):
-    ap = cli_util.parser(__doc__)
+    ap = cli.parser(__doc__)
     for flag in ("--debug-heap", "--guard-heap", "--guard-continue", "--trace-exit",
                  "--trace-arena", "--guard-reuse", "--trace-physics"):
         ap.add_argument(flag, action="store_true", help=argparse.SUPPRESS)
@@ -656,4 +654,4 @@ def main(argv=None):
 
 
 if __name__ == "__main__":
-    sys.exit(cli_util.run(main))
+    sys.exit(cli.run(main))

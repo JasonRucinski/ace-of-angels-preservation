@@ -7,10 +7,9 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import client_launcher as launcher
-import prepare_client as setup
-import texture_pack
+from aoa.launchers import client_launcher as launcher
+from aoa.client import prepare as setup
+from aoa.client import texture_pack
 
 GAME = launcher.DEFAULT_GAME
 
@@ -57,14 +56,14 @@ class SyntheticLauncherTests(unittest.TestCase):
 
     def setUp(self):
         import hashlib
-        import patch_client
-        import physics_timestep
-        import test_patch_layout
+        from aoa.client import base
+        from aoa.client.patches import physics_timestep
+        from tests import test_patch_layout
         pristine = test_patch_layout.synthetic_pristine()
         pristine_sha = hashlib.sha256(pristine).hexdigest()
-        with patch.object(patch_client, "PRISTINE_292", pristine_sha):
-            stable_sha = hashlib.sha256(patch_client.configure(pristine)[0]).hexdigest()
-        for mocked in (patch.object(patch_client, "PRISTINE_292", pristine_sha),
+        with patch.object(base, "PRISTINE_292", pristine_sha):
+            stable_sha = hashlib.sha256(base.configure(pristine)[0]).hexdigest()
+        for mocked in (patch.object(base, "PRISTINE_292", pristine_sha),
                        patch.object(setup, "STABLE_SHA256", stable_sha),
                        patch.object(physics_timestep, "STABLE_SHA256", stable_sha),
                        patch.object(setup, "check_assets", return_value=0),

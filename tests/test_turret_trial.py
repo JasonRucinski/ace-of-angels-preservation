@@ -2,17 +2,15 @@
 import contextlib
 import io
 import struct
-import sys
 import unittest
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import navigation_buoys
-import turret_trial
-import test_navigation_buoys
-from station_runtime import parse_args
+from aoa.maps import navigation
+from aoa.host import turret_trial
+from tests import test_navigation_buoys
+from aoa.host.runtime import parse_args
+from aoa.paths import ROOT
 
-SOURCE = Path(__file__).resolve().parents[1] / 'work/2.9.2/export/AOAOBJECTS'
+SOURCE = ROOT / 'work/2.9.2/export/AOAOBJECTS'
 
 
 @unittest.skipUnless((SOURCE / 'Arena1a.Gob').exists(), 'requires original exported maps')
@@ -45,7 +43,7 @@ class TrialTests(unittest.TestCase):
                 parse_args(base + extra)
 
     def test_first_late_join_with_buoys_and_lost_ack(self):
-        expected = navigation_buoys.loads(navigation_buoys.map_placements(SOURCE, 'Arena1a'))
+        expected = navigation.loads(navigation.map_placements(SOURCE, 'Arena1a'))
         expected += turret_trial.loads(turret_trial.placements(SOURCE))
         test_navigation_buoys.BuoyTests.check_delivery(
             self, 'Arena1a', ('--turret-trial', str(SOURCE)), expected)

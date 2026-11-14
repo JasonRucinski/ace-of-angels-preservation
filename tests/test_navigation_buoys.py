@@ -12,22 +12,22 @@ import time
 import unittest
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import aoanet
-import navigation_buoys as buoys
-import station_stub as stub
-from station_runtime import parse_args
-from test_station_stub import request
+from aoa.protocol import codec
+from aoa.maps import navigation as buoys
+from aoa.host.runtime import parse_args
+from tests.test_station_stub import request
+from aoa.paths import ROOT
+from aoa import paths
 
-SOURCE = Path(__file__).resolve().parents[1] / 'work/2.9.2/export/AOAOBJECTS/Arena1a.Gob'
+SOURCE = ROOT / 'work/2.9.2/export/AOAOBJECTS/Arena1a.Gob'
 
 
 @unittest.skipUnless(SOURCE.exists(), 'requires original exported Arena1a')
 class BuoyTests(unittest.TestCase):
     def test_all_maps_and_nested_transforms(self):
-        import online_terrain
-        import scene2obj
-        trn = Path(__file__).resolve().parents[1] / 'game/2.9.2/JRMAP.TRN'
+        from aoa.client.patches import online_terrain
+        from aoa.formats import scene
+        trn = ROOT / 'game/2.9.2/JRMAP.TRN'
         expected = {'Arena1a': 10, 'newterrain': 10, 'CTF_arena': 1,
                     'outerchange': 6, 'irrosa01': 5, 'hu_base_a': 1, 'hu_base_b': 1, 'JRMAP': 7}
         for name in online_terrain.MAP_NAMES:
@@ -38,8 +38,8 @@ class BuoyTests(unittest.TestCase):
         self.assertEqual(len({tuple(n['position']) for n in outer}), 6)
         for n in outer:
             parent_name = n['node_path'].split('/')[0]
-            parent = next(p for p in scene2obj.read_nodes((SOURCE.parent / 'outerchange.Gob').read_bytes()) if p['name'] == parent_name)
-            child = next(p for p in scene2obj.read_nodes((SOURCE.parent / (n['source_scene'] + '.Gob')).read_bytes()) if p['name'] == n['name'])
+            parent = next(p for p in scene.read_nodes((SOURCE.parent / 'outerchange.Gob').read_bytes()) if p['name'] == parent_name)
+            child = next(p for p in scene.read_nodes((SOURCE.parent / (n['source_scene'] + '.Gob')).read_bytes()) if p['name'] == n['name'])
             expected_pos = [sum(child['position'][k] * parent['matrix'][k * 4 + c] for k in range(3)) + parent['matrix'][12 + c] for c in range(3)]
             self.assertLess(math.dist(n['position'], expected_pos), .001)
         jr = buoys.loads(buoys.map_placements(SOURCE.parent, 'JRMAP', trn))
@@ -86,7 +86,7 @@ class BuoyTests(unittest.TestCase):
 
     def check_delivery(self, map_name, extra=(), expected=None, drop_ack_tag=None):
         key = bytes(range(256))
-        trn = Path(__file__).resolve().parents[1] / 'game/2.9.2/JRMAP.TRN'
+        trn = ROOT / 'game/2.9.2/JRMAP.TRN'
         if expected is None:
             expected = buoys.loads(buoys.map_placements(SOURCE.parent, map_name, trn))
         watched = {kind for kind, _ in expected} | {0x25}
@@ -96,7 +96,7 @@ class BuoyTests(unittest.TestCase):
             with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as probe:
                 probe.bind(('127.0.0.1', 0))
                 endpoint = probe.getsockname()
-            process = subprocess.Popen([sys.executable, '-I', str(Path(stub.__file__)),
+            process = subprocess.Popen([sys.executable, '-I', str(paths.entry("station_stub")),
                 str(folder / 'key'), str(folder / 'log'), '--profile', 'local-relay',
                 '--port', '0', '--tcp', '0', '--arena-port', str(endpoint[1]),
                 '--map', map_name, '--experimental-terrain', '--sustained-delivery', '--navigation-buoys', str(SOURCE.parent), '--buoy-trn', str(trn),
@@ -109,7 +109,7 @@ class BuoyTests(unittest.TestCase):
             retransmitted = False
 
             def send(peer, kind, payload):
-                peer.sendto(aoanet.encode(kind, payload, key), endpoint)
+                peer.sendto(codec.encode(kind, payload, key), endpoint)
 
             def pump(seconds):
                 nonlocal missed_ack, missed_event, retransmitted
@@ -118,7 +118,7 @@ class BuoyTests(unittest.TestCase):
                     ready, _, _ = select.select(peers, [], [], min(.05, max(0, deadline - time.monotonic())))
                     for peer in ready:
                         try:
-                            message = aoanet.decode(peer.recv(512), key)
+                            message = codec.decode(peer.recv(512), key)
                         except ConnectionResetError:
                             continue
                         kind, body = message['type'], message['payload']

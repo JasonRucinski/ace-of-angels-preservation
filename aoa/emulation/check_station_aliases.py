@@ -13,11 +13,10 @@ from pathlib import Path
 from unicorn import UC_HOOK_CODE
 from unicorn.x86_const import UC_X86_REG_EAX, UC_X86_REG_EIP, UC_X86_REG_ESP
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import cli_util
-from emulate_codec import Emu, HEAP, SCRATCH, STUBS, STOP
-from pe_util import PE
-from station_stub import pilot_list
+from aoa import cli
+from aoa.emulation.emu import Emu, HEAP, SCRATCH, STUBS, STOP
+from aoa.analysis.pe_util import PE
+from aoa.host.server import pilot_list
 
 
 def check(pe, name, current):
@@ -65,7 +64,7 @@ def check(pe, name, current):
 
 
 def main(argv=None):
-    ap = cli_util.parser(__doc__)
+    ap = cli.parser(__doc__)
     ap.add_argument("source", help="pristine 2.9.2 client (AOACLIENT.EXE.orig)")
     ap.add_argument("output", help="JSON report to write")
     a = ap.parse_args(argv)
@@ -83,4 +82,4 @@ def main(argv=None):
 
 
 if __name__ == "__main__":
-    sys.exit(cli_util.run(main))
+    sys.exit(cli.run(main))

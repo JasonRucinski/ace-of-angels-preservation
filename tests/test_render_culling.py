@@ -1,16 +1,13 @@
 """Regression tests for the actual offline culling machine-code patch."""
-import sys
 import unittest
-from pathlib import Path
 
-sys.path.insert(0,str(Path(__file__).resolve().parent))
-from audit_render_pipeline import run
-import render_culling_experiment as patch
-import render_clock_experiment as clock
-import prepare_client
-import online_terrain
+from aoa.emulation.render_pipeline import run
+from aoa.client.experiments import render_culling_experiment as patch
+from aoa.client.experiments import render_clock_experiment as clock
+from aoa.client import prepare
+from aoa.client.patches import online_terrain
 
-ROOT = Path(__file__).resolve().parents[1]
+from aoa.paths import ROOT
 
 
 class CullingTests(unittest.TestCase):
@@ -53,7 +50,7 @@ class CullingTests(unittest.TestCase):
     def test_exact_undo_bounds_and_rejection(self):
         # The offline experiment predates online terrain (cave 0x58B800) and the
         # promoted patches it shares sites with; test it on that older layout.
-        prepared = online_terrain.configure(prepare_client.configure(
+        prepared = online_terrain.configure(prepare.configure(
             self.source.read_bytes(), smooth_frame_clock=False, bounded_visibility=False), False)
         for source in (prepared,clock.configure(prepared)):
             result = patch.configure(source)

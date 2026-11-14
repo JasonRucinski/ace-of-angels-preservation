@@ -13,21 +13,21 @@ import time
 import unittest
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import aoanet
-import decode_trn
-import station_stub as stub
-from test_station_stub import request
+from aoa.protocol import codec
+from aoa.formats import trn
+from aoa.host import server as stub
+from tests.test_station_stub import request
+from aoa import paths
 
 
 def record(kind, position=(0.0, 0.0, 0.0), half=0.0, value=0):
     """One 540-byte 2.9.2 terrain record with the fields ReadInTerrain passes on."""
-    r = bytearray(decode_trn.REC_292)
+    r = bytearray(trn.REC_292)
     struct.pack_into("<3f", r, 0xC4, *position)
     struct.pack_into("<f", r, 0x104, half)
     struct.pack_into("<I", r, 0x194, value)
     struct.pack_into("<I", r, 0x200, kind)
-    struct.pack_into("<I", r, decode_trn.REC_292 - 4, decode_trn.SENTINEL)
+    struct.pack_into("<I", r, trn.REC_292 - 4, trn.SENTINEL)
     return bytes(r)
 
 
@@ -43,20 +43,20 @@ ZONES = terrain(record(0, (9.0, 9.0, 9.0)),                      # A static mode
 
 class ZoneTests(unittest.TestCase):
     def test_reads_only_kind_6_records(self):
-        zones = decode_trn.powerup_zones_292(ZONES)
+        zones = trn.powerup_zones_292(ZONES)
         self.assertEqual([(z["type"], z["half"]) for z in zones], [(3, 500.0), (0, 1000.0)])
         self.assertEqual(zones[0]["position"], (1000.0, -2000.0, 30000.0))
 
     def test_rejects_truncated_or_unsentineled_files(self):
         with self.assertRaises(ValueError):
-            decode_trn.powerup_zones_292(ZONES[:-1])
+            trn.powerup_zones_292(ZONES[:-1])
         with self.assertRaises(ValueError):
-            decode_trn.powerup_zones_292(terrain(record(6)[:-4] + bytes(4)))
+            trn.powerup_zones_292(terrain(record(6)[:-4] + bytes(4)))
 
 
 class LedgerTests(unittest.TestCase):
     def setUp(self):
-        self.zones = decode_trn.powerup_zones_292(ZONES)
+        self.zones = trn.powerup_zones_292(ZONES)
         self.powerups = stub.PowerUps(self.zones, random.Random(7))
 
     def test_spawn_layout_matches_the_2_7_1_sender(self):
@@ -111,7 +111,7 @@ class RelayTests(unittest.TestCase):
                 probe.bind(("127.0.0.1", 0))
                 endpoint = probe.getsockname()
             process = subprocess.Popen(
-                [sys.executable, "-I", str(Path(stub.__file__)), str(folder / "key"), str(folder / "log"),
+                [sys.executable, "-I", str(paths.entry("station_stub")), str(folder / "key"), str(folder / "log"),
                  "--port", "0", "--arena", "--arena-port", str(endpoint[1]), "--ack", "--experimental-relay",
                  "--powerup-zones", str(folder / "zones.trn"), "--peer-timeout", "8", "--seconds", "20"],
                 stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -119,7 +119,7 @@ class RelayTests(unittest.TestCase):
             messages = {p: [] for p in peers}
 
             def send(peer, kind, body):
-                peer.sendto(aoanet.encode(kind, body, key), endpoint)
+                peer.sendto(codec.encode(kind, body, key), endpoint)
 
             def pump(duration):
                 until = time.monotonic() + duration
@@ -127,7 +127,7 @@ class RelayTests(unittest.TestCase):
                     ready, _, _ = select.select(peers, [], [], min(0.05, max(0, until - time.monotonic())))
                     for peer in ready:
                         try:
-                            message = aoanet.decode(peer.recv(512), key)
+                            message = codec.decode(peer.recv(512), key)
                         except ConnectionResetError:
                             continue
                         if message["type"] == 8:

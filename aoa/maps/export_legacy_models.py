@@ -10,14 +10,13 @@ from pathlib import Path
 import struct
 import sys
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import cli_util  # noqa: E402
-import gob2obj  # noqa: E402
+from aoa import cli  # noqa: E402
+from aoa.formats import gob  # noqa: E402
 
 
 def parse(data):
     meshes = []
-    for _, at, name in gob2obj.strings(data):
+    for _, at, name in gob.strings(data):
         if at + 8 > len(data):
             continue
         nv, nf = struct.unpack_from('<II', data, at)
@@ -25,7 +24,7 @@ def parse(data):
         end = faces_at + nf * 36
         if not (3 <= nv <= 65535 and 1 <= nf <= 65535 and end + 8 <= len(data)):
             continue
-        if data[end + 4:end + 8] != gob2obj.TAG:
+        if data[end + 4:end + 8] != gob.TAG:
             continue
         verts = [struct.unpack_from('<8f', data, at + 8 + i * 32) for i in range(nv)]
         if not all(math.isfinite(x) for v in verts for x in v):
@@ -43,7 +42,7 @@ def parse(data):
 
 
 def main(argv=None):
-    ap = cli_util.parser(__doc__)
+    ap = cli.parser(__doc__)
     ap.add_argument('src', type=Path, help='exported AOAOBJECTS folder of a 2.0.0 or 2.7.1 build')
     ap.add_argument('out', type=Path, help='folder to write OBJ files and _legacy_report.json to')
     a = ap.parse_args(argv)
@@ -56,7 +55,7 @@ def main(argv=None):
         row = {'file': path.name, 'meshes': []}
         for i, mesh in enumerate(parse(path.read_bytes())):
             stem = f'{path.stem}_{i}'
-            gob2obj.write_obj(mesh, stem, out, None)
+            gob.write_obj(mesh, stem, out, None)
             row['meshes'].append({'obj': stem + '.obj', 'vertices': len(mesh['verts']),
                                   'faces': len(mesh['faces']), 'offset': mesh['offset'],
                                   'end': mesh['end'], 'material': mesh['name']})
@@ -67,4 +66,4 @@ def main(argv=None):
 
 
 if __name__ == '__main__':
-    sys.exit(cli_util.run(main))
+    sys.exit(cli.run(main))

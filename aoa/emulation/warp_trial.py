@@ -6,13 +6,10 @@ substitutes; no renderer, Windows UI, model loading or live game is simulated.
 """
 import hashlib
 import struct
-import sys
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-from emulate_codec import Emu, HEAP, STACK, SCRATCH, STUBS, STOP
-from patch_client import PRISTINE_292
-from pe_util import PE
+from aoa.emulation.emu import Emu, HEAP, STACK, SCRATCH, STUBS, STOP
+from aoa.client.base import PRISTINE_292
+from aoa.analysis.pe_util import PE
 from unicorn import UC_HOOK_CODE
 from unicorn.x86_const import (UC_X86_REG_EAX, UC_X86_REG_EBP, UC_X86_REG_EBX,
                                UC_X86_REG_EDI, UC_X86_REG_ESI,

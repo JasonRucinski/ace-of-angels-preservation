@@ -15,13 +15,13 @@ import struct
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import cli_util
-from emulate_codec import Emu, SCRATCH, STUBS, STOP
-from patch_client import PRISTINE_292
-from pe_util import PE
+from aoa import cli
+from aoa.emulation.emu import Emu, SCRATCH, STUBS, STOP
+from aoa.client.base import PRISTINE_292
+from aoa.analysis.pe_util import PE
 from unicorn import UC_HOOK_CODE
 from unicorn.x86_const import UC_X86_REG_EIP, UC_X86_REG_FPCW, UC_X86_REG_ESP
+from aoa.paths import ROOT
 
 
 def matrix(angle=0, position=(0, 0, 0)):
@@ -44,7 +44,7 @@ def run(source, corrected=False, fpcw=0x7F, patch=None):
     center_visible = True
     if corrected:
         if patch is None:
-            import render_culling_experiment as patch
+            from aoa.client.experiments import render_culling_experiment as patch
         center_visible = getattr(patch, 'CENTER_VISIBLE', True)
         for offset, old, new in patch.regions():
             emu.write(offset+0x400000,new)
@@ -246,7 +246,7 @@ def run(source, corrected=False, fpcw=0x7F, patch=None):
              'view_builder':(0x569880,0x569A00),'primitive_dispatch':(0x562210,0x5622DE),
              'state_wrapper':(0x566DF0,0x566F04),'flip':(0x556220,0x55627C)}
     comparisons = []
-    root = Path(__file__).resolve().parents[1]
+    root = ROOT
     for relative in ('game/offline-baseline-2.9.2/AOACLIENT.EXE','game/2.9.2/AOACLIENT.EXE'):
         path = root/relative
         if path.exists():
@@ -281,9 +281,9 @@ def run(source, corrected=False, fpcw=0x7F, patch=None):
 
 
 def main(argv=None):
-    ap = cli_util.parser(__doc__)
+    ap = cli.parser(__doc__)
     ap.add_argument('output', type=Path, help='JSON report to write')
-    ap.add_argument('--source', type=Path, default=cli_util.ROOT/'game/2.9.2/AOACLIENT.EXE.orig',
+    ap.add_argument('--source', type=Path, default=cli.ROOT/'game/2.9.2/AOACLIENT.EXE.orig',
                     help='pristine 2.9.2 client (default: %(default)s)')
     a = ap.parse_args(argv)
     report = run(a.source)
@@ -294,4 +294,4 @@ def main(argv=None):
 
 
 if __name__ == '__main__':
-    sys.exit(cli_util.run(main))
+    sys.exit(cli.run(main))

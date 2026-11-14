@@ -8,13 +8,12 @@ import json
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import cli_util  # noqa: E402
-from pe_util import PE  # noqa: E402
+from aoa import cli  # noqa: E402
+from aoa.analysis.pe_util import PE  # noqa: E402
 
 
 def main(argv=None):
-    ap = cli_util.parser(__doc__)
+    ap = cli.parser(__doc__)
     ap.add_argument("client", help="executable to describe")
     ap.add_argument("out", help="JSON file to write")
     a = ap.parse_args(argv)
@@ -59,4 +58,4 @@ def main(argv=None):
 
 
 if __name__ == "__main__":
-    sys.exit(cli_util.run(main))
+    sys.exit(cli.run(main))

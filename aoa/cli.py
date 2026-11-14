@@ -13,7 +13,7 @@ import argparse
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+from aoa.paths import ROOT
 WORK = ROOT / "work"
 
 

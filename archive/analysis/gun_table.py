@@ -15,9 +15,8 @@ import struct
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import cli_util  # noqa: E402
-from pe_util import PE  # noqa: E402
+from aoa import cli  # noqa: E402
+from aoa.analysis.pe_util import PE  # noqa: E402
 
 PRISTINE_292 = "4b6c35e2b3ab473bd98c0afa6538079ee78678d85c28406c07bc27a08cc78c7e"
 BASE, STRIDE = 0x5D62CC, 36
@@ -31,7 +30,7 @@ FIELDS = ((0x00, "<H", "obj+0x120"), (0x02, "<H", "obj+0x122"), (0x04, "<H", "ob
 
 
 def main(argv=None):
-    ap = cli_util.parser(__doc__)
+    ap = cli.parser(__doc__)
     ap.add_argument("exe", type=Path, help="pristine 2.9.2 client")
     ap.add_argument("out", type=Path, help="JSON file to write")
     a = ap.parse_args(argv)
@@ -52,4 +51,4 @@ def main(argv=None):
 
 
 if __name__ == "__main__":
-    sys.exit(cli_util.run(main))
+    sys.exit(cli.run(main))

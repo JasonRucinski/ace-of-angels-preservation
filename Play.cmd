@@ -1,6 +1,6 @@
 @echo off
 rem Double-click to choose client visuals and play Ace of Angels.
-cd /d "%~dp0.."
+cd /d "%~dp0"
 if not exist ".venv\Scripts\python.exe" (
   echo Missing project Python environment: .venv\Scripts\python.exe
   echo Create it as docs\play.md describes: py -3.12 -m venv .venv

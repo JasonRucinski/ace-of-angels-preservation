@@ -46,14 +46,14 @@ import subprocess
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import decode_trn  # noqa: E402
-import online_terrain  # noqa: E402
+from aoa.formats import trn as formats_trn  # noqa: E402
+from aoa.client.patches import online_terrain  # noqa: E402
 
-ROOT = Path(__file__).resolve().parents[1]
+from aoa.paths import ROOT
+from aoa import paths
 SLOT_MAP = "JRMAP"
 SLOT_FILE = online_terrain.MAPS[online_terrain.MAP_NAMES.index(SLOT_MAP)][2]
-KIND_MODEL, KIND_SAFE, KIND_NAV, KIND_POWERUP = 0, 2, 3, decode_trn.KIND_POWERUP_ZONE
+KIND_MODEL, KIND_SAFE, KIND_NAV, KIND_POWERUP = 0, 2, 3, formats_trn.KIND_POWERUP_ZONE
 NAME_MAX = 23  # 24-byte field with its NUL
 NAV_MAX = 10  # navigation_buoys.py slots 90..99
 COPY_SKIP = ("Logs", "Capture Images")
@@ -97,7 +97,7 @@ def record(entry, index=0):
     pos = _finite(entry.get("pos"), 3, what + " pos")
     yaw, pitch, roll = _finite(entry.get("rot", [0, 0, 0]), 3, what + " rot")
     name = _name(entry.get("name", "---"), what + " name")
-    r = bytearray(decode_trn.REC_292)
+    r = bytearray(formats_trn.REC_292)
     x_axis, y_axis, z_axis = rotation(yaw, pitch, roll)
     struct.pack_into("<9f", r, 0x98, *x_axis, *z_axis, *y_axis)
     struct.pack_into("<3f", r, 0xC4, *pos)
@@ -107,13 +107,13 @@ def record(entry, index=0):
         # Kind 3, as JRMAP's buoys; the server sends it (see module notes)
         # in LoadObject, whose name fields are ASCII.
         name = _name(entry["nav"], what + " nav", "ascii")
-        database, obj, kind, x_field = (decode_trn.DATABASE, _name(entry.get("object", "Buoy"), what + " object", "ascii"),
+        database, obj, kind, x_field = (formats_trn.DATABASE, _name(entry.get("object", "Buoy"), what + " object", "ascii"),
                                         KIND_NAV, pos[0])
     elif zone is None:
         obj = entry.get("object")
         if not isinstance(obj, str) or not obj:
             raise ValueError(f"{what}: needs an ODB object or a zone")
-        database, obj, kind, x_field = decode_trn.DATABASE, _name(obj, what + " object"), KIND_MODEL, pos[0]
+        database, obj, kind, x_field = formats_trn.DATABASE, _name(obj, what + " object"), KIND_MODEL, pos[0]
     elif zone in ("safe", "powerup"):
         half = entry.get("half")
         if not (isinstance(half, (int, float)) and math.isfinite(half) and half > 0):
@@ -121,7 +121,7 @@ def record(entry, index=0):
         x_field = float(half)
         if zone == "safe":
             # Named like the layout path's safe zone so AddTerrainObject keeps it.
-            database, obj, kind = decode_trn.DATABASE, decode_trn.SAFE_ZONE_OBJECT, KIND_SAFE
+            database, obj, kind = formats_trn.DATABASE, formats_trn.SAFE_ZONE_OBJECT, KIND_SAFE
         else:
             ptype = entry.get("type")
             if ptype not in range(5):
@@ -138,7 +138,7 @@ def record(entry, index=0):
     struct.pack_into("<I", r, 0x200, kind)
     if kind in (KIND_MODEL, KIND_SAFE):
         struct.pack_into("<I", r, 0x204, 4)
-    struct.pack_into("<I", r, decode_trn.REC_292 - 4, decode_trn.SENTINEL)
+    struct.pack_into("<I", r, formats_trn.REC_292 - 4, formats_trn.SENTINEL)
     return bytes(r)
 
 
@@ -164,14 +164,14 @@ def build(spec):
 def parse(data):
     """The fields the 2.9.2 reader passes on, for checks and previews."""
     count = struct.unpack_from("<I", data, 0)[0]
-    if len(data) != 4 + count * decode_trn.REC_292:
-        raise ValueError(f"{count} records need {4 + count * decode_trn.REC_292} bytes, file has {len(data)}")
+    if len(data) != 4 + count * formats_trn.REC_292:
+        raise ValueError(f"{count} records need {4 + count * formats_trn.REC_292} bytes, file has {len(data)}")
     out = []
     for i in range(count):
-        r = data[4 + i * decode_trn.REC_292:4 + (i + 1) * decode_trn.REC_292]
-        if struct.unpack_from("<I", r, decode_trn.REC_292 - 4)[0] != decode_trn.SENTINEL:
+        r = data[4 + i * formats_trn.REC_292:4 + (i + 1) * formats_trn.REC_292]
+        if struct.unpack_from("<I", r, formats_trn.REC_292 - 4)[0] != formats_trn.SENTINEL:
             raise ValueError(f"record {i}: missing sentinel")
-        out.append({"object": decode_trn.cstr(r[0x40:0x80]), "name": decode_trn.cstr(r[0x80:0x98]),
+        out.append({"object": formats_trn.cstr(r[0x40:0x80]), "name": formats_trn.cstr(r[0x80:0x98]),
                     "x_axis": struct.unpack_from("<3f", r, 0x98), "z_axis": struct.unpack_from("<3f", r, 0xA4),
                     "position": struct.unpack_from("<3f", r, 0xC4), "half": struct.unpack_from("<f", r, 0x104)[0],
                     "type": struct.unpack_from("<I", r, 0x194)[0], "kind": struct.unpack_from("<I", r, 0x200)[0]})
@@ -180,7 +180,7 @@ def parse(data):
 
 def odb_objects(client_dir):
     """Lower-case object names with a .Sco config in the client's object database."""
-    import aoapack
+    from aoa.formats import aoapack
     exe = client_dir / "AOACLIENT.EXE"
     _, _, _, entries = aoapack.read_archive(client_dir / "AOAOBJECTS.ODB", aoapack.builtin_key(exe))
     return {e["name"][:-4].lower() for e in entries if e["name"].lower().endswith(".sco")}
@@ -235,7 +235,7 @@ def serve(spec, client, seconds=0):
         raise SystemExit(f"{trn} is not this spec; run install first")
     log = ROOT / "work/custom-map" / f"{spec['name']}.jsonl"
     log.parent.mkdir(parents=True, exist_ok=True)
-    command = [sys.executable, "-I", str(ROOT / "tools/station_stub.py"), str(client / "SCRTY.BIN"), str(log),
+    command = [sys.executable, "-I", str(paths.entry("station_stub", ROOT)), str(client / "SCRTY.BIN"), str(log),
                "--profile", "local-relay", "--map", SLOT_MAP, "--backdrop", spec.get("backdrop", "spacebkgd3"),
                "--experimental-terrain", "--spawn-at", *map(str, spec["spawn"])]
     if any(e.get("zone") == "powerup" for e in spec["objects"]):
@@ -251,12 +251,12 @@ def serve(spec, client, seconds=0):
 def export_obj(spec, src, out_dir, tex_dir=None):
     """Preview geometry like scene2obj: each model's most detailed mesh, placed
     with the same rows the client reads. Zones are listed, not drawn."""
-    import scene2obj
-    objects, cache = scene2obj.sco_models(src), {}
+    from aoa.formats import scene
+    objects, cache = scene.sco_models(src), {}
     lines, mtl, vbase, placed = [f"# custom map {spec['name']}", f"mtllib {spec['name']}.mtl"], {}, 1, []
     for i, rec in enumerate(parse(build(spec))):
         model = objects.get(rec["object"].lower()) if rec["kind"] == KIND_MODEL else None
-        mesh = scene2obj.best_mesh(src, model["gob"], cache) if model else None
+        mesh = scene.best_mesh(src, model["gob"], cache) if model else None
         placed.append({"index": i, "object": rec["object"], "name": rec["name"], "kind": rec["kind"],
                        "position": [round(v, 1) for v in rec["position"]], "drawn": bool(mesh),
                        "radius": round(max(math.sqrt(x * x + y * y + z * z) for x, y, z, *_ in mesh["verts"]))

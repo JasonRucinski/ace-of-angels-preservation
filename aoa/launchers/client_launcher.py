@@ -10,15 +10,13 @@ import io
 import json
 import os
 import subprocess
-import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import install_wrapper
-import prepare_client as setup
-import texture_pack
+from aoa.client import install_wrapper
+from aoa.client import prepare as setup
+from aoa.client import texture_pack
 
-ROOT = Path(__file__).resolve().parents[1]
+from aoa.paths import ROOT
 DEFAULT_GAME = ROOT / "game/2.9.2"
 PACK_CACHE = "_launcher_texture_pack.json"
 PACK_SUFFIX = ".launcher-texture-pack"

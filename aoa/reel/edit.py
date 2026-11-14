@@ -29,7 +29,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2]
+from aoa.paths import ROOT
 W, H, FPS = 1920, 1080, 60
 FONTS = {"title": "bahnschrift.ttf", "body": "segoeui.ttf", "bold": "segoeuib.ttf", "heavy": "seguibl.ttf"}
 CUT = 2 / FPS

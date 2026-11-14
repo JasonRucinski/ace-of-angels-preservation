@@ -15,9 +15,8 @@ from pathlib import Path
 import sys
 import zipfile
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import aoapack
-import cli_util
+from aoa.formats import aoapack
+from aoa import cli
 
 ROOT = Path('work/asset-review')
 COMMITTED = 'evidence/asset-review'
@@ -28,13 +27,13 @@ def sha(data):
 
 
 def main(argv=None):
-    ap = cli_util.parser(__doc__)
-    cli_util.add_evidence_option(ap, COMMITTED)
+    ap = cli.parser(__doc__)
+    cli.add_evidence_option(ap, COMMITTED)
     a = ap.parse_args(argv)
-    EVIDENCE = a.evidence.resolve() if a.evidence else cli_util.WORK / COMMITTED
+    EVIDENCE = a.evidence.resolve() if a.evidence else cli.WORK / COMMITTED
     # The reports record repo-relative paths (and other tools read them back
     # that way), so work from the repository root.
-    os.chdir(cli_util.ROOT)
+    os.chdir(cli.ROOT)
     manifest = json.loads(Path('manifest/downloads.json').read_text())['downloads']
     key = aoapack.builtin_key('work/2.7.1/members/15_AOACLIENT.EXE')
     EVIDENCE.mkdir(parents=True, exist_ok=True)
@@ -125,4 +124,4 @@ def main(argv=None):
 
 
 if __name__ == '__main__':
-    sys.exit(cli_util.run(main))
+    sys.exit(cli.run(main))

@@ -1,9 +1,7 @@
 """third-person-camera-v3: all three caves run in Unicorn on the prepared client image."""
 import math
 import struct
-import sys
 import unittest
-from pathlib import Path
 
 import capstone
 from unicorn import Uc, UC_ARCH_X86, UC_MODE_32, UC_HOOK_CODE
@@ -11,13 +9,13 @@ from unicorn.x86_const import (UC_X86_REG_EAX, UC_X86_REG_EBX, UC_X86_REG_ECX, U
                                UC_X86_REG_EDI, UC_X86_REG_EBP, UC_X86_REG_ESI, UC_X86_REG_ESP,
                                UC_X86_REG_EIP)
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import own_ship_menu  # noqa: E402
-import own_ship_model  # noqa: E402
-import prepare_client  # noqa: E402
-import third_person as tp  # noqa: E402
+from aoa.client.patches import own_ship_menu  # noqa: E402
+from aoa.client.patches import own_ship_model  # noqa: E402
+from aoa.client import prepare  # noqa: E402
+from aoa.client.patches import third_person as tp  # noqa: E402
+from aoa.paths import ROOT
 
-ORIGINAL = Path(__file__).resolve().parents[1] / "game/2.9.2/AOACLIENT.EXE.orig"
+ORIGINAL = ROOT / "game/2.9.2/AOACLIENT.EXE.orig"
 NODE, RECORD, GRAPHICS, STACK = 0x700000, 0x701000, 0x702000, 0x720000
 STUB_GETKEYSTATE = 0x6F0000
 
@@ -156,7 +154,7 @@ class ThirdPersonTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.raw = ORIGINAL.read_bytes()
-        cls.prepared = prepare_client.configure(cls.raw)
+        cls.prepared = prepare.configure(cls.raw)
 
     def test_off_is_the_original_camera(self):
         u, calls = machine(self.prepared, toggled=False)
@@ -326,12 +324,12 @@ class ThirdPersonTests(unittest.TestCase):
 
     def test_preparation_applies_and_undoes_exactly(self):
         on = self.prepared
-        off = prepare_client.configure(self.raw, chase_camera=False)
-        self.assertIn(tp.NAME, prepare_client.inspect(on)["patches"])
-        self.assertNotIn(tp.NAME, prepare_client.inspect(off)["patches"])
+        off = prepare.configure(self.raw, chase_camera=False)
+        self.assertIn(tp.NAME, prepare.inspect(on)["patches"])
+        self.assertNotIn(tp.NAME, prepare.inspect(off)["patches"])
         self.assertEqual(own_ship_menu.configure(own_ship_model.configure(tp.configure(on, False), False), False), off)
-        self.assertEqual(prepare_client.configure(on), on)
-        self.assertEqual(prepare_client.configure(off, chase_camera=True), on)
+        self.assertEqual(prepare.configure(on), on)
+        self.assertEqual(prepare.configure(off, chase_camera=True), on)
         allowed = {i for o, old, new in tp.regions() + own_ship_model.regions() + own_ship_menu.regions() for i in range(o, o + len(old))}
         self.assertTrue(all(i in allowed for i, (a, b) in enumerate(zip(on, off)) if a != b))
         for o, old, new in tp.regions():
@@ -350,9 +348,9 @@ class ThirdPersonTests(unittest.TestCase):
         v1 = bytes(v1)
         self.assertIs(tp.state(v1), True)
         self.assertEqual(tp.installed_name(v1), "third-person-camera-v1")
-        self.assertIn("third-person-camera-v1", prepare_client.inspect(v1)["patches"])
-        self.assertNotIn(tp.NAME, prepare_client.inspect(v1)["patches"])
-        self.assertEqual(prepare_client.configure(v1), on)
+        self.assertIn("third-person-camera-v1", prepare.inspect(v1)["patches"])
+        self.assertNotIn(tp.NAME, prepare.inspect(v1)["patches"])
+        self.assertEqual(prepare.configure(v1), on)
         self.assertEqual(tp.configure(v1, False), tp.configure(on, False))
         # So does v2 (patch version 20: orbit, same-tick cull check).
         v2 = bytearray(tp.configure(on, False))
@@ -361,8 +359,8 @@ class ThirdPersonTests(unittest.TestCase):
         v2 = bytes(v2)
         self.assertNotEqual(v2, on)
         self.assertIs(tp.state(v2), True)
-        self.assertIn("third-person-camera-v2", prepare_client.inspect(v2)["patches"])
-        self.assertEqual(prepare_client.configure(v2), on)
+        self.assertIn("third-person-camera-v2", prepare.inspect(v2)["patches"])
+        self.assertEqual(prepare.configure(v2), on)
         self.assertEqual(tp.configure(v2, False), tp.configure(on, False))
         self.assertEqual(on[tp.SITE_R - 0x400000:][:len(tp.ORIGINAL_R)][:1], b"\xe9")
         self.assertEqual(v1[tp.SITE_R - 0x400000:][:len(tp.ORIGINAL_R)], tp.ORIGINAL_R)
@@ -371,7 +369,7 @@ class ThirdPersonTests(unittest.TestCase):
                         {"experimental_station_detail": True}, {"experimental_world_detail": True},
                         {"experimental_texture32": True}):
             with self.subTest(options=options):
-                self.assertIn(tp.NAME, prepare_client.inspect(prepare_client.configure(self.raw, **options))["patches"])
+                self.assertIn(tp.NAME, prepare.inspect(prepare.configure(self.raw, **options))["patches"])
 
     def test_state_lives_in_unreferenced_data_tail(self):
         # 0x60D200/0x60D204 are the logger lock words; nothing else is past the original .data.
@@ -379,7 +377,7 @@ class ThirdPersonTests(unittest.TestCase):
         self.assertLessEqual(tp.ARMED + 4, 0x60E000)
         self.assertGreater(tp.ORBIT, own_ship_menu.RESTRICT)
         packed = [struct.pack("<I", v) for v in range(tp.FAKE, tp.ARMED + 4, 4)]
-        image = prepare_client.configure(self.raw, chase_camera=False)
+        image = prepare.configure(self.raw, chase_camera=False)
         self.assertFalse(any(p in image for p in packed))
 
 
@@ -390,7 +388,7 @@ class OwnShipModelTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.raw = ORIGINAL.read_bytes()
-        cls.prepared = prepare_client.configure(cls.raw)
+        cls.prepared = prepare.configure(cls.raw)
 
     def attaches(self, image, is_self, graphics_active=True):
         u = Uc(UC_ARCH_X86, UC_MODE_32)
@@ -432,18 +430,18 @@ class OwnShipModelTests(unittest.TestCase):
         self.assertEqual(self.attaches(self.prepared, 1, graphics_active=False), [])
 
     def test_follows_the_third_person_option(self):
-        off = prepare_client.configure(self.raw, chase_camera=False)
-        self.assertIn(own_ship_model.NAME, prepare_client.inspect(self.prepared)["patches"])
-        self.assertNotIn(own_ship_model.NAME, prepare_client.inspect(off)["patches"])
+        off = prepare.configure(self.raw, chase_camera=False)
+        self.assertIn(own_ship_model.NAME, prepare.inspect(self.prepared)["patches"])
+        self.assertNotIn(own_ship_model.NAME, prepare.inspect(off)["patches"])
         self.assertEqual(own_ship_menu.configure(own_ship_model.configure(tp.configure(self.prepared, False), False), False), off)
         # A client prepared at patch version 15 (camera, no model) upgrades in place.
         v15 = own_ship_menu.configure(own_ship_model.configure(self.prepared, False), False)
-        self.assertEqual(prepare_client.configure(v15), self.prepared)
+        self.assertEqual(prepare.configure(v15), self.prepared)
         for o, old, new in own_ship_model.regions():
             bad = bytearray(self.prepared)
             bad[o] ^= 0xFF
             with self.assertRaises(ValueError):
-                prepare_client.inspect(bytes(bad))
+                prepare.inspect(bytes(bad))
             partial = bytearray(self.prepared)
             partial[o:o + len(old)] = old
             with self.assertRaises(ValueError):
@@ -476,7 +474,7 @@ class OwnShipMenuTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.raw = ORIGINAL.read_bytes()
-        cls.prepared = prepare_client.configure(cls.raw)
+        cls.prepared = prepare.configure(cls.raw)
 
     def machine(self, image, chase):
         u = Uc(UC_ARCH_X86, UC_MODE_32)
@@ -536,17 +534,17 @@ class OwnShipMenuTests(unittest.TestCase):
                     self.assertFalse(self.instance_drawn(self.prepared, 1, chase, own, drawable=False))
 
     def test_prepare_applies_upgrades_and_rejects_partial(self):
-        self.assertIn(own_ship_menu.NAME, prepare_client.inspect(self.prepared)["patches"])
+        self.assertIn(own_ship_menu.NAME, prepare.inspect(self.prepared)["patches"])
         v16 = own_ship_menu.configure(self.prepared, False)
-        self.assertEqual(prepare_client.configure(v16), self.prepared)
+        self.assertEqual(prepare.configure(v16), self.prepared)
         # A client prepared with the first cave (no +0x245 restore) upgrades in place.
         first = bytearray(v16)
         for o, old, new in own_ship_menu.regions(legacy=True):
             first[o:o + len(old)] = new
         self.assertIs(own_ship_menu.state(bytes(first)), True)
-        self.assertIn(own_ship_menu.LEGACY_NAME, prepare_client.inspect(bytes(first))["patches"])
-        self.assertNotIn(own_ship_menu.NAME, prepare_client.inspect(bytes(first))["patches"])
-        self.assertEqual(prepare_client.configure(bytes(first)), self.prepared)
+        self.assertIn(own_ship_menu.LEGACY_NAME, prepare.inspect(bytes(first))["patches"])
+        self.assertNotIn(own_ship_menu.NAME, prepare.inspect(bytes(first))["patches"])
+        self.assertEqual(prepare.configure(bytes(first)), self.prepared)
         self.assertEqual(own_ship_menu.configure(bytes(first), False), v16)
         for o, old, new in own_ship_menu.regions():
             partial = bytearray(self.prepared)

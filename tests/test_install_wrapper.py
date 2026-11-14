@@ -3,16 +3,14 @@ import contextlib
 import hashlib
 import io
 import json
-import sys
 import tempfile
 import unittest
 import zipfile
 from pathlib import Path
 from unittest.mock import patch
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import install_wrapper  # noqa: E402
-import make_install  # noqa: E402
+from aoa.client import install_wrapper  # noqa: E402
+from aoa.client import make_install  # noqa: E402
 
 CONF = ("Version = 0x287\r\n\r\n[General]\r\nFullScreenMode = true\r\nCenterAppWindow = false\r\n\r\n"
         "[DirectX]\r\nAntialiasing = appdriven\r\nFiltering = appdriven\r\ndgVoodooWatermark = true\r\n"

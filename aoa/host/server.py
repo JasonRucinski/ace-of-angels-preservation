@@ -52,19 +52,18 @@ from collections import OrderedDict, deque
 from contextlib import ExitStack
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import aoanet  # noqa: E402
-import host_ops
-import relay_motion
-from net_impair import Impairment, MeteredSocket, TrafficMeter
-from reliable_window import WindowedReliable
-import online_terrain
-import decode_trn
-import vessel_combat
-import navigation_buoys
-import turret_trial
-import warp_trial
-from station_runtime import (DEFAULT_VESSEL, SELECTABLE_VESSELS, DatagramBudget, EventLog,
+from aoa.protocol import codec  # noqa: E402
+from aoa.host import ops
+from aoa.protocol import motion as protocol_motion
+from aoa.host.net_impair import Impairment, MeteredSocket, TrafficMeter
+from aoa.host.delivery import WindowedReliable
+from aoa.client.patches import online_terrain
+from aoa.formats import trn
+from aoa.host import vessel_combat
+from aoa.maps import navigation
+from aoa.host import turret_trial
+from aoa.host import warp_trial
+from aoa.host.runtime import (DEFAULT_VESSEL, SELECTABLE_VESSELS, DatagramBudget, EventLog,
                              StationTCPServer, parse_args)
 
 NUL = bytes(1)
@@ -1007,12 +1006,12 @@ def movement_update(payload, slot):
     if len(payload) < 8 + size:
         return None
     end = 8 + size
-    if raw_mask & relay_motion.GUN_STATE:
+    if raw_mask & protocol_motion.GUN_STATE:
         # The per-gun fire state directly follows the prefix. Keep it only
         # when well formed with bounded indexes; otherwise drop the block.
         try:
-            end = relay_motion.gun_state(payload, end)[1]
-            mask |= relay_motion.GUN_STATE
+            end = protocol_motion.gun_state(payload, end)[1]
+            mask |= protocol_motion.GUN_STATE
         except ValueError:
             pass
     return struct.pack("<HHI", trip, slot, mask) + payload[8:end]
@@ -1053,7 +1052,7 @@ def tcp_reply(job, bodies=None):
     """u32 length + CCompress body (CClientComm::TCPRead 0x435930 decompresses
     with the routine matching 2.7.1 CCompress::Decompress). Length 0 skips the
     job handler and only releases the client's transfer lock."""
-    import aoapack
+    from aoa.formats import aoapack
     body = (TCP_JOB_BODIES if bodies is None else bodies).get(job)
     if body is None:
         return (0).to_bytes(4, "little")
@@ -1082,12 +1081,12 @@ def load_objects(args):
     warp_gates = warp_trial.placements(args.warp_trial) if args.warp_trial else []
     warp = warp_trial.loads(warp_gates)
     trial = turret_trial.loads(turret_trial.placements(args.turret_trial)) if args.turret_trial else []
-    buoys = navigation_buoys.loads(navigation_buoys.placements(args.arena1a_buoys)) if args.arena1a_buoys else []
+    buoys = navigation.loads(navigation.placements(args.arena1a_buoys)) if args.arena1a_buoys else []
     if args.navigation_buoys:
-        buoys = navigation_buoys.loads(navigation_buoys.map_placements(
+        buoys = navigation.loads(navigation.map_placements(
             args.navigation_buoys, args.map, args.buoy_trn or args.key.parent / 'JRMAP.TRN'))
     if args.map_waypoints:
-        buoys = navigation_buoys.loads(navigation_buoys.trn_placements(args.map_waypoints.read_bytes()))
+        buoys = navigation.loads(navigation.trn_placements(args.map_waypoints.read_bytes()))
     return warp_gates, warp, trial, buoys
 
 
@@ -1203,7 +1202,7 @@ def run(args, key, log, resources, objects=None):
     missiles = MissileLedger(map(TargetShips.tag, targets.ships) if targets is not None else ())
     powerups = None
     if args.powerup_zones is not None:
-        powerups = PowerUps(decode_trn.powerup_zones_292(args.powerup_zones.read_bytes()))
+        powerups = PowerUps(trn.powerup_zones_292(args.powerup_zones.read_bytes()))
         print(f"power-ups: {len(powerups.items)} from {args.powerup_zones.name}", flush=True)
     match = Match(args.kill_limit, args.time_limit)
     resources.callback(lambda: print("kills=" + json.dumps(deaths.kills) + " deaths=" + json.dumps(deaths.deaths),
@@ -1215,7 +1214,7 @@ def run(args, key, log, resources, objects=None):
     started = time.monotonic()
     status_due = started
     traffic_mark = {}  # addr -> (time, rx_bytes, tx_bytes) at the previous status
-    console = host_ops.Console(sys.stdin) if args.console else None
+    console = ops.Console(sys.stdin) if args.console else None
     REJOIN_SILENCE = 5.0
     overflowed = set()  # peers whose reliable queue overflowed, departed next pass
     restart_reason, restart_due = None, None
@@ -1323,7 +1322,7 @@ def run(args, key, log, resources, objects=None):
                 depart(peer, "essential event history exhausted")
                 return
         if packet:
-            arena.sendto(aoanet.encode(*packet, key), peer)
+            arena.sendto(codec.encode(*packet, key), peer)
 
     def destroy_targets(destroyed, shooter):
         """Announce target ships the server destroyed to every loaded player."""
@@ -1341,7 +1340,7 @@ def run(args, key, log, resources, objects=None):
         wrapped. Without sustained delivery this stays best effort.
         """
         if not args.sustained_delivery:
-            arena.sendto(aoanet.encode(*packet, key), peer)
+            arena.sendto(codec.encode(*packet, key), peer)
             return
         if peer not in arena_connections:
             return
@@ -1349,7 +1348,7 @@ def run(args, key, log, resources, objects=None):
         if queued is None:
             overflowed.add(peer)  # Callers may be iterating arena state.
         elif queued:
-            arena.sendto(aoanet.encode(*queued, key), peer)
+            arena.sendto(codec.encode(*queued, key), peer)
 
     refresh_server_list()
 
@@ -1383,7 +1382,7 @@ def run(args, key, log, resources, objects=None):
                 if packet is None:
                     failed.append(observer)
                 elif packet:
-                    arena.sendto(aoanet.encode(*packet, key), observer)
+                    arena.sendto(codec.encode(*packet, key), observer)
             for observer in failed:
                 depart(observer, "reliable removal history exhausted")
         refresh_server_list()
@@ -1440,7 +1439,7 @@ def run(args, key, log, resources, objects=None):
         peer = next((peer for peer, taken in arena_players.items() if taken == slot), None)
         if peer is None:
             return f"no arena player in slot {slot}"
-        arena.sendto(aoanet.encode(*arena_message("You were removed by the host"), key), peer)
+        arena.sendto(codec.encode(*arena_message("You were removed by the host"), key), peer)
         if ban:
             banned_ips.add(peer[0])
         depart(peer, "banned by host" if ban else "kicked by host")
@@ -1449,13 +1448,13 @@ def run(args, key, log, resources, objects=None):
         return f"{'banned' if ban else 'kicked'} slot {slot}"
 
     def run_command(line, now):
-        command, value = host_ops.parse_command(line)
+        command, value = ops.parse_command(line)
         if command is None:
             return value
         if command == "help":
-            return host_ops.HELP
+            return ops.HELP
         if command == "status":
-            return host_ops.player_table(players_now(now))
+            return ops.player_table(players_now(now))
         if command == "end":
             if not arena_players or match.started is None:
                 return "no match in progress"
@@ -1464,14 +1463,14 @@ def run(args, key, log, resources, objects=None):
         if command in ("say", "quit"):
             text = value if command == "say" else "Host is shutting down"
             for peer in list(arena_players) if args.arena else []:
-                arena.sendto(aoanet.encode(*arena_message(text), key), peer)
+                arena.sendto(codec.encode(*arena_message(text), key), peer)
             log({"t": round(time.time(), 3), "event": "host_" + command})
-            return host_ops.QUIT if command == "quit" else f"said to {len(arena_players)} player(s)"
+            return ops.QUIT if command == "quit" else f"said to {len(arena_players)} player(s)"
         return remove_by_host(value, command == "ban")
 
     print(f"station stub on {args.bind_address}:{s.getsockname()[1]} (replies {'ON' if reply else 'off'})", flush=True)
     if console is not None:
-        print("Host console ready. " + host_ops.HELP, flush=True)
+        print("Host console ready. " + ops.HELP, flush=True)
     end = time.monotonic() + seconds if seconds else None
     while end is None or time.monotonic() < end:
         now = time.monotonic()
@@ -1490,7 +1489,7 @@ def run(args, key, log, resources, objects=None):
                     log({"t": round(time.time(), 3), "event": "session_restart", "reason": restart_reason,
                          "map": args.map, "next_map": args.next_map})
                     if args.status_file is not None:
-                        host_ops.write_status(args.status_file, host_status(now))
+                        ops.write_status(args.status_file, host_status(now))
                     return SESSION_COMPLETE
                 for threshold in (10, 5):
                     if threshold < args.restart_warning and restart_due - now <= threshold and threshold not in restart_notices:
@@ -1506,11 +1505,11 @@ def run(args, key, log, resources, objects=None):
                 response = run_command(line, now)
                 if response:
                     print(response, flush=True)
-                if response == host_ops.QUIT:
+                if response == ops.QUIT:
                     end = now  # leave the loop; ExitStack cleanup still runs
         if args.status_file is not None and now >= status_due:
             try:
-                host_ops.write_status(args.status_file, host_status(now))
+                ops.write_status(args.status_file, host_status(now))
             except OSError as error:
                 print(f"status file not written: {error}", flush=True)
             status_due = now + 2
@@ -1518,13 +1517,13 @@ def run(args, key, log, resources, objects=None):
             if now >= state["expiry"]:
                 station_depart(peer, "inactivity timeout")
         for peer, packet in station.pings(now):
-            s.sendto(aoanet.encode(*packet, key), peer)
+            s.sendto(codec.encode(*packet, key), peer)
         retries, failed = removals.due(time.monotonic())
         for peer in failed:
             depart(peer, "essential event unacknowledged")
         for peer, packet in retries:
             if peer in arena_connections:
-                arena.sendto(aoanet.encode(*packet, key), peer)
+                arena.sendto(codec.encode(*packet, key), peer)
         for peer, (due, step) in list(protection_probe.items()):
             if now < due or any(p == peer for p, _ in removals.pending):
                 continue
@@ -1534,7 +1533,7 @@ def run(args, key, log, resources, objects=None):
                 depart(peer, "protection probe delivery exhausted")
                 continue
             if packet:
-                arena.sendto(aoanet.encode(*packet, key), peer)
+                arena.sendto(codec.encode(*packet, key), peer)
             log({"t": round(time.time(), 3), "event": "protection_probe_step", "status": desired})
             print(f"Protection probe {step + 1}/4: state={desired}", flush=True)
             if step == 3:
@@ -1555,7 +1554,7 @@ def run(args, key, log, resources, objects=None):
             for subject, state in arena_motion.items():
                 if subject not in ping_due:
                     continue
-                packet = aoanet.encode(0x1F, relay_motion.snapshot(arena_players[subject], state,
+                packet = codec.encode(0x1F, protocol_motion.snapshot(arena_players[subject], state,
                                                                     stats=player_stats(subject)), key)
                 for observer in ping_due:
                     if observer != subject:
@@ -1581,7 +1580,7 @@ def run(args, key, log, resources, objects=None):
                                                        else None, arena_vessels.get(peer, start_vessel)), True)
                     for other, slot in arena_players.items():
                         if other != peer and other not in bootstrap_due:
-                            arena.sendto(aoanet.encode(0x1F, relay_motion.snapshot(
+                            arena.sendto(codec.encode(0x1F, protocol_motion.snapshot(
                                 slot, arena_motion[other], stats=player_stats(other)), key), peer)
                 position = arena_motion[peer][0x40] if peer in arena_motion else None
                 for packet in flight_bootstrap(position, online_terrain.marker(args.map)
@@ -1590,10 +1589,10 @@ def run(args, key, log, resources, objects=None):
                     deliver(peer, packet, True)
                 if args.experimental_teams:
                     slot = arena_players[peer]
-                    arena.sendto(aoanet.encode(*object_to_team(player_tag(slot), ffa_team(slot)), key), peer)
+                    arena.sendto(codec.encode(*object_to_team(player_tag(slot), ffa_team(slot)), key), peer)
                 if args.experimental_object:
                     rtype, rpay = scenario_test_object()
-                    arena.sendto(aoanet.encode(rtype, rpay, key), peer)
+                    arena.sendto(codec.encode(rtype, rpay, key), peer)
                 if powerups is not None:
                     for packet in powerups.spawns():
                         deliver(peer, packet, True)
@@ -1624,7 +1623,7 @@ def run(args, key, log, resources, objects=None):
                 ticks = ping_ticks.setdefault(peer, [])
                 ticks.append(rpay[:4])
                 del ticks[:-4]
-                arena.sendto(aoanet.encode(rtype, rpay, key), peer)
+                arena.sendto(codec.encode(rtype, rpay, key), peer)
                 ping_due[peer] = now + 1
         # BeginSerialLoad precedes Station dialog initialization. Wait until
         # its first server-list TCP job so the alias observer is registered.
@@ -1634,7 +1633,7 @@ def run(args, key, log, resources, objects=None):
             identity = notifications.get_nowait()
             peer = station.alias_target(identity, time.monotonic())
             if peer is not None:
-                s.sendto(aoanet.encode(0x9A, pilot_list(station.peers[peer]["pilot"]), key), peer)
+                s.sendto(codec.encode(0x9A, pilot_list(station.peers[peer]["pilot"]), key), peer)
         ready = [sock for sock in sockets if sock.has_due()]
         if not ready:
             wait = 0.5
@@ -1648,7 +1647,7 @@ def run(args, key, log, resources, objects=None):
         sockets.remove(receiver)
         sockets.append(receiver)  # Fair service when both UDP channels stay ready.
         try:
-            wire, addr = receiver.recvfrom(aoanet.MAX_WIRE + 1)
+            wire, addr = receiver.recvfrom(codec.MAX_WIRE + 1)
         except BlockingIOError:
             continue  # Held or dropped by test impairment.
         except ConnectionResetError:
@@ -1664,7 +1663,7 @@ def run(args, key, log, resources, objects=None):
         try:
             if not ingress.allow((receiver.getsockname()[1], addr), time.monotonic()):
                 continue
-            m = aoanet.decode(wire, key)
+            m = codec.decode(wire, key)
         except Exception as e:  # noqa: BLE001
             m = {"type": None, "payload": b"", "crc_ok": False, "error": repr(e)}
         rec = {"t": round(time.time(), 3), "from": f"{addr[0]}:{addr[1]}", "wire_len": len(wire),
@@ -1681,7 +1680,7 @@ def run(args, key, log, resources, objects=None):
                 if len(payload) < 5:
                     continue
                 rtype, rpay = ack_reliable(payload)
-                receiver.sendto(aoanet.encode(rtype, rpay, key), addr)
+                receiver.sendto(codec.encode(rtype, rpay, key), addr)
                 message_type, payload = payload[-1], payload[:-5]
                 if message_type == 0x1B:
                     # Only one reliable envelope is supported. Do not let a
@@ -1695,7 +1694,7 @@ def run(args, key, log, resources, objects=None):
                 if struct.unpack_from("<III", payload, 1) != (9, 2, 2):
                     # Original 2.9.2 login error switch maps result 8 to
                     # 'Incorrect version.' Do not allocate on rejection.
-                    receiver.sendto(aoanet.encode(*ack_connect(payload, kind=1 if receiver is s else 0, result=8), key), addr)
+                    receiver.sendto(codec.encode(*ack_connect(payload, kind=1 if receiver is s else 0, result=8), key), addr)
                     log({"t": round(time.time(), 3), "event": "admission_rejected", "reason": "unsupported client version"})
                     continue
             if receiver is s:
@@ -1703,7 +1702,7 @@ def run(args, key, log, resources, objects=None):
                 if message_type == 0x0A and len(payload) == 381:
                     new_session = addr not in station.peers
                     if new_session and restart_due is not None:
-                        receiver.sendto(aoanet.encode(*ack_connect(payload, result=4), key), addr)
+                        receiver.sendto(codec.encode(*ack_connect(payload, result=4), key), addr)
                         continue
                     identity = station.admit(addr, payload, now)
                     if identity is not None:
@@ -1720,9 +1719,9 @@ def run(args, key, log, resources, objects=None):
                                 station_depart(stale, "replaced by rejoin")
                         refresh_server_list()
                         name = station.peers[addr]["pilot"] if args.guest_sessions else None
-                        receiver.sendto(aoanet.encode(*ack_connect(payload, station_id=identity, pilot_name=name), key), addr)
+                        receiver.sendto(codec.encode(*ack_connect(payload, station_id=identity, pilot_name=name), key), addr)
                     elif addr not in station.peers and addr not in station.retired and station.next_id > station.CAPACITY:
-                        receiver.sendto(aoanet.encode(*ack_connect(payload, result=4), key), addr)
+                        receiver.sendto(codec.encode(*ack_connect(payload, result=4), key), addr)
                 elif message_type == 0x4E and len(payload) == 1:
                     station_depart(addr, "client quit")
                 elif message_type == 9:
@@ -1734,10 +1733,10 @@ def run(args, key, log, resources, objects=None):
                 # replacement needs an explicit departure/expiry policy first.
                 first_join = addr not in arena_connections
                 if first_join and restart_due is not None:
-                    receiver.sendto(aoanet.encode(*ack_connect(payload, kind=0, result=4), key), addr)
+                    receiver.sendto(codec.encode(*ack_connect(payload, kind=0, result=4), key), addr)
                     continue
                 if first_join and addr not in retired_endpoints and len(arena_connections) >= args.max_players:
-                    receiver.sendto(aoanet.encode(*ack_connect(payload, kind=0, result=4), key), addr)
+                    receiver.sendto(codec.encode(*ack_connect(payload, kind=0, result=4), key), addr)
                     continue
                 if first_join and (addr in retired_endpoints or
                                    len(arena_connections) + len(retired_endpoints) >= 49):
@@ -1748,7 +1747,7 @@ def run(args, key, log, resources, objects=None):
                 if args.guest_sessions:
                     owner = station.arena_owner(payload, addr, time.monotonic())
                     if owner is None:
-                        receiver.sendto(aoanet.encode(*ack_connect(payload, kind=0, result=5), key), addr)
+                        receiver.sendto(codec.encode(*ack_connect(payload, kind=0, result=5), key), addr)
                         continue
                     arena_pilots[addr] = station.peers[station.routes[owner][0]]["pilot"]
                 player_id = 1
@@ -1758,13 +1757,13 @@ def run(args, key, log, resources, objects=None):
                             continue
                         arena_players[addr] = next_player_slot
                         next_player_slot += 1
-                        arena_motion[addr] = relay_motion.initial(spawn_position(
+                        arena_motion[addr] = protocol_motion.initial(spawn_position(
                             arena_players[addr], args.spawn_axis, args.spawn_spacing, args.spawn_origin))
                     player_id = 0x80010000 | arena_players[addr]
                 arena_connections[addr] = payload
                 refresh_server_list()
                 rtype, rpay = ack_connect(payload, 0, player_id)
-                receiver.sendto(aoanet.encode(rtype, rpay, key), addr)
+                receiver.sendto(codec.encode(rtype, rpay, key), addr)
                 if first_join and (args.experimental_flight or args.experimental_relay):
                     bootstrap_due[addr] = time.monotonic() + 3
                 if first_join:
@@ -1809,34 +1808,34 @@ def run(args, key, log, resources, objects=None):
                     p = movement_update(payload, arena_players[addr])
                     if p is not None:
                         try:
-                            state, present, missing = relay_motion.update(p, arena_motion[addr])
+                            state, present, missing = protocol_motion.update(p, arena_motion[addr])
                         except (ValueError, OverflowError):
                             continue
                         arena_motion[addr] = state
                         raw_mask = struct.unpack_from("<I", payload, 4)[0]
                         # Locate the client's own stats only when the relayed
                         # prefix/gun block match the original byte layout.
-                        if not raw_mask & relay_motion.GUN_STATE or relay_motion.GUN_STATE in present:
+                        if not raw_mask & protocol_motion.GUN_STATE or protocol_motion.GUN_STATE in present:
                             try:
-                                reported = relay_motion.client_stats(payload, len(p), raw_mask)
+                                reported = protocol_motion.client_stats(payload, len(p), raw_mask)
                             except ValueError:
                                 reported = None
                             if reported is not None:
                                 arena_reported[addr] = reported
                             if targets is not None:
                                 try:
-                                    hits = relay_motion.perceived_damage(payload, len(p), raw_mask)
+                                    hits = protocol_motion.perceived_damage(payload, len(p), raw_mask)
                                 except ValueError:
                                     hits = []
                                 destroy_targets(targets.gun_hits(arena_vessels.get(addr, start_vessel), hits,
                                                                 time.monotonic()), arena_players[addr])
-                        p = relay_motion.snapshot(arena_players[addr], state, include_control=0x400 in present,
+                        p = protocol_motion.snapshot(arena_players[addr], state, include_control=0x400 in present,
                                                   stats=player_stats(addr))
                         expiry_due[addr] = time.monotonic() + peer_timeout
                         station.renew_arena(addr, expiry_due[addr])
                         for peer in arena_players:
                             if peer != addr and peer not in bootstrap_due:
-                                receiver.sendto(aoanet.encode(0x1F, p, key), peer)
+                                receiver.sendto(codec.encode(0x1F, p, key), peer)
                 elif message_type == 0xA0 and addr in arena_players and addr not in bootstrap_due:
                     change_vessel(addr, payload)
                 elif message_type == 0x44 and powerups is not None and addr in arena_players \
@@ -1869,7 +1868,7 @@ def run(args, key, log, resources, objects=None):
                     elif message_type == 0x48:
                         target = collision_target(payload, sender, loaded)
                         if target is not None:
-                            receiver.sendto(aoanet.encode(0x48, payload, key), loaded[target])
+                            receiver.sendto(codec.encode(0x48, payload, key), loaded[target])
                     else:
                         death = deaths.report(sender, payload, loaded, time.monotonic())
                         if death is not None:

@@ -35,9 +35,8 @@ import re
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import aoacrypt  # noqa: E402
-import cli_util  # noqa: E402
+from aoa.formats import aoacrypt  # noqa: E402
+from aoa import cli  # noqa: E402
 
 BUILTIN_KEY_VA = {  # per client build; located by content search in 2.9.2
     "b179c3c22e6426d55de52d57476aaa53b7e92622009daf754c5153be0b7503a7": 0x6A0128,
@@ -56,7 +55,7 @@ def builtin_key(client_path):
     """Return the built-in key: at the pinned VA for a known original client,
     otherwise at a candidate VA whose bytes match KEY_SHA256 (for example a
     2.9.2 client after prepare_client.py)."""
-    from pe_util import PE
+    from aoa.analysis.pe_util import PE
     pe = PE(client_path)
     sha = hashlib.sha256(pe.data).hexdigest()
     if sha in BUILTIN_KEY_VA:
@@ -313,7 +312,7 @@ def safe_name(i, name):
 
 
 def main(argv=None):
-    ap = cli_util.parser(__doc__)
+    ap = cli.parser(__doc__)
     sub = ap.add_subparsers(dest="cmd", required=True)
     for name, text in (("list", "print the directory and per-entry hashes"),
                        ("extract", "write every entry to a folder"),
@@ -365,4 +364,4 @@ def main(argv=None):
 
 
 if __name__ == "__main__":
-    sys.exit(cli_util.run(main))
+    sys.exit(cli.run(main))

@@ -23,12 +23,9 @@ renderer (0x43B42C) clear every frame unless the chase camera is on.
 
 Library use only (prepare_client.py composes it); no file is written here.
 """
-import sys
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-from patch_client import Asm, jmp_patch  # noqa: E402
-from third_person import CHASE_FLAG  # noqa: E402
+from aoa.client.base import Asm, jmp_patch  # noqa: E402
+from aoa.client.patches.third_person import CHASE_FLAG  # noqa: E402
 
 NAME = "own-ship-model-v1"
 MODEL_SITE = 0x44C0C5                 # jne 0x44C0D8 (skip when is_self)

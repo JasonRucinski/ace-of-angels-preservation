@@ -14,16 +14,15 @@ import struct
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import cli_util
-from emulate_codec import Emu, HEAP, STACK, STOP
-from patch_client import PRISTINE_292
-from pe_util import PE
-import scene2obj
+from aoa import cli
+from aoa.emulation.emu import Emu, HEAP, STACK, STOP
+from aoa.client.base import PRISTINE_292
+from aoa.analysis.pe_util import PE
+from aoa.formats import scene
 from unicorn import UC_HOOK_CODE
 from unicorn.x86_const import UC_X86_REG_EAX, UC_X86_REG_EBX, UC_X86_REG_EBP, UC_X86_REG_EDI, UC_X86_REG_EIP, UC_X86_REG_ESP
 
-ROOT = Path(__file__).resolve().parents[1]
+from aoa.paths import ROOT
 EVIDENCE = 'evidence/2.9.2/arena1a_rebuild_20261026.json'
 
 
@@ -77,14 +76,14 @@ def probe_gates(client):
 
 
 def main(argv=None):
-    parser = cli_util.parser(__doc__)
+    parser = cli.parser(__doc__)
     live_source = parser.add_mutually_exclusive_group()
     live_source.add_argument('--pid', type=int, help='read-only snapshot of a client already flying Arena1a')
     live_source.add_argument('--snapshot', type=Path, help='previously captured inspect_arena --objects snapshot')
-    cli_util.add_evidence_option(parser, EVIDENCE)
+    cli.add_evidence_option(parser, EVIDENCE)
     args = parser.parse_args(argv)
     source = ROOT / 'work/2.9.2/export/AOAOBJECTS'
-    nodes = list(scene2obj.expanded_nodes(source, 'Arena1a', True))
+    nodes = list(scene.expanded_nodes(source, 'Arena1a', True))
     categories = dict(collections.Counter(n['category'] for n in nodes))
     assert categories == {1: 80, 4: 10, 5: 18, 6: 9, 7: 4, 8: 1, 9: 272}
     service = [n for n in nodes if n['name'].startswith(('ZA', 'ZShield', 'ZRepair', 'ZMissile'))]
@@ -111,7 +110,7 @@ def main(argv=None):
                      'Object counts alone do not reconcile names, transforms or grouping.'],
     }
     if args.pid or args.snapshot:
-        from inspect_arena import snapshot
+        from aoa.live.arena import snapshot
         live = (snapshot(args.pid, include_objects=True) if args.pid else
                 json.loads(args.snapshot.read_text(encoding='utf-8-sig')))
         if not live['active_players'] or not live['terrain_list_complete']:
@@ -138,10 +137,10 @@ def main(argv=None):
                                'cube_home': 1, 'group_or_link_helpers': 17, 'nested_layout_reference': 1},
             'limitations': 'Read-only live snapshot; collision flag is not a collision-play test; no nodes restored yet',
         }
-    output = cli_util.evidence_target(args.evidence, EVIDENCE)
+    output = cli.evidence_target(args.evidence, EVIDENCE)
     output.write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
     print(json.dumps(report, indent=2))
 
 
 if __name__ == '__main__':
-    sys.exit(cli_util.run(main))
+    sys.exit(cli.run(main))

@@ -17,10 +17,9 @@ This module does not open sockets.
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import aoacrypt  # noqa: E402
-import aoapack  # noqa: E402
-import cli_util  # noqa: E402
+from aoa.formats import aoacrypt  # noqa: E402
+from aoa.formats import aoapack  # noqa: E402
+from aoa import cli  # noqa: E402
 
 MAX_WIRE = 0x200
 MAX_INNER = 0x200
@@ -58,7 +57,7 @@ def decode(wire: bytes, key: bytes):
 
 
 def main(argv=None):
-    ap = cli_util.parser(__doc__)
+    ap = cli.parser(__doc__)
     ap.add_argument("key", help="a 256-byte cipher table such as SCRTY.BIN; encodes and decodes one example")
     a = ap.parse_args(argv)
     key = Path(a.key).read_bytes()
@@ -67,4 +66,4 @@ def main(argv=None):
 
 
 if __name__ == "__main__":
-    sys.exit(cli_util.run(main))
+    sys.exit(cli.run(main))

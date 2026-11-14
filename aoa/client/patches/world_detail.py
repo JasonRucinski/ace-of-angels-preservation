@@ -1,11 +1,9 @@
 """Select closest authored mesh/texture variants for solid world model groups."""
 import argparse
 import json
-import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import station_detail
+from aoa.client.patches import station_detail
 
 NAME = "world-full-detail-v1"
 SITE = station_detail.SITE
@@ -52,8 +50,8 @@ def install(exe, undo=False):
     Every other option keeps its installed state; prepare's own backup and
     record (_client_setup.json) cover undo.
     """
-    import prepare_client
-    return prepare_client.prepare(exe, experimental_world_detail=not undo)
+    from aoa.client import prepare
+    return prepare.prepare(exe, experimental_world_detail=not undo)
 
 
 def main():

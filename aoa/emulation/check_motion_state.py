@@ -9,11 +9,10 @@ import struct
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import cli_util
-from emulate_codec import Emu, HEAP, SCRATCH, STOP
-from pe_util import PE
-import relay_motion as motion
+from aoa import cli
+from aoa.emulation.emu import Emu, HEAP, SCRATCH, STOP
+from aoa.analysis.pe_util import PE
+from aoa.protocol import motion
 from unicorn.x86_const import UC_X86_REG_EIP
 
 
@@ -39,7 +38,7 @@ def compare(emu, state, control=True):
 
 
 def main(argv=None):
-    ap = cli_util.parser(__doc__)
+    ap = cli.parser(__doc__)
     ap.add_argument("source", help="pristine 2.9.2 client (AOACLIENT.EXE.orig)")
     ap.add_argument("output", help="JSON report to write")
     a = ap.parse_args(argv)
@@ -100,4 +99,4 @@ def main(argv=None):
 
 
 if __name__ == "__main__":
-    sys.exit(cli_util.run(main))
+    sys.exit(cli.run(main))

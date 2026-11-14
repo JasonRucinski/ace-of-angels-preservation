@@ -15,13 +15,12 @@ import struct
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import cli_util
-from audit_turret_groups import hierarchy
-from navigation_buoys import ARENA1A_SHA256
-from patch_client import PRISTINE_292
+from aoa import cli
+from aoa.maps.turret_hierarchy import hierarchy
+from aoa.maps.navigation import ARENA1A_SHA256
+from aoa.client.base import PRISTINE_292
 
-ROOT = Path(__file__).resolve().parents[1]
+from aoa.paths import ROOT
 EVIDENCE = 'evidence/2.9.2/warp_gates_20261026.json'
 
 
@@ -46,8 +45,8 @@ def routes(nodes):
 def native_checks(client, nodes, links):
     if hashlib.sha256(client.read_bytes()).hexdigest() != PRISTINE_292:
         raise ValueError('requires the original 2.9.2 executable')
-    from pe_util import PE
-    from emulate_codec import Emu, HEAP, STACK, SCRATCH, STOP
+    from aoa.analysis.pe_util import PE
+    from aoa.emulation.emu import Emu, HEAP, STACK, SCRATCH, STOP
     from unicorn import UC_HOOK_CODE
     from unicorn.x86_const import (UC_X86_REG_EBP, UC_X86_REG_EBX,
                                    UC_X86_REG_EDI, UC_X86_REG_EIP, UC_X86_REG_ESP)
@@ -169,16 +168,16 @@ def native_checks(client, nodes, links):
 
 
 def relay_checks(links):
-    from station_stub import movement_update
-    import relay_motion
+    from aoa.host.server import movement_update
+    from aoa.protocol import motion
     for link in links:
         position = struct.unpack('<3f', struct.pack('<3f', *link['destination']))
         packet = struct.pack('<HHI6f', 0x8000, 1, 0x41, *position, 0., 0., 100.)
         filtered = movement_update(packet, 1)
-        state, present, missing = relay_motion.update(filtered, relay_motion.initial(link['position']))
+        state, present, missing = motion.update(filtered, motion.initial(link['position']))
         assert state[0x40] == position and not missing
-        observer, _, missing = relay_motion.update(relay_motion.snapshot(1, state),
-                                                   relay_motion.initial(link['position']))
+        observer, _, missing = motion.update(motion.snapshot(1, state),
+                                                   motion.initial(link['position']))
         assert observer[0x40] == position and observer[1] == (0., 0., 100.) and not missing
     return {'destination_jumps_through_movement_codecs': len(links),
             'scope': 'Synthetic codec checks, not socket or live two-client tests',
@@ -186,17 +185,17 @@ def relay_checks(links):
 
 
 def main(argv=None):
-    parser = cli_util.parser(__doc__)
+    parser = cli.parser(__doc__)
     parser.add_argument('--local-report', type=Path, help='also write the full route coordinates here')
-    cli_util.add_evidence_option(parser, EVIDENCE)
+    cli.add_evidence_option(parser, EVIDENCE)
     args = parser.parse_args(argv)
     nodes = hierarchy((ROOT / 'work/2.9.2/export/AOAOBJECTS/Arena1a.Gob').read_bytes())
     links = routes(nodes)
     checks = native_checks(ROOT / 'game/2.9.2/AOACLIENT.EXE.orig', nodes, links)
-    import gob2obj
+    from aoa.formats import gob
     source = ROOT / 'work/2.9.2/export/AOAOBJECTS'
     config = source / 'WarpGate.Sco'
-    model = gob2obj.strings(config.read_bytes())[4][2]
+    model = gob.strings(config.read_bytes())[4][2]
     archive = next(a for a in json.loads((ROOT / 'evidence/2.9.2/archives.json').read_text())
                    if a['archive'].upper().endswith('AOAOBJECTS.ODB'))
     hashes = {entry['name'].casefold(): entry['sha256'] for entry in archive['entries']}
@@ -216,10 +215,10 @@ def main(argv=None):
     if args.local_report:
         args.local_report.parent.mkdir(parents=True, exist_ok=True)
         args.local_report.write_text(json.dumps({'summary': report, 'routes': links}, indent=2) + '\n')
-    path = cli_util.evidence_target(args.evidence, EVIDENCE)
+    path = cli.evidence_target(args.evidence, EVIDENCE)
     path.write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
     print(json.dumps(report, indent=2))
 
 
 if __name__ == '__main__':
-    sys.exit(cli_util.run(main))
+    sys.exit(cli.run(main))

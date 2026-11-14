@@ -7,12 +7,10 @@ import argparse
 import json
 import math
 import struct
-import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-from inspect_arena import snapshot
-import warp_trial
+from aoa.live.arena import snapshot
+from aoa.host import warp_trial
 
 
 def verify(live, gates):

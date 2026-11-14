@@ -1,14 +1,12 @@
 """Skin pack builder on synthetic TGAs with a stand-in 4x upscaler; no game files."""
 import io
 import struct
-import sys
 import tempfile
 import unittest
 from pathlib import Path
 from unittest import mock
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import build_texture_pack as build
+from aoa.client import build_texture_pack as build
 from PIL import Image
 
 FOOTER = bytes(8) + b"TRUEVISION-XFILE.\0"

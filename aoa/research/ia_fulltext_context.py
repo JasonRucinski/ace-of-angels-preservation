@@ -18,10 +18,8 @@ Some scans only have ABBYY XML text, which this misses; re-read those via the
 item's _djvu.txt (see CONTEXT.md, "full-text search").
 """
 import json, sys, urllib.parse, gzip, re, os
-from pathlib import Path
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import cli_util  # noqa: E402
-from polite_http import polite_get  # noqa: E402
+from aoa import cli  # noqa: E402
+from aoa.research.http import polite_get  # noqa: E402
 HITS, PASSAGES = "ia_fulltext_hits.json", "ia_fulltext_passages.txt"
 KEY = re.compile(r"(?i)ace\s*of\s*ang|aceofangel|flying\s*rock|flyingrock")
 def trim_item(ctxs, gap=2, cap=400):
@@ -67,7 +65,7 @@ GAME = re.compile(r"(?i)flying\s*rock|space|kosmic|kosmicz|űr|vesmír|spatial|e
 def get(u):
     return polite_get(u, timeout=180)
 def main(argv=None):
-    ap = cli_util.parser(__doc__)
+    ap = cli.parser(__doc__)
     ap.add_argument("dir", nargs="?", help="folder holding the hits file, e.g. data/")
     ap.add_argument("--hits", default=HITS, help="hits file name inside DIR (default: %(default)s)")
     ap.add_argument("--out", default=PASSAGES, help="passages file name inside DIR (default: %(default)s)")
@@ -108,4 +106,4 @@ def main(argv=None):
         print(f"{ident} / {fn.replace('_hocr_searchtext.txt.gz','')} | {title[:45]} | {status} | {', '.join(words)[:200]}")
     print("files with no game mention:", sum(1 for r in report if not r[4]))
 if __name__ == "__main__":
-    sys.exit(cli_util.run(main))
+    sys.exit(cli.run(main))

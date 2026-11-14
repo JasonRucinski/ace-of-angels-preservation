@@ -7,19 +7,17 @@ import hashlib
 import json
 import math
 import struct
-import sys
 import tempfile
 import unittest
 from pathlib import Path
 from unittest import mock
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import aoacrypt
-import aoapack
-import gob2obj
-import make_object
+from aoa.formats import aoacrypt
+from aoa.formats import aoapack
+from aoa.formats import gob as formats_gob
+from aoa.maps import make_object
 
-ROOT = Path(__file__).resolve().parents[1]
+from aoa.paths import ROOT
 GAME = ROOT / "game/2.9.2"
 SPEC = ROOT / "config/objects/bennu.json"
 BENNU = ROOT / "builds/bennu-nasa/bennu.glb"
@@ -90,7 +88,7 @@ class GeometryTests(unittest.TestCase):
             self.assertIn((round(u * 250, 3), round(v * 250, 3)),
                           {(round(z, 3), round(y, 3)), (round(x, 3), round(z, 3)), (round(x, 3), round(y, 3))})
         block = make_object.mesh_block(verts, faces)
-        mesh = gob2obj.try_mesh(block, 0)
+        mesh = formats_gob.try_mesh(block, 0)
         self.assertEqual((len(mesh["verts"]), len(mesh["faces"]), mesh["end"]), (len(verts), len(faces), len(block)))
         at = 8 + 64 * len(verts)
         a, b, c, flags = struct.unpack_from("<4H", block, at)
@@ -188,20 +186,20 @@ class TemplateTests(unittest.TestCase):
         verts, faces = make_object.triplanar(pos, nrm, tris, 1000.0)
         template = self.templates[make_object.TEMPLATE_GOB]
         gob = make_object.write_gob(template, "Octa1", "astr4_a.tga", verts, faces)
-        strings = [t for _, _, t in gob2obj.strings(gob)]
+        strings = [t for _, _, t in formats_gob.strings(gob)]
         self.assertEqual(strings[0], "Octa1")
         self.assertEqual(strings.count("astr4_a.tga"), 2)
         self.assertNotIn("astr3.tga", strings)
         self.assertEqual(struct.unpack_from("<I", gob, 0x0C)[0], 162 + 5)
-        after = gob2obj.strings(gob)[0][1]
+        after = formats_gob.strings(gob)[0][1]
         lo, hi = [min(v[k] for v in verts) for k in range(3)], [max(v[k] for v in verts) for k in range(3)]
         for got, want in zip(struct.unpack_from("<6f", gob, after), lo + hi):
             self.assertAlmostEqual(got, want, places=2)
         (node, node_after), = make_object._strings(gob, make_object.TEMPLATE_NODE)
         self.assertEqual(gob[node_after:node_after + 24], gob[after:after + 24])
         self.assertEqual(gob[node_after + 0x74:node_after + 0x80], bytes(12))
-        mesh = gob2obj.parse(gob)[0]
-        self.assertEqual(len(gob) - mesh["end"], len(template) - gob2obj.parse(template)[0]["end"] + 2)
+        mesh = formats_gob.parse(gob)[0]
+        self.assertEqual(len(gob) - mesh["end"], len(template) - formats_gob.parse(template)[0]["end"] + 2)
         sco = make_object.write_sco(self.templates[make_object.TEMPLATE_SCO], "Octa", "Octa1")
         template_sco = self.templates[make_object.TEMPLATE_SCO]
         self.assertEqual(len(sco), len(template_sco) - len("Astr-C") + 4 - len("Astr-C_mip") + 5)
@@ -214,7 +212,7 @@ class TemplateTests(unittest.TestCase):
         entries, stats = make_object.build(spec, BENNU, self.templates)
         self.assertEqual(sorted(entries), ["Bennu.Sco", "Bennu1.Gob"])
         self.assertEqual((stats["faces"], stats["radius"], stats["flipped"]), (18240, 60000, True))
-        mesh = gob2obj.parse(entries["Bennu1.Gob"])[0]
+        mesh = formats_gob.parse(entries["Bennu1.Gob"])[0]
         verts = mesh["verts"]
         self.assertEqual(outward(verts, [f[:3] for f in mesh["faces"]]), len(mesh["faces"]))
         self.assertEqual(sum(v[0] * v[5] + v[1] * v[6] + v[2] * v[7] > 0 for v in verts), len(verts))

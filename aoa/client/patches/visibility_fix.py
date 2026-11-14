@@ -25,11 +25,8 @@ visible; promoted, that would draw the player's own hull at the camera.
 Library use only (prepare_client.py composes it); no file is written here.
 """
 import struct
-import sys
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-from patch_client import Asm, jmp_patch  # noqa: E402
+from aoa.client.base import Asm, jmp_patch  # noqa: E402
 
 NAME = "visibility-math-v1"
 CENTER_VISIBLE = False      # distance-0 nodes keep the original (hidden) result

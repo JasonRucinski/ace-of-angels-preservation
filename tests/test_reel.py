@@ -6,17 +6,13 @@ import contextlib
 import io
 import math
 import struct
-import sys
 import unittest
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-sys.path.insert(0, str(Path(__file__).resolve().parent / "reel"))
-import bot  # noqa: E402
-import edit  # noqa: E402
-import relay_motion  # noqa: E402
-import station_stub as stub  # noqa: E402
-from station_runtime import parse_args  # noqa: E402
+from aoa.reel import bot  # noqa: E402
+from aoa.reel import edit  # noqa: E402
+from aoa.protocol import motion  # noqa: E402
+from aoa.host import server as stub  # noqa: E402
+from aoa.host.runtime import parse_args  # noqa: E402
 
 
 class ReelTests(unittest.TestCase):
@@ -39,7 +35,7 @@ class ReelTests(unittest.TestCase):
         prefix = stub.movement_update(payload, 3)
         self.assertEqual(prefix, payload)
         self.assertIsNone(stub.movement_update(payload, 4))  # the header slot must be the sender's
-        state, present, _ = relay_motion.update(prefix, {})
+        state, present, _ = motion.update(prefix, {})
         self.assertEqual(state[0x40], (1.5, -2.0, 3e4))
         self.assertEqual(state[1], (0.0, 0.0, 900.0))
         for hull in stub.SELECTABLE_VESSELS:

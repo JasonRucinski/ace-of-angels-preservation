@@ -1,18 +1,16 @@
 """frame-clock-v1: patch bytes, client preparation, and the emulated timer gate."""
 import struct
-import sys
 import unittest
-from pathlib import Path
 from unicorn import Uc, UC_ARCH_X86, UC_MODE_32, UC_HOOK_CODE
 from unicorn.x86_const import UC_X86_REG_EAX, UC_X86_REG_ECX, UC_X86_REG_ESP
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import frame_clock  # noqa: E402
-import measure_frame_pacing  # noqa: E402
-import prepare_client  # noqa: E402
-import render_clock_experiment  # noqa: E402
+from aoa.client.patches import frame_clock  # noqa: E402
+from aoa.live import frame_pacing  # noqa: E402
+from aoa.client import prepare  # noqa: E402
+from aoa.client.experiments import render_clock_experiment  # noqa: E402
+from aoa.paths import ROOT
 
-ORIGINAL = Path(__file__).resolve().parents[1] / "game/2.9.2/AOACLIENT.EXE.orig"
+ORIGINAL = ROOT / "game/2.9.2/AOACLIENT.EXE.orig"
 QPF_STUB, QPC_STUB, FRAME_STUB_EXIT, RETURN = 0x500000, 0x500010, 0x500020, 0x500100
 APP = 0x600000
 
@@ -70,13 +68,13 @@ class FrameClockTests(unittest.TestCase):
 
     def test_preparation_applies_and_undoes_exactly(self):
         raw = ORIGINAL.read_bytes()
-        on = prepare_client.configure(raw)
-        off = prepare_client.configure(raw, smooth_frame_clock=False)
-        self.assertIn(frame_clock.NAME, prepare_client.inspect(on)["patches"])
-        self.assertNotIn(frame_clock.NAME, prepare_client.inspect(off)["patches"])
+        on = prepare.configure(raw)
+        off = prepare.configure(raw, smooth_frame_clock=False)
+        self.assertIn(frame_clock.NAME, prepare.inspect(on)["patches"])
+        self.assertNotIn(frame_clock.NAME, prepare.inspect(off)["patches"])
         self.assertEqual(frame_clock.configure(on, False), off)
-        self.assertEqual(prepare_client.configure(on), on)                       # idempotent
-        self.assertEqual(prepare_client.configure(on, smooth_frame_clock=False), off)
+        self.assertEqual(prepare.configure(on), on)                       # idempotent
+        self.assertEqual(prepare.configure(on, smooth_frame_clock=False), off)
         allowed = {i for o, old, new in frame_clock.regions() for i in range(o, o + len(old))}
         self.assertTrue(all(i in allowed for i, (a, b) in enumerate(zip(on, off)) if a != b))
         for o, old, new in frame_clock.regions():
@@ -86,7 +84,7 @@ class FrameClockTests(unittest.TestCase):
                 frame_clock.state(bytes(bad))
 
     def test_partial_patch_rejected(self):
-        off = prepare_client.configure(ORIGINAL.read_bytes(), smooth_frame_clock=False)
+        off = prepare.configure(ORIGINAL.read_bytes(), smooth_frame_clock=False)
         o, old, new = frame_clock.regions()[-1]          # gate call only
         partial = off[:o] + new + off[o + len(old):]
         with self.assertRaises(ValueError):
@@ -95,14 +93,14 @@ class FrameClockTests(unittest.TestCase):
     def test_pacing_summary(self):
         frames = [{"t": n / 60, "counter": n, "clock": round(n * 1000 / 60), "camera": (0, 0, n * 8.0),
                    "active": 1} for n in range(120)]
-        s = measure_frame_pacing.summarize(frames, 1000, 2.0)
+        s = frame_pacing.summarize(frames, 1000, 2.0)
         self.assertEqual(s["missed_counter_steps"], 0)
         self.assertAlmostEqual(s["present_interval_ms"]["mean"], 16.667, places=2)
         self.assertEqual(set(s["game_ms_per_frame"]), {"16", "17"})
         self.assertLess(s["camera"]["step_error_rms_frames"], 1e-6)
         self.assertEqual(s["active_frames"], 120)
         jumpy = [dict(f, clock=(f["counter"] // 2) * 31) for f in frames]  # 0/31 ms steps
-        self.assertGreater(measure_frame_pacing.summarize(jumpy, 1000, 2.0)["game_vs_present_rms_ms"], 10)
+        self.assertGreater(frame_pacing.summarize(jumpy, 1000, 2.0)["game_vs_present_rms_ms"], 10)
 
 
 if __name__ == "__main__":

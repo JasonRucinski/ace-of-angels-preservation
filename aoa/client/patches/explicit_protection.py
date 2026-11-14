@@ -4,11 +4,8 @@ Changes the CAOAComm 0x81 receive case from a toggle to a one-byte state.
 This is not session authentication, ordered delivery, or spawn protection
 policy. Use only in the localhost extension gate with a prepared client.
 """
-import sys
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-from patch_client import Asm, jmp_patch
+from aoa.client.base import Asm, jmp_patch
 
 NAME = "explicit-protection-v1"
 SITE, SITE_OFFSET = 0x4867C3, 0x867C3

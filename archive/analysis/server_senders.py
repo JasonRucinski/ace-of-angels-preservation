@@ -15,9 +15,8 @@ import re
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import cli_util  # noqa: E402
-from pe_util import PE, Disasm  # noqa: E402
+from aoa import cli  # noqa: E402
+from aoa.analysis.pe_util import PE, Disasm  # noqa: E402
 
 NAME_RE = re.compile(rb"(?:CAOAComm::|::)?(Send[A-Z][A-Za-z]+)")
 HEX_RE = re.compile(r"0x[0-9a-f]{6,8}")
@@ -40,7 +39,7 @@ def callers(d, target):
 
 
 def main(argv=None):
-    ap = cli_util.parser(__doc__)
+    ap = cli.parser(__doc__)
     ap.add_argument("old_client", help="the 2.7.1 client")
     ap.add_argument("cache", help="disassembly cache (.pkl) for the 2.7.1 client")
     ap.add_argument("sites", help="2.7.1 send_sites.json (the 2.9.2 one is found by name)")
@@ -94,4 +93,4 @@ def main(argv=None):
 
 
 if __name__ == "__main__":
-    sys.exit(cli_util.run(main))
+    sys.exit(cli.run(main))

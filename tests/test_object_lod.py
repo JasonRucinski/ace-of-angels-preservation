@@ -2,18 +2,15 @@
 import math
 import hashlib
 import struct
-import sys
 import unittest
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-from audit_object_lod import audit
-from emulate_codec import Emu, SCRATCH, STACK
-from pe_util import PE
-from patch_client import PRISTINE_292
+from aoa.maps.lod import audit
+from aoa.emulation.emu import Emu, SCRATCH, STACK
+from aoa.analysis.pe_util import PE
+from aoa.client.base import PRISTINE_292
 from unicorn.x86_const import UC_X86_REG_ESI, UC_X86_REG_ESP, UC_X86_REG_FPCW
 
-ROOT = Path(__file__).resolve().parents[1]
+from aoa.paths import ROOT
 
 
 class ObjectLodTests(unittest.TestCase):

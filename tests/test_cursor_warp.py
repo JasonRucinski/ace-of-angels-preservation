@@ -1,19 +1,17 @@
 """Run the client's own cursor warp (0x4EACE0) in x86, before and after the fix."""
 import struct
-import sys
 import unittest
-from pathlib import Path
 
 from unicorn import Uc, UC_ARCH_X86, UC_MODE_32, UC_HOOK_CODE
 from unicorn.x86_const import (UC_X86_REG_EAX, UC_X86_REG_EBX, UC_X86_REG_ECX, UC_X86_REG_EDX,
                                UC_X86_REG_EDI, UC_X86_REG_EBP, UC_X86_REG_ESI, UC_X86_REG_ESP,
                                UC_X86_REG_EIP)
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import cursor_warp
-import prepare_client
+from aoa.client.patches import cursor_warp
+from aoa.client import prepare
+from aoa.paths import ROOT
 
-ORIGINAL = Path(__file__).resolve().parents[1] / "game/2.9.2/AOACLIENT.EXE.orig"
+ORIGINAL = ROOT / "game/2.9.2/AOACLIENT.EXE.orig"
 WARP, MOUSE, HWND, RETURN, STACK = 0x4EACE0, 0x700000, 0x1234, 0x6F0F00, 0x710000
 STUB_S2C, STUB_SET = 0x6F0000, 0x6F0010
 
@@ -65,7 +63,7 @@ class CursorWarpTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.original = ORIGINAL.read_bytes()
-        cls.prepared = prepare_client.configure(cls.original)
+        cls.prepared = prepare.configure(cls.original)
         cls.unfixed = cursor_warp.configure(cls.prepared, False)
 
     def test_original_sends_stale_origin_to_the_corner(self):
@@ -87,7 +85,7 @@ class CursorWarpTests(unittest.TestCase):
         self.assertEqual(calls[-1], ("SetCursorPos", 350, 460))
 
     def test_reversible_and_rejects_corruption(self):
-        self.assertIn(cursor_warp.NAME, prepare_client.inspect(self.prepared)["patches"])
+        self.assertIn(cursor_warp.NAME, prepare.inspect(self.prepared)["patches"])
         self.assertEqual(cursor_warp.configure(self.prepared), self.prepared)
         for off in [cursor_warp.CAVE - 0x400000, cursor_warp.SITE - 0x400000]:
             bad = bytearray(self.prepared)
@@ -95,7 +93,7 @@ class CursorWarpTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 cursor_warp.configure(bad)
             with self.assertRaises(ValueError):
-                prepare_client.inspect(bytes(bad))
+                prepare.inspect(bytes(bad))
 
 
 if __name__ == "__main__":

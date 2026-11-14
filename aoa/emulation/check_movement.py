@@ -14,21 +14,20 @@ from pathlib import Path
 from unicorn import UcError
 from unicorn.x86_const import UC_X86_REG_EIP, UC_X86_REG_ESP, UC_X86_REG_EBP, UC_X86_REG_EAX
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import cli_util
-from emulate_codec import Emu, HEAP, SCRATCH, STACK, STOP
-from pe_util import PE
-from station_stub import movement_update, reported_motion, motion_snapshot
-import relay_motion
-from physics_timestep import SITE, CAVE, DISPLACED, guard_code
-from patch_client import jmp_patch
+from aoa import cli
+from aoa.emulation.emu import Emu, HEAP, SCRATCH, STACK, STOP
+from aoa.analysis.pe_util import PE
+from aoa.host.server import movement_update, reported_motion, motion_snapshot
+from aoa.protocol import motion
+from aoa.client.patches.physics_timestep import SITE, CAVE, DISPLACED, guard_code
+from aoa.client.base import jmp_patch
 
 
 GUN_COUNTERS = SCRATCH + 0x4000  # Outside the zeroed context and body.
 
 
 def main(argv=None):
-    ap = cli_util.parser(__doc__)
+    ap = cli.parser(__doc__)
     ap.add_argument("source", help="pristine 2.9.2 client (AOACLIENT.EXE.orig)")
     ap.add_argument("output", help="JSON report to write")
     a = ap.parse_args(argv)
@@ -48,8 +47,8 @@ def main(argv=None):
             emu.write(SCRATCH + off, struct.pack("<I", pointer))
         # Decoder object: per-system counter array {ptr, count}. The live
         # client has 5000 entries; the relay's index bound is 128.
-        emu.write(GUN_COUNTERS, bytes(4 * relay_motion.MAX_SYSTEM_INDEX))
-        emu.write(HEAP + 0x3000, struct.pack("<II", GUN_COUNTERS, relay_motion.MAX_SYSTEM_INDEX))
+        emu.write(GUN_COUNTERS, bytes(4 * motion.MAX_SYSTEM_INDEX))
+        emu.write(HEAP + 0x3000, struct.pack("<II", GUN_COUNTERS, motion.MAX_SYSTEM_INDEX))
         # Remote player with an empty system container (+0xAC list null):
         # 0x4D4820 then finds no system, as for an unknown index.
         emu.write(HEAP + 0x2000 + 0x194, struct.pack("<I", HEAP + 0x2800))
@@ -78,16 +77,16 @@ def main(argv=None):
     # A relayed per-gun fire-state block (live capture: guns 2..7 at 15)
     # plus the highest permitted index is consumed exactly and stays in
     # bounds; the guard word after the array must remain untouched.
-    records = [(index, 15) for index in range(2, 8)] + [(relay_motion.MAX_SYSTEM_INDEX - 1, 1)]
+    records = [(index, 15) for index in range(2, 8)] + [(motion.MAX_SYSTEM_INDEX - 1, 1)]
     block = bytes([0x80 | len(records)]) + b"".join(struct.pack("<HB", i, v) for i, v in records)
     packet = movement_update(struct.pack("<HHI", 0x8000, 1, 0x10000040) + bytes(12) + block, 1)
     assert struct.unpack_from("<I", packet, 4)[0] == 0x10000040
-    emu.write(GUN_COUNTERS + 4 * relay_motion.MAX_SYSTEM_INDEX, b"\xEE" * 16)
+    emu.write(GUN_COUNTERS + 4 * motion.MAX_SYSTEM_INDEX, b"\xEE" * 16)
     assert decode(0x10000040, packet[8:]) == len(packet) - 8
-    counters = struct.unpack(f"<{relay_motion.MAX_SYSTEM_INDEX}I",
-                             emu.read(GUN_COUNTERS, 4 * relay_motion.MAX_SYSTEM_INDEX))
+    counters = struct.unpack(f"<{motion.MAX_SYSTEM_INDEX}I",
+                             emu.read(GUN_COUNTERS, 4 * motion.MAX_SYSTEM_INDEX))
     assert {i for i, c in enumerate(counters) if c} == {i for i, _ in records}
-    assert emu.read(GUN_COUNTERS + 4 * relay_motion.MAX_SYSTEM_INDEX, 16) == b"\xEE" * 16
+    assert emu.read(GUN_COUNTERS + 4 * motion.MAX_SYSTEM_INDEX, 16) == b"\xEE" * 16
     assert emu.read(HEAP + 0x2000 + 0x1A4, 1) == b"\x01"
     gun_cases = 1
 
@@ -95,7 +94,7 @@ def main(argv=None):
     # prefix and gun state: consumed exactly; the stats struct (ctx+0x10)
     # gets kills/deaths/score and the valid flag, the rating lands at
     # ctx+0x2E, and no other submask part (unset pointers) is touched.
-    snap = relay_motion.snapshot(1, {0x40: (1.0, 2.0, 3.0), relay_motion.GUN_STATE: (0x81, ((2, 15),))},
+    snap = motion.snapshot(1, {0x40: (1.0, 2.0, 3.0), motion.GUN_STATE: (0x81, ((2, 15),))},
                                  stats=(3, 2, 7, 1234))
     mask = struct.unpack_from("<I", snap, 4)[0]
     assert mask == 0x90000040
@@ -177,4 +176,4 @@ def main(argv=None):
 
 
 if __name__ == "__main__":
-    sys.exit(cli_util.run(main))
+    sys.exit(cli.run(main))

@@ -1,20 +1,18 @@
 """Deterministic original-x86 camera and timer regressions; no UI or client launch."""
 import math
 import struct
-import sys
 import unittest
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-from compare_render_clocks import view, project
-from emulate_codec import Emu, SCRATCH
-from pe_util import PE
+from archive.offline_baseline.compare_render_clocks import view, project
+from aoa.emulation.emu import Emu, SCRATCH
+from aoa.analysis.pe_util import PE
 from unicorn.x86_const import UC_X86_REG_FPCW
+from aoa.paths import ROOT
 
 
 class RenderMotionTests(unittest.TestCase):
     def setUp(self):
-        path = Path(__file__).resolve().parents[1] / 'game/2.9.2/AOACLIENT.EXE.orig'
+        path = ROOT / 'game/2.9.2/AOACLIENT.EXE.orig'
         self.emu = Emu(PE(path))
         self.emu.uc.reg_write(UC_X86_REG_FPCW, 0x7F)
 

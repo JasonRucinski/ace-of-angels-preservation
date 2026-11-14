@@ -1,20 +1,18 @@
 """Texture-loader depth selection in original x86; no game launch or GPU claim."""
 import struct
-import sys
 import tempfile
 import unittest
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import prepare_client
-import texture32 as patch
-from emulate_codec import Emu, SCRATCH, STACK
-from pe_util import PE
+from aoa.client import prepare
+from aoa.client.patches import texture32 as patch
+from aoa.emulation.emu import Emu, SCRATCH, STACK
+from aoa.analysis.pe_util import PE
 from unicorn import UC_HOOK_CODE
 from unicorn.x86_const import (UC_X86_REG_EAX, UC_X86_REG_ECX, UC_X86_REG_EDX, UC_X86_REG_EDI,
                                UC_X86_REG_ESI, UC_X86_REG_ESP, UC_X86_REG_EIP)
 
-ROOT = Path(__file__).resolve().parents[1]
+from aoa.paths import ROOT
 SOURCE = ROOT / 'game/2.9.2/AOACLIENT.EXE.orig'
 DONE, INVALID = 0x562AF9, 0x562AC4
 
@@ -115,20 +113,20 @@ class Texture32Tests(unittest.TestCase):
         self.assertEqual(pe.read_va(0x558C71, 5), bytes.fromhex('0d000000ff'))  # 24-bit forced opaque
 
     def test_byte_scope_preparation_and_corruption(self):
-        before = prepare_client.configure(SOURCE.read_bytes(), experimental_world_detail=True,
+        before = prepare.configure(SOURCE.read_bytes(), experimental_world_detail=True,
                                           experimental_solids=True)
-        after = prepare_client.configure(before, experimental_texture32=True)
+        after = prepare.configure(before, experimental_texture32=True)
         allowed = {i for off, old, _ in patch.regions() for i in range(off, off + len(old))}
         changed = {i for i, (a, b) in enumerate(zip(before, after)) if a != b}
         self.assertTrue(changed and changed <= allowed)
-        self.assertEqual(prepare_client.configure(after), after)  # preserved by normal preparation
-        self.assertIn(patch.NAME, prepare_client.inspect(after)['patches'])
-        self.assertEqual(prepare_client.configure(after, experimental_texture32=False), before)
+        self.assertEqual(prepare.configure(after), after)  # preserved by normal preparation
+        self.assertIn(patch.NAME, prepare.inspect(after)['patches'])
+        self.assertEqual(prepare.configure(after, experimental_texture32=False), before)
         for off, _, _ in patch.regions():
             broken = bytearray(after)
             broken[off] ^= 1
             with self.assertRaises(ValueError):
-                prepare_client.inspect(bytes(broken))
+                prepare.inspect(bytes(broken))
         partial = bytearray(before)
         off, _, new = patch.regions()[2]
         partial[off:off + len(new)] = new
@@ -139,11 +137,11 @@ class Texture32Tests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as folder:
             exe = Path(folder) / 'AOACLIENT.EXE'
             exe.write_bytes(SOURCE.read_bytes())
-            prepare_client.prepare(exe, experimental_solids=True, experimental_world_detail=True)
+            prepare.prepare(exe, experimental_solids=True, experimental_world_detail=True)
             before = exe.read_bytes()
             patch.install(exe)
             after = exe.read_bytes()
-            self.assertIn(patch.NAME, prepare_client.check(exe, require_assets=False)['patches'])
+            self.assertIn(patch.NAME, prepare.check(exe, require_assets=False)['patches'])
             patch.install(exe)
             self.assertEqual(exe.read_bytes(), after)
             patch.install(exe, undo=True)
