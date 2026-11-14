@@ -11,11 +11,12 @@ Newest results are in [findings.md](findings.md) and the status section of
 | Document | What it covers |
 |---|---|
 | [play.md](play.md) | **Start here.** From nothing to flying offline, then with friends |
+| [STATUS.md](STATUS.md) | What works and how it was checked, what is untested, what does not exist |
 | [lan-dogfight.md](lan-dogfight.md) | Hosting and joining on one home network |
 | [vpn-dogfight.md](vpn-dogfight.md) | Playing over the internet through a private VPN, host console, lag testing |
 | [linux-host.md](linux-host.md) | Minimal Linux host with a systemd service, LAN checks and a VPN path |
 | [host-control.md](host-control.md) | The host window: players, scores, kick/ban, map switching |
-| [map-viewer.md](map-viewer.md) | Loading any of the 20 recovered maps in the client |
+| [map-viewer.md](map-viewer.md) | Loading any of the 20 recovered map layouts in the client |
 | [custom-maps.md](custom-maps.md) | Building new maps from a JSON spec; the first one, Crucible |
 | [custom-objects.md](custom-objects.md) | Adding new objects from glTF models; the first one, NASA's Bennu |
 | [hype-reel.md](hype-reel.md) | Filming scripted shots of the real client and cutting the highlight reel |
@@ -48,6 +49,7 @@ Reverse-engineering notes. Addresses refer to the hash-verified 2.7.1 or 2.9.2
 | [code-clues.md](code-clues.md) | Other recovered code paths and source-path clues |
 | [local-server.md](local-server.md) | Server profiles, options and logs |
 | [arena1a.md](arena1a.md) | Recovering the Arena1a map |
+| [arena1a-rebuild.md](arena1a-rebuild.md) | Arena1a navigation buoys, turret and warp gate trials (26–27 October 2026) |
 | [render-pipeline-audit.md](render-pipeline-audit.md) | Rendering bugs found by emulation |
 | [asteroid-rendering.md](asteroid-rendering.md) | The asteroid size-popping investigation |
 | [offline-rendering-baseline.md](offline-rendering-baseline.md) | Rendering baseline for the offline mission |

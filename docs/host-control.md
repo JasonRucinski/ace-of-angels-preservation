@@ -24,7 +24,7 @@ window opens. Settings are remembered in `work/host/host_control.json`.
 |---|---|
 | Mode | **This PC only** (`local-relay` on 127.0.0.1), **LAN** (`lan-dogfight`) or **VPN (internet)** (`vpn-dogfight`) |
 | Host address | LAN/VPN only: pick this PC's address from the list (found automatically) or type it |
-| Map | Any of the 20 maps from [map-viewer.md](map-viewer.md) |
+| Map | Any of the 20 entries in [map-viewer.md](map-viewer.md); 11 have real content ([which](STATUS.md#maps)) |
 | Build map terrain | Sends the map so clients build it on flight entry. Clients need patch version 11 or later; without it they still join, in empty space |
 | Navigation buoys | Restore navigation markers for the selected map. Initially checked, preserving the previous automatic behavior when exported assets are available |
 | Turret trial | Restore five Arena1a turrets with firing disabled. Initially unchecked; this does not enable turret combat |

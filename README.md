@@ -82,7 +82,7 @@ Its servers went dark, and the company was dissolved in 2011.
 |---|---|
 | 📦 **Builds** | Six client versions recovered, hashed and versioned: full installers 2.0.0, 2.7.1, 2.8.0, 2.8.2 and 2.9.2, plus a 2.3.1 replacement client. Sources and hashes: [`manifest/downloads.json`](manifest/downloads.json). |
 | 🎮 **Playable today** | The 2.9.2 client runs on Windows 10/11 with crash, timing and display fixes. The offline training mission plays. |
-| 🌐 **Multiplayer** | A new stand-in server, written from reverse engineering, lets friends dogfight over a LAN or a private VPN: guns, missiles, kills, scoreboard, ship changes, 20 maps, power-ups and a host control window. |
+| 🌐 **Multiplayer** | A new stand-in server, written from reverse engineering, lets friends dogfight over a LAN or a private VPN: guns, missiles, kills, scoreboard, ship changes, power-ups and a host control window. The client can load all 20 recovered map layouts; 11 of them have real content ([which maps](docs/STATUS.md#maps)). |
 | 🐧 **Dedicated Linux host** | An unattended systemd service with automatic map rotation, kill/time limits, admission recycling, a stalled-process watchdog and rotation state that survives reboot. [Setup and operation](docs/linux-host.md). |
 | 📜 **History** | Magazine coverage, company records, trademarks, the old website and forums (restored from the Wayback Machine), and the state of revival attempts. |
 
@@ -95,23 +95,22 @@ See [NOTICE.md](NOTICE.md).
 > [!IMPORTANT]
 >
 > - **Two separate Windows PCs have fought through the Linux host over LAN.**
->   The operator reported damage and destruction; server logs confirm two valid
->   player deaths, one per player. [Session verification](evidence/2.9.2/linux_two_pc_combat_20261026.json).
-> - Automatic rotation, watchdog recovery and reboot persistence were checked
->   on the Linux VM. Map-transition tests used simulated Windows clients;
->   visual terrain loading after real-client rejoin still needs acceptance.
-> - Internet/VPN play remains unverified between separate connections.
->   Players must quit/relaunch and rejoin between maps; transitions are not seamless.
+>   A Windows-hosted LAN game and VPN play between separate connections have
+>   not been recorded yet.
+> - Players must quit, relaunch and rejoin between maps.
 > - This is a trusted-friends relay, not a public server. There are no accounts,
 >   and the original clients decide hits and damage.
 > - No CTF rules, AI missions or persistent pilots yet. Practice target ships
 >   can be destroyed, but they are passive and never fire back.
+>
+> What was checked, how, and what is still untested: [docs/STATUS.md](docs/STATUS.md).
 
 ## 🧭 Start here
 
 | I want to… | Go to |
 |---|---|
 | Play it on Windows 10/11 | [docs/play.md](docs/play.md) |
+| See what works and what is untested | [docs/STATUS.md](docs/STATUS.md) |
 | Host a game for friends | [docs/play.md#play-with-friends](docs/play.md#play-with-friends) |
 | Get sharper ship and station skins | [docs/texture-pack.md](docs/texture-pack.md) |
 | Run an unattended Linux server | [docs/linux-host.md](docs/linux-host.md) |
@@ -129,7 +128,7 @@ runbook when ready to test internet access.
 | Default | Behavior |
 |---|---|
 | Map rotation | `CTF_arena` → `CTF_arena_b` → `ast_fld_a` → repeat |
-| Match limit | First pilot to **10 kills**, or **15 minutes** from flight entry |
+| Match limit | First pilot to **10 kills**, or **15 minutes** from flight entry (set in the example rotation; without it the host default is 20 kills or 10 minutes) |
 | Map change | **30-second warning**, followed by a **5-second intermission** |
 | Admission recycling | Fresh process before the lifetime join limits, plus cleanup of used empty sessions |
 | Recovery | Status watchdog and bounded crash restarts; current map resumes after a VM reboot |
@@ -171,7 +170,7 @@ and follow [docs/play.md](docs/play.md) from step 3.
 | `evidence/` | Machine-readable results behind each claim in the docs |
 | `data/` | Archive search logs and magazine mentions |
 | `config/` | Client configuration records |
-| `CLAUDE.md` | Working rules for AI coding agents (and a good summary for humans) |
+| `CLAUDE.md` | Working rules for coding agents |
 
 `builds/`, `game/`, `originals/`, `wb/` and `work/` are created locally and
 never committed.

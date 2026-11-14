@@ -45,9 +45,11 @@ stop the server with Ctrl+C, then `serve` the next map.
 "Loaded" is the native terrain-object count read from a real client's memory
 after flight entry (23 Oct, scratch copy of the prepared client; evidence:
 [map_viewer_tour_20261023.json](../evidence/2.9.2/map_viewer_tour_20261023.json)).
-Every loaded object had graphics and every list was complete. Nobody has
-looked at these maps on screen yet: an in-flight screenshot comes back black,
-so visual checking is up to you.
+Every loaded object had graphics and every list was complete. At that time
+nobody had looked at the maps on screen. Since then eight have been seen
+(Arena1a, CTF_arena, CTF_arena_b, irrosa01, outerchange, ast_fld_a,
+ast_fld_b, JRMAP); the others have not. Which, when and the evidence:
+[STATUS.md](STATUS.md#maps).
 
 | # | Map | Kind | Spawn | Loaded | Notes |
 |---:|---|---|---|---:|---|

@@ -113,8 +113,11 @@ Windows `hosts` file under the short alias, then re-points their client:
 The guides give the exact firewall and `hosts` commands.
 
 Matches are free-for-all: 20 kills or 10 minutes, then scores reset and play
-continues. **Play between separate PCs has not been recorded yet.** If you try
-it, please open an issue with what worked and what didn't.
+continues. Separate PCs have played over a LAN only through the
+[Linux host](linux-host.md) so far. A Windows-hosted LAN game and VPN play
+between separate connections have not been recorded
+([status](STATUS.md#implemented-but-not-tested)). If you try one, please open
+an issue with what worked and what didn't.
 
 ## Troubleshooting
 

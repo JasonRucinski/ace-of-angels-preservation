@@ -22,7 +22,9 @@ already been searched.
 
 ## Play reports
 
-Multiplayer between separate PCs has not been recorded yet, so any session is
+Separate PCs have played only through the Linux host on a LAN; a
+Windows-hosted LAN game and VPN play between separate connections have not
+been recorded ([docs/STATUS.md](docs/STATUS.md)), so any session is
 valuable. Open a **Play report** issue with your Windows version, GPU, whether
 you used the dgVoodoo wrapper, LAN or VPN, the player count, and what did or
 didn't work. The client log in `game\2.9.2\Logs\` helps with crashes.
