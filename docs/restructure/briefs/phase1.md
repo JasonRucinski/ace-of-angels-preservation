@@ -81,6 +81,30 @@ Also in this phase, mechanically:
 - `tools/README.md`: replace with a short pointer (phase 4 generates the
   index).
 
+## Things phase 0 added that the move must carry
+
+- `tools/cli_util.py` becomes `aoa/cli.py`; `tools/polite_http.py` becomes
+  `aoa/research/http.py` (both are in `file-map.tsv`).
+- `tests/test_cli_help.py` finds entry points by scanning `tools/` for
+  `__main__` blocks and runs each with `--help` in a sandboxed copy of the
+  repo. After the move it must cover every `tools/` shim and, through
+  `tools/run.py`, every `aoa` module that has a `main`. Keep its sandbox
+  (temp working directory, sockets and child processes blocked) exactly as
+  strict. Its copy list must include `aoa/`.
+- `tests/test_host_argv.py` keys documented commands by their text and holds
+  a hand copy of `start_lan_dogfight.ps1`'s argument building. Shimmed
+  commands keep their text, so its snapshot must not change.
+- `tests/test_patch_layout.py` imports every patch module by its old name.
+  Only its imports change; the snapshot file must not.
+- `CLAUDE.md` and `docs/STATUS.md` name `tools/polite_http.py`,
+  `tools/prepare_client.py` and other paths: apply the same mechanical path
+  rule as the other docs (shimmed names stay; others become the new path).
+- Known leftover for phase 2, do not fix here: requirement wording in code
+  strings ("patch v11" in the host window, "online-terrain-v2" in
+  `station_runtime`, `dedicated_host` and `map_viewer`), and the deprecated
+  `--advertised-address` still shown in two `docs/arena1a-rebuild.md`
+  commands.
+
 ## Gate (all must hold before you report done)
 
 1. `python3 -I tools/test.py --tier ci` passes.

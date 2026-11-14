@@ -149,7 +149,7 @@ verified without the game: see section 4.
 - [x] **0d Command-line safety**: U3, U4. Every script gets `main(argv)` and
   argparse; a test runs `--help` on every entry point with the network
   blocked and asserts exit 0 and no file written.
-- [ ] **0e Docs truth**: U10; one `docs/STATUS.md` holds what is verified and
+- [x] **0e Docs truth**: U10; one `docs/STATUS.md` holds what is verified and
   what is untested, and other docs link to it.
 
 Gate: the CI suites, the new snapshot and `--help` tests, and the 47-suite
