@@ -45,7 +45,7 @@ def main(argv=None):
     ap.add_argument("out", nargs="?", help="folder to extract into (default: only list)")
     ap.add_argument("--force", action="store_true", help="write entries whose CRC does not match")
     a = ap.parse_args(argv)
-    data = open(a.installer, "rb").read()
+    data = Path(a.installer).read_bytes()
     out = a.out
     if out:
         os.makedirs(out, exist_ok=True)
