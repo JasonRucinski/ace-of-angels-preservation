@@ -6,4 +6,4 @@ if not exist ".venv\Scripts\pythonw.exe" (
   pause
   exit /b 1
 )
-start "" ".venv\Scripts\pythonw.exe" tools\host_control.py %*
+start "" ".venv\Scripts\pythonw.exe" -I tools\host_control.py %*

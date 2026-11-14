@@ -14,14 +14,20 @@ and sustained delivery LAN and VPN players get), LAN (lan-dogfight) and VPN
 (vpn-dogfight). The server validates every setting (--print-config) before
 it binds anything. No firewall, hosts-file or client files are changed.
 Settings are remembered in work/host/host_control.json, with the mode as its
-profile id.
+profile id; a saved value that is not valid falls back to its default with a
+notice. Any error that stops the window is shown in a message box and
+written to work/logs/host.log.
 """
+import argparse
+import datetime
 import json
+import math
 import queue
 import subprocess
 import sys
 import threading
 import time
+import traceback
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -32,6 +38,7 @@ from station_runtime import HOST_DEFAULTS  # noqa: E402
 ROOT = Path(__file__).resolve().parents[1]
 WORK = ROOT / "work/host"
 SETTINGS_FILE = WORK / "host_control.json"
+LOG_FILE = ROOT / "work/logs/host.log"
 LOCAL = "local-guests"
 MODES = {LOCAL: "This PC only", "lan-dogfight": "LAN", "vpn-dogfight": "VPN (internet)"}  # profile -> label
 LABELS = {label: profile for profile, label in MODES.items()}  # also reads files saved with labels
@@ -190,14 +197,46 @@ class HostProcess:
         return host_ops.read_status(status_path(self.settings), self.proc.pid)
 
 
-def load_settings():
+def valid_setting(key, value):
+    """Whether a saved value can be used for this setting (the window's own ranges)."""
+    if key in ("terrain", *NODE_LABELS):
+        return type(value) is bool
+    choices = {"mode": MODES, "map": online_terrain.MAP_NAMES, "backdrop": BACKDROPS}
+    if key in choices:
+        return isinstance(value, str) and value in choices[key]
+    if key in ("address", "game"):
+        return isinstance(value, str) and (key == "address" or bool(value.strip()))
+    if key == "time_limit_min":
+        return type(value) in (int, float) and math.isfinite(value) and 0 <= value <= 1440
+    low, high = {"max_players": (1, 8), "kill_limit": (0, 1000), "target_ships": (0, 20)}[key]
+    return type(value) is int and low <= value <= high
+
+
+def load_settings(notices=None):
+    """Saved settings, each checked; anything unusable becomes its default and adds a line to `notices`."""
+    notices = [] if notices is None else notices
     try:
         saved = json.loads(SETTINGS_FILE.read_text(encoding="utf-8"))
-        loaded = {k: saved.get(k, v) for k, v in DEFAULTS.items()}
-        loaded["mode"] = LABELS.get(loaded["mode"], loaded["mode"])
-        return loaded
-    except (OSError, ValueError):
+    except FileNotFoundError:
         return dict(DEFAULTS)
+    except (OSError, ValueError) as error:
+        notices.append(f"Could not read {SETTINGS_FILE} ({error}); using the default settings.")
+        return dict(DEFAULTS)
+    if not isinstance(saved, dict):
+        notices.append(f"{SETTINGS_FILE} does not hold settings; using the default settings.")
+        return dict(DEFAULTS)
+    loaded = dict(DEFAULTS)
+    for key, default in DEFAULTS.items():
+        if key not in saved:
+            continue
+        value = saved[key]
+        if key == "mode" and isinstance(value, str):
+            value = LABELS.get(value, value)  # files saved before profile ids
+        if valid_setting(key, value):
+            loaded[key] = value
+        else:
+            notices.append(f"Saved {key.replace('_', ' ')} {saved[key]!r} is not valid; using {default!r}.")
+    return loaded
 
 
 def save_settings(settings):
@@ -213,7 +252,14 @@ def gui(autostart=False, run=True):
     root = tk.Tk()
     root.title("Ace of Angels host")
     root.minsize(860, 640)
-    saved = load_settings()
+
+    def report(*exc):
+        log_error("host window callback failed", exc)
+        messagebox.showerror("Ace of Angels host", f"{exc[1]}\n\nDetails: {LOG_FILE}")
+
+    root.report_callback_exception = report
+    notices = []
+    saved = load_settings(notices)
     addresses = detect_addresses()
     v = {"mode": tk.StringVar(value=MODES[saved["mode"]]), "address": tk.StringVar(value=saved["address"]),
          "map": tk.StringVar(value=saved["map"]), "terrain": tk.BooleanVar(value=saved["terrain"]),
@@ -520,6 +566,10 @@ def gui(autostart=False, run=True):
 
     root.protocol("WM_DELETE_WINDOW", on_close)
     refresh_controls()
+    for notice in notices:
+        write_log(f"[settings: {notice}]")
+    if notices:
+        root.after(300, lambda: messagebox.showwarning("Saved settings not used", "\n".join(notices)))
     if autostart:
         root.after(200, do_start)
     poll_output()
@@ -531,5 +581,42 @@ def gui(autostart=False, run=True):
     root.mainloop()
 
 
+def log_error(context, exc=None):
+    """Append a traceback (the current exception, or `exc` info) to work/logs/host.log."""
+    text = "".join(traceback.format_exception(*exc)) if exc else traceback.format_exc()
+    try:
+        LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
+        with LOG_FILE.open("a", encoding="utf-8") as stream:
+            stream.write(f"{datetime.datetime.now().isoformat(timespec='seconds')} {context}\n{text}\n")
+    except OSError:
+        print(text, file=sys.stderr)
+
+
+def show_error(title, text):
+    """A message box; stderr when Tk cannot open one (pythonw has no console)."""
+    try:
+        import tkinter as tk
+        from tkinter import messagebox
+        root = tk.Tk()
+        root.withdraw()
+        messagebox.showerror(title, text, parent=root)
+        root.destroy()
+    except Exception:  # noqa: BLE001
+        print(f"{title}: {text}", file=sys.stderr)
+
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument("--autostart", action="store_true", help="start the host with the saved settings")
+    args = parser.parse_args(argv)
+    try:
+        gui(autostart=args.autostart)
+    except Exception as error:  # noqa: BLE001 - under pythonw nothing else would report it
+        log_error("host window failed")
+        show_error("Ace of Angels host", f"The host window stopped: {error}\n\nDetails: {LOG_FILE}")
+        return 1
+    return 0
+
+
 if __name__ == "__main__":
-    gui(autostart="--autostart" in sys.argv[1:])
+    raise SystemExit(main())

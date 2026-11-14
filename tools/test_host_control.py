@@ -1,4 +1,7 @@
 """Host control: real server child process, status file, console commands, clean quit."""
+import contextlib
+import io
+import json
 import sys
 import tempfile
 import time
@@ -44,6 +47,65 @@ class StatusFileTests(unittest.TestCase):
             self.assertEqual(host_ops.read_status(path, 7), ({"pid": 7}, None))
             path.write_text("[1, 2]")
             self.assertEqual(host_ops.read_status(path), (None, None))
+
+
+class StartupTests(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temp.cleanup)
+        self.root = Path(self.temp.name)
+        for name, value in (("SETTINGS_FILE", self.root / "host_control.json"),
+                            ("LOG_FILE", self.root / "logs/host.log")):
+            patch = mock.patch.object(host_control, name, value)
+            patch.start()
+            self.addCleanup(patch.stop)
+
+    def test_help_and_options_do_not_open_a_window(self):
+        with mock.patch.object(host_control, "gui") as gui, contextlib.redirect_stdout(io.StringIO()) as out, \
+                self.assertRaises(SystemExit) as stop:
+            host_control.main(["--help"])
+        self.assertEqual(stop.exception.code, 0)
+        self.assertIn("--autostart", out.getvalue())
+        gui.assert_not_called()
+        with mock.patch.object(host_control, "gui") as gui, contextlib.redirect_stderr(io.StringIO()), \
+                self.assertRaises(SystemExit):
+            host_control.main(["--autostrat"])
+        gui.assert_not_called()
+        with mock.patch.object(host_control, "gui") as gui:
+            self.assertEqual(host_control.main(["--autostart"]), 0)
+        gui.assert_called_once_with(autostart=True)
+
+    def test_startup_error_is_shown_and_logged(self):
+        with mock.patch.object(host_control, "gui", side_effect=KeyError("Bogus mode")), \
+                mock.patch.object(host_control, "show_error") as shown:
+            self.assertEqual(host_control.main([]), 1)
+        log = host_control.LOG_FILE.read_text()
+        self.assertIn("KeyError: 'Bogus mode'", log)
+        self.assertIn("Traceback", log)
+        self.assertIn(str(host_control.LOG_FILE), shown.call_args.args[1])
+
+    def test_saved_settings_are_validated(self):
+        good = {"map": "CTF_arena", "kill_limit": 5, "time_limit_min": 2.5, "game": "elsewhere"}
+        bad = {"mode": "Bogus", "max_players": 99, "backdrop": "space", "terrain": "yes", "target_ships": 1.5,
+               "turret_trial": None, "address": 5, "game": " "}
+        host_control.SETTINGS_FILE.write_text(json.dumps({**bad, **{k: v for k, v in good.items() if k != "game"},
+                                                          "unknown": 1}))
+        notices = []
+        loaded = host_control.load_settings(notices)
+        self.assertEqual(loaded, {**host_control.DEFAULTS, **{k: v for k, v in good.items() if k != "game"}})
+        self.assertEqual(len(notices), len(bad))
+        self.assertTrue(any("'Bogus'" in notice for notice in notices))
+        for text in ("{not json", "[1, 2]"):
+            host_control.SETTINGS_FILE.write_text(text)
+            notices = []
+            self.assertEqual(host_control.load_settings(notices), host_control.DEFAULTS)
+            self.assertEqual(len(notices), 1)
+        host_control.SETTINGS_FILE.unlink()
+        notices = []
+        self.assertEqual(host_control.load_settings(notices), host_control.DEFAULTS)
+        self.assertEqual(notices, [])
+        host_control.save_settings({**host_control.DEFAULTS, **good, "mode": "VPN (internet)"})
+        self.assertEqual(host_control.load_settings(), {**host_control.DEFAULTS, **good, "mode": "vpn-dogfight"})
 
 
 class NodeControlTests(unittest.TestCase):
