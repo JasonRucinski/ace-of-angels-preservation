@@ -17,7 +17,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import host_ops
 import online_terrain
-from station_runtime import HOST_DEFAULTS, parse_args as server_config
+from station_runtime import HOST_DEFAULTS, ConfigError, parse_args as server_config
 
 SESSION_COMPLETE = 75
 DEFAULTS = {
@@ -36,8 +36,12 @@ DEFAULTS = {
 
 def load_config(path):
     data = json.loads(Path(path).read_text(encoding="utf-8"))
-    if not isinstance(data, dict) or set(data) - set(DEFAULTS) - {"comment"}:
-        raise ValueError("rotation config must be an object containing only documented settings")
+    if not isinstance(data, dict):
+        raise ValueError("rotation config must be a JSON object")
+    unknown = sorted(set(data) - set(DEFAULTS) - {"comment"})
+    if unknown:
+        raise ValueError(f"rotation config has unknown settings: {', '.join(unknown)} "
+                         f"(documented: comment, {', '.join(DEFAULTS)})")
     if not isinstance(data.pop("comment", ""), str):
         raise ValueError("comment must be text")
     settings = {**DEFAULTS, **data}
@@ -166,13 +170,19 @@ def main(argv=None):
     parser.add_argument("--status-file", type=Path,
                         help="default work/host/<profile>-status.json, as the host window writes")
     parser.add_argument("--profile", default="vpn-dogfight", choices=("vpn-dogfight", "lan-dogfight", "local-guests"))
-    parser.add_argument("--bind-address", default="127.0.0.1")
+    parser.add_argument("--bind-address", help="this host's LAN or VPN IPv4; required except for local-guests, "
+                                               "which uses 127.0.0.1")
     parser.add_argument("--max-players", type=int, default=HOST_DEFAULTS["max_players"])
     parser.add_argument("--port", type=int, default=5033)
     parser.add_argument("--arena-port", type=int, default=5031)
     parser.add_argument("--tcp", type=int, default=5034)
     parser.add_argument("--check", action="store_true", help="validate without opening sockets or writing state")
     args = parser.parse_args(argv)
+    if args.bind_address is None:
+        if args.profile != "local-guests":
+            parser.exit(2, f"{parser.prog}: error: --bind-address is required for {args.profile} "
+                           "(this host's own LAN or VPN IPv4 address)\n")
+        args.bind_address = "127.0.0.1"
     if args.status_file is None:
         args.status_file = host_ops.status_path(args.profile)
     try:
@@ -183,7 +193,10 @@ def main(argv=None):
         if len(args.key.read_bytes()) != 256:
             raise ValueError("SCRTY.BIN must contain exactly 256 bytes")
         for name in settings["maps"]:
-            server_config(child_args(args, settings, name))
+            try:
+                server_config(child_args(args, settings, name), raise_errors=True)
+            except ConfigError as error:
+                raise ValueError(f"station_stub.py settings for map {name}: {error}") from None
         load_state(args.state_file, settings["maps"])
         if args.check:
             print(json.dumps(settings, indent=2))
