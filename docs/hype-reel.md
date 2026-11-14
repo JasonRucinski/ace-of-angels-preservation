@@ -30,8 +30,8 @@ music. They live in git-ignored `work/reel/` and are **never committed**.
 ## Steps
 
 ```powershell
-py -3.12 -I tools\reel\record.py tools\reel\shots.json
-py -3.12 -I tools\reel\edit.py tools\reel\edit.json
+py -3.12 -I tools\run.py aoa.reel.record aoa\reel\shots.json
+py -3.12 -I tools\run.py aoa.reel.edit aoa\reel\edit.json
 ```
 
 `record.py` writes `work\reel\raw\NN_<shot>.mp4` and a log of what each shot
@@ -42,7 +42,7 @@ platforms may flag the original MUSIC.MP3.
 
 ## How a shot is filmed
 
-For each entry in [`shots.json`](../tools/reel/shots.json), `record.py`:
+For each entry in [`shots.json`](../aoa/reel/shots.json), `record.py`:
 
 1. Starts the loopback host on the shot's map with `--start-vessel` (the
    fighter the pilot starts in), optional `--spawn-at` and `--target-ships`.
@@ -50,7 +50,7 @@ For each entry in [`shots.json`](../tools/reel/shots.json), `record.py`:
    (`client_login.ps1`, then Station Play). After a killed session the first
    launch sometimes shows a login dialog with five edit boxes; the recorder
    relaunches.
-3. Logs in the shot's scripted pilots (`tools/reel/bot.py`): synthetic
+3. Logs in the shot's scripted pilots (`aoa/reel/bot.py`): synthetic
    clients that ask for a hull with the fighter menu's `0xA0` request and send
    absolute position and velocity 30 times a second along a straight line or
    circle. They fly nose-first along +z; nothing sends orientation, so the

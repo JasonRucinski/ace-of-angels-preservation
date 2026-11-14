@@ -9,7 +9,7 @@ from the command line.
 
 ## Opening it
 
-Double-click `tools\host_control.cmd`, or run:
+Double-click `Host.cmd`, or run:
 
 ```powershell
 .venv/Scripts/python.exe -I tools/host_control.py
@@ -100,7 +100,7 @@ Two commands were added to the server console (also usable from
 
 ## Verification (23 October 2026)
 
-- `tools/test_host_control.py` starts the real server (ephemeral ports)
+- `tests/test_host_control.py` starts the real server (ephemeral ports)
   through the same process wrapper. It checks the status file, `say`, a clean
   `quit` with cleanup output, settings refused before starting, and the
   arguments for every map and mode. It is part of `verify_local.py`.

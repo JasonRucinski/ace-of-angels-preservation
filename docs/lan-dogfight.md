@@ -170,7 +170,7 @@ are on the same LAN, not an isolated guest Wi-Fi. An address change requires
 updating hosts entries, firewall rules and the host command. A same-PC connection
 to the LAN address does not verify another PC's firewall/network path.
 
-Automated checks: `tools/test_lan_dogfight.py` validates configuration and guest
+Automated checks: `tests/test_lan_dogfight.py` validates configuration and guest
 source-IP binding, then runs the actual profile with its fixture LAN address
 redirected to loopback. It verifies all three requested listener addresses,
 listing, two guest admissions, 120 combat events per observer, duplicate impacts,

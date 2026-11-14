@@ -5,7 +5,7 @@ available assets, not a claim that the replacement server can host their
 original game modes. Reproduce with:
 
 ```powershell
-.venv/Scripts/python.exe -I tools/arena_inventory.py work/2.9.2/export work/2.9.2/scenes evidence/2.9.2/arena_inventory.json
+.venv/Scripts/python.exe -I tools/run.py archive.analysis.arena_inventory work/2.9.2/export work/2.9.2/scenes evidence/2.9.2/arena_inventory.json
 ```
 
 The scene JSON is produced by `tools/scene2obj.py` (see `assets.md`). Its
@@ -39,7 +39,7 @@ the original `field40` placeholder caused an intentional client shutdown.
 strings include Defense, Offense, Attackers, Defenders, and Air Superiority.
 Those are labels inside one file, not five recovered scenarios. Its structure
 (teams, groups, ships, orders, waypoints) is now decoded by
-`tools/decode_scenario.py`; trigger and win rules are not in the file. The
+`aoa/formats/scenario.py`; trigger and win rules are not in the file. The
 loose `JRMAP.TRN` is a further editor-saved map. See [level-data.md](level-data.md).
 This inventory does not cover missing server-delivered resources.
 
@@ -51,7 +51,7 @@ alone does not provide those. No original multiplayer scenario is yet
 verified hostable. See findings 9.11 for the object-spawn evidence.
 
 Static `CTF_arena` continuation (21 October 2026):
-`python -I tools/check_arena_geometry.py` checks the existing heuristic export
+`python -I tools/run.py aoa.maps.arena_geometry` checks the existing heuristic export
 and writes `work/ctf-arena-validation.json`. It found 37,449 finite vertices,
 35,134 triangles with valid indices, 113 exported objects and no degenerate
 triangles. All resolved model files exist. Six nodes remain unresolved:

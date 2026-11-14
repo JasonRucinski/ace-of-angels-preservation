@@ -44,7 +44,7 @@ this is a file-level comparison, **not 89 confirmed new gameplay assets**.
    The capital-ship config also names the United Human Confederacy.
 
    The existing model reader could not read the 32-byte legacy vertices.
-   `tools/export_legacy_models.py` recovers **44 meshes from 37 of 40**
+   `aoa/maps/export_legacy_models.py` recovers **44 meshes from 37 of 40**
    2.0.0 Gob files and **93 meshes from 59 of 78** 2.7.1 Gob files. Accepted
    meshes have finite values, at least 95% unit normals, in-range face indices,
    and an exact shader-record boundary. These are geometry-only OBJ/MTL
@@ -120,11 +120,11 @@ here establishes that old data can be dropped into 2.9.2 unchanged.
   gitignored. Evidence JSON contains inventories and validation metadata.
 
 ```powershell
-.venv/Scripts/python.exe -I tools/compare_version_assets.py
-.venv/Scripts/python.exe -I tools/compare_client_resources.py --reports work/evidence/asset-review
+.venv/Scripts/python.exe -I tools/run.py aoa.research.compare_version_assets
+.venv/Scripts/python.exe -I tools/run.py archive.analysis.compare_client_resources --reports work/evidence/asset-review
 # Replace VERSION with a complete-installer version:
 .venv/Scripts/python.exe -I tools/export_assets.py work/asset-review/VERSION/assets work/asset-review/VERSION/export
-.venv/Scripts/python.exe -I tools/export_legacy_models.py work/asset-review/2.0.0/export/AOAOBJECTS work/asset-review/2.0.0/legacy-models
+.venv/Scripts/python.exe -I tools/run.py aoa.maps.export_legacy_models work/asset-review/2.0.0/export/AOAOBJECTS work/asset-review/2.0.0/legacy-models
 .venv/Scripts/python.exe -I tools/scene2obj.py work/asset-review/2.8.0/export/AOAOBJECTS Arena1a work/asset-review/2.8.0/scenes ../export/TEXTURES
 ```
 

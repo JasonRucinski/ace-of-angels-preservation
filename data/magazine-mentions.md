@@ -1,7 +1,7 @@
 # Ace of Angels in scanned magazines (archive.org full-text search)
 
-Found with `tools/ia_fulltext_search.py data/`, which writes
-`data/ia_fulltext_hits.json`, and read with `tools/ia_fulltext_context.py data/`,
+Found with `aoa/research/ia_fulltext_search.py data/`, which writes
+`data/ia_fulltext_hits.json`, and read with `aoa/research/ia_fulltext_context.py data/`,
 which writes `data/ia_fulltext_passages.txt`. The passages file keeps only the
 OCR sentences that name the game or Flying Rock; the full pages are on archive.org.
 Every row below was read in the OCR text, not

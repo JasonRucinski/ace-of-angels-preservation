@@ -109,7 +109,7 @@ one safe zone; the latter has 456 plus one safe zone. These agree with the
 previous live counts of 616 and 457. The original client already resolves
 these references; this change fixes the analysis/export tools, not gameplay.
 
-`tools/audit_map_nodes.py` inventories all 17 node-layout Gobs and writes
+`archive/analysis/audit_map_nodes.py` inventories all 17 node-layout Gobs and writes
 [counts and remaining node classes](../evidence/2.9.2/map_nodes_20261026.json)
 (a re-run writes `work/evidence/2.9.2/` unless given `--evidence PATH`).
 Full records and regenerated OBJ files are local under `work/map-node-review/`.
@@ -124,7 +124,7 @@ with CRT string/uppercase calls stubbed. No live-client changes were made.
 
 ### Loader
 
-- Client: `online-terrain-v3` (`tools/online_terrain.py`) hooks the
+- Client: `online-terrain-v3` (`aoa/client/patches/online_terrain.py`) hooks the
   flight-entry handler at `0x4306AF`. The server's four-byte 0x2C body
   selects the map: `AR1A` means Arena1a, kept for v1-prepared clients;
   `MAP` plus an index byte selects any entry of the 20-entry table in the

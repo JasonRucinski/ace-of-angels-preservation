@@ -70,10 +70,10 @@ run `game\2.9.2\AOACLIENT.EXE` and choose **Play Offline** → **Play**, or
 | Symptom | Cause | Fix |
 |---|---|---|
 | Crash `0xC000041D` creating the first dialog | Login/station dialogs host SoftShape ActiveSkin 3.60 ActiveX controls (`{972DE6C2-…}`, `{53FA8D4x-…}`); unregistered, MFC throws and then frees a bad pointer. | `tools/register_activeskin.ps1`: runs the OCX's own `DllRegisterServer` in a 32-bit process with HKCR → `HKCU\Software\Classes` and HKLM → HKCU (`RegOverridePredefKey`). HKLM is needed because the ScriptPlugins object writes `HKLM\Software\SoftShape\ActiveSkin\ScriptPlugins` directly and fails registration otherwise. Nothing is written to HKLM. |
-| Random heap crashes during `InitAppResources` (`0xC0000005` in ntdll heap, or `CMemoryException` on tiny allocations) | Heap overflow: the separately built Dx7Api library (`Z:\src\Dx7Api`) allocates the "DxGfx" logger with a stale `sizeof` of 0x20 (`push 0x20` at VA 0x551775); the logger class is 0x24 bytes and its constructor (0x5266b0) writes +0x20. | `tools/patch_client.py`: `push 0x20` → `push 0x24`. |
-| Occasional crash writing 0x10023 in a worker thread | Logger (0x526d00) is not thread-safe: per line it does fopen/fwrite/fclose and stores `(FILE*)0xFFFF`, so a concurrent thread can `fwrite(0xFFFF)`; the formatter it uses (0x527210) `vsprintf`s into one global buffer. | `tools/patch_client.py`: both functions wrapped in a recursive spinlock in the `.text` padding (0x58B200), using only imports the client already has. |
+| Random heap crashes during `InitAppResources` (`0xC0000005` in ntdll heap, or `CMemoryException` on tiny allocations) | Heap overflow: the separately built Dx7Api library (`Z:\src\Dx7Api`) allocates the "DxGfx" logger with a stale `sizeof` of 0x20 (`push 0x20` at VA 0x551775); the logger class is 0x24 bytes and its constructor (0x5266b0) writes +0x20. | `aoa/client/base.py`: `push 0x20` → `push 0x24`. |
+| Occasional crash writing 0x10023 in a worker thread | Logger (0x526d00) is not thread-safe: per line it does fopen/fwrite/fclose and stores `(FILE*)0xFFFF`, so a concurrent thread can `fwrite(0xFFFF)`; the formatter it uses (0x527210) `vsprintf`s into one global buffer. | `aoa/client/base.py`: both functions wrapped in a recursive spinlock in the `.text` padding (0x58B200), using only imports the client already has. |
 
-The overflow was located with `tools/crashdbg.py --guard-heap`, which serves
+The overflow was located with `aoa/live/crashdbg.py --guard-heap`, which serves
 every msvcrt allocation from a guard-paged arena so the overrunning instruction
 faults immediately. Before the patch the client crashed in 3/3 fresh-path
 launches; after it, 6/6 reached the login dialog. The Windows XP SP3
@@ -123,7 +123,7 @@ recorded no invalid values in 300 samples, versus 38 of 100 before the fix.
 The consolidated preparation above includes this guard. The guard skips
 physics only when the elapsed time is zero and leaves positive time steps on
 the original path. It was first tried as a standalone command
-(`tools/physics_timestep.py EXE`, with `--undo`); that command line was
+(`aoa/client/patches/physics_timestep.py EXE`, with `--undo`); that command line was
 removed on 13 November 2026 and `prepare_client.py` is now the only way to
 apply it. This does not implement missing multiplayer gameplay. See
 findings 9.10.

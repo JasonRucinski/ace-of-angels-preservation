@@ -2,7 +2,7 @@
 
 Run everything from the repository root with the project's Python:
 `.venv\Scripts\python.exe -I tools\<script>.py` on Windows, or
-`python3 -I tools/<script>.py` on Linux (the [Linux host](../docs/linux-host.md)
+`python3 -I tools/<script>.py` on Linux (the [Linux host](../linux-host.md)
 uses no venv). Each script's docstring gives its usage, and `--help` prints
 it without doing anything else (`test_cli_help.py` checks this for every
 script).
@@ -27,21 +27,21 @@ executable accept only known, hash-checked builds and record an exact undo.
 | Script | Does |
 |---|---|
 | `fetch_known_builds.py DIR` | Downloads the verified 2.8.2 and 2.9.2 installers from archive.org and checks their hashes |
-| `setup_game.ps1` | Builds a playable `game\2.9.2` folder: extract, patch, register, wrapper ([play.md](../docs/play.md)). Needs `.venv`; stops if a `-Wrapper` path you name is missing |
+| `setup_game.ps1` | Builds a playable `game\2.9.2` folder: extract, patch, register, wrapper ([play.md](../play.md)). Needs `.venv`; stops if a `-Wrapper` path you name is missing |
 | `prepare_client.py prepare/check/undo/launch EXE` | Applies every client fix with an exact undo, verifies the result, and launches the game. `prepare` changes only the options you name |
 | `client_launcher.cmd` / `client_launcher.py` | Client window with saved visual checkboxes, original-visuals preset, Apply and Play. The `.cmd` keeps a console open, so an error before the window appears stays readable |
 | `host_control.cmd` / `host_control.py` | The host window: start, watch players, message, kick, switch maps, stop |
 | `start_lan_dogfight.ps1` | Starts the LAN or VPN dogfight server from the command line |
 | `map_viewer.py serve MAP` | Serves one recovered map for flying around |
-| `make_object.py install SPEC MODEL.glb CLIENT` | Adds a new object from a glTF model to a play copy's object database ([custom-objects.md](../docs/custom-objects.md)) |
-| `make_map.py install/serve SPEC CLIENT` | Builds a new map from a JSON spec into a play copy of the client and serves it ([custom-maps.md](../docs/custom-maps.md)) |
+| `make_object.py install SPEC MODEL.glb CLIENT` | Adds a new object from a glTF model to a play copy's object database ([custom-objects.md](../custom-objects.md)) |
+| `make_map.py install/serve SPEC CLIENT` | Builds a new map from a JSON spec into a play copy of the client and serves it ([custom-maps.md](../custom-maps.md)) |
 | `station_stub.py` | The stand-in Station and arena server that all of the above run |
-| `dedicated_host.py` | The unattended Linux host: map rotation, fresh process per map, watchdog ([linux-host.md](../docs/linux-host.md)) |
+| `dedicated_host.py` | The unattended Linux host: map rotation, fresh process per map, watchdog ([linux-host.md](../linux-host.md)) |
 | `register_activeskin.ps1` | Registers the game's dialog skin control for the current user (no admin) |
 | `make_install.py` / `install_wrapper.py` | The extract and wrapper steps of `setup_game.ps1` |
-| `build_texture_pack.py GAME_DIR` | Builds the 2x skin pack from your own archives with Real-ESRGAN ([texture-pack.md](../docs/texture-pack.md)) |
+| `build_texture_pack.py GAME_DIR` | Builds the 2x skin pack from your own archives with Real-ESRGAN ([texture-pack.md](../texture-pack.md)) |
 | `texture_pack.py` | Installs or removes replacement TGA skins in a game folder |
-| `reel/record.py SHOTS` / `reel/edit.py EDIT` | Films scripted shots of the real client and cuts them into the highlight reel ([hype-reel.md](../docs/hype-reel.md)). Their inputs are `reel/shots.json` and `reel/edit.json`; `reel/bot.py` (scripted pilots), `reel/scout.py` (terrain positions and an F5 capture per map), `reel/client_mem.py` (camera forced in the running process) and `reel/window.py` (window helpers) are their parts. Windows only |
+| `reel/record.py SHOTS` / `reel/edit.py EDIT` | Films scripted shots of the real client and cuts them into the highlight reel ([hype-reel.md](../hype-reel.md)). Their inputs are `reel/shots.json` and `reel/edit.json`; `reel/bot.py` (scripted pilots), `reel/scout.py` (terrain positions and an F5 capture per map), `reel/client_mem.py` (camera forced in the running process) and `reel/window.py` (window helpers) are their parts. Windows only |
 
 ## Server internals
 
@@ -55,7 +55,7 @@ Arena1a trials, each opt-in on the server: `navigation_buoys.py`
 (navigation buoys on every map), `turret_groups.py` and `turret_trial.py`
 (five disabled turrets), `warp_trial.py` (nine warp gates), with the live
 memory checks `verify_navigation_buoys.py`, `verify_turret_trial.py` and
-`verify_warp_trial.py` ([arena1a-rebuild.md](../docs/arena1a-rebuild.md)).
+`verify_warp_trial.py` ([arena1a-rebuild.md](../arena1a-rebuild.md)).
 `vessel_combat.py` is the per-ship hit point and gun damage table that
 `make_vessel_combat.py` generates (`--check` compares without writing).
 
@@ -67,7 +67,7 @@ HTTP 429 and 5xx).
 ## Client patches
 
 Each is a library used by `prepare_client.py`, with a matching `test_*.py`.
-Details and addresses are in [client-setup.md](../docs/client-setup.md).
+Details and addresses are in [client-setup.md](../client-setup.md).
 `patch_client.py`, `physics_timestep.py` and `local_station.py` have no
 command line of their own any more. The optional rendering modules
 (`asteroid_render.py`, `solid_world_render.py`, `station_detail.py`,
@@ -139,9 +139,9 @@ offline-only experiments `prepare_offline_baseline.py`,
 `SUITES` list (most, not all, of the `test_*.py` files) and the emulators,
 about 10 minutes. It does not launch the game, but it needs a prepared
 `game\2.9.2` folder (it reads the original `AOACLIENT.EXE.orig`). Run a single
-suite with `.venv\Scripts\python.exe -I tools\test_station_stub.py`.
+suite with `.venv\Scripts\python.exe -I tools\test.py test_station_stub`.
 
 Without the game, the server, relay and host suites still run; the
 client-patch suites skip or fail for lack of the executable or of `unicorn`,
 `capstone` and `pefile`. CI runs the game-free list on every push and pull
-request ([`.github/workflows/tests.yml`](../.github/workflows/tests.yml)).
+request ([`.github/workflows/tests.yml`](../../.github/workflows/tests.yml)).

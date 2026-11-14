@@ -33,7 +33,7 @@ OBJ previews negate game Z. Turret coordinates must not be used for spawning
 until their attachment hierarchy is recovered.
 
 Local previews, generated from the original assets by
-`tools/audit_arena1a.py` into the ignored `work/arena1a-review/` folder (so
+`aoa/maps/arena1a_audit.py` into the ignored `work/arena1a-review/` folder (so
 they exist only on a machine that has run it):
 
 - `work/arena1a-review/Arena1a-expanded.png`, the full expanded map
@@ -81,7 +81,7 @@ collision and interactive-node acceptance remain open. See
 [the sanitized snapshot summary](../evidence/2.9.2/online_terrain_20261022.json).
 
 ```powershell
-.venv/Scripts/python.exe -I tools/audit_arena1a.py
+.venv/Scripts/python.exe -I tools/run.py aoa.maps.arena1a_audit
 # The report goes to work/evidence/2.9.2/; add
 # --evidence evidence/2.9.2/arena1a_audit_20261021.json to replace the committed one.
 powershell -NoProfile -ExecutionPolicy Bypass -File tools/start_lan_dogfight.ps1 -HostAddress 192.168.0.61 -Map Arena1a -PrintConfig

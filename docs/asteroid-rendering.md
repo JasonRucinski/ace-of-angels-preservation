@@ -41,7 +41,7 @@ all complete JSONL samples preceding the failure were retained.
 
 ## Reversible workaround
 
-`tools/asteroid_render.py` replaces the single floating-point comparison at
+`aoa/client/patches/asteroid_render.py` replaces the single floating-point comparison at
 `0x543222` with guarded code in unused padding at `0x58BA00`. For model names
 beginning `Astr-` or `Astr_`, it uses the existing 900,000-unit billboard horizon
 constant. All other names use the original 61,000 comparison. The hook preserves
@@ -62,8 +62,8 @@ the online terrain hook and the existing offline clock/culling experiments.
 ## Verification
 
 ```powershell
-.venv\Scripts\python.exe -I tools/test_asteroid_render.py
-.venv\Scripts\python.exe -I tools/test_object_lod.py
+.venv\Scripts\python.exe -I tools/test.py test_asteroid_render
+.venv\Scripts\python.exe -I tools/test.py test_object_lod
 .venv\Scripts\python.exe -I tools/verify_local.py --report work/asteroid-render-verification/gate.json
 ```
 
@@ -79,7 +79,7 @@ it is not a measured frame-rate benchmark or validation of every scene.
 
 ## Extension to all solid world models
 
-At the user's request, `tools/solid_world_render.py` replaces the same six-byte
+At the user's request, `aoa/client/patches/solid_world_render.py` replaces the same six-byte
 comparison at `0x543222` directly with `fcomp [0x59D9C0]`, using 900,000 instead
 of 61,000 surface-distance units for world model groups. It replaces the
 asteroid-only selection and clears that patch's code cave. No name list or new
@@ -101,10 +101,10 @@ the existing 900,000-unit horizon and other visibility gates still apply.
 With the client closed:
 
 ```powershell
-.venv\Scripts\python.exe -I tools/solid_world_render.py game/2.9.2/AOACLIENT.EXE
+.venv\Scripts\python.exe -I tools/run.py aoa.client.patches.solid_world_render game/2.9.2/AOACLIENT.EXE
 # Turn it off (asteroid-only mode does not come back):
-.venv\Scripts\python.exe -I tools/solid_world_render.py game/2.9.2/AOACLIENT.EXE --undo
-.venv\Scripts\python.exe -I tools/test_solid_world_render.py
+.venv\Scripts\python.exe -I tools/run.py aoa.client.patches.solid_world_render game/2.9.2/AOACLIENT.EXE --undo
+.venv\Scripts\python.exe -I tools/test.py test_solid_world_render
 ```
 
 Normal preparation preserves the installed mode; a fresh preparation does not
@@ -125,7 +125,7 @@ share texture `hy_bs1_b.tga`, the `SimpleTextured` shader name, material name,
 and white vertex colors. Geometry and normals differ. This makes their lighting
 a candidate for the user-reported brightness jump, not a proven GPU diagnosis.
 
-At the user's request, `tools/station_detail.py` pins this station to its
+At the user's request, `aoa/client/patches/station_detail.py` pins this station to its
 closest mesh selection. It replaces the size load at `0x546BE4` with a guarded
 hook at `0x58BB00`: exact model name `Hy_base1` receives the original maximum
 projected size of 4000 for child LOD selection. Other names receive their actual
@@ -137,9 +137,9 @@ than the station's lower-resolution rock textures.
 
 ```powershell
 # Close the client first:
-.venv\Scripts\python.exe -I tools/station_detail.py game/2.9.2/AOACLIENT.EXE
-.venv\Scripts\python.exe -I tools/station_detail.py game/2.9.2/AOACLIENT.EXE --undo
-.venv\Scripts\python.exe -I tools/test_station_detail.py
+.venv\Scripts\python.exe -I tools/run.py aoa.client.patches.station_detail game/2.9.2/AOACLIENT.EXE
+.venv\Scripts\python.exe -I tools/run.py aoa.client.patches.station_detail game/2.9.2/AOACLIENT.EXE --undo
+.venv\Scripts\python.exe -I tools/test.py test_station_detail
 ```
 
 Preparation preserves this optional selection and recognizes
@@ -168,7 +168,7 @@ distance cutoff was extended. This is stronger evidence for the brightness
 handoff than the earlier unverified `Hy_base1` assumption. The nearby
 `RingPanel` structure has a single mesh and is distinct from these dock sections.
 
-`tools/world_detail.py` supersedes station-only detail with two changes:
+`aoa/client/patches/world_detail.py` supersedes station-only detail with two changes:
 
 - `0x546BE4`: select child meshes/textures using the original close-up size of
   4000, instead of the real projected size. The root's stored size is untouched.
@@ -186,9 +186,9 @@ or mip-filter override.
 
 ```powershell
 # Close the client first:
-.venv\Scripts\python.exe -I tools/world_detail.py game/2.9.2/AOACLIENT.EXE
-.venv\Scripts\python.exe -I tools/world_detail.py game/2.9.2/AOACLIENT.EXE --undo
-.venv\Scripts\python.exe -I tools/test_world_detail.py
+.venv\Scripts\python.exe -I tools/run.py aoa.client.patches.world_detail game/2.9.2/AOACLIENT.EXE
+.venv\Scripts\python.exe -I tools/run.py aoa.client.patches.world_detail game/2.9.2/AOACLIENT.EXE --undo
+.venv\Scripts\python.exe -I tools/test.py test_world_detail
 ```
 
 Normal preparation preserves the selected mode. Turning on station-only
@@ -202,7 +202,7 @@ Flight confirmation of brightness consistency remains pending.
 
 ## Distant object persistence (27 October 2026)
 
-`tools/object_persistence.py` adds a separate optional visibility patch,
+`aoa/client/patches/object_persistence.py` adds a separate optional visibility patch,
 `distant-world-objects-v1`. It extends the mesh surface-distance cutoff from
 61,000 to **4,500,000 world units**, and the cached-world-image horizon from
 900,000 to the same limit. The shared model visibility check now accepts
@@ -231,10 +231,10 @@ or intentional sprites/particles.
 Close the client first, then run from the repository root:
 
 ```powershell
-.venv\Scripts\python.exe -I tools/object_persistence.py game/2.9.2/AOACLIENT.EXE
+.venv\Scripts\python.exe -I tools/run.py aoa.client.patches.object_persistence game/2.9.2/AOACLIENT.EXE
 # Turn it off:
-.venv\Scripts\python.exe -I tools/object_persistence.py game/2.9.2/AOACLIENT.EXE --undo
-.venv\Scripts\python.exe -I tools/test_object_persistence.py
+.venv\Scripts\python.exe -I tools/run.py aoa.client.patches.object_persistence game/2.9.2/AOACLIENT.EXE --undo
+.venv\Scripts\python.exe -I tools/test.py test_object_persistence
 ```
 
 On a client never prepared before, the command first applies the default

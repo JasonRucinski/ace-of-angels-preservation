@@ -42,7 +42,7 @@ All addresses are VAs in the 2.7.1 client (SHA-256 b179c3c2…) unless marked 2.
     `CComm` is not marked ready unless that file loads.
 * Receive path (0x60DEF0): `recvfrom` (≤0x200 bytes), decrypt, decompress (capped at
   0x200), split off the type and CRC, and accept only if the CRC matches.
-* Python implementations in `tools/aoacrypt.py`, `tools/aoapack.py`, and `tools/aoanet.py`
+* Python implementations in `aoa/formats/aoacrypt.py`, `tools/aoapack.py`, and `aoa/protocol/codec.py`
   match the client's own code exactly:
   * cipher: 220/220 cases, for both 2.7.1 and 2.9.2;
   * compressor: byte-identical output, 36/36;
@@ -169,9 +169,9 @@ Still missing:
 ```
 py -3.12 -m venv .venv && .venv/Scripts/python -m pip install -r requirements.txt
 python -I tools/fetch.py manifest/downloads.json 2.7.1 originals/2.7.1
-python -I tools/inventory.py <installer> <ver> [docs/history/2026-10-20-research-handoff.txt] work/<ver>
-python -I tools/version_probe.py | packet_sizes.py | config_records.py | dispatch_table.py | send_sites.py ...
-python -I tools/emulate_cipher.py / emulate_codec.py   (see each script's docstring)
+python -I tools/run.py archive.analysis.inventory <installer> <ver> [docs/history/2026-10-20-research-handoff.txt] work/<ver>
+python -I tools/run.py aoa.research.version_probe | packet_sizes.py | config_records.py | dispatch_table.py | send_sites.py ...
+python -I tools/run.py archive.analysis.emulate_cipher / emulate_codec.py   (see each script's docstring)
 ```
 All outputs are under `evidence/<ver>/`.
 
@@ -183,7 +183,7 @@ login dialog's Station IP box (Play Online, handle `testpilot`, test
 password). No traffic went to any historical host.
 
 **CONFIRMED live:**
-* The codec in `tools/aoanet.py` decodes every client datagram with valid CRC
+* The codec in `aoa/protocol/codec.py` decodes every client datagram with valid CRC
   using SCRTY.BIN as the key.
 * **SConnectReq** (0x0A): UDP to port 5033, 381-byte payload, version
   fields 2.9.2, handle at +0x1F, 350-byte login block; resent every 2 s,
@@ -302,13 +302,13 @@ Not yet supplied: the game-server list, player list, MOTD/chat traffic.
 
 **Verification completed:**
 
-* `tools/emulate_station_aliases.py` executes the actual `0x45DBE0` handler
+* `aoa/emulation/check_station_aliases.py` executes the actual `0x45DBE0` handler
   in Unicorn, with logging and Windows UI imports intercepted. Four cases
   passed: empty previous name, "Offline", matching previous name, and a
   19-character supplied name. In each, the handler added exactly one item
   and selected it. Evidence: `evidence/2.9.2/station_aliases_emulation.json`.
   This verifies the payload layout and selection calls, not live UI timing.
-* `python -I tools/test_station_stub.py`: five passing regression checks,
+* `python -I tools/test.py test_station_stub`: five passing regression checks,
   including a real subprocess/socket exchange on ephemeral localhost
   Station ports with a synthetic key. Checks cover TCP fragmentation and
   decompression, the subsequent alias datagram, both acknowledgement
@@ -342,7 +342,7 @@ world state is not implemented. This is not a playable multiplayer server.
   returns, so it is not evidence of a missing AI-file load.
 * No matching new crash dump or Windows crash event was found during this
   inspection. The failing instruction and cause are **not yet known**.
-  A reproduction under `tools/crashdbg.py` was requested before attempting
+  A reproduction under `aoa/live/crashdbg.py` was requested before attempting
   a crash fix. Placeholder terrain/background names and the minimal echoed
   player record remain possible later initialization problems, not proven
   causes of this crash.
@@ -354,7 +354,7 @@ Sanitized evidence (no login-block/password bytes):
 
 **Confirmed in locally operated debugger runs on 20 Oct 2026:**
 
-* `tools/crashdbg.py --trace-exit` now intercepts CRT `exit` and `_exit`
+* `aoa/live/crashdbg.py --trace-exit` now intercepts CRT `exit` and `_exit`
   and records the caller before allowing normal execution. The original
   failure was an intentional `_exit(2)`, returning to `0x43A3A5`, rather
   than an unhandled exception. `On3dGfxInitialized` looked up the backdrop,
@@ -412,7 +412,7 @@ flight entry, unlike the fallback watchdog path at `0x433AC9`.
 
 **Live evidence:** two real clients ran from separate ignored local folders.
 Client B executed two player loads, a ship load, and explicit flight entry.
-`tools/inspect_arena.py` read its active player array: local slot 0 held
+`aoa/live/arena.py` read its active player array: local slot 0 held
 `LocalPilot2`, tag `0x80010002`; slot 1 held `LocalPilot1`, tag `0x80010001`.
 The UI also announced both pilots entering the scene. Thus remote player
 creation is confirmed in this direction, not just packet transmission.
@@ -463,7 +463,7 @@ Verification:
 - Seven protocol tests pass, including actual localhost two-peer transport
   with the unsafe optional block removed, wrong-slot rejection and prefix
   truncation checks.
-- `tools/emulate_movement.py` executes original decoder `0x495330` in
+- `aoa/emulation/check_movement.py` executes original decoder `0x495330` in
   Unicorn. All 229 single-bit/combined/random mask cases consume exactly
   the filtered body length. A nonzero target-position case writes the
   expected coordinates. The deliberately unsupported optional pointer
@@ -628,7 +628,7 @@ physics breakpoint. Raw trace: ignored `work/physics-client.txt`.
 `local_station.py`, was removed; the modules are libraries that
 `prepare_client.py` applies. The findings below are unchanged.)
 
-`tools/physics_timestep.py` adds a reversible guard at `0x48AE71`. After
+`aoa/client/patches/physics_timestep.py` adds a reversible guard at `0x48AE71`. After
 the original tick bookkeeping, it checks the calculated time step at
 `[esp+0x38]`. Zero takes the existing balanced epilogue at `0x48CE9F`;
 positive values execute the displaced instruction and original physics.
@@ -719,7 +719,7 @@ Static inspection of the original 2.9.2 executable establishes these paths:
 | `0x2D` | Server to client, player slot in payload byte 0 | Dispatch at `0x430710` reads one byte and calls `0x4A6FB0`, whose diagnostics identify `RemovePlayer`. The routine indexes the player array at world `+0xD32AC` with stride `0x3B0`. No generation/tag check precedes removal. The stub sends exactly one byte; a historical sender's full packet size is not independently recovered. |
 | `0x09` | Client to server, 12-byte bounced ping | `BouncePing` at `0x486C20` replaces payload byte 6 with the local tag's low byte at `0x486C58`/`0x486C5E`; length/type are set at `0x486CDB`/`0x486CE5`. The timestamp remains in payload bytes 0..3. |
 
-Reproduce the static inspection with `tools/explore.py`, using
+Reproduce the static inspection with `aoa/analysis/explore.py`, using
 `game/2.9.2/AOACLIENT.EXE.orig` and `work/2.9.2/disasm.pkl`: commands
 `dis 48724d 110`, `dis 430710 24`, `func 4a6fb0`, and `dis 486c20 65`.
 This is client-side evidence, not recovered original server behavior.
@@ -754,7 +754,7 @@ Station ownership, alias routing, TCP jobs and passive mission objects are
 outside this arena-only cleanup change. Inactive/minimized real clients may
 expire because their processing pause remains unresolved.
 
-Verification: `python -I tools/test_station_stub.py` exercises real localhost
+Verification: `python -I tools/test.py test_station_stub` exercises real localhost
 UDP sockets with a synthetic key; all 12 tests passed in 37.947 seconds.
 The lifecycle test verifies cancellation
 before bootstrap, one removal for duplicate wrapped quits, malformed quit
@@ -784,13 +784,13 @@ duplicate suppression, not ordered delivery or a permanent replay barrier.
 Sequence zero is initially considered a duplicate. After 30 different IDs
 have displaced an earlier ID, that old packet can execute again.
 
-`tools/emulate_reliable_history.py` runs the original constructor and filter
+`aoa/emulation/check_reliable_history.py` runs the original constructor and filter
 in Unicorn with the existing allocator stub; it verifies zero rejection,
 acceptance of IDs 1..30, rejection of their duplicates, and acceptance of an
 old ID after eviction. Reproduction:
 
 ```powershell
-.venv\Scripts\python.exe -I tools/emulate_reliable_history.py game/2.9.2/AOACLIENT.EXE.orig evidence/2.9.2/reliable_history_emulation.json
+.venv\Scripts\python.exe -I tools/run.py aoa.emulation.check_reliable_history game/2.9.2/AOACLIENT.EXE.orig evidence/2.9.2/reliable_history_emulation.json
 ```
 
 The output records the verified original executable hash. This executes
@@ -829,7 +829,7 @@ acknowledging retries. A second socket case keeps heartbeats alive while
 dropping every removal ACK and verifies retirement after five copies.
 Real-client reliable dispatch and visible despawn remain unverified.
 
-Verification result: all 14 tests in `python -I tools/test_station_stub.py`
+Verification result: all 14 tests in `python -I tools/test.py test_station_stub`
 passed in 43.075 seconds, including complete removal-ACK loss. The original
 duplicate-filter emulator also passed; `git diff --check` reported no errors.
 
@@ -841,7 +841,7 @@ computer-use helper returned `GetCursorPos failed: Access is denied.
 No game process opened. The temporary loopback server was stopped. This is
 an automation/environment failure, not evidence of a game or protocol crash.
 
-The existing `tools/emulate_reliable_history.py` now also exercises original
+The existing `aoa/emulation/check_reliable_history.py` now also exercises original
 machine code beginning at `0x4863C8`, after sender recognition. It supplies
 actual packets from `station_stub.ReliableRemovals`, executes the wrapper
 unpacking, ACK preparation and duplicate check, and stops at the accepted
@@ -919,7 +919,7 @@ that record pointer world+`0xD3620`, the pointer used by TCP request packing.
 The stand-in now places a per-session ID at ACK payload+`0x88` (13+`0x7B`).
 The header player tag remains 1, independent of this correlation ID.
 
-`tools/emulate_station_request.py` verifies the original executable hash,
+`aoa/emulation/check_station_request.py` verifies the original executable hash,
 executes the original record copy and request-packing instructions, and checks
 two distinct u32 IDs plus flag `0xA7`. Both IDs survive unchanged; job 5 remains
 5 despite the nonzero flag. Evidence is in
@@ -1138,7 +1138,7 @@ beyond removals, or slot reuse/reconnect.
 
 ### 9.22 Server hang-up (`0x3E`), client grace timers and shutdown (21 October 2026)
 
-Static analysis of the 2.9.2 client only (`tools/explore.py`); nothing here
+Static analysis of the 2.9.2 client only (`aoa/analysis/explore.py`); nothing here
 was observed in a running client. It answers whether a server can tell a
 client to disconnect cleanly before shutdown.
 
@@ -1269,7 +1269,7 @@ patched client in its own folder crashed the same way (`0xC0000005`,
 `ntdll+0x5019E`) about 0.3 s after `On3dGfxInitialized`, as the second
 client to join. That is 2 crashes in about 12 arena joins, so the shared
 folder was not the cause. This intermittent heap corruption on arena join is
-open and needs a debugger trace (`tools/crashdbg.py`). One client per folder
+open and needs a debugger trace (`aoa/live/crashdbg.py`). One client per folder
 is still advisable.
 
 **Windowing.** dgVoodoo's DirectX `Resolution = 640x480` with windowed output
@@ -1354,7 +1354,7 @@ the names:
 `0x34` (3 bytes) is not combat. The position-update receiver sends it to ask
 for an unknown object.
 
-**Static gun table.** `tools/gun_table.py` decodes it to
+**Static gun table.** `archive/analysis/gun_table.py` decodes it to
 `evidence/2.9.2/gun_table.json` (original EXE hash checked). Reader
 `0x4DA990`: level *i* has a 36-byte record at `0x5D62CC + 36·i`. Field +6 is
 per-shot damage, the field `SetGunDamage` overwrites. The level-to-id switch
@@ -1415,7 +1415,7 @@ The decoder also increments its own 5000-entry counter array (decoder
 object `[ptr, count]` at comm `+0xF8C`) at the packet's index, with no
 bounds check. `relay_motion` now relays this block only when it is well
 formed and every index is below 128; otherwise only the block is dropped.
-`tools/emulate_movement.py` runs the original decoder against a 128-entry
+`aoa/emulation/check_movement.py` runs the original decoder against a 128-entry
 array followed by guard bytes. A relayed block for guns 2–7 plus index 127
 is consumed to the exact length, only those counters change, the guard
 survives, and the header flag lands at player `+0x1A4`. During a live burst,
@@ -1546,7 +1546,7 @@ write from that allocation.
 This resolves the intermittent arena-join crash left open in 9.28. The bug is
 in the original 2.9.2 client and is now fixed by a versioned client patch.
 
-**Capture.** Joins were driven with each client under `tools/crashdbg.py`,
+**Capture.** Joins were driven with each client under `aoa/live/crashdbg.py`,
 without the guard heap. Three of twelve crashed, all identically:
 
 1. On arena entry, the target-window loader `0x502B80` reads `tgtwin2.cfg`
@@ -1570,7 +1570,7 @@ a 0x2A9-byte block at `AOACLIENT+0x126FD3`, allocated at `0x52A6ED`. It was
 misfiled as harmless. That explains the intermittency: the crash depends
 only on what happens to follow the block in the heap.
 
-**Fix: client patch `archive-terminator-v1`** (`tools/archive_terminator.py`,
+**Fix: client patch `archive-terminator-v1`** (`aoa/client/patches/archive_terminator.py`,
 composed by `prepare_client.py`, patch version 3). The 10 bytes at
 `0x52A6E3` (`mov ecx,[esp+10]; push ecx; call new`) jump to a 24-byte cave
 at `0x58B440`. The cave allocates size + 1, stores a NUL after the data and
@@ -1579,7 +1579,7 @@ the patch. The prepared localhost image is
 `782d1825e944d564e55034e34d52968ae5fc1e2ee22148a54c17c8d4cf2c1b95`.
 
 **Verification.**
-- `tools/emulate_archive_terminator.py` runs the original and the patched
+- `aoa/emulation/check_archive_terminator.py` runs the original and the patched
   decompressor on a config-sized body compressed by `aoapack`, with the heap
   after each block pre-filled with `0xAA`. Both return identical data. The
   byte after it is `0xAA` originally and `0x00` patched
@@ -1730,7 +1730,7 @@ rack off. The custom config (`0x99`, applied by `ChangeObjectVesselCustom`
 client clears its main logger's enabled byte (`mov byte [0x5E7E44], 0` at
 `0x431A0E`). Every arena-time warning is therefore silent. For diagnosis
 only, a scratch copy with those 7 bytes (`C6 05 44 7E 5E 00 00`) NOPed logs
-in flight. `tools/crashdbg.py --trace VA,...` (new) logs the registers each
+in flight. `aoa/live/crashdbg.py --trace VA,...` (new) logs the registers each
 time a listed instruction runs; both were used to walk
 `LaunchActiveMissiles` (`0x4B0E00`).
 
@@ -1831,7 +1831,7 @@ segment lifetime), a copy sent at `t` cannot arrive after anything sent at
 and for `margin` seconds after its last transmission. The budget can be a
 sliding window instead of a lifetime count.
 
-**Implementation** (`tools/reliable_window.py`, `--sustained-delivery`,
+**Implementation** (`aoa/host/delivery.py`, `--sustained-delivery`,
 default on for `vpn-dogfight`):
 - The server first-sends a new ID to a player only if fewer than 30 IDs have
   been sent since the oldest live ID, inclusive.
@@ -1859,7 +1859,7 @@ sustained mode, a new Station login from the IP of an arena player silent for
 client on the same IP is left alone. The limits are 49 arena joins and 64
 Station logins per host run.
 
-**Verification** (`tools/test_internet_play.py`, 8 tests):
+**Verification** (`tests/test_internet_play.py`, 8 tests):
 - A virtual-time model of the client's 30-entry filter, over 30/80/150 ms RTT
   × 0/1/3% loss × two seeds: 400 events each (13× the old budget) with 5% of
   copies delayed up to 90% of the margin. Every event applied exactly once
@@ -1904,10 +1904,10 @@ jumps to a 60-byte cave at `0x58B300`. The cave calls
 `ScreenToClient(hwnd, {0,0})` through the existing import, and then
 `SetCursorPos(x − pt.x, y − pt.y)`. If `ScreenToClient` fails, it falls back
 to the cached origin. `ECX` (this) and the stack frame are preserved; the
-cave resumes at the original `pop esi; ret 8`. `tools/cursor_warp.py` holds
+cave resumes at the original `pop esi; ret 8`. `aoa/client/patches/cursor_warp.py` holds
 the patch, and `prepare_client.py` applies it and requires it in `check`.
 
-**Verification.** `tools/test_cursor_warp.py` (4 tests, unicorn) runs the
+**Verification.** `tests/test_cursor_warp.py` (4 tests, unicorn) runs the
 client's own `0x4EACE0` from the prepared image. Unpatched, a stale origin
 gives `SetCursorPos(960+65535, 540+65535)`. Patched, four window layouts
 (0,0; −1920,100; −8,−31; 100,200) give the exact screen point. The fallback
@@ -1919,7 +1919,7 @@ dragging a panel in the real client.**
 
 ### 9.35 Frame pacing: a millisecond game clock and the timer-frame gate (23 October 2026)
 
-Measured live with `tools/measure_frame_pacing.py`, a read-only probe that
+Measured live with `aoa/live/frame_pacing.py`, a read-only probe that
 polls the client every ~3 µs. It timestamps the frame counter incremented
 just before each present (app `[0x5E6E58]+0x38`, at `0x44AF94`) and reads
 the game clock (`0x5E8E5C`), the main camera (graphics `+0x2510`) and the
@@ -1957,7 +1957,7 @@ and present, splitting the cadence: 75 fps, with intervals like 4+12 or
 8+8 ms. Traced: 381 presents = 315 main-loop + 66 timer frames in 5 s. With
 `GetTickCount` almost all of these frames were silently skipped.
 
-**frame-clock-v1** (`tools/frame_clock.py`, now applied by
+**frame-clock-v1** (`aoa/client/patches/frame_clock.py`, now applied by
 `prepare_client.py prepare` by default; `--no-frame-clock` opts out;
 patch version 13):
 - **Clock:** Codex's verified clock cave (byte-identical) at `0x58B600`
@@ -1966,7 +1966,7 @@ patch version 13):
 - **Gate:** a cave at `0x58B680`, called from the timer at `0x446EB1`, runs
   a timer frame only when at least 50 ms have passed since the last frame's
   clock (app `+0x30`). It is unsigned and safe across clock wrap.
-- **Tests:** `tools/test_frame_clock.py` emulates the gate (skip below
+- **Tests:** `tests/test_frame_clock.py` emulates the gate (skip below
   50 ms, run at 50 ms, wrap, balanced stack, app pointer intact) and checks
   exact undo and that preparation is idempotent.
 
@@ -1999,7 +1999,7 @@ times smoother. In the background it still renders at 78 ms from the timer
 ### 9.36 Visibility math promoted; the player's own ship must stay hidden (23 October 2026)
 
 Codex's offline culling correction (`render-pipeline-audit.md`) is now a
-supported patch, `visibility-math-v1` (`tools/visibility_fix.py`), applied by
+supported patch, `visibility-math-v1` (`aoa/client/patches/visibility_fix.py`), applied by
 `prepare_client.py prepare` by default (`--no-visibility-math` opts out;
 patch version 14). Two things changed on the way.
 
@@ -2029,7 +2029,7 @@ client.
   the original result without the NaN.
 
 **Verification:**
-- **Emulation:** `tools/test_visibility_fix.py` runs the original routine
+- **Emulation:** `tests/test_visibility_fix.py` runs the original routine
   with the patch in Unicorn (`audit_render_pipeline.run(..., patch=...)`,
   which now honours `CENTER_VISIBLE`). Across 480 moving/turning cases at
   three FPU precisions it found no out-of-domain trig inputs and no NaN-made
@@ -2038,7 +2038,7 @@ client.
   0 matches the original exactly (hidden, no trig), and the small-object
   cutoff is unchanged. Exact undo, partial/corrupt rejection and coexistence
   with the asteroid/solid-world hook (`0x543222`) are checked too.
-- **Codex's experiment test:** `tools/test_render_culling.py` was already
+- **Codex's experiment test:** `tests/test_render_culling.py` was already
   failing on current preparation and now passes. It tests the experiment on
   an image without online terrain and the promoted patches. Both suites are
   in the local gate.
@@ -2073,7 +2073,7 @@ twice, by the enabled flag and by the zero-distance cull that 9.36 described.
 9.36 named only the zero-distance branch. Live reads now show the enabled
 flag is the first gate.
 
-**third-person-camera-v1** (`tools/third_person.py`, patch version 15, on by
+**third-person-camera-v1** (`aoa/client/patches/third_person.py`, patch version 15, on by
 default; `--no-third-person` opts out):
 - **Cave A** at `0x58BC00`, from `0x44A091`. It reads F2's toggle bit with
   `GetKeyState` (already imported; the client has no DirectInput) and
@@ -2091,7 +2091,7 @@ default; `--no-third-person` opts out):
   so no state is kept beyond the key state itself.
 
 **Verification:**
-- **Emulation:** `tools/test_third_person.py` runs both caves in Unicorn on
+- **Emulation:** `tests/test_third_person.py` runs both caves in Unicorn on
   the prepared image. Off, the original call order, pointer and tick are
   kept, the flag is cleared and culling gets the real record. On, the eye
   matches the renderer's formula at three orientations, and the node is
@@ -2199,7 +2199,7 @@ gates hide the hull:
   write breakpoint on a child's `+0x151`. A 64-bit debugger must set DR0/DR7
   through the native thread context; the WoW64 context did not arm them.
 
-**own-ship-model-v1** (`tools/own_ship_model.py`, patch version 16, applied
+**own-ship-model-v1** (`aoa/client/patches/own_ship_model.py`, patch version 16, applied
 with the third-person camera; `--no-third-person` removes both):
 - NOPs the `jne` at `0x44C0C5`, so your ship gets meshes like any other.
 - Replaces the store at `0x48FAE5` with a cave at `0x58BE00` that writes
@@ -2209,7 +2209,7 @@ with the third-person camera; `--no-third-person` removes both):
   camera is on.
 
 **Verification:**
-- **Emulation:** `tools/test_third_person.py` now also runs `0x44C0A0` with
+- **Emulation:** `tests/test_third_person.py` now also runs `0x44C0A0` with
   is_self 0 and 1, before and after the patch. It runs the child store with
   the flag 0 and 1, and checks in-place upgrade from a v15 client and
   rejection of partial patches. The local gate passes (146 tests).
@@ -2367,7 +2367,7 @@ switch, your new hull attaches to those parts:
   still showed nothing. The menu's own draw (`0x568DE0`) re-sets `+0x245`
   from renderer `+0x33` each time it draws (`0x568F7D`).
 
-**own-ship-menu-model-v1** (`tools/own_ship_menu.py`, patch version 17,
+**own-ship-menu-model-v1** (`aoa/client/patches/own_ship_menu.py`, patch version 17,
 applied with the third-person camera; caves at `0x58BF00`, state byte
 `0x60D3EC`):
 - **Part check** (`0x56ECDC`): records the part's `+0x244`. A part with it
@@ -2381,7 +2381,7 @@ applied with the third-person camera; caves at `0x58BF00`, state byte
   so a client prepared with it upgrades in place.
 
 **Verification:**
-- **Emulation** (`tools/test_third_person.py`): the original skips cleared
+- **Emulation** (`tests/test_third_person.py`): the original skips cleared
   parts. Patched, a cleared part draws your instance with `+0x245` restored,
   and does not draw the preview's instance. Cockpit view and untouched parts
   are unchanged. The suite also checks upgrades and partial-patch rejection.
@@ -2444,7 +2444,7 @@ original server sent terrain before flight entry. `online-terrain-v2`
 loads the map at `0x4306AF`, right *after* `SetupFlightMode` returns, so
 the safe list was empty when both walks ran and no cube was ever built.
 
-**Fix: `online-terrain-v3`** (`tools/online_terrain.py`, patch version 18).
+**Fix: `online-terrain-v3`** (`aoa/client/patches/online_terrain.py`, patch version 18).
 After a successful layout load or `ReadInTerrain`, the cave repeats
 `SetupFlightMode`'s walk: each safe-list node's box (`[node]`, next at
 `+8`) goes to `0x43E030` on the flight view. Null handler, flight mode or
@@ -2459,7 +2459,7 @@ so they were dropped. `decode_trn.convert_292` now names them
 `map_viewer.py install`; the converted file is now `60b09731…6779`.
 
 **Verification:**
-- **Emulation** (`tools/test_online_terrain.py`): every map entry walks a
+- **Emulation** (`tests/test_online_terrain.py`): every map entry walks a
   three-node safe list after loading and passes each box with `ecx` = view;
   no walk without a load, a handler or a view; v2 bytes upgrade to v3 in
   both `online_terrain` and `prepare_client`. The local gate passes
@@ -2485,7 +2485,7 @@ CTF_arena_b and JRMAP do not spawn inside their zones.
 ### 9.43 The 2.7.1 client keeps the server's send routines (25 October 2026)
 
 Static analysis only; nothing was patched or run. Reproduce with
-`python -I tools/server_senders.py work/2.7.1/members/15_AOACLIENT.EXE
+`python -I tools/run.py archive.analysis.server_senders work/2.7.1/members/15_AOACLIENT.EXE
 work/2.7.1/disasm.pkl evidence/2.7.1/send_sites.json
 game/offline-baseline-2.9.2/AOACLIENT.EXE evidence/2.7.1/server_senders.json`
 ([evidence](../evidence/2.7.1/server_senders.json)).
@@ -2597,7 +2597,7 @@ kind-6 zone, so the 19 layout maps have none.
   reappear together. It ignores repeats for the 5 s hidden window and
   unknown tags.
 - The host window passes the map's own `.trn` automatically for TRN maps
-  (JRMAP). `tools/test_powerups.py` adds 7 tests (zone reader, layouts,
+  (JRMAP). `tests/test_powerups.py` adds 7 tests (zone reader, layouts,
   pickup rules, a loopback socket test with a late joiner); the local gate
   passes (161).
 
@@ -2625,7 +2625,7 @@ placed 150 units ahead of the spawn.
   and cannot be touched; the test zone was moved 150 units ahead for this
   reason.
 
-**Fix: `powerup-pickup-v1`** (`tools/powerup_pickup.py`, patch version 19,
+**Fix: `powerup-pickup-v1`** (`aoa/client/patches/powerup_pickup.py`, patch version 19,
 on by default; `--no-powerup-pickup` opts out):
 - **Collidable on the `0x43` path.** The receiver's store
   `mov dword [edi+0x200], 4` at `0x431E19` jumps to a 22-byte cave at
@@ -2642,7 +2642,7 @@ on by default; `--no-powerup-pickup` opts out):
   return value.
 
 **Verification:**
-- **Emulation** (`tools/test_powerup_pickup.py`, 5 tests): the client's own
+- **Emulation** (`tests/test_powerup_pickup.py`, 5 tests): the client's own
   `ReceiveSpawnPowerup` runs with allocation, model, name, position and log
   stubbed, and real `SetTerrainType`.
   - Unpatched it leaves `+0x2FB` = 0; patched it sets 1.
@@ -2803,8 +2803,8 @@ anything server-owned, the server keeps the score.
   - For a loaded ship (`+0x1DC` = −1) it only refills the shields. That was
     live run 2: no change.
 
-**Server** (`TargetShips` in `station_stub.py`; table in `tools/vessel_combat.py`,
-generated by `tools/make_vessel_combat.py` from the `.Sco` export and the gun
+**Server** (`TargetShips` in `station_stub.py`; table in `aoa/host/vessel_combat.py`,
+generated by `aoa/host/make_vessel_combat.py` from the `.Sco` export and the gun
 table):
 - **HP:** each ship has the vessel's Shield value as simple HP, matching
   the live client (Ym Khtat 107).
@@ -2868,7 +2868,7 @@ modifiers: Shift+F4 is "Movement cue grid visible toggle" (`0x4F`), and
 modifier sets `0x16` and `0x10` save and recall keymap 4. `GetKeyState`'s
 toggle bit flips on those combinations too.
 
-**third-person-camera-v2** (`tools/third_person.py`, patch version 20,
+**third-person-camera-v2** (`aoa/client/patches/third_person.py`, patch version 20,
 replaces v1; on by default with `--third-person`):
 - **Cave A** also reads F4's toggle bit into `ORBIT` (`0x60D3F0`). When the
   bit changes it stores the game tick in `START` (`0x60D3F4`), and it sets
@@ -2910,7 +2910,7 @@ committed):
   of the frames. `ARMED` replaced the tick check.
 
 **Verification:**
-- **Emulation:** `tools/test_third_person.py` (19 tests). The orbit test
+- **Emulation:** `tests/test_third_person.py` (19 tests). The orbit test
   runs cave A on two frames, at three orientations and five lap times. The
   turned rows, up and eye match the formula, `START` is kept, and the node
   is enabled with F4 alone. The clock then advances 1 ms, and the test
@@ -2978,7 +2978,7 @@ flight camera. The cave grew to 0x1F0 bytes, still before `0x58BE00`.
 v1 and v2 clients are recognized and upgraded in place.
 
 **Verification:**
-- **Emulation:** `tools/test_third_person.py` (19 tests). The culling test
+- **Emulation:** `tests/test_third_person.py` (19 tests). The culling test
   now checks that FAKE is used at +16 ms and +250 ms, and the original
   record at +251 ms, +300 ms and −1 ms. The v2 → v3 upgrade and exact undo
   are tested beside v1 → v3. `test_prepare_client` passes.

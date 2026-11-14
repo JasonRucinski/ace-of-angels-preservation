@@ -7,7 +7,7 @@ prepares the local diagnostic client, not a released internet game.
 
 ## Client launcher and visual options
 
-Double-click `tools\client_launcher.cmd`, or run:
+Double-click `Play.cmd`, or run:
 
 ```powershell
 .venv\Scripts\python.exe -I tools/client_launcher.py
@@ -285,9 +285,9 @@ For the Arena1a distance-dependent shape popping investigation, close the
 client and run:
 
 ```powershell
-.venv\Scripts\python.exe -I tools/asteroid_render.py game/2.9.2/AOACLIENT.EXE
+.venv\Scripts\python.exe -I tools/run.py aoa.client.patches.asteroid_render game/2.9.2/AOACLIENT.EXE
 # Turn it off again:
-.venv\Scripts\python.exe -I tools/asteroid_render.py game/2.9.2/AOACLIENT.EXE --undo
+.venv\Scripts\python.exe -I tools/run.py aoa.client.patches.asteroid_render game/2.9.2/AOACLIENT.EXE --undo
 ```
 
 This opt-in patch keeps `Astr-*` / `Astr_*` models on their original mesh path
@@ -309,9 +309,9 @@ To extend the accepted asteroid workaround to all world model groups while
 retaining the sprite/particle/effect renderer, close the client and run:
 
 ```powershell
-.venv\Scripts\python.exe -I tools/solid_world_render.py game/2.9.2/AOACLIENT.EXE
+.venv\Scripts\python.exe -I tools/run.py aoa.client.patches.solid_world_render game/2.9.2/AOACLIENT.EXE
 # Turn it off (this does not bring back asteroid-only mode):
-.venv\Scripts\python.exe -I tools/solid_world_render.py game/2.9.2/AOACLIENT.EXE --undo
+.venv\Scripts\python.exe -I tools/run.py aoa.client.patches.solid_world_render game/2.9.2/AOACLIENT.EXE --undo
 ```
 
 This replaces the asteroid name filter with the same 900,000-unit mesh cutoff
@@ -326,9 +326,9 @@ To keep the `Hy_base1` station on its closest mesh and texture detail, close
 the client and run:
 
 ```powershell
-.venv\Scripts\python.exe -I tools/station_detail.py game/2.9.2/AOACLIENT.EXE
+.venv\Scripts\python.exe -I tools/run.py aoa.client.patches.station_detail game/2.9.2/AOACLIENT.EXE
 # Turn it off:
-.venv\Scripts\python.exe -I tools/station_detail.py game/2.9.2/AOACLIENT.EXE --undo
+.venv\Scripts\python.exe -I tools/run.py aoa.client.patches.station_detail game/2.9.2/AOACLIENT.EXE --undo
 ```
 
 This selects the station's high-detail mesh set at all visible distances.
@@ -342,9 +342,9 @@ affected sections as `newdock`, not `Hy_base1`. Prefer full world detail below.
 With the client closed:
 
 ```powershell
-.venv\Scripts\python.exe -I tools/world_detail.py game/2.9.2/AOACLIENT.EXE
+.venv\Scripts\python.exe -I tools/run.py aoa.client.patches.world_detail game/2.9.2/AOACLIENT.EXE
 # Turn it off (this does not bring back station-only detail):
-.venv\Scripts\python.exe -I tools/world_detail.py game/2.9.2/AOACLIENT.EXE --undo
+.venv\Scripts\python.exe -I tools/run.py aoa.client.patches.world_detail game/2.9.2/AOACLIENT.EXE --undo
 ```
 
 This replaces station-only selection with close-up authored mesh/texture
@@ -382,7 +382,7 @@ atlas. Neither has been observed yet.
 The texture loader at `0x562A30` fixes TGA texture views at 16 bits: 24-bit
 sources load as RGB565 and 32-bit sources as ARGB4444 (`Logs/DxGfx1.log`).
 That covers ship skins, the space background, asteroids, docks, the station
-and some HUD/effect images. `tools/texture32.py` rewrites 18 bytes in place
+and some HUD/effect images. `aoa/client/patches/texture32.py` rewrites 18 bytes in place
 (no code cave). 24-bit sources get depth 32 with alpha 0, and 32-bit sources
 get depth 32 with alpha 8. 16-bit sources are unchanged because a 32-bit
 surface has no 16-bit converter (`0x411510` is a bare `ret`).
@@ -393,10 +393,10 @@ alpha 0 to alpha 8, so it creates ARGB8888 (`0x554970`). The 32-bit surface's
 
 ```powershell
 # Close the client first (or use the launcher's 32-bit textures checkbox):
-.venv\Scripts\python.exe -I tools/texture32.py game/2.9.2/AOACLIENT.EXE
+.venv\Scripts\python.exe -I tools/run.py aoa.client.patches.texture32 game/2.9.2/AOACLIENT.EXE
 # Turn it off:
-.venv\Scripts\python.exe -I tools/texture32.py game/2.9.2/AOACLIENT.EXE --undo
-.venv\Scripts\python.exe -I tools/test_texture32.py
+.venv\Scripts\python.exe -I tools/run.py aoa.client.patches.texture32 game/2.9.2/AOACLIENT.EXE --undo
+.venv\Scripts\python.exe -I tools/test.py test_texture32
 ```
 
 The six tests run the original and patched loader for source depths
@@ -426,7 +426,7 @@ The writer `aoapack.rebuild` keeps the key, header and every other entry's
 stored bytes. Replacements use the same codec and cipher as the shipped
 entries, which `aoapack.compress` reproduces byte for byte. Each replaced
 entry is decoded back with the client's overflow limit before writing.
-`tools/test_aoapack_write.py` covers:
+`tests/test_aoapack_write.py` covers:
 - byte-exact identity rebuilds of all eight pinned archives;
 - codec reproduction of shipped entries;
 - a replacement round trip with untouched neighbours;
@@ -455,7 +455,7 @@ pack on each player's PC:
 - Colour and alpha are resized separately. An RGBA resize premultiplies, which
   blackened the colour under transparent pixels and would fringe cutout edges.
 
-`tools/test_build_texture_pack.py` is game-free and runs in CI. It checks:
+`tests/test_build_texture_pack.py` is game-free and runs in CI. It checks:
 - header, ID field, footer and row order for both TGA origins;
 - alpha kept, including the colour under transparent pixels;
 - wrap padding;

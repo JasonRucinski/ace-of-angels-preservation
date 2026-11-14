@@ -16,7 +16,7 @@ Launch with the existing debugger to guarantee the game working directory and
 collect failures (the generic app launcher exited during the first attempt):
 
 ```powershell
-.venv\Scripts\python.exe -I tools/crashdbg.py --timeout 240 game/offline-baseline-2.9.2
+.venv\Scripts\python.exe -I tools/run.py aoa.live.crashdbg --timeout 240 game/offline-baseline-2.9.2
 ```
 
 This bounded debugger run terminates its own client after four minutes. It is
@@ -63,7 +63,7 @@ and high-rate video capture have not yet been implemented.
 Build a fresh, isolated copy from the hash-pinned installer and wrapper:
 
 ```powershell
-.venv\Scripts\python.exe -I tools/prepare_offline_baseline.py game/offline-baseline-2.9.2
+.venv\Scripts\python.exe -I tools/run.py archive.offline_baseline.prepare_offline_baseline game/offline-baseline-2.9.2
 ```
 
 The tool refuses an existing destination, verifies static dependencies and
@@ -130,9 +130,9 @@ Copy-Item game/offline-baseline-2.9.2/dgVoodoo.reference.conf game/offline-basel
 ### Automated clock and camera comparison (no Computer Use)
 
 ```powershell
-.venv\Scripts\python.exe -I tools/compare_render_clocks.py work/offline-rendering/clock-comparison.json
-.venv\Scripts\python.exe -I tools/test_render_motion.py
-.venv\Scripts\python.exe -I tools/test_render_clock_experiment.py
+.venv\Scripts\python.exe -I tools/run.py archive.offline_baseline.compare_render_clocks work/offline-rendering/clock-comparison.json
+.venv\Scripts\python.exe -I tools/test.py archive.offline_baseline.test_render_motion
+.venv\Scripts\python.exe -I tools/test.py archive.offline_baseline.test_render_clock_experiment
 ```
 
 The comparison samples both Windows clocks at 60 and 144 Hz, executes the
@@ -171,8 +171,8 @@ Undo that patch first before using the clock commands below; their image checks
 reject the additional culling edits.
 
 ```powershell
-.venv\Scripts\python.exe -I tools/render_clock_experiment.py --undo
-.venv\Scripts\python.exe -I tools/render_clock_experiment.py
+.venv\Scripts\python.exe -I tools/run.py aoa.client.experiments.render_clock_experiment --undo
+.venv\Scripts\python.exe -I tools/run.py aoa.client.experiments.render_clock_experiment
 ```
 
 `seed_offline_velocity.py PID` provides a one-shot synthetic coast fixture for
@@ -201,8 +201,8 @@ investigation, see [rendering pipeline audit](render-pipeline-audit.md).
 Run without launching or controlling the game:
 
 ```powershell
-.venv\Scripts\python.exe -I tools/audit_object_lod.py work/offline-rendering/object-lod-audit.json
-.venv\Scripts\python.exe -I tools/test_object_lod.py
+.venv\Scripts\python.exe -I tools/run.py aoa.maps.lod work/offline-rendering/object-lod-audit.json
+.venv\Scripts\python.exe -I tools/test.py test_object_lod
 ```
 
 The audit reads 154 mesh models (18 other files are layouts or unparsed).

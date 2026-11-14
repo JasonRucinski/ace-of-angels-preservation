@@ -9,9 +9,9 @@ below. No GUI automation, client launch, or network access is used.
 Run with the repository environment:
 
 ```powershell
-.venv\Scripts\python.exe -I tools/audit_render_pipeline.py evidence/2.9.2/render_pipeline_audit.json
-.venv\Scripts\python.exe -I tools/test_object_lod.py
-.venv\Scripts\python.exe -I tools/test_render_motion.py
+.venv\Scripts\python.exe -I tools/run.py aoa.emulation.render_pipeline evidence/2.9.2/render_pipeline_audit.json
+.venv\Scripts\python.exe -I tools/test.py test_object_lod
+.venv\Scripts\python.exe -I tools/test.py archive.offline_baseline.test_render_motion
 ```
 
 The runner requires the hash-pinned original executable. It executes original
@@ -82,14 +82,14 @@ they do not establish identical timing, state, assets, or host/client behavior.
 ## Culling correction applied to the offline baseline
 
 **Promoted (23 October 2026):** the dot clamp and inside-sphere parts are now
-the supported patch `visibility-math-v1` (`tools/visibility_fix.py`), applied
+the supported patch `visibility-math-v1` (`aoa/client/patches/visibility_fix.py`), applied
 by default in client preparation. The exact-centre part below was **not**
 promoted. The player's own ship node sits at distance 0 from the camera in
 flight, and the original's "hidden" result there is what keeps your own hull
 out of view ([findings 9.36](findings.md)). The experiment's caves now overlap
 online terrain, so the tool below applies only to images without it.
 
-`tools/render_culling_experiment.py` now corrects the two visibility entry
+`aoa/client/experiments/render_culling_experiment.py` now corrects the two visibility entry
 points at `0x543077` and `0x5431A1`, with code in verified padding at `0x58B700`.
 It handles zero distance before normalization, bounds the dot product to [-1,1]
 before `acos`, and handles a camera inside/on a bounding sphere without calling
@@ -112,10 +112,10 @@ zero in the single-precision fixture. See
 [fix evidence](../evidence/2.9.2/render_culling_fix.json).
 
 ```powershell
-.venv\Scripts\python.exe -I tools/test_render_culling.py
+.venv\Scripts\python.exe -I tools/test.py test_render_culling
 # Close the isolated baseline before either operation:
-.venv\Scripts\python.exe -I tools/render_culling_experiment.py --undo
-.venv\Scripts\python.exe -I tools/render_culling_experiment.py
+.venv\Scripts\python.exe -I tools/run.py aoa.client.experiments.render_culling_experiment --undo
+.venv\Scripts\python.exe -I tools/run.py aoa.client.experiments.render_culling_experiment
 ```
 
 Undo culling **before** changing/removing the clock experiment: the older clock

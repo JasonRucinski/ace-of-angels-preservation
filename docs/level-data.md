@@ -6,7 +6,7 @@ only: no client was run for this audit, and nothing below has been loaded
 in-game yet.
 
 ```powershell
-.venv/Scripts/python.exe -I tools/audit_level_data.py
+.venv/Scripts/python.exe -I tools/run.py archive.analysis.audit_level_data
 ```
 
 That writes full decodes (with coordinates) to the ignored
@@ -14,8 +14,8 @@ That writes full decodes (with coordinates) to the ignored
 `work/evidence/asset-review/level-data.json`. Add
 `--evidence evidence/asset-review/level-data.json` to replace the committed
 summary. The decoders are
-`tools/decode_trn.py`, `tools/decode_scenario.py` and
-`tools/decode_legacy_layout.py`.
+`aoa/formats/trn.py`, `aoa/formats/scenario.py` and
+`aoa/formats/legacy_layout.py`.
 
 ## Result
 
@@ -32,7 +32,7 @@ out are listed at the end.
 
 ## 1. `JRMAP.TRN`: an editor-built world map
 
-`JRMAP.TRN` is not encrypted or compressed, and `tools/inventory.py` listed it
+`JRMAP.TRN` is not encrypted or compressed, and `archive/analysis/inventory.py` listed it
 without reading it. Its format matches the 2.0.0 client's
 `CTerrainObjectHandler::ReadInTerrain` (`0x46F600`):
 
@@ -90,7 +90,7 @@ how to issue the command is still unknown.
 ## 2. `Curt3`: the offline prototype mission
 
 The file is a stream of integers and tagged strings (u32 `0x05765768`,
-u32 length, bytes, NUL). `tools/decode_scenario.py` applies one fixed
+u32 length, bytes, NUL). `aoa/formats/scenario.py` applies one fixed
 grammar and must end on the last byte, which it does for the 2.8.0, 2.8.2
 and 2.9.2 copies. Field names come from the contents; the client's loader
 (`AoA_MissionData.cpp`, `CScenarioHdlr`) has not been traced, so numeric
@@ -127,7 +127,7 @@ client that ships Curt3 also has its ships.
 
 2.0.0 layouts use the same tagged strings, and each node's position sits
 0x4D bytes after its name's NUL, followed by a (1, 1, 1) scale.
-`tools/decode_legacy_layout.py` accepts a node only when that scale check
+`aoa/formats/legacy_layout.py` accepts a node only when that scale check
 passes, and it also reads the hardpoint nodes of the 2.0.0 ship models,
 which supports the offset. TestScene yields 178 nodes; only the root name
 fails the check:

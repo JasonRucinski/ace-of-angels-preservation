@@ -50,11 +50,11 @@ exact release.
 
 The game normally squeezes textures down to 16-bit colour, which would throw
 the extra detail away. This client fix stops that. The easiest way is the
-**32-bit textures** checkbox in `tools\client_launcher.cmd` (tick it,
+**32-bit textures** checkbox in `Play.cmd` (tick it,
 then **Apply**). Or, with the game closed:
 
 ```powershell
-.venv\Scripts\python.exe -I tools\texture32.py game\2.9.2\AOACLIENT.EXE
+.venv\Scripts\python.exe -I tools\run.py aoa.client.patches.texture32 game\2.9.2\AOACLIENT.EXE
 ```
 
 It's worth having even without the new skins: it removes colour banding from
@@ -109,7 +109,7 @@ Or, with the game closed:
 
 ```powershell
 .venv\Scripts\python.exe -I tools\texture_pack.py game\2.9.2 --undo
-.venv\Scripts\python.exe -I tools\texture32.py game\2.9.2\AOACLIENT.EXE --undo
+.venv\Scripts\python.exe -I tools\run.py aoa.client.patches.texture32 game\2.9.2\AOACLIENT.EXE --undo
 ```
 
 The first command puts back the original archives exactly. The second turns

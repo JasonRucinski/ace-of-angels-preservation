@@ -36,7 +36,7 @@ with named entries swapped (see [replacement texture pack](client-setup.md#optio
 | SOUNDS.AOA | 55 MP3 + the 55 WAVs the client decodes into it on first run | MP3 / WAV |
 | SCRIPTS.AOA | 8 readable `.scr` scripts | text |
 | FX.AOA | 14 `.sfx` effect definitions | raw (not decoded) |
-| SCENARIOS.AOA | the offline scenario (Curt3) | structure decoded: `tools/decode_scenario.py`, see `level-data.md` |
+| SCENARIOS.AOA | the offline scenario (Curt3) | structure decoded: `aoa/formats/scenario.py`, see `level-data.md` |
 | AOAOBJECTS.ODB | 172 `.Gob` (3D), 123 `.Sco` (ship configs), 39 `.Shs`, index | see below |
 
 ## `.Gob` 3D model format
@@ -91,7 +91,7 @@ establish working gameplay nodes; see [Arena1a recovery](arena1a.md).
 ## `.Sco` object configs (ships, stations, turrets, pods)
 
 ```powershell
-.venv\Scripts\python.exe -I tools\sco_dump.py work\2.9.2\export\AOAOBJECTS work\2.9.2\sco.json work\2.9.2\ships.md
+.venv\Scripts\python.exe -I tools\run.py aoa.formats.sco work\2.9.2\export\AOAOBJECTS work\2.9.2\sco.json work\2.9.2\ships.md
 ```
 
 Header strings: name, class code (`S621`), faction, (empty), `.Gob` model.
@@ -108,7 +108,7 @@ meaning (power draw, recharge, etc.) is not established.
 
 ## Map preview gallery
 
-`tools/render_map_previews.py` renders all 17 recovered scene exports to a
+`aoa/maps/render_map_previews.py` renders all 17 recovered scene exports to a
 local HTML gallery with 29 PNG views. Arena candidates include full-layout
 oblique/top views and labeled close-ups; component layouts are listed separately.
 The images use original exported textures with simplified preview lighting.
@@ -120,7 +120,7 @@ textures, then render:
 
 ```powershell
 Copy-Item work/2.9.2/export/DATA/salamtex.png work/2.9.2/TEXTURES/SALAMTEX.png
-.venv/Scripts/python.exe -I tools/render_map_previews.py
+.venv/Scripts/python.exe -I tools/run.py aoa.maps.render_map_previews
 ```
 
 Open `work/map-previews/index.html` in a browser. Images and extracted assets

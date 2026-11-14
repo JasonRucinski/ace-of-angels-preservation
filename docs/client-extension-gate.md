@@ -9,7 +9,7 @@ No active game executable is modified by the automated probes.
 
 ## Evidence and remaining work
 
-Run `.venv/Scripts/python.exe -I tools/emulate_client_extensions.py game/2.9.2/AOACLIENT.EXE.orig work/client-extension-gate.json`.
+Run `.venv/Scripts/python.exe -I tools/run.py aoa.emulation.check_client_extensions game/2.9.2/AOACLIENT.EXE.orig work/client-extension-gate.json`.
 The source hash is checked before emulation. Prepared images exist only in
 temporary directories. The tool explicitly reports the overall gate as false.
 
@@ -91,7 +91,7 @@ than assuming it has returned to the disabled state.
 
 ### Ordered receive prototype (emulation only)
 
-`tools/emulate_ordered_events.py` injects an x86 guard into emulator memory
+`aoa/emulation/check_ordered_events.py` injects an x86 guard into emulator memory
 before the original protection handler. Its 25-byte fixture body carries a
 magic marker, 64-bit session epoch, entity ID, generation, sequence and explicit
 protection value. The trusted context is supplied by the harness, not by a

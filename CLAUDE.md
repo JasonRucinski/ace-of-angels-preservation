@@ -28,7 +28,7 @@ What is verified and what is not: `docs/STATUS.md`. House rules:
   were actually listed; record it in `data/disc_search.tsv` either way.
 - Be gentle with archive.org and the Wayback Machine: pause between
   requests and back off on 429. All archive access goes through
-  `tools/polite_http.py`; do not add another fetch path.
+  `aoa/research/http.py`; do not add another fetch path.
 - Mark anything taken only from a search-engine summary as *(snippet)*.
 - "Ace of Angels" is also the K-pop group AOA. Pair searches with
   "Flying Rock" or "space".

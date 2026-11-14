@@ -112,7 +112,7 @@ binds loopback; changing that address alone is not a release.
 - [ ] Write a short gameplay reference: units, speeds, turn rates, weapons,
   damage and win conditions. Mark reconstructed behavior versus new design.
   Recovered so far: per-shot damage for gun levels 1–10 (7–130) from the
-  client's static table (`tools/gun_table.py`), plus per-system hit points
+  client's static table (`archive/analysis/gun_table.py`), plus per-system hit points
   from `.Sco` configs. Other gun fields remain unnamed. See [findings 9.25](findings.md#925-combat-protocol-survey-and-gun-table-21-october-2026).
 - [x] Set a compatibility decision point: use a maintained, versioned client/
   protocol change before claiming safe slot reuse, ordered input or essential
@@ -129,7 +129,7 @@ scene, including the busiest combat situation expected in that release.
   flight initialization. A different login on an occupied endpoint is ignored;
   nested reliable envelopes cannot bypass admission. Verified with synthetic
   localhost sockets in both flight and relay modes by
-  `python -I tools/test_station_stub.py` (10 tests). No real-client retry or
+  `python -I tools/test.py test_station_stub` (10 tests). No real-client retry or
   internet validation yet. This does not complete general reliable-message
   deduplication, departure, expiry, slot reuse, or reconnect support below.
 - [x] Second bounded step (21 October 2026): arena quit (`0x4E`) and
@@ -163,7 +163,7 @@ scene, including the busiest combat situation expected in that release.
 - [x] Turn the experimental flags into a documented, reproducible local
   configuration. `--profile local-relay`, validated overrides and
   `--print-config` are implemented; the default diagnostic mode remains.
-  See [local-server.md](local-server.md) and `tools/test_station_runtime.py`.
+  See [local-server.md](local-server.md) and `tests/test_station_runtime.py`.
 - [ ] Record every required message's direction, fields, units, size bounds,
   reliability, ordering, legal state and evidence source.
   The implemented local message set and all 16 safe movement groups are now
@@ -348,7 +348,7 @@ and loss. Expanding the current raw relay is not sufficient by itself.
 - [ ] Decode Curt3's groups, members, objectives, spawn locations, teams,
   triggers and completion rules; label unknown fields instead of guessing.
   Teams, groups, members, orders and waypoints are parsed
-  (`tools/decode_scenario.py`, [level-data.md](level-data.md)); the file
+  (`aoa/formats/scenario.py`, [level-data.md](level-data.md)); the file
   holds no trigger/completion records, so those need the client loader.
 - [ ] Load `JRMAP.TRN` (editor-saved map, 74 objects, 3 flags) in a real
   client: recover the edit-mode command names first.

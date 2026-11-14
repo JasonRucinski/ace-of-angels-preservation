@@ -47,7 +47,7 @@ archives plus JRMAP from the 2.0.0 editor file ([map-viewer.md](map-viewer.md#ma
 |---|---|---|
 | Arena1a | 22 Oct, owner confirmed the geometry is visible; 25 Oct, F5 captures | [online_terrain_20261022.json](../evidence/2.9.2/online_terrain_20261022.json), [safe_zones_20261025.json](../evidence/2.9.2/safe_zones_20261025.json) |
 | CTF_arena, irrosa01 | 25 Oct, F5 captures | [safe_zones_20261025.json](../evidence/2.9.2/safe_zones_20261025.json) |
-| irrosa01, ast_fld_a, ast_fld_b, outerchange, CTF_arena_b, JRMAP | 27 Oct, filmed for the highlight reel | the shot list [`tools/reel/shots.json`](../tools/reel/shots.json) and [hype-reel.md](hype-reel.md); the footage is not committed |
+| irrosa01, ast_fld_a, ast_fld_b, outerchange, CTF_arena_b, JRMAP | 27 Oct, filmed for the highlight reel | the shot list [`aoa/reel/shots.json`](../aoa/reel/shots.json) and [hype-reel.md](hype-reel.md); the footage is not committed |
 
 Not seen on screen: newterrain, ast_fld_c, ast_fld_d, and every component.
 

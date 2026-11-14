@@ -51,7 +51,7 @@ never appears.
 
 ## 4. Fly offline
 
-Double-click `tools\client_launcher.cmd`. The launcher reads the installed
+Double-click `Play.cmd`. The launcher reads the installed
 settings and provides an on/off checkbox for each visual addition. Choose
 **Apply** to save, or **Play** to save and launch. **Original visuals (all off)**
 clears the visual additions together. Close the game before applying changes.
@@ -79,7 +79,7 @@ station skins from your own copy.
 
 To try online play before involving anyone else:
 
-1. Double-click `tools\host_control.cmd`. Choose **This PC only**, pick a map
+1. Double-click `Host.cmd`. Choose **This PC only**, pick a map
    and click **Start host**.
 2. Launch the game as in step 4. Log in with any name and password (there are
    no accounts), choose **Play Online**, pick the temporary pilot and the

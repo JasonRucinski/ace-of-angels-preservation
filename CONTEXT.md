@@ -17,7 +17,7 @@ a search-engine summary only.
 ## 2. Status
 
 Client visual launcher (27 Oct 2026; rebased onto patch version 22 on
-31 Oct 2026): `tools/client_launcher.cmd` opens saved on/off checkboxes for
+31 Oct 2026): `Play.cmd` opens saved on/off checkboxes for
 visual patches, wrapper quality effects and an installed replacement texture
 pack. Original visuals clears all visual additions; power-up pickups have a
 separate control. Ship-menu framing is now optional (`--no-menu-framing`).
@@ -283,7 +283,7 @@ fixes this under dgVoodoo windowed output
 ([findings 9.24](docs/findings.md#924-background-client-network-stall-and-fix-21-october-2026)).
 Combat groundwork ([findings 9.25](docs/findings.md#925-combat-protocol-survey-and-gun-table-21-october-2026)):
 gun damage per level (7–130, ids 250–850) decoded from the client
-(`tools/gun_table.py`, `evidence/2.9.2/gun_table.json`). Gunfire is `0x1F`
+(`archive/analysis/gun_table.py`, `evidence/2.9.2/gun_table.json`). Gunfire is `0x1F`
 status bits plus a per-gun fire-state block. Live test ([findings 9.26](docs/findings.md#926-victim-side-damage-gun-state-relay-and-death-report-21-october-2026)):
 the **victim's client computes damage** from relayed fire state and reports
 death with `0x37` (killer tag). The relay now forwards the bounded gun block,
@@ -353,7 +353,7 @@ real client, JRMAP loaded 18 objects (station segments, docked capital ships).
 This is for viewing only: no collision, turrets, warps or flags.
 
 Host control window (23 Oct 2026, [docs/host-control.md](docs/host-control.md)):
-`tools/host_control.cmd` opens one window that starts the host (this PC, LAN or
+`Host.cmd` opens one window that starts the host (this PC, LAN or
 VPN), shows players with kills/deaths/ping, sends messages, kicks/bans, ends
 matches, switches maps (clean restart) and stops the host. The server console
 gained `say` and `quit`. Tested live with a real client on this PC (map switch
@@ -407,7 +407,7 @@ later. Verified live with one client; missile kills and two clients are untested
 Server code in the client (25 Oct 2026, [findings 9.43](docs/findings.md)):
 2.7.1 still links the server's `CAOAComm` senders (20 named routines,
 32 packet types that 2.9.2 no longer sends), e.g. `SendLoadPlayer`, `SendGainScore`,
-`SendSetupTFCGame`, `SendMovePowerupTo`; `tools/server_senders.py` lists them.
+`SendSetupTFCGame`, `SendMovePowerupTo`; `archive/analysis/server_senders.py` lists them.
 A few still have live callers (turret group status, set-param, load scenario).
 Power-ups (25 Oct 2026, [findings 9.44](docs/findings.md)): spawn `0x43`,
 pickup `0x44` and move `0x53` decoded from those senders and the 2.9.2
@@ -588,8 +588,8 @@ employees, website flyingrockllc.com, LinkedIn
    - the PC Guru 2001 CD collection (`PCGURUCD`)
    - Hungarian GameStar and PC Guru 2003–04 zips
    - the CD-Action Bonus 2002/2003 `.zpaq` archives
-   - The method: download, then `tools/rar_img2iso.py` or
-     `7z e -so … | tools/iso_stream_extract.py`.
+   - The method: download, then `aoa/research/rar_img2iso.py` or
+     `7z e -so … | aoa/research/iso_stream_extract.py`.
 4. **FilePlanet in a real browser**: does the v2.8.0 file download? Check its
    MD5 against `7401dd3d…f752`.
 5. **Revival follow-ups**:
@@ -598,7 +598,7 @@ employees, website flyingrockllc.com, LinkedIn
    - a USPTO search for new "ACE OF ANGELS" or "FLYING ROCK" filings
    - a Georgia Secretary of State search for a successor entity
    - an X or Facebook search for "Ace of Angels" with "Flying Rock"
-6. **Every new build** gets the same treatment: `tools/wise_extract.py`, then
+6. **Every new build** gets the same treatment: `aoa/formats/wise.py`, then
    `tools/aoa_version.py`, then hashes. Add a row to the table in section 3.
 
 ## 8. Tools (`tools/`, Python 3 standard library unless noted)
@@ -624,7 +624,7 @@ use libarchive (`rar_img2iso.py`) or a 7-Zip build with the RAR codec.
 - One new, empty directory per download. Keep scripts elsewhere and run them
   with `python3 -I`.
 - Pace requests to the archives. Every archive.org and Wayback request in
-  `tools/` goes through `tools/polite_http.py`, which waits between requests
+  `tools/` goes through `aoa/research/http.py`, which waits between requests
   to the same host and backs off on HTTP 429 and 5xx (13 Nov 2026).
 
 ## 10. Sources

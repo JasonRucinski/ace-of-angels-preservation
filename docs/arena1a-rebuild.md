@@ -227,7 +227,7 @@ independent.
 Reproduce with:
 
 ```powershell
-.venv/Scripts/python.exe -I tools/audit_warp_gates.py --local-report work/warp-research/routes.json
+.venv/Scripts/python.exe -I tools/run.py aoa.maps.warp_routes --local-report work/warp-research/routes.json
 ```
 
 The report goes to `work/evidence/2.9.2/warp_gates_20261026.json`; add
@@ -280,7 +280,7 @@ Connect the prepared client to Station IP 127.0.0.2, select Local Relay and
 press Play. The spawn is 6,000 units behind the gate along +Z. Once flying:
 
 ```powershell
-.venv/Scripts/python.exe -I tools/verify_warp_trial.py <PID> work/2.9.2/export/AOAOBJECTS work/warp-research/live-verification.json
+.venv/Scripts/python.exe -I tools/run.py aoa.live.verify_warp_trial <PID> work/2.9.2/export/AOAOBJECTS work/warp-research/live-verification.json
 ```
 
 The verifier checks all nine matching gates, kinds, names, positions, destinations,
@@ -294,7 +294,7 @@ The user deferred manual playtesting. The trial can now be checked without
 opening the game UI:
 
 ```powershell
-.venv/Scripts/python.exe -I tools/test_warp_headless.py --report evidence/2.9.2/warp_headless_20261027.json
+.venv/Scripts/python.exe -I tools/test.py test_warp_headless -- --report evidence/2.9.2/warp_headless_20261027.json
 ```
 
 All four tests pass. `emulate_warp_trial.py` executes the complete original
@@ -401,7 +401,7 @@ every client could create duplicate or independently simulated world objects.
 
 ## Reproduction and evidence
 
-`tools/audit_arena1a_rebuild.py` executes the pinned original-code probes.
+`archive/analysis/audit_arena1a_rebuild.py` executes the pinned original-code probes.
 Pass `--pid <PID>` while a client is flying Arena1a to capture and reconcile its
 live inventory, or `--snapshot <file>` to check a previously captured snapshot.
 Full local coordinates are in ignored `work/arena1a-game-trial/live-snapshot.json`.

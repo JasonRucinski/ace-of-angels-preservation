@@ -11,7 +11,7 @@ flight, weapons and damage. The host relays events, assigns temporary pilots
 and counts client-reported kills.
 
 Status, 22 October 2026: implemented and verified on loopback only
-(`tools/test_internet_play.py`, including a session under 60 ms RTT, 3% loss
+(`tests/test_internet_play.py`, including a session under 60 ms RTT, 3% loss
 and 1% duplication; [full gate: 77 tests and nine emulators](../evidence/2.9.2/local_gate_20261022_internet_play.json)).
 A real internet session between separate connections has
 **not** been recorded yet ([status](STATUS.md)). See [Acceptance](#acceptance) below.

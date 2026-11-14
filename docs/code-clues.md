@@ -82,7 +82,7 @@ that a feature was removed; later builds omit many diagnostic messages.
 Best next target for server reconstruction: trace the scenario-object loader
 and its callers, then map the CTF score/win fields. Best target for map
 research: recover the edit-command table. The terrain read format is now known
-and `JRMAP.TRN` decodes with it (`tools/decode_trn.py`, `level-data.md`).
+and `JRMAP.TRN` decodes with it (`aoa/formats/trn.py`, `level-data.md`).
 
 ## 2.9.2 follow-up: mission-group loader
 

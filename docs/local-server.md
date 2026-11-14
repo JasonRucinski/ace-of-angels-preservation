@@ -224,11 +224,11 @@ replace the roadmap's full-match, outside-network, clean-machine and performance
 acceptance gates. Individual earlier checks remain available:
 
 ```powershell
-.venv\Scripts\python.exe -I tools/test_station_runtime.py
-.venv\Scripts\python.exe -I tools/test_station_stub.py
-.venv\Scripts\python.exe -I tools/test_station_sessions.py
-.venv\Scripts\python.exe -I tools/emulate_reliable_history.py game/2.9.2/AOACLIENT.EXE.orig evidence/2.9.2/reliable_history_emulation.json
-.venv\Scripts\python.exe -I tools/emulate_station_request.py game/2.9.2/AOACLIENT.EXE.orig evidence/2.9.2/station_request_emulation.json
+.venv\Scripts\python.exe -I tools/test.py test_station_runtime
+.venv\Scripts\python.exe -I tools/test.py test_station_stub
+.venv\Scripts\python.exe -I tools/test.py test_station_sessions
+.venv\Scripts\python.exe -I tools/run.py aoa.emulation.check_reliable_history game/2.9.2/AOACLIENT.EXE.orig evidence/2.9.2/reliable_history_emulation.json
+.venv\Scripts\python.exe -I tools/run.py aoa.emulation.check_station_request game/2.9.2/AOACLIENT.EXE.orig evidence/2.9.2/station_request_emulation.json
 ```
 
 The runtime suite covers configuration rejection, profile startup, redaction,
