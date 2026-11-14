@@ -12,6 +12,9 @@ from pathlib import Path
 
 import pefile
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import cli_util  # noqa: E402
+
 ATOMS = {0x80: "Button", 0x81: "Edit", 0x82: "Static", 0x83: "ListBox", 0x84: "ScrollBar", 0x85: "ComboBox"}
 
 
@@ -63,9 +66,14 @@ def parse(b):
     return {"title": title, "class": cls, "controls": ctrls}
 
 
-def main():
-    path, out, *want = sys.argv[1:]
-    want = {int(w, 16) for w in want}
+def main(argv=None):
+    ap = cli_util.parser(__doc__)
+    ap.add_argument("client", help="executable whose resources to read")
+    ap.add_argument("out", help="JSON file to write")
+    ap.add_argument("want", nargs="*", help="control IDs (hex) to look for")
+    a = ap.parse_args(argv)
+    path, out = a.client, a.out
+    want = {int(w, 16) for w in a.want}
     pe = pefile.PE(path)
     res = []
     for t in pe.DIRECTORY_ENTRY_RESOURCE.entries:
@@ -93,4 +101,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(cli_util.run(main))

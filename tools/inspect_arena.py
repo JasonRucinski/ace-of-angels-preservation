@@ -2,12 +2,18 @@
 
 Offsets recovered from AllocNewPlayer, LoadPlayer and ReceivePositionUpdate.
 Only use with the 2.9.2 executable (image base 0x400000).
+
+    python -I tools/inspect_arena.py <PID> [--objects]
 """
 import ctypes
 import json
 import struct
 import sys
 from ctypes import wintypes
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import cli_util  # noqa: E402
 
 
 def snapshot(pid, include_objects=False, include_render=False):
@@ -120,5 +126,15 @@ def snapshot(pid, include_objects=False, include_render=False):
         k.CloseHandle(handle)
 
 
+def main(argv=None):
+    ap = cli_util.parser(__doc__)
+    ap.add_argument("pid", type=int, help="process id of a running 2.9.2 client")
+    ap.add_argument("--objects", action="store_true", help="also list objects, terrain and safe zones")
+    a = ap.parse_args(argv)
+    if sys.platform != "win32":
+        sys.exit("inspect_arena: needs Windows (it reads the client's process memory)")
+    print(json.dumps(snapshot(a.pid, a.objects), indent=2))
+
+
 if __name__ == "__main__":
-    print(json.dumps(snapshot(int(sys.argv[1]), "--objects" in sys.argv), indent=2))
+    sys.exit(cli_util.run(main))

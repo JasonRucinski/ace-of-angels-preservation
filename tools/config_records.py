@@ -15,14 +15,21 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import cli_util  # noqa: E402
 from pe_util import PE, Disasm  # noqa: E402
 
 NAME = re.compile(rb"^[A-Za-z0-9_]{2,}\0+$")
 
 
-def main():
-    path, cache, nlen_s, anchor, out = sys.argv[1:6]
-    nlen = int(nlen_s)
+def main(argv=None):
+    ap = cli_util.parser(__doc__)
+    ap.add_argument("client", help="client executable")
+    ap.add_argument("cache", help="disassembly cache (.pkl) for that executable")
+    ap.add_argument("name_len", type=int, help="record name length (64 for 2.7.1 and later, 32 for 2.0.0)")
+    ap.add_argument("anchor", help="a record name known to be in the table")
+    ap.add_argument("out", help="JSON file to write")
+    a = ap.parse_args(argv)
+    path, cache, nlen, anchor, out = a.client, a.cache, a.name_len, a.anchor, a.out
     stride = nlen + 4
     pe = PE(path)
     d = Disasm(pe, cache)
@@ -58,4 +65,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(cli_util.run(main))

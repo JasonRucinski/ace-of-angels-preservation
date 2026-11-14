@@ -58,13 +58,13 @@ def scout(name, out, spawn_at=None, camera="cockpit"):
         record.stop_host(host)
 
 
-def main():
+def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("maps", nargs="+")
     parser.add_argument("--out", type=Path, default=record.ROOT / "work/reel/scout")
     parser.add_argument("--spawn-at", type=float, nargs=3)
     parser.add_argument("--camera", default="cockpit")
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
     args.out.mkdir(parents=True, exist_ok=True)
     for name in args.maps:
         try:

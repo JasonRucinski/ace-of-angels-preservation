@@ -36,6 +36,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import aoacrypt  # noqa: E402
+import cli_util  # noqa: E402
 
 BUILTIN_KEY_VA = {  # per client build; located by content search in 2.9.2
     "b179c3c22e6426d55de52d57476aaa53b7e92622009daf754c5153be0b7503a7": 0x6A0128,
@@ -310,21 +311,35 @@ def safe_name(i, name):
     return f"{i:04d}_{base}"
 
 
-def main():
-    cmd, client, archive = sys.argv[1:4]
+def main(argv=None):
+    ap = cli_util.parser(__doc__)
+    sub = ap.add_subparsers(dest="cmd", required=True)
+    for name, text in (("list", "print the directory and per-entry hashes"),
+                       ("extract", "write every entry to a folder"),
+                       ("replace", "write a copy with some entries replaced")):
+        p = sub.add_parser(name, help=text, description=text)
+        p.add_argument("client", help="2.7.1 or 2.9.2 client holding the built-in key")
+        p.add_argument("archive", help=".aoa or .odb archive")
+        if name == "extract":
+            p.add_argument("out", help="folder to extract into")
+        if name == "replace":
+            p.add_argument("out", help="new archive to write (must not exist)")
+            p.add_argument("pairs", nargs="*", metavar="entry=file", help="entries to replace")
+    a = ap.parse_args(argv)
+    cmd, client, archive = a.cmd, a.client, a.archive
     key0 = builtin_key(client)
     if cmd == "replace":
-        out = Path(sys.argv[4])
+        out = Path(a.out)
         if out.exists():
             sys.exit(f"refusing to overwrite {out}")
-        pairs = dict(arg.split("=", 1) for arg in sys.argv[5:])
+        pairs = dict(arg.split("=", 1) for arg in a.pairs)
         data = rebuild(archive, key0, {k: Path(v).read_bytes() for k, v in pairs.items()})
         out.write_bytes(data)
         print(json.dumps({"archive": out.as_posix(), "bytes": len(data), "sha256": hashlib.sha256(data).hexdigest(),
                           "replaced": sorted(pairs)}))
         return
     d, key, version, entries = read_archive(archive, key0)
-    out_dir = Path(sys.argv[4]) if cmd == "extract" else None
+    out_dir = Path(a.out) if cmd == "extract" else None
     if out_dir:
         out_dir.mkdir(parents=True, exist_ok=True)
     report = {"archive": Path(archive).as_posix(), "bytes": len(d), "version": f"0x{version:04x}",
@@ -349,4 +364,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(cli_util.run(main))

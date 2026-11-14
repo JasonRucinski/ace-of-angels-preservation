@@ -17,6 +17,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import aoapack  # noqa: E402
+import cli_util  # noqa: E402
 import prepare_client  # noqa: E402
 from emulate_codec import Emu, HEAP, SCRATCH  # noqa: E402
 from pe_util import PE  # noqa: E402
@@ -37,8 +38,12 @@ def run(image_path, packed):
     return emu.read(out, size), emu.read(out + size, 1)[0]
 
 
-def main():
-    source, output = Path(sys.argv[1]), Path(sys.argv[2])
+def main(argv=None):
+    ap = cli_util.parser(__doc__)
+    ap.add_argument("source", type=Path, help="pristine 2.9.2 client (AOACLIENT.EXE.orig)")
+    ap.add_argument("output", type=Path, help="JSON report to write")
+    a = ap.parse_args(argv)
+    source, output = a.source, a.output
     original = source.read_bytes()
     body = b"".join(b"DxTgtWin_%d 20 %d 300 400 tgtwin2 icon\r\n" % (i, i * 7) for i in range(17))[:681]
     packed = aoapack.compress(body)
@@ -59,4 +64,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(cli_util.run(main))

@@ -1,6 +1,10 @@
 """Cross-check tools/aoapack.py's CCompress codec against the client's code.
 
 Usage: python -I tools/emulate_codec.py <client.exe(2.7.1)> <out.json>
+       python -I tools/emulate_codec.py <client.exe(2.7.1)> <out.json> <key256.bin>
+
+With a cipher key, it instead runs the end-to-end CComm framing check
+(SendPacket 0x60DDB0 / RecvPacket 0x60DEF0) described at ccomm_check below.
 
 The client image is mapped into a Unicorn x86-32 emulator (sections copied
 from the file, virtual tails zero-filled). Only CCompress routines are run:
@@ -20,6 +24,7 @@ from unicorn.x86_const import (UC_X86_REG_EAX, UC_X86_REG_ECX, UC_X86_REG_EIP,
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import aoapack  # noqa: E402
+import cli_util  # noqa: E402
 from pe_util import PE  # noqa: E402
 
 STACK, HEAP, SCRATCH, STUBS = 0x10000000, 0x20000000, 0x30000000, 0x40000000
@@ -81,8 +86,7 @@ def samples(rng):
         yield bytes(rng.choice((0, 0, 0, 1, 0x41)) for _ in range(n))         # very compressible
 
 
-def main():
-    path, out = sys.argv[1:3]
+def codec_check(path, out):
     pe = PE(path)
     emu = Emu(pe)
     this = SCRATCH
@@ -124,10 +128,6 @@ def main():
     results["failures"] = results["failures"][:5]
     Path(out).write_text(json.dumps(results, indent=2), encoding="utf-8")
     print(json.dumps(results, indent=2))
-
-
-if __name__ == "__main__" and len(sys.argv) == 3:
-    main()
 
 
 # ---------------------------------------------------------------------------
@@ -207,5 +207,17 @@ def ccomm_check(path, key_path, out):
     print(json.dumps(res, indent=2))
 
 
-if __name__ == "__main__" and len(sys.argv) > 3:
-    ccomm_check(sys.argv[1], sys.argv[3], sys.argv[2])
+def main(argv=None):
+    ap = cli_util.parser(__doc__)
+    ap.add_argument("client", help="the 2.7.1 client executable")
+    ap.add_argument("out", help="JSON file to write")
+    ap.add_argument("key", nargs="?", help="256-byte cipher table: run the CComm framing check instead")
+    a = ap.parse_args(argv)
+    if a.key:
+        ccomm_check(a.client, a.key, a.out)
+    else:
+        codec_check(a.client, a.out)
+
+
+if __name__ == "__main__":
+    sys.exit(cli_util.run(main))

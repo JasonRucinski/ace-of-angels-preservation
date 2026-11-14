@@ -32,6 +32,9 @@ import struct
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import cli_util  # noqa: E402
+
 TAG = b"hWv\x05"
 
 
@@ -121,9 +124,15 @@ def write_obj(mesh, stem, out_dir, tex_dir):
     return flip
 
 
-def main():
-    src, out_dir = Path(sys.argv[1]), Path(sys.argv[2])
-    tex_dir = sys.argv[3] if len(sys.argv) > 3 else None
+def main(argv=None):
+    ap = cli_util.parser(__doc__)
+    ap.add_argument("src", type=Path, help="a .Gob file or a folder of them")
+    ap.add_argument("out_dir", type=Path, help="folder to write OBJ/MTL files to")
+    ap.add_argument("texture_dir", nargs="?", help="texture folder the MTL files point to")
+    a = ap.parse_args(argv)
+    src, out_dir, tex_dir = a.src, a.out_dir, a.texture_dir
+    if not src.exists():
+        sys.exit(f"gob2obj: not found: {src}")
     out_dir.mkdir(parents=True, exist_ok=True)
     gobs = sorted(src.glob("*.[Gg]ob")) if src.is_dir() else [src]
     report = []
@@ -148,4 +157,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(cli_util.run(main))

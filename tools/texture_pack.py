@@ -140,14 +140,14 @@ def undo(folder):
     return {"restored": restored}
 
 
-if __name__ == "__main__":
+def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("game_dir", type=Path)
     parser.add_argument("replacements", nargs="*", help="[ARCHIVE:]<entry>=<tga file>")
     parser.add_argument("--from-dir", type=Path, action="append", default=[],
                         help="folder whose _entries.json maps entry -> file name; repeatable")
     parser.add_argument("--undo", action="store_true")
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
     pairs = dict(item.split("=", 1) for item in args.replacements)
     for folder in args.from_dir:
         listing = json.loads((folder / "_entries.json").read_text(encoding="utf-8"))
@@ -158,3 +158,7 @@ if __name__ == "__main__":
     if args.undo == bool(pairs):
         parser.error("give replacements, or --undo alone")
     print(json.dumps(undo(args.game_dir) if args.undo else install(args.game_dir, pairs), indent=2))
+
+
+if __name__ == "__main__":
+    main()

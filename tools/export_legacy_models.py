@@ -11,7 +11,8 @@ import struct
 import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-import gob2obj
+import cli_util  # noqa: E402
+import gob2obj  # noqa: E402
 
 
 def parse(data):
@@ -41,8 +42,14 @@ def parse(data):
     return meshes
 
 
-def main():
-    src, out = map(Path, sys.argv[1:3])
+def main(argv=None):
+    ap = cli_util.parser(__doc__)
+    ap.add_argument('src', type=Path, help='exported AOAOBJECTS folder of a 2.0.0 or 2.7.1 build')
+    ap.add_argument('out', type=Path, help='folder to write OBJ files and _legacy_report.json to')
+    a = ap.parse_args(argv)
+    src, out = a.src, a.out
+    if not src.is_dir():
+        sys.exit(f'export_legacy_models: folder not found: {src}')
     out.mkdir(parents=True, exist_ok=True)
     report = []
     for path in sorted(src.glob('*.Gob')):
@@ -60,4 +67,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    sys.exit(cli_util.run(main))

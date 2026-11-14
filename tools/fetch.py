@@ -7,7 +7,9 @@ Usage:
 against `client_bytes` / `client_sha256` instead of the installer fields.
 
 Nothing downloaded is executed. A JSON provenance record is appended to
-evidence/download_log.jsonl.
+evidence/download_log.jsonl (in the repository, whatever the working
+directory). Requests go through tools/polite_http.py (paced, backs off on
+HTTP 429/5xx).
 """
 import datetime
 import hashlib
@@ -15,18 +17,31 @@ import json
 import os
 import stat
 import sys
-import urllib.request
 from pathlib import Path
 
-UA = "Mozilla/5.0 (preservation research; static analysis only)"
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import cli_util  # noqa: E402
+from polite_http import polite_open  # noqa: E402
+
+LOG = cli_util.ROOT / "evidence" / "download_log.jsonl"
 
 
-def main() -> int:
-    manifest_path, version, out_dir = sys.argv[1:4]
-    want_client = "--client" in sys.argv[4:]
+def main(argv=None) -> int:
+    ap = cli_util.parser(__doc__)
+    ap.add_argument("manifest", help="manifest/downloads.json")
+    ap.add_argument("version", help="runtime_version of the entry to fetch")
+    ap.add_argument("out_dir", type=cli_util.output_dir, help="folder to save the file in")
+    ap.add_argument("--client", action="store_true", help="fetch the direct client instead of the installer")
+    a = ap.parse_args(argv)
+    manifest_path, version, out_dir, want_client = a.manifest, a.version, a.out_dir, a.client
     manifest = json.loads(Path(manifest_path).read_text(encoding="utf-8"))
-    entry = next(d for d in manifest["downloads"] if d["runtime_version"] == version)
+    entry = next((d for d in manifest["downloads"] if d["runtime_version"] == version), None)
+    if entry is None:
+        sys.exit(f"fetch: no manifest entry for runtime_version {version}")
 
+    field = "direct_client_url" if want_client else "direct_url"
+    if field not in entry:
+        sys.exit(f"fetch: the {version} entry has no {field}")
     if want_client:
         url = entry["direct_client_url"]
         want_bytes, want_sha = entry["client_bytes"], entry["client_sha256"]
@@ -44,11 +59,10 @@ def main() -> int:
         return 0
     part = out / (name + ".part")
 
-    req = urllib.request.Request(url, headers={"User-Agent": UA})
     started = datetime.datetime.now(datetime.timezone.utc).isoformat()
     h = hashlib.sha256()
     n = 0
-    with urllib.request.urlopen(req, timeout=120) as resp, open(part, "wb") as f:
+    with polite_open(url, timeout=120) as resp, open(part, "wb") as f:
         status, final_url = resp.status, resp.geturl()
         headers = {k: v for k, v in resp.headers.items()
                    if k.lower() in ("content-length", "content-type", "last-modified", "date", "etag")}
@@ -65,7 +79,7 @@ def main() -> int:
         "expected_bytes": want_bytes, "expected_sha256": want_sha, "verified": ok,
         "local_path": str(final.as_posix()),
     }
-    with open(Path("evidence") / "download_log.jsonl", "a", encoding="utf-8") as log:
+    with open(LOG, "a", encoding="utf-8") as log:
         log.write(json.dumps(record) + "\n")
     if not ok:
         print(json.dumps(record, indent=2))
@@ -78,4 +92,4 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(cli_util.run(main))

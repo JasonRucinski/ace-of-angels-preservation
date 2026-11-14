@@ -21,6 +21,9 @@ import sys
 import zlib
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import cli_util  # noqa: E402
+
 
 def tga_to_rgba(data):
     id_len, cmap_type, img_type = data[0], data[1], data[2]
@@ -54,8 +57,12 @@ def png(w, h, rows):
             + chunk(b"IDAT", body) + chunk(b"IEND", b""))
 
 
-def main():
-    src, dst = Path(sys.argv[1]), Path(sys.argv[2])
+def main(argv=None):
+    ap = cli_util.parser(__doc__)
+    ap.add_argument("extracted", type=Path, help="folder of archives extracted by aoapack.py extract")
+    ap.add_argument("out", type=Path, help="folder to write the asset tree to")
+    a = ap.parse_args(argv)
+    src, dst = a.extracted, a.out
     record = []
     for arch in sorted(p for p in src.iterdir() if p.is_dir()):
         for f in sorted(arch.iterdir()):
@@ -84,4 +91,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(cli_util.run(main))

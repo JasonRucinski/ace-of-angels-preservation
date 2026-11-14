@@ -36,6 +36,9 @@ import struct
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import cli_util  # noqa: E402
+
 SENTINEL = 0xFADE1234
 REC = 512
 REC_292 = 540
@@ -127,17 +130,19 @@ def powerup_zones_292(data):
     return zones
 
 
-def main():
-    if len(sys.argv) not in (2, 3):
-        sys.exit(__doc__)
-    out = decode(Path(sys.argv[1]).read_bytes())
+def main(argv=None):
+    ap = cli_util.parser(__doc__)
+    ap.add_argument("trn", type=Path, help="2.0.0-format terrain map (.TRN)")
+    ap.add_argument("out", type=Path, nargs="?", help="JSON file to write (default: print it)")
+    a = ap.parse_args(argv)
+    out = decode(a.trn.read_bytes())
     text = json.dumps(out, indent=1)
-    if len(sys.argv) == 3:
-        Path(sys.argv[2]).write_text(text, encoding="utf-8")
+    if a.out:
+        a.out.write_text(text, encoding="utf-8")
         print(json.dumps({k: v for k, v in out.items() if k not in ("records", "links")}))
     else:
         print(text)
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(cli_util.run(main))

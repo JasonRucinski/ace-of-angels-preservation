@@ -2,35 +2,49 @@
 """Full-text search of archive.org's scanned books and magazines (OCR text).
 
 Web search engines do not index this. Runs a fixed list of queries against
-archive.org's full-text backend and writes <out>/hits.json: one row per
-(item, file) with the queries that matched.
+archive.org's full-text backend and writes <out>/ia_fulltext_hits.json (the
+name committed in data/): one row per (item, file) with the queries that
+matched. The output folder must already exist and be given explicitly; a
+name starting with "-" is refused. Requests go through tools/polite_http.py
+(paced, backs off on HTTP 429/5xx).
 
     python3 -I ia_fulltext_search.py data/        # then ia_fulltext_context.py data/
 
 Edit `queries` below to change what is searched.
 """
-import json, sys, urllib.parse, urllib.request, time, gzip, re, os
-out = sys.argv[1]
+import json, sys, urllib.parse, os
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import cli_util  # noqa: E402
+from polite_http import polite_get  # noqa: E402
+HITS = "ia_fulltext_hits.json"
 queries = ['"ace of angels" "flying rock"', '"flying rock enterprises"', '"aceofangels.com"', '"aceofangels"',
            '"flyingrockllc"', '"ace of angels" beta', '"ace of angels" demo', '"ace of angels" space',
            '"ace of angels" simulator', '"flying rock" angels space']
-def get(u):
-    req = urllib.request.Request(u, headers={"User-Agent": "Mozilla/5.0"})
-    with urllib.request.urlopen(req, timeout=120) as r: return r.read()
-hits = {}
-for q in queries:
-    for page in (1, 2, 3):
-        u = ("https://archive.org/services/search/beta/page_production/?service_backend=fts&user_query="
-             + urllib.parse.quote(q) + f"&hits_per_page=100&page={page}")
-        try: j = json.loads(get(u))
-        except Exception as e: print("ERR", q, e); break
-        hh = j["response"]["body"]["hits"]
-        for h in hh["hits"]:
-            f = h["fields"]; key = (f["identifier"], f.get("filename"))
-            hits.setdefault(key, {"title": f.get("title"), "date": f.get("date") or f.get("publicdate"), "queries": set()})["queries"].add(q)
-        print(f"{q!r} page {page}: total {hh.get('total')}, got {len(hh['hits'])}")
-        if len(hh["hits"]) < 100: break
-        time.sleep(1)
-print(len(hits), "unique files")
-json.dump([{"identifier": k[0], "filename": k[1], **{**v, "queries": sorted(v["queries"])}} for k, v in hits.items()],
-          open(os.path.join(out, "hits.json"), "w"), indent=1)
+def main(argv=None):
+    ap = cli_util.parser(__doc__)
+    ap.add_argument("out", type=cli_util.output_dir, help=f"existing folder to write {HITS} to, e.g. data/")
+    ap.add_argument("--hits", default=HITS, help="output file name inside OUT (default: %(default)s)")
+    a = ap.parse_args(argv)
+    out = a.out
+    if not os.path.isdir(out):
+        sys.exit(f"ia_fulltext_search: output folder not found: {out}")
+    hits = {}
+    for q in queries:
+        for page in (1, 2, 3):
+            u = ("https://archive.org/services/search/beta/page_production/?service_backend=fts&user_query="
+                 + urllib.parse.quote(q) + f"&hits_per_page=100&page={page}")
+            try: j = json.loads(polite_get(u, timeout=120))
+            except Exception as e: print("ERR", q, e); break
+            hh = j["response"]["body"]["hits"]
+            for h in hh["hits"]:
+                f = h["fields"]; key = (f["identifier"], f.get("filename"))
+                hits.setdefault(key, {"title": f.get("title"), "date": f.get("date") or f.get("publicdate"), "queries": set()})["queries"].add(q)
+            print(f"{q!r} page {page}: total {hh.get('total')}, got {len(hh['hits'])}")
+            if len(hh["hits"]) < 100: break
+    print(len(hits), "unique files")
+    with open(os.path.join(out, a.hits), "w") as f:
+        json.dump([{"identifier": k[0], "filename": k[1], **{**v, "queries": sorted(v["queries"])}} for k, v in hits.items()],
+                  f, indent=1)
+if __name__ == "__main__":
+    sys.exit(cli_util.run(main))

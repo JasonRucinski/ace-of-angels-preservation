@@ -13,9 +13,29 @@ import sys
 import time
 from ctypes import wintypes
 
-user32 = ctypes.WinDLL("user32", use_last_error=True)
-kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
-EnumProc = ctypes.WINFUNCTYPE(wintypes.BOOL, wintypes.HWND, wintypes.LPARAM)
+
+class _NeedsWindows:
+    """Stands in for a Windows DLL elsewhere, so the reel scripts import and
+    answer --help on any system: functions can be configured, calls fail."""
+
+    def __init__(self, dll):
+        self._dll = dll
+
+    def __getattr__(self, name):
+        def unavailable(*args, **kwargs):
+            raise OSError(f"{self._dll}.{name} needs Windows")
+        setattr(self, name, unavailable)
+        return unavailable
+
+
+def dll(name):
+    """ctypes.WinDLL(name) on Windows; elsewhere a stand-in whose calls fail."""
+    return ctypes.WinDLL(name, use_last_error=True) if sys.platform == "win32" else _NeedsWindows(name)
+
+
+user32 = dll("user32")
+kernel32 = dll("kernel32")
+EnumProc = getattr(ctypes, "WINFUNCTYPE", ctypes.CFUNCTYPE)(wintypes.BOOL, wintypes.HWND, wintypes.LPARAM)
 user32.EnumWindows.argtypes = [EnumProc, wintypes.LPARAM]
 user32.EnumChildWindows.argtypes = [wintypes.HWND, EnumProc, wintypes.LPARAM]
 user32.GetWindowThreadProcessId.argtypes = [wintypes.HWND, ctypes.POINTER(wintypes.DWORD)]
@@ -35,7 +55,8 @@ user32.GetForegroundWindow.restype = wintypes.HWND
 user32.AttachThreadInput.argtypes = [wintypes.DWORD, wintypes.DWORD, wintypes.BOOL]
 user32.MapVirtualKeyW.argtypes = [wintypes.UINT, wintypes.UINT]
 user32.MapVirtualKeyW.restype = wintypes.UINT
-user32.SetProcessDPIAware()
+if sys.platform == "win32":
+    user32.SetProcessDPIAware()
 
 WM_KEYDOWN, WM_KEYUP, WM_SYSKEYDOWN, WM_SYSKEYUP, WM_COMMAND = 0x100, 0x101, 0x104, 0x105, 0x111
 
@@ -166,7 +187,7 @@ def hide_hud(hwnd, panels=None):
             time.sleep(0.12)
 
 
-def main():
+def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = parser.add_subparsers(dest="action", required=True)
     sub.add_parser("list")
@@ -178,7 +199,9 @@ def main():
     p = sub.add_parser("key")
     p.add_argument("vk", type=lambda s: int(s, 0))
     p.add_argument("--sys", action="store_true")
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
+    if sys.platform != "win32":
+        sys.exit("window: needs Windows")
     if args.action == "list":
         print(json.dumps(windows(), indent=1))
     elif args.action == "press":

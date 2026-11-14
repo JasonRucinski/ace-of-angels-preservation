@@ -21,11 +21,11 @@ from local_station import OFFSET
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def main():
+def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("destination", type=Path)
     parser.add_argument("--menu-fix", action="store_true", help="include the verified ship-selection aspect fix")
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
     destination = args.destination.resolve()
     if destination.exists():
         parser.error("destination already exists; use a new folder")

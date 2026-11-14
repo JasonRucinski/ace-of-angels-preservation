@@ -2,7 +2,8 @@
 
 Usage: python -I tools/message_table.py <out.md>
 
-Inputs (all produced by the other tools):
+Inputs (all produced by the other tools; read from the repository root,
+whatever the working directory):
   evidence/2.7.1/dispatch_4d1830.json   CAOAComm receive switch
   evidence/2.7.1/dispatch_45b430.json   CClientComm::ReceiveExtraPacket switch
   evidence/2.7.1/send_sites.json        immediate type/length stores
@@ -16,6 +17,11 @@ structure has that size.
 import json
 import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import cli_util  # noqa: E402
+
+EVIDENCE = cli_util.ROOT / "evidence"
 
 
 def load(p):
@@ -40,13 +46,16 @@ def sends(p):
     return out
 
 
-def main():
-    out = sys.argv[1]
-    r271 = handlers("evidence/2.7.1/dispatch_4d1830.json", "evidence/2.7.1/dispatch_45b430.json")
-    r292 = handlers("evidence/2.9.2/dispatch_base.json", "evidence/2.9.2/dispatch_extra.json")
-    s271, s292 = sends("evidence/2.7.1/send_sites.json"), sends("evidence/2.9.2/send_sites.json")
+def main(argv=None):
+    ap = cli_util.parser(__doc__)
+    ap.add_argument("out", help="Markdown file to write (docs/message-types.md is the committed copy)")
+    a = ap.parse_args(argv)
+    out = a.out
+    r271 = handlers(EVIDENCE / "2.7.1/dispatch_4d1830.json", EVIDENCE / "2.7.1/dispatch_45b430.json")
+    r292 = handlers(EVIDENCE / "2.9.2/dispatch_base.json", EVIDENCE / "2.9.2/dispatch_extra.json")
+    s271, s292 = sends(EVIDENCE / "2.7.1/send_sites.json"), sends(EVIDENCE / "2.9.2/send_sites.json")
     by_size = {}
-    for r in load("evidence/2.7.1/packet_sizes.json")["rows"]:
+    for r in load(EVIDENCE / "2.7.1/packet_sizes.json")["rows"]:
         by_size.setdefault(r["value"], []).append(r["name"])
     types = sorted(set(r271) | set(r292) | set(s271) | set(s292))
 
@@ -92,4 +101,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(cli_util.run(main))

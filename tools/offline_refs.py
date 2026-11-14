@@ -16,13 +16,20 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import cli_util  # noqa: E402
 from pe_util import PE, Disasm  # noqa: E402
 
 REG8 = {"eax": "al", "ebx": "bl", "ecx": "cl", "edx": "dl"}
 
 
-def main():
-    path, cache, flags_s, out = sys.argv[1:5]
+def main(argv=None):
+    ap = cli_util.parser(__doc__)
+    ap.add_argument("client", help="client executable")
+    ap.add_argument("cache", help="disassembly cache (.pkl) for that executable")
+    ap.add_argument("flags_va", help="VA (hex) of the global flag word")
+    ap.add_argument("out", help="JSON file to write")
+    a = ap.parse_args(argv)
+    path, cache, flags_s, out = a.client, a.cache, a.flags_va, a.out
     flags = int(flags_s, 16)
     pe = PE(path)
     d = Disasm(pe, cache)
@@ -66,4 +73,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(cli_util.run(main))

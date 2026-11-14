@@ -12,6 +12,7 @@ import tempfile
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import cli_util
 import explicit_protection as protection
 import prepare_client
 from emulate_codec import Emu, HEAP, SCRATCH, STACK, STOP
@@ -231,8 +232,12 @@ def health_reset_probe(path):
             "remaining": "local death callback, arbitrary health correction and server-owned respawn state"}
 
 
-def main():
-    source, output = map(Path, sys.argv[1:])
+def main(argv=None):
+    ap = cli_util.parser(__doc__)
+    ap.add_argument("source", type=Path, help="pristine 2.9.2 client (AOACLIENT.EXE.orig)")
+    ap.add_argument("output", type=Path, help="JSON report to write")
+    a = ap.parse_args(argv)
+    source, output = a.source, a.output
     original = source.read_bytes()
     if hashlib.sha256(original).hexdigest() != PRISTINE_292:
         raise ValueError("requires hash-pinned original 2.9.2 client")
@@ -261,4 +266,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(cli_util.run(main))

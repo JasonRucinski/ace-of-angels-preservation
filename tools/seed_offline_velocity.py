@@ -12,11 +12,17 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import cli_util
 import render_clock_experiment
 
 
-def main():
-    pid = int(sys.argv[1])
+def main(argv=None):
+    ap = cli_util.parser(__doc__)
+    ap.add_argument('pid', type=int, help='process id of the offline-baseline client')
+    a = ap.parse_args(argv)
+    if sys.platform != 'win32':
+        sys.exit('seed_offline_velocity: needs Windows (it writes the client\'s process memory)')
+    pid = a.pid
     k = ctypes.WinDLL('kernel32', use_last_error=True)
     k.OpenProcess.argtypes = [wintypes.DWORD, wintypes.BOOL, wintypes.DWORD]
     k.OpenProcess.restype = wintypes.HANDLE
@@ -58,4 +64,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    sys.exit(cli_util.run(main))

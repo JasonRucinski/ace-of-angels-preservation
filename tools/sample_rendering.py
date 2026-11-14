@@ -14,12 +14,12 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from inspect_arena import snapshot
 
 
-def main():
+def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("pid", type=int)
     parser.add_argument("output", type=Path)
     parser.add_argument("--seconds", type=float, default=10)
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
     if not 0 < args.seconds <= 60:
         parser.error("duration must be greater than zero and at most 60 seconds")
     samples = []

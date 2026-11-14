@@ -191,14 +191,14 @@ def export(src, name, out_dir, tex_dir, objects, cache, expand_layouts=False):
     return len(nodes), placed
 
 
-def main():
+def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("src", type=Path)
     parser.add_argument("which")
     parser.add_argument("out_dir", type=Path)
     parser.add_argument("tex_dir", nargs="?")
     parser.add_argument("--expand-layouts", action="store_true", help="expand native category-9 nested layouts; preview evidence only")
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
     src, which, out_dir, tex_dir = args.src, args.which, args.out_dir, args.tex_dir
     out_dir.mkdir(parents=True, exist_ok=True)
     objects, cache = sco_models(src), {}

@@ -3,6 +3,10 @@
 Only _CIasin/_CIacos are substituted, with Python math. Their input values
 are recorded before substitution; domain findings do not depend on a CRT stub.
 This is not a GPU or complete-frame test.
+
+    python -I tools/audit_render_pipeline.py <output.json> [--source EXE]
+
+EXE defaults to game/2.9.2/AOACLIENT.EXE.orig (the pristine 2.9.2 client).
 """
 import hashlib
 import json
@@ -12,6 +16,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import cli_util
 from emulate_codec import Emu, SCRATCH, STUBS, STOP
 from patch_client import PRISTINE_292
 from pe_util import PE
@@ -275,10 +280,18 @@ def run(source, corrected=False, fpcw=0x7F, patch=None):
                           'Causality for the reported large-scale jumping; localhost host/client parity.']}
 
 
-if __name__ == '__main__':
-    root = Path(__file__).resolve().parents[1]
-    report = run(root/'game/2.9.2/AOACLIENT.EXE.orig')
-    output = Path(sys.argv[1])
+def main(argv=None):
+    ap = cli_util.parser(__doc__)
+    ap.add_argument('output', type=Path, help='JSON report to write')
+    ap.add_argument('--source', type=Path, default=cli_util.ROOT/'game/2.9.2/AOACLIENT.EXE.orig',
+                    help='pristine 2.9.2 client (default: %(default)s)')
+    a = ap.parse_args(argv)
+    report = run(a.source)
+    output = a.output
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(report, indent=2, allow_nan=False)+'\n')
     print(json.dumps({k:report[k] for k in ('nested_transform_cases','maximum_matrix_error','moving_turning_culling_cases','findings')},indent=2))
+
+
+if __name__ == '__main__':
+    sys.exit(cli_util.run(main))

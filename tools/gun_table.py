@@ -16,6 +16,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import cli_util  # noqa: E402
 from pe_util import PE  # noqa: E402
 
 PRISTINE_292 = "4b6c35e2b3ab473bd98c0afa6538079ee78678d85c28406c07bc27a08cc78c7e"
@@ -29,8 +30,12 @@ FIELDS = ((0x00, "<H", "obj+0x120"), (0x02, "<H", "obj+0x122"), (0x04, "<H", "ob
           (0x1A, "<H", "obj+0x108"), (0x1C, "<b", "argument to 0x4C3D00"))
 
 
-def main():
-    exe, out = Path(sys.argv[1]), Path(sys.argv[2])
+def main(argv=None):
+    ap = cli_util.parser(__doc__)
+    ap.add_argument("exe", type=Path, help="pristine 2.9.2 client")
+    ap.add_argument("out", type=Path, help="JSON file to write")
+    a = ap.parse_args(argv)
+    exe, out = a.exe, a.out
     digest = hashlib.sha256(exe.read_bytes()).hexdigest()
     if digest != PRISTINE_292:
         raise SystemExit("expected the original 2.9.2 executable")
@@ -47,4 +52,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(cli_util.run(main))

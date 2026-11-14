@@ -17,6 +17,7 @@ from pathlib import Path
 import capstone
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import cli_util  # noqa: E402
 from pe_util import PE, Disasm  # noqa: E402
 
 
@@ -53,8 +54,16 @@ def to_regex(code, mask):
     return b"".join(re.escape(bytes([c])) if m else b"." for c, m in zip(code, mask))
 
 
-def main():
-    ref, refc, oth, othc, out, *pairs = sys.argv[1:]
+def main(argv=None):
+    ap = cli_util.parser(__doc__)
+    ap.add_argument("ref", help="reference executable (2.7.1)")
+    ap.add_argument("ref_cache", help="disassembly cache (.pkl) for the reference")
+    ap.add_argument("other", help="executable to search")
+    ap.add_argument("other_cache", help="disassembly cache (.pkl) for the other build")
+    ap.add_argument("out", help="JSON file to write")
+    ap.add_argument("pairs", nargs="*", metavar="name=va", help="reference functions (VA in hex)")
+    a = ap.parse_args(argv)
+    ref, refc, oth, othc, out, pairs = a.ref, a.ref_cache, a.other, a.other_cache, a.out, a.pairs
     pr, po = PE(ref), PE(oth)
     dr = Disasm(pr, refc)
     Disasm(po, othc)
@@ -90,4 +99,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(cli_util.run(main))

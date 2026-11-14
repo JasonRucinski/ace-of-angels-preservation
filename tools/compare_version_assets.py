@@ -1,27 +1,40 @@
 """Verify known packages and compare pristine decoded assets with 2.9.2.
 
-Run from the repository root: python -I tools/compare_version_assets.py
+python -I tools/compare_version_assets.py [--evidence DIR]
 Never executes downloaded binaries or writes to the active game directory.
+Paths are resolved from the repository root, whatever the working directory.
+The per-version reports and summary.json go to work/evidence/asset-review/
+unless --evidence names the folder (the committed copies are in
+evidence/asset-review/).
 """
 import collections
 import hashlib
 import json
+import os
 from pathlib import Path
 import sys
 import zipfile
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import aoapack
+import cli_util
 
 ROOT = Path('work/asset-review')
-EVIDENCE = Path('evidence/asset-review')
+COMMITTED = 'evidence/asset-review'
 
 
 def sha(data):
     return hashlib.sha256(data).hexdigest()
 
 
-def main():
+def main(argv=None):
+    ap = cli_util.parser(__doc__)
+    cli_util.add_evidence_option(ap, COMMITTED)
+    a = ap.parse_args(argv)
+    EVIDENCE = a.evidence.resolve() if a.evidence else cli_util.WORK / COMMITTED
+    # The reports record repo-relative paths (and other tools read them back
+    # that way), so work from the repository root.
+    os.chdir(cli_util.ROOT)
     manifest = json.loads(Path('manifest/downloads.json').read_text())['downloads']
     key = aoapack.builtin_key('work/2.7.1/members/15_AOACLIENT.EXE')
     EVIDENCE.mkdir(parents=True, exist_ok=True)
@@ -30,7 +43,10 @@ def main():
         version = spec['runtime_version']
         candidates = list(Path('originals', version).glob('*.exe'))
         candidates += list(Path('builds/asset-review', version).glob('*.exe'))
-        source = next(p for p in candidates if sha(p.read_bytes()) == spec['sha256'])
+        source = next((p for p in candidates if sha(p.read_bytes()) == spec['sha256']), None)
+        if source is None:
+            sys.exit(f"compare_version_assets: no file with the manifest's sha256 for {version} "
+                     f"in originals/{version}/ or builds/asset-review/{version}/")
         assert source.stat().st_size == spec['bytes'], source
         out = ROOT / version
         members = out / 'members'
@@ -109,4 +125,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    sys.exit(cli_util.run(main))

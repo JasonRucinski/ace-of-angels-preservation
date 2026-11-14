@@ -1,8 +1,11 @@
 """Inventory filled and unfilled nodes in every recovered 2.9.2 layout.
 
-python -I tools/audit_map_nodes.py
+python -I tools/audit_map_nodes.py [--evidence PATH]
 Full positions stay in ignored work/; evidence contains only counts and names.
 This audits assets, not gameplay implementation or live-client acceptance.
+
+The report goes to work/evidence/2.9.2/map_nodes_20261026.json unless
+--evidence names the file (the committed copy is evidence/2.9.2/...).
 """
 import collections
 import hashlib
@@ -12,9 +15,11 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import cli_util
 import scene2obj
 
 ROOT = Path(__file__).resolve().parents[1]
+EVIDENCE = 'evidence/2.9.2/map_nodes_20261026.json'
 
 
 def classify(node, objects):
@@ -43,8 +48,13 @@ def classify(node, objects):
     return 'unresolved_reference'
 
 
-def main():
+def main(argv=None):
+    ap = cli_util.parser(__doc__)
+    cli_util.add_evidence_option(ap, EVIDENCE)
+    a = ap.parse_args(argv)
     source = ROOT / 'work/2.9.2/export/AOAOBJECTS'
+    if not source.is_dir():
+        sys.exit(f'audit_map_nodes: export folder not found: {source} (run export_assets.py first)')
     out = ROOT / 'work/map-node-review'
     out.mkdir(parents=True, exist_ok=True)
     objects = scene2obj.sco_models(source)
@@ -70,10 +80,10 @@ def main():
             'recovered_prefix_references': [{'node': n['name'], 'layout': n['nested_layout']} for n in recovered],
             'unresolved_references': sorted({n['name'] for n in nodes if n['resolution'] == 'unresolved_reference'}),
         }
-    target = ROOT / 'evidence/2.9.2/map_nodes_20261026.json'
+    target = cli_util.evidence_target(a.evidence, EVIDENCE)
     target.write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
     print(json.dumps(report, indent=2))
 
 
 if __name__ == '__main__':
-    main()
+    sys.exit(cli_util.run(main))
