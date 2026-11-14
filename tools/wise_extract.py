@@ -8,6 +8,9 @@ stream, so they can be pulled out as plain data without running anything.
     python3 -I wise_extract.py aoa-current.exe              # list entries
     python3 -I wise_extract.py aoa-current.exe out_dir/     # extract all
 
+An entry whose CRC-32 does not match is not written and the run exits 1;
+--force writes it anyway (with a warning).
+
 Never run the installer itself; it is untrusted, 20+ years old, and unneeded
 for inspection.
 """
@@ -15,6 +18,10 @@ import os
 import struct
 import sys
 import zlib
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import cli_util  # noqa: E402
 
 
 def entries(data):
@@ -32,14 +39,18 @@ def entries(data):
         i += 4
 
 
-def main():
-    if len(sys.argv) not in (2, 3):
-        sys.exit(__doc__)
-    data = open(sys.argv[1], "rb").read()
-    out = sys.argv[2] if len(sys.argv) == 3 else None
+def main(argv=None):
+    ap = cli_util.parser(__doc__)
+    ap.add_argument("installer", help="Wise installer to read (never run)")
+    ap.add_argument("out", nargs="?", help="folder to extract into (default: only list)")
+    ap.add_argument("--force", action="store_true", help="write entries whose CRC does not match")
+    a = ap.parse_args(argv)
+    data = open(a.installer, "rb").read()
+    out = a.out
     if out:
         os.makedirs(out, exist_ok=True)
     seen = {}
+    bad_crc = 0
     for off, name, meth, csz, usz, crc, start in entries(data):
         print(f"{off:#010x}  meth={meth}  {usz:>10}  {name}")
         if not out or meth != 8:
@@ -50,6 +61,10 @@ def main():
             print(f"    skipped: {e}")
             continue
         if zlib.crc32(raw) != crc:
+            if not a.force:
+                print("    CRC mismatch: not written (--force writes it)")
+                bad_crc += 1
+                continue
             print("    warning: CRC mismatch")
         # Basename only: an entry name must never write outside out_dir.
         base = os.path.basename(name.replace("\\", "/")) or "unnamed"
@@ -58,7 +73,9 @@ def main():
         target = os.path.join(out, base if n == 0 else f"{base}.{n}")
         with open(target, "wb") as f:
             f.write(raw)
+    if bad_crc:
+        sys.exit(f"wise_extract: {bad_crc} entr{'y' if bad_crc == 1 else 'ies'} failed the CRC check")
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(cli_util.run(main))
