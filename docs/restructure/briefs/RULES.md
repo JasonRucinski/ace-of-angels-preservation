@@ -39,17 +39,12 @@ finding your brief cites by ID.
 - House rules (CONTRIBUTING.md): evidence over claims; anything untested
   stays visibly marked untested; patches reversible and hash-checked; no game
   files in commits.
-- Before each commit run the game-free suites that cover what you touched,
-  with `python3 -I tools/<suite>.py`. Before you finish run all of:
-  test_network_bounds test_relay_motion test_relay_recovery
-  test_station_runtime test_station_sessions test_station_stub
-  test_guest_admission test_combat_delivery test_client_extensions
-  test_lan_dogfight test_internet_play test_powerups test_target_ships
-  test_host_control test_prepare_client test_dedicated_host
-  test_client_launcher test_make_map test_make_object
-  test_patch_layout test_host_argv test_reel
-  test_cli_help test_polite_http test_install_wrapper test_make_vessel_combat
-  plus any test you added. All must pass.
+- Before each commit run the suites that cover what you touched:
+  `python3 -I tools/test.py <suite> [<suite> …]`. Before you finish run
+  `python3 -I tools/test.py --tier ci` plus any test you added (add new
+  game-free suites to the `CI` list in `tests/tiers.py`). All must pass.
+  The layout since phase 1: code in `aoa/`, suites in `tests/`, command
+  shims in `tools/`, frozen one-offs in `archive/`.
 
 ## Report back (under 400 words)
 
