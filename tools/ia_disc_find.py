@@ -12,23 +12,26 @@ It only *lists*; nothing is downloaded. A result of "N entries listed" with
 no hits is a real negative only when N is the disc's file count. A RAR/7z
 that wraps a raw .img/.bin/.mdf shows just that one file, so it was NOT
 searched -- download it and use rar_img2iso.py / iso_stream_extract.py.
+
+Requests go through tools/polite_http.py (paced, backs off on HTTP 429/5xx).
 """
-import argparse
 import html
 import json
 import re
 import sys
 import urllib.parse
-import urllib.request
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import cli_util  # noqa: E402
+from polite_http import polite_get  # noqa: E402
 
 DEFAULT = r"(?i)ace.?of.?angel|aoa[-_ ]|aoaclient|flyingrock"
 IMG = re.compile(r"\.(iso|zip|rar|7z)$", re.I)
 
 
 def get(url, timeout=300):
-    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (research)"})
-    with urllib.request.urlopen(req, timeout=timeout) as r:
-        return r.read()
+    return polite_get(url, timeout=timeout)
 
 
 def search(ident, pat):
@@ -53,12 +56,12 @@ def search(ident, pat):
         print(f"   {im}: {len(names)} entries listed{note}")
 
 
-def main():
-    ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
-    ap.add_argument("ids", nargs="*")
-    ap.add_argument("--ids-file")
-    ap.add_argument("--pattern", default=DEFAULT)
-    a = ap.parse_args()
+def main(argv=None):
+    ap = cli_util.parser(__doc__)
+    ap.add_argument("ids", nargs="*", help="archive.org item identifiers")
+    ap.add_argument("--ids-file", help="file with one identifier per line")
+    ap.add_argument("--pattern", default=DEFAULT, help="regex for entry paths (default: %(default)s)")
+    a = ap.parse_args(argv)
     ids = list(a.ids)
     if a.ids_file:
         ids += [l.strip() for l in open(a.ids_file) if l.strip()]
@@ -73,4 +76,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(cli_util.run(main))

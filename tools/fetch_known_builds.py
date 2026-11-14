@@ -5,12 +5,18 @@
 
 Each file goes to builds/<version>/aoa-current.exe and is checked against the
 MD5 recorded in CONTEXT.md. Nothing is executed. Already-present files with
-the right hash are skipped.
+the right hash are skipped. The output folder must be given explicitly; a
+name starting with "-" is refused. Requests go through tools/polite_http.py
+(paced, backs off on HTTP 429/5xx).
 """
 import hashlib
 import os
 import sys
-import urllib.request
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import cli_util  # noqa: E402
+from polite_http import polite_open  # noqa: E402
 
 BUILDS = [
     ("v2.8.2_2002-03_CD-Action-06-2002", "96c852b07a7d55c7894dbdda624fa3db",
@@ -36,19 +42,19 @@ def md5(path):
 
 
 def fetch(url, dest):
-    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (research)"})
-    with urllib.request.urlopen(req, timeout=600) as r, open(dest + ".part", "wb") as f:
+    with polite_open(url, timeout=600) as r, open(dest + ".part", "wb") as f:
         while (b := r.read(1 << 20)):
             f.write(b)
     os.replace(dest + ".part", dest)
 
 
-def main():
-    if len(sys.argv) != 2:
-        sys.exit(__doc__)
+def main(argv=None):
+    ap = cli_util.parser(__doc__)
+    ap.add_argument("out_dir", type=cli_util.output_dir, help="folder to save the builds in, e.g. builds/")
+    a = ap.parse_args(argv)
     ok = True
     for name, want, url in BUILDS:
-        d = os.path.join(sys.argv[1], name)
+        d = os.path.join(a.out_dir, name)
         os.makedirs(d, exist_ok=True)
         dest = os.path.join(d, "aoa-current.exe")
         if not (os.path.exists(dest) and md5(dest) == want):
@@ -64,8 +70,8 @@ def main():
         status = "OK" if got == want else f"MISMATCH (got {got})"
         ok &= got == want
         print(f"{status:8}  {name}  {dest}")
-    sys.exit(0 if ok else 1)
+    return 0 if ok else 1
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(cli_util.run(main))

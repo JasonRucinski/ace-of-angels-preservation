@@ -17,17 +17,21 @@ an md5/sha256 line in wb/files/hashes.txt. Files are only saved, never run.
 
 The `id_` form of a Wayback URL returns the archived bytes without the
 Wayback toolbar or link rewriting -- that is what gets downloaded.
+
+Requests go through tools/polite_http.py: at least --pause seconds apart,
+with backoff on HTTP 429/5xx.
 """
-import argparse
 import hashlib
 import json
 import os
 import re
 import sys
-import time
-import urllib.error
 import urllib.parse
-import urllib.request
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import cli_util  # noqa: E402
+import polite_http  # noqa: E402
 
 DOMAINS = ["aceofangels.com", "flyingrockllc.com", "flyingrock.com"]
 CDX = "https://web.archive.org/cdx/search/cdx"
@@ -35,25 +39,12 @@ FIELDS = "timestamp,original,mimetype,statuscode,digest,length"
 BUILD_EXT = re.compile(r"\.(exe|zip|msi|cab|rar|7z|ace|lzh|tgz|gz|sit|bin)$", re.I)
 BUILD_MIME = re.compile(r"application/(x-)?(msdownload|msdos-program|dosexec|zip|"
                         r"zip-compressed|octet-stream|x-msi|rar|7z)", re.I)
-UA = {"User-Agent": "aoa-preservation-research/1.0 (personal, polite; contact via repo)"}
+HTTP = polite_http.Polite(min_interval=4.0)
 
 
-def get(url, tries=6):
-    delay = 5
-    for n in range(tries):
-        try:
-            with urllib.request.urlopen(urllib.request.Request(url, headers=UA),
-                                        timeout=180) as r:
-                return r.read(), r.headers.get_content_type()
-        except urllib.error.HTTPError as e:
-            if e.code not in (429, 502, 503, 504) or n == tries - 1:
-                raise
-        except (urllib.error.URLError, TimeoutError, ConnectionError):
-            if n == tries - 1:
-                raise
-        print(f"   retry in {delay}s: {url[:90]}", file=sys.stderr)
-        time.sleep(delay)
-        delay *= 2
+def get(url):
+    with HTTP.open(url, timeout=180) as r:
+        return r.read(), r.headers.get_content_type()
 
 
 def cdx_rows(domain):
@@ -71,14 +62,15 @@ def is_build(row):
     return ok_status and (BUILD_EXT.search(path) or BUILD_MIME.search(mime or ""))
 
 
-def main():
-    ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
-    ap.add_argument("--out", required=True)
+def main(argv=None):
+    ap = cli_util.parser(__doc__)
+    ap.add_argument("--out", required=True, type=cli_util.output_dir, help="folder for the listings and downloads")
     ap.add_argument("--domains", nargs="*", default=DOMAINS)
     ap.add_argument("--cdx-file", help="parse a saved CDX JSON dump instead of querying")
     ap.add_argument("--download", action="store_true")
-    ap.add_argument("--pause", type=float, default=4.0, help="seconds between downloads")
-    a = ap.parse_args()
+    ap.add_argument("--pause", type=float, default=4.0, help="minimum seconds between requests to one host")
+    a = ap.parse_args(argv)
+    HTTP.min_interval = max(1.0, a.pause)
     os.makedirs(a.out, exist_ok=True)
 
     rows = []
@@ -91,7 +83,6 @@ def main():
             got = cdx_rows(dom)
             print(f"   {len(got)} captures", file=sys.stderr)
             rows += got
-            time.sleep(a.pause)
 
     # One row per (URL, content digest): the earliest capture of each version.
     uniq = {}
@@ -137,8 +128,7 @@ def main():
                     f"  {len(body):>10}  {target}{note}")
             print(" ", line)
             hf.write(line + "\n")
-            time.sleep(a.pause)
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(cli_util.run(main))

@@ -3,8 +3,11 @@
 
 Raw responses and the resumable ledger stay in ignored wb/site-archive/.
 Only build/ is deployed. No original scripts or form submissions are enabled.
+
+Requests are paced and retried through tools/polite_http.py. A capture the
+archive keeps throttling (HTTP 429 or 5xx after the retries) stays pending
+for the next resume; only other HTTP errors mark it missing.
 """
-import argparse
 import hashlib
 import html
 import http.client
@@ -12,9 +15,14 @@ from html.parser import HTMLParser
 import json
 from pathlib import Path
 import re
+import sys
 import time
 import urllib.error
 import urllib.parse as U
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import cli_util  # noqa: E402
+import polite_http  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 STORE = ROOT / 'wb/site-archive'
@@ -78,8 +86,7 @@ class Mirror:
         (STORE / 'raw').mkdir(exist_ok=True)
         self.ledger_path = STORE / 'ledger.json'
         self.rows = json.loads(self.ledger_path.read_text('utf-8')) if self.ledger_path.exists() else {}
-        self.last_request = 0
-        self.pause = pause
+        self.http = polite_http.Polite(min_interval=pause)
         self.connection = http.client.HTTPSConnection('web.archive.org', timeout=35)
 
     def save(self):
@@ -162,57 +169,72 @@ class Mirror:
         self.save()
         print(f'{changed} forum URLs queued for a larger indexed capture.', flush=True)
 
+    def replay(self, row, replay):
+        """Fetch one capture over the kept-alive connection, following archive redirects."""
+        try:
+            return self._replay(row, replay)
+        except urllib.error.HTTPError:
+            raise
+        except (OSError, http.client.HTTPException):
+            # A retry must not reuse a broken connection.
+            self.connection.close()
+            self.connection = http.client.HTTPSConnection('web.archive.org', timeout=35)
+            raise
+
+    def _replay(self, row, replay):
+        # Reuse one HTTPS connection; thousands of new TLS connections are
+        # unnecessary for this sequential, paced crawl.
+        for redirect in range(10):
+            parsed = U.urlsplit(replay)
+            if parsed.hostname != 'web.archive.org':
+                raise ValueError('Replay redirected away from the archive')
+            self.connection.request('GET', U.urlunsplit(('', '', parsed.path, parsed.query, '')), headers={'User-Agent': polite_http.USER_AGENT, 'Connection': 'keep-alive'})
+            response = self.connection.getresponse()
+            if response.status in {301, 302, 303, 307, 308}:
+                location = response.headers.get('Location', '')
+                response.read()
+                target = U.urlsplit(U.urljoin(replay, location))
+                replay = U.urlunsplit(target._replace(scheme='https'))
+                continue
+            if response.status != 200:
+                response.read()
+                raise urllib.error.HTTPError(replay, response.status, response.reason, response.headers, None)
+            body_limit = (64 if row['kind'] == 'page' and 'players/scores/by_names.html' in row['original'] else 12) * 1024 * 1024
+            body = response.read(body_limit + 1)
+            if len(body) > body_limit:
+                self.connection.close()
+                raise ValueError(f'Capture exceeds {body_limit // (1024 * 1024)} MiB recovery limit')
+            mime = response.headers.get_content_type()
+            if b'Internet Archive services are temporarily offline' in body or b'Wayback Machine has not archived that URL' in body:
+                raise ValueError('Archive error page')
+            actual = CAPTURE.match(replay)
+            if actual:
+                row['timestamp'] = actual[1]
+                if actual[1] > '20111231235959':
+                    raise ValueError('Replay falls outside the original game-era website (through 2011)')
+            row.update(mime=mime, replay=replay, bytes=len(body), sha256=hashlib.sha256(body).hexdigest(), state='ok')
+            if row['kind'] == 'page' and mime not in {'text/html', 'application/xhtml+xml', 'text/plain'}:
+                row['kind'] = kind_for(row['url'], mime)
+            raw = STORE / 'raw' / row['sha256']
+            raw.write_bytes(body)
+            row['raw'] = str(raw.relative_to(STORE)).replace('\\', '/')
+            charset = response.headers.get_content_charset() or ('utf-8' if b'charset=UTF-8' in body[:4000] else 'windows-1252')
+            row['charset'] = charset
+            return
+        raise ValueError('Too many archive redirects')
+
     def fetch(self, row):
-        time.sleep(max(0, self.pause - (time.monotonic() - self.last_request)))
-        self.last_request = time.monotonic()
         replay = f'https://web.archive.org/web/{row["timestamp"]}id_/{row["original"]}'
         try:
-            # Reuse one HTTPS connection; thousands of new TLS connections are
-            # unnecessary for this sequential, paced crawl.
-            for redirect in range(10):
-                parsed = U.urlsplit(replay)
-                if parsed.hostname != 'web.archive.org':
-                    raise ValueError('Replay redirected away from the archive')
-                self.connection.request('GET', U.urlunsplit(('', '', parsed.path, parsed.query, '')), headers={'User-Agent': 'AceOfAngels-personal-preservation/1.0', 'Connection': 'keep-alive'})
-                response = self.connection.getresponse()
-                if response.status in {301, 302, 303, 307, 308}:
-                    location = response.headers.get('Location', '')
-                    response.read()
-                    target = U.urlsplit(U.urljoin(replay, location))
-                    replay = U.urlunsplit(target._replace(scheme='https'))
-                    continue
-                if response.status != 200:
-                    response.read()
-                    raise urllib.error.HTTPError(replay, response.status, response.reason, response.headers, None)
-                body_limit = (64 if row['kind'] == 'page' and 'players/scores/by_names.html' in row['original'] else 12) * 1024 * 1024
-                body = response.read(body_limit + 1)
-                if len(body) > body_limit:
-                    self.connection.close()
-                    raise ValueError(f'Capture exceeds {body_limit // (1024 * 1024)} MiB recovery limit')
-                mime = response.headers.get_content_type()
-                if b'Internet Archive services are temporarily offline' in body or b'Wayback Machine has not archived that URL' in body:
-                    raise ValueError('Archive error page')
-                actual = CAPTURE.match(replay)
-                if actual:
-                    row['timestamp'] = actual[1]
-                    if actual[1] > '20111231235959':
-                        raise ValueError('Replay falls outside the original game-era website (through 2011)')
-                row.update(mime=mime, replay=replay, bytes=len(body), sha256=hashlib.sha256(body).hexdigest(), state='ok')
-                if row['kind'] == 'page' and mime not in {'text/html', 'application/xhtml+xml', 'text/plain'}:
-                    row['kind'] = kind_for(row['url'], mime)
-                raw = STORE / 'raw' / row['sha256']
-                raw.write_bytes(body)
-                row['raw'] = str(raw.relative_to(STORE)).replace('\\', '/')
-                charset = response.headers.get_content_charset() or ('utf-8' if b'charset=UTF-8' in body[:4000] else 'windows-1252')
-                row['charset'] = charset
-                break
-            else:
-                raise ValueError('Too many archive redirects')
+            self.http.call(replay, lambda url: self.replay(row, url))
         except urllib.error.HTTPError as error:
+            if polite_http.retryable(error):
+                # Still throttled or failing after the backoff: keep it queued.
+                row.update(state='pending', error=f'HTTP {error.code}')
+                self.save()
+                print(f'Archive kept returning {error.code}; leaving this capture pending.', flush=True)
+                return False
             row.update(state='missing', error=f'HTTP {error.code}')
-            if error.code in {429, 503}:
-                print(f'Archive returned {error.code}; backing off for 60 seconds.', flush=True)
-                time.sleep(60)
         except (urllib.error.URLError, TimeoutError, OSError, http.client.HTTPException) as error:
             self.connection.close()
             self.connection = http.client.HTTPSConnection('web.archive.org', timeout=35)
@@ -441,15 +463,15 @@ INDEX = '''<!doctype html><html lang="en"><meta charset="utf-8"><meta name="view
 UNAVAILABLE = '''<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Capture unavailable · Ace of Angels</title><link rel="stylesheet" href="/archive-ui.css"><body class="archive-index"><main class="archive-home"><a href="/">← Archive index</a><h1>Capture unavailable</h1><p>This link could not be recovered, is still awaiting recovery, or points to an external service or excluded download. Its original content has not been recreated.</p><p id="original-url"></p></main><script src="/missing.js"></script></body></html>'''
 
 
-def main():
-    ap = argparse.ArgumentParser(description=__doc__)
+def main(argv=None):
+    ap = cli_util.parser(__doc__)
     ap.add_argument('--recover', action='store_true')
     ap.add_argument('--limit', type=int, default=2000)
     ap.add_argument('--retry-missing', action='store_true')
     ap.add_argument('--import-indexes', action='store_true')
     ap.add_argument('--import-forum-versions', action='store_true')
     ap.add_argument('--pause', type=float, default=4.0, help='Minimum seconds between sequential archive requests')
-    args = ap.parse_args()
+    args = ap.parse_args(argv)
     mirror = Mirror(pause=max(1.0, args.pause))
     mirror.seed()
     if args.import_indexes:
@@ -466,4 +488,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    sys.exit(cli_util.run(main))
