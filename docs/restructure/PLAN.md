@@ -157,18 +157,26 @@ baseline unchanged except for suites that now pass or skip cleanly.
 
 ### Phase 1. Package and move, behaviour unchanged
 
-- [ ] Create `aoa/` and move every file per `file-map.tsv`; rewrite imports;
+- [x] Create `aoa/` and move every file per `file-map.tsv`; rewrite imports;
   remove the `sys.path.insert` lines; leave `tools/` shims.
-- [ ] Move tests to `tests/`; shared server fixtures leave `test_station_stub`
+- [x] Move tests to `tests/`; shared server fixtures leave `test_station_stub`
   for `tests/support.py`; add `tools/test.py`; point CI and `verify_local.py`
   at it; add the 11 orphan suites to the right tier.
-- [ ] Add the layering test (rule 1) with today's known violations listed as
+- [x] Add the layering test (rule 1) with today's known violations listed as
   expected failures to remove in phase 2.
-- [ ] Update the Linux deploy unit and `linux-host.md` (the host now needs
+- [x] Update the Linux deploy unit and `linux-host.md` (the host now needs
   `aoa/` as well as `tools/` and `deploy/`).
 
 Gate: snapshots byte-identical; 47-suite outcomes identical to the phase 0
 baseline; every module imports; every shim's `--help` works.
+
+Done 14 Nov ([phase1-tests.md](phase1-tests.md)): the snapshots are the same
+git blobs as before the move, every suite has its baseline outcome, and
+`tools/test.py --tier ci` passes 28 of 28. Not done: the Windows run of
+`verify_local.py`, both windows, the reel and the live verifiers (section 4).
+Left for phase 2: 17 known layering violations listed in
+`tests/test_layering.py`, five suites that still import another suite, and
+old `tools/x.py` names in docstrings and usage lines.
 
 ### Phase 2. Rebuild inside the packages
 
