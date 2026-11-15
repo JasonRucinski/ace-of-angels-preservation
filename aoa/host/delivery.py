@@ -22,7 +22,10 @@ abandoned after their deadline and later messages continue.
 """
 import math
 import struct
-from collections import deque
+import time
+from collections import OrderedDict, deque
+
+from aoa.protocol.arena import remove_player
 
 
 class WindowedReliable:
@@ -150,3 +153,115 @@ class WindowedReliable:
         self.queues.pop(peer, None)
         self.history.pop(peer, None)
         self.sent.pop(peer, None)
+
+
+class ReliableRemovals:
+    """Bounded 0x1B delivery; preserve the client's 30-entry duplicate cache.
+
+    All outbound reliable messages must use this shared history budget.
+    Sequence zero is pre-filled in the client cache.
+    Retries back off from INTERVAL to MAX_INTERVAL and give up after
+    `deadline` seconds. A real 2.9.2 client in a background window stops
+    servicing UDP for tens of seconds and then drains its queue (findings
+    9.23), so the server passes its peer timeout here: an observer is not
+    retired for a stall it would otherwise survive.
+    """
+    INTERVAL = 0.5
+    MAX_INTERVAL = 4.0
+    HISTORY = 30
+
+    def __init__(self, deadline=2.5, ordered=False):
+        self.deadline = deadline
+        self.ordered = ordered
+        self.pending = {}
+        self.sent = {}
+        self.sequence = 1
+
+    def queue(self, peer, slot, now):
+        kind, body = remove_player(slot)
+        return self.queue_message(peer, kind, body, now)
+
+    def queue_message(self, peer, kind, body, now):
+        """Share one lifetime history budget across every essential event.
+
+        Ordered mode holds subsequent packets until the preceding ACK. This
+        prevents an impact overtaking its launch. None means budget exhausted;
+        an empty tuple means accepted but waiting behind another event.
+        """
+        if not 0 <= kind <= 255 or kind == 0x1B or len(body) > 503:
+            raise ValueError("invalid reliable inner message")
+        if self.sent.get(peer, 0) >= self.HISTORY or self.sequence > 0xFFFFFFFF:
+            return None
+        seq = self.sequence
+        self.sequence += 1
+        packet = (0x1B, body + struct.pack("<I", seq) + bytes([kind]))
+        waiting = self.ordered and any(p == peer for p, _ in self.pending)
+        self.pending[peer, seq] = (packet, math.inf if waiting else now + self.INTERVAL,
+                                  self.INTERVAL, now + self.deadline)
+        self.sent[peer] = self.sent.get(peer, 0) + 1
+        return () if waiting else packet
+
+    def acknowledge(self, peer, payload, now=None):
+        if len(payload) != 4:
+            return False
+        identity = peer, struct.unpack("<I", payload)[0]
+        entry = self.pending.get(identity)
+        if entry is None or entry[1] == math.inf:
+            return False
+        del self.pending[identity]
+        if self.ordered:
+            for next_id, (packet, due, interval, deadline) in self.pending.items():
+                if next_id[0] == peer:
+                    self.pending[next_id] = (packet, time.monotonic() if now is None else now,
+                                             interval, deadline)
+                    break
+        return True
+
+    def due(self, now):
+        failed = {peer for (peer, _), (_, _, _, give_up) in self.pending.items() if now >= give_up}
+        packets = []
+        for (peer, seq), (packet, due, interval, give_up) in list(self.pending.items()):
+            if peer not in failed and now >= due:
+                packets.append((peer, packet))
+                interval = min(interval * 2, self.MAX_INTERVAL)
+                self.pending[peer, seq] = (packet, now + interval, interval, give_up)
+        return packets, failed
+
+    def discard(self, peer):
+        for identity in list(self.pending):
+            if identity[0] == peer:
+                del self.pending[identity]
+        self.sent.pop(peer, None)
+
+
+class InboundReliable:
+    """Per-channel/endpoint duplicate suppression for inbound 0x1B envelopes.
+
+    Mirrors the client's own receive history (a fixed count of recent IDs),
+    with a larger window. Callers ACK every copy, since an earlier ACK may
+    have been lost; only the first copy may cause side effects. Sequence zero
+    is not pre-filled: the client's send counter origin is unverified.
+    History outlives departure (endpoints are never reused); the table is
+    bounded instead. A replay older than WINDOW newer distinct IDs, or from
+    an endpoint evicted from the table, is treated as new, so handlers must
+    remain idempotent.
+    """
+    WINDOW = 64
+    MAX_ENDPOINTS = 512
+    # Repeated handshakes must be re-answered: the reply may have been lost.
+    REPLAYABLE = frozenset({0x0A})
+
+    def __init__(self):
+        self.history = OrderedDict()
+        self.duplicates = 0
+
+    def first(self, endpoint, sequence):
+        recent = self.history.pop(endpoint, None) or deque(maxlen=self.WINDOW)
+        self.history[endpoint] = recent
+        if len(self.history) > self.MAX_ENDPOINTS:
+            self.history.popitem(last=False)
+        if sequence in recent:
+            self.duplicates += 1
+            return False
+        recent.append(sequence)
+        return True

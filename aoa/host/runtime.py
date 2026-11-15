@@ -13,6 +13,7 @@ import time
 from pathlib import Path
 from collections import Counter, OrderedDict
 
+from aoa.host.vessels import DEFAULT_VESSEL, SELECTABLE_VESSELS  # noqa: F401 (also read from here)
 from aoa.maps import registry
 
 DOGFIGHT_PROFILES = ("lan-dogfight", "vpn-dogfight")
@@ -22,14 +23,6 @@ PRIVATE_NETWORKS = ("10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16")
 VPN_NETWORKS = ("100.64.0.0/10",)
 # The one table of match defaults; host_control and dedicated_host import it.
 HOST_DEFAULTS = {"kill_limit": 20, "time_limit_seconds": 600, "max_players": 8}
-DEFAULT_VESSEL = "Ym Khtat"
-# Every .Sco object in the 2.9.2 AoAObjects.odb with an engine, pods
-# excluded (work/2.9.2/sco.json): the fighters the in-flight menu offers.
-SELECTABLE_VESSELS = frozenset((
-    "AlphaFighter", "Dafusha", "Dasibaz", "Eagle", "Etat'Illraku", "Foushar", "Grathven", "Hartra",
-    "IBCH", "Janha Vari", "Kafic", "MBB", "Meskvak Su", "Mkulat", "N'Goc", "Naroch", "Natak'Illraku",
-    "Rchat", "Rhino", "Saksatar", "Shrike", "Tekan", "Test Missile Boat", "Tholfus", "Ummra Viazyem",
-    "Vagym", "Vasa Chovo", "Vermok", "Vrak Stat", "Yagari", "Ym Khtat", "Zkole"))
 
 
 class ConfigError(ValueError):
