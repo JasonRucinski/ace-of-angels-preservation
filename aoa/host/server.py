@@ -1043,777 +1043,791 @@ def main(argv=None):
         raise SystemExit(f"Host I/O failed: {error}. Check that {args.bind_address} belongs to this PC and the ports are free.") from error
 
 
-def run(args, key, log, resources, objects=None):
-    warp_gates, warp, trial, buoys = load_objects(args) if objects is None else objects
-    port, seconds, peer_timeout = args.port, args.seconds, args.peer_timeout
-    reply, pilot = args.ack, args.pilot
-    notifications = queue.Queue(maxsize=1024)
-    station = StationSessions(peer_timeout, pilot, args.guest_sessions)
-    ingress = DatagramBudget()
-    inbound = InboundReliable()
-    resources.callback(lambda: print(f"UDP ingress: rate_limited={ingress.dropped} "
-                                     f"reliable_duplicates={inbound.duplicates}", flush=True))
-    meter = TrafficMeter()
-    seed = args.impair_seed
-    impair_in = Impairment(args.impair_rtt_ms, args.impair_jitter_ms, args.impair_loss, args.impair_duplicate, seed)
-    impair_out = Impairment(args.impair_rtt_ms, args.impair_jitter_ms, args.impair_loss, args.impair_duplicate,
-                            None if seed is None else seed + 1)
-    if impair_in.active:
-        print("TEST IMPAIRMENT ACTIVE (each direction): " + json.dumps(impair_out.describe()), flush=True)
-        log({"t": round(time.time(), 3), "event": "impairment", "status": impair_out.describe()})
-    s = resources.enter_context(socket.socket(socket.AF_INET, socket.SOCK_DGRAM))
-    s.bind((args.bind_address, port))
-    s = MeteredSocket(s, meter, impair_in, impair_out)
-    sockets = [s]
-    if args.arena:
-        arena_port = args.arena_port
-        arena = resources.enter_context(socket.socket(socket.AF_INET, socket.SOCK_DGRAM))
-        arena.bind((args.bind_address, arena_port))
-        arena = MeteredSocket(arena, meter, impair_in, impair_out)
-        sockets.append(arena)
-    mode = "Local Relay" if args.experimental_relay else ("Local Flight" if args.experimental_flight else "Handshake Test")
-    if args.profile == "lan-dogfight":
-        mode = "LAN Dogfight"
-    elif args.profile == "vpn-dogfight":
-        mode = "VPN Dogfight"
-    hosted_port = arena.getsockname()[1] if args.arena and reply else None
-    job_bodies = {4: TCP_JOB_BODIES[4], 14: TCP_JOB_BODIES[14], 5: server_list_body(0, hosted_port, mode,
-                                                         advertised_address=args.advertised_address,
-                                                         terrain=args.map, backdrop=args.backdrop)}
+class ArenaServer:
+    """One host run of the stand-in Station and arena server.
 
-    def station_tcp_response(request, address):
-        identity = station.resolve(request, address, time.monotonic())
-        if identity is None:
-            return bytes(4), None, None
-        job = request[128]
-        return tcp_reply(job, job_bodies), identity if job == 5 else None, identity
+    `serve()` runs until --seconds elapse, the console quits, or a managed
+    session completes (it then returns SESSION_COMPLETE).
+    """
 
-    def session_alive(identity):
-        route = station.routes.get(identity)  # Immutable snapshot; TCP thread.
-        return route is not None and time.monotonic() < route[1]
+    def __init__(self, args, key, log, resources, objects=None):
+        self.args, self.key, self.log, self.resources, self.objects = args, key, log, resources, objects
+        self.arena = None
 
-    if args.tcp is not None:
-        tcp = resources.enter_context(StationTCPServer(args.tcp, log, reply,
-            station_tcp_response, notifications, session_alive, bind_address=args.bind_address))
-        print(f"Station TCP on {args.bind_address}:{tcp.port}", flush=True)
-    bootstrap_due = {}
-    arena_players = {}
-    arena_connections = {}
-    arena_pilots = {}
-    arena_vessels = {}  # addr -> vessel chosen in the fighter menu
-    start_vessel = args.start_vessel
-    if start_vessel not in SELECTABLE_VESSELS:
-        raise ValueError(f"unknown --start-vessel {start_vessel!r}")
-    arena_reported = {}  # addr -> (rating, score) from the client's own stats
-    arena_motion = {}
-    ping_due = {}
-    expiry_due = {}
-    ping_ticks = {}
-    next_player_slot = 1
-    retired_endpoints = set()
-    protection_probe = {}  # peer -> (next due, index in explicit 1,1,0,0 probe)
-    if args.sustained_delivery:
-        removals = WindowedReliable(deadline=peer_timeout, margin=args.reorder_margin)
-        resources.callback(lambda: print(f"sustained delivery: expired_events={removals.expired} "
-                                         f"window_waits={removals.window_waits}", flush=True))
-    else:
-        removals = ReliableRemovals(deadline=peer_timeout,
-                                   ordered=args.experimental_reliable_combat or args.experimental_protection_probe)
-    resources.callback(lambda: print("traffic: " + json.dumps(dict(meter.totals(), dropped_in=meter.dropped_in,
-                                                                   dropped_out=meter.dropped_out)), flush=True))
-    deaths = DeathLedger()
-    targets = TargetShips(args.target_ships, args.spawn_origin) if args.target_ships else None
-    if buoys:
-        print(f'{args.map} navigation buoys: {len(buoys)}', flush=True)
-    if targets is not None:
-        print(f"target ships: {len(targets.ships)}", flush=True)
-    missiles = MissileLedger(map(TargetShips.tag, targets.ships) if targets is not None else ())
-    powerups = None
-    if args.powerup_zones is not None:
-        powerups = PowerUps(trn.powerup_zones_292(args.powerup_zones.read_bytes()))
-        print(f"power-ups: {len(powerups.items)} from {args.powerup_zones.name}", flush=True)
-    match = Match(args.kill_limit, args.time_limit)
-    resources.callback(lambda: print("kills=" + json.dumps(deaths.kills) + " deaths=" + json.dumps(deaths.deaths),
-                                     flush=True))
-    motion_refresh_due = time.monotonic() + 1
-    arena_heard = {}   # addr -> last valid arena datagram (monotonic)
-    arena_rtt = {}     # addr -> smoothed ping round trip, ms
-    banned_ips = set()
-    started = time.monotonic()
-    status_due = started
-    traffic_mark = {}  # addr -> (time, rx_bytes, tx_bytes) at the previous status
-    console = ops.Console(sys.stdin) if args.console else None
-    REJOIN_SILENCE = 5.0
-    overflowed = set()  # peers whose reliable queue overflowed, departed next pass
-    restart_reason, restart_due = None, None
-    restart_notices = set()
-    idle_since = started
+    def serve(self):
+        self.warp_gates, self.warp, self.trial, self.buoys = load_objects(self.args) if self.objects is None else self.objects
+        port, seconds, self.peer_timeout = self.args.port, self.args.seconds, self.args.peer_timeout
+        self.reply, pilot = self.args.ack, self.args.pilot
+        self.notifications = queue.Queue(maxsize=1024)
+        self.station = StationSessions(self.peer_timeout, pilot, self.args.guest_sessions)
+        self.ingress = DatagramBudget()
+        self.inbound = InboundReliable()
+        self.resources.callback(lambda: print(f"UDP ingress: rate_limited={self.ingress.dropped} "
+                                         f"reliable_duplicates={self.inbound.duplicates}", flush=True))
+        self.meter = TrafficMeter()
+        seed = self.args.impair_seed
+        self.impair_in = Impairment(self.args.impair_rtt_ms, self.args.impair_jitter_ms, self.args.impair_loss, self.args.impair_duplicate, seed)
+        self.impair_out = Impairment(self.args.impair_rtt_ms, self.args.impair_jitter_ms, self.args.impair_loss, self.args.impair_duplicate,
+                                None if seed is None else seed + 1)
+        if self.impair_in.active:
+            print("TEST IMPAIRMENT ACTIVE (each direction): " + json.dumps(self.impair_out.describe()), flush=True)
+            self.log({"t": round(time.time(), 3), "event": "impairment", "status": self.impair_out.describe()})
+        self.s = self.resources.enter_context(socket.socket(socket.AF_INET, socket.SOCK_DGRAM))
+        self.s.bind((self.args.bind_address, port))
+        self.s = MeteredSocket(self.s, self.meter, self.impair_in, self.impair_out)
+        self.sockets = [self.s]
+        if self.args.arena:
+            arena_port = self.args.arena_port
+            self.arena = self.resources.enter_context(socket.socket(socket.AF_INET, socket.SOCK_DGRAM))
+            self.arena.bind((self.args.bind_address, arena_port))
+            self.arena = MeteredSocket(self.arena, self.meter, self.impair_in, self.impair_out)
+            self.sockets.append(self.arena)
+        self.mode = "Local Relay" if self.args.experimental_relay else ("Local Flight" if self.args.experimental_flight else "Handshake Test")
+        if self.args.profile == "lan-dogfight":
+            self.mode = "LAN Dogfight"
+        elif self.args.profile == "vpn-dogfight":
+            self.mode = "VPN Dogfight"
+        hosted_port = self.arena.getsockname()[1] if self.args.arena and self.reply else None
+        self.job_bodies = {4: TCP_JOB_BODIES[4], 14: TCP_JOB_BODIES[14], 5: server_list_body(0, hosted_port, self.mode,
+                                                             advertised_address=self.args.advertised_address,
+                                                             terrain=self.args.map, backdrop=self.args.backdrop)}
 
-    def announce_restart(now):
-        remaining = max(0, math.ceil(restart_due - now))
-        text = f"Next map {args.next_map} in {remaining}s. Quit and relaunch to rejoin."
-        for peer in list(ping_due):
-            deliver(peer, arena_message(text))
+        def station_tcp_response(request, address):
+            identity = self.station.resolve(request, address, time.monotonic())
+            if identity is None:
+                return bytes(4), None, None
+            job = request[128]
+            return tcp_reply(job, self.job_bodies), identity if job == 5 else None, identity
 
-    def schedule_restart(reason, now):
-        nonlocal restart_reason, restart_due
-        if restart_due is not None:
-            return
-        restart_reason, restart_due = reason, now + args.restart_warning
-        log({"t": round(time.time(), 3), "event": "session_restart_scheduled", "reason": reason,
-             "map": args.map, "next_map": args.next_map, "restart_in_s": args.restart_warning})
-        print(f"Session ending ({reason}); next map {args.next_map} in {args.restart_warning:g}s", flush=True)
-        refresh_server_list()
-        announce_restart(now)
+        def session_alive(identity):
+            route = self.station.routes.get(identity)  # Immutable snapshot; TCP thread.
+            return route is not None and time.monotonic() < route[1]
 
-    def player_stats(addr):
-        """(kills, deaths, rating, score): server counts, client-reported rest."""
-        slot = arena_players.get(addr)
-        rating, score = arena_reported.get(addr, (0, 0))
-        return deaths.kills.get(slot, 0), deaths.deaths.get(slot, 0), rating, score
+        if self.args.tcp is not None:
+            tcp = self.resources.enter_context(StationTCPServer(self.args.tcp, self.log, self.reply,
+                station_tcp_response, self.notifications, session_alive, bind_address=self.args.bind_address))
+            print(f"Station TCP on {self.args.bind_address}:{tcp.port}", flush=True)
+        self.bootstrap_due = {}
+        self.arena_players = {}
+        self.arena_connections = {}
+        self.arena_pilots = {}
+        self.arena_vessels = {}  # addr -> vessel chosen in the fighter menu
+        self.start_vessel = self.args.start_vessel
+        if self.start_vessel not in SELECTABLE_VESSELS:
+            raise ValueError(f"unknown --start-vessel {self.start_vessel!r}")
+        self.arena_reported = {}  # addr -> (rating, score) from the client's own stats
+        self.arena_motion = {}
+        self.ping_due = {}
+        self.expiry_due = {}
+        self.ping_ticks = {}
+        self.next_player_slot = 1
+        self.retired_endpoints = set()
+        self.protection_probe = {}  # peer -> (next due, index in explicit 1,1,0,0 probe)
+        if self.args.sustained_delivery:
+            self.removals = WindowedReliable(deadline=self.peer_timeout, margin=self.args.reorder_margin)
+            self.resources.callback(lambda: print(f"sustained delivery: expired_events={self.removals.expired} "
+                                             f"window_waits={self.removals.window_waits}", flush=True))
+        else:
+            self.removals = ReliableRemovals(deadline=self.peer_timeout,
+                                       ordered=self.args.experimental_reliable_combat or self.args.experimental_protection_probe)
+        self.resources.callback(lambda: print("traffic: " + json.dumps(dict(self.meter.totals(), dropped_in=self.meter.dropped_in,
+                                                                       dropped_out=self.meter.dropped_out)), flush=True))
+        self.deaths = DeathLedger()
+        self.targets = TargetShips(self.args.target_ships, self.args.spawn_origin) if self.args.target_ships else None
+        if self.buoys:
+            print(f'{self.args.map} navigation buoys: {len(self.buoys)}', flush=True)
+        if self.targets is not None:
+            print(f"target ships: {len(self.targets.ships)}", flush=True)
+        self.missiles = MissileLedger(map(TargetShips.tag, self.targets.ships) if self.targets is not None else ())
+        self.powerups = None
+        if self.args.powerup_zones is not None:
+            self.powerups = PowerUps(trn.powerup_zones_292(self.args.powerup_zones.read_bytes()))
+            print(f"power-ups: {len(self.powerups.items)} from {self.args.powerup_zones.name}", flush=True)
+        self.match = Match(self.args.kill_limit, self.args.time_limit)
+        self.resources.callback(lambda: print("kills=" + json.dumps(self.deaths.kills) + " deaths=" + json.dumps(self.deaths.deaths),
+                                         flush=True))
+        self.motion_refresh_due = time.monotonic() + 1
+        self.arena_heard = {}   # addr -> last valid arena datagram (monotonic)
+        self.arena_rtt = {}     # addr -> smoothed ping round trip, ms
+        self.banned_ips = set()
+        self.started = time.monotonic()
+        self.status_due = self.started
+        self.traffic_mark = {}  # addr -> (time, rx_bytes, tx_bytes) at the previous status
+        self.console = ops.Console(sys.stdin) if self.args.console else None
+        self.REJOIN_SILENCE = 5.0
+        self.overflowed = set()  # peers whose reliable queue overflowed, departed next pass
+        self.restart_reason, self.restart_due = None, None
+        self.restart_notices = set()
+        self.idle_since = self.started
 
-    def own_record(addr):
-        """0x42 for a player's own HUD (0x4AFC00 -> 0x49DB20 copies 350 bytes).
+        def announce_restart(now):
+            remaining = max(0, math.ceil(self.restart_due - now))
+            text = f"Next map {self.args.next_map} in {remaining}s. Quit and relaunch to rejoin."
+            for peer in list(self.ping_due):
+                deliver(peer, arena_message(text))
 
-        Its own handshake record with the server's kills (+0x7F) and deaths
-        (+0x83) and its last reported score (+0x4E). Never sent to anyone else:
-        the record is the client's login block.
-        """
-        kills, died, _, score = player_stats(addr)
-        record = bytearray(arena_connections[addr][31:381])
-        struct.pack_into("<i", record, 0x4E, score)
-        struct.pack_into("<i", record, 0x7F, kills)
-        struct.pack_into("<i", record, 0x83, died)
-        return 0x42, struct.pack("<I", player_tag(arena_players[addr])) + bytes(record)
+        def schedule_restart(reason, now):
+            if self.restart_due is not None:
+                return
+            self.restart_reason, self.restart_due = reason, now + self.args.restart_warning
+            self.log({"t": round(time.time(), 3), "event": "session_restart_scheduled", "reason": reason,
+                 "map": self.args.map, "next_map": self.args.next_map, "restart_in_s": self.args.restart_warning})
+            print(f"Session ending ({reason}); next map {self.args.next_map} in {self.args.restart_warning:g}s", flush=True)
+            refresh_server_list()
+            announce_restart(now)
 
-    def change_vessel(addr, payload):
-        """Answer the fighter menu's 0xA0 request (findings 9.40).
+        def player_stats(addr):
+            """(kills, deaths, rating, score): server counts, client-reported rest."""
+            slot = self.arena_players.get(addr)
+            rating, score = self.arena_reported.get(addr, (0, 0))
+            return self.deaths.kills.get(slot, 0), self.deaths.deaths.get(slot, 0), rating, score
 
-        The pilot and every loaded observer get 0x27 for the new hull; late
-        joiners get it in the player record. The original server path moves a
-        ship that changes outside a safe zone to a random point (0x4A4310), so
-        the relay sends it back to its spawn, as after a death: a swap is not
-        a free escape or repair.
-        """
-        vessel = ship_request(payload)
-        slot = arena_players[addr]
-        log({"t": round(time.time(), 3), "event": "ship_change", "slot": slot, "status": vessel or "rejected"})
-        if vessel is None:
-            return
-        arena_vessels[addr] = vessel
-        deliver(addr, load_ship(vessel), True)
-        for peer in ping_due:
-            if peer != addr:
-                deliver(peer, load_ship(vessel, slot), True)
-        spawn = spawn_position(slot, args.spawn_axis, args.spawn_spacing, args.spawn_origin)
-        deliver(addr, (0x24, struct.pack("<3f", *spawn)))
+        def own_record(addr):
+            """0x42 for a player's own HUD (0x4AFC00 -> 0x49DB20 copies 350 bytes).
 
-    def end_match(reason, now):
-        """Announce the result, reset the scoreboard and start the next match."""
-        if restart_due is not None:
-            return
-        loaded = {arena_players[peer]: peer for peer in ping_due if peer in arena_players}
-        names = {slot: arena_pilots.get(peer) or f"LocalPilot{slot}" for slot, peer in loaded.items()}
-        text = f"{match.result(deaths.kills, names)} ({reason})"
-        log({"t": round(time.time(), 3), "event": "match_end", "reason": reason})
-        if args.managed_session:
+            Its own handshake record with the server's kills (+0x7F) and deaths
+            (+0x83) and its last reported score (+0x4E). Never sent to anyone else:
+            the record is the client's login block.
+            """
+            kills, died, _, score = player_stats(addr)
+            record = bytearray(self.arena_connections[addr][31:381])
+            struct.pack_into("<i", record, 0x4E, score)
+            struct.pack_into("<i", record, 0x7F, kills)
+            struct.pack_into("<i", record, 0x83, died)
+            return 0x42, struct.pack("<I", player_tag(self.arena_players[addr])) + bytes(record)
+
+        def change_vessel(addr, payload):
+            """Answer the fighter menu's 0xA0 request (findings 9.40).
+
+            The pilot and every loaded observer get 0x27 for the new hull; late
+            joiners get it in the player record. The original server path moves a
+            ship that changes outside a safe zone to a random point (0x4A4310), so
+            the relay sends it back to its spawn, as after a death: a swap is not
+            a free escape or repair.
+            """
+            vessel = ship_request(payload)
+            slot = self.arena_players[addr]
+            self.log({"t": round(time.time(), 3), "event": "ship_change", "slot": slot, "status": vessel or "rejected"})
+            if vessel is None:
+                return
+            self.arena_vessels[addr] = vessel
+            deliver(addr, load_ship(vessel), True)
+            for peer in self.ping_due:
+                if peer != addr:
+                    deliver(peer, load_ship(vessel, slot), True)
+            spawn = spawn_position(slot, self.args.spawn_axis, self.args.spawn_spacing, self.args.spawn_origin)
+            deliver(addr, (0x24, struct.pack("<3f", *spawn)))
+
+        def end_match(reason, now):
+            """Announce the result, reset the scoreboard and start the next match."""
+            if self.restart_due is not None:
+                return
+            loaded = {self.arena_players[peer]: peer for peer in self.ping_due if peer in self.arena_players}
+            names = {slot: self.arena_pilots.get(peer) or f"LocalPilot{slot}" for slot, peer in loaded.items()}
+            text = f"{self.match.result(self.deaths.kills, names)} ({reason})"
+            self.log({"t": round(time.time(), 3), "event": "match_end", "reason": reason})
+            if self.args.managed_session:
+                for peer in loaded.values():
+                    deliver(peer, arena_message(text))
+                schedule_restart(reason, now)
+                return  # Keep the final scoreboard until the session closes.
+            self.deaths.kills.clear()
+            self.deaths.deaths.clear()
+            self.match.next(now)
             for peer in loaded.values():
                 deliver(peer, arena_message(text))
-            schedule_restart(reason, now)
-            return  # Keep the final scoreboard until the session closes.
-        deaths.kills.clear()
-        deaths.deaths.clear()
-        match.next(now)
-        for peer in loaded.values():
-            deliver(peer, arena_message(text))
-            deliver(peer, arena_message(f"Match {match.number} started"))
-            deliver(peer, own_record(peer))
+                deliver(peer, arena_message(f"Match {self.match.number} started"))
+                deliver(peer, own_record(peer))
 
-    def refresh_server_list():
-        hosted_port = arena.getsockname()[1] if args.arena and reply else None
-        available = (restart_due is None and len(arena_connections) < args.max_players and
-                     len(arena_connections) + len(retired_endpoints) < 49)
-        job_bodies[5] = server_list_body(len(arena_connections), hosted_port, mode, available, len(station.peers),
-                                       args.advertised_address, args.map, args.backdrop)
+        def refresh_server_list():
+            hosted_port = self.arena.getsockname()[1] if self.args.arena and self.reply else None
+            available = (self.restart_due is None and len(self.arena_connections) < self.args.max_players and
+                         len(self.arena_connections) + len(self.retired_endpoints) < 49)
+            self.job_bodies[5] = server_list_body(len(self.arena_connections), hosted_port, self.mode, available, len(self.station.peers),
+                                           self.args.advertised_address, self.args.map, self.args.backdrop)
 
-    def combat_send(peer, packet):
-        if peer not in arena_connections:
-            return
-        if args.sustained_delivery:
-            packet = removals.queue_message(peer, *packet, time.monotonic(), essential=False)
-            if packet is None:
-                depart(peer, "reliable event queue overflow")
+        def combat_send(peer, packet):
+            if peer not in self.arena_connections:
                 return
-        elif args.experimental_reliable_combat:
-            packet = removals.queue_message(peer, *packet, time.monotonic())
-            if packet is None:
-                depart(peer, "essential event history exhausted")
-                return
-        if packet:
-            arena.sendto(codec.encode(*packet, key), peer)
-
-    def destroy_targets(destroyed, shooter):
-        """Announce target ships the server destroyed to every loaded player."""
-        for index, packet in destroyed:
-            log({"t": round(time.time(), 3), "event": "target_destroyed", "ship": index, "slot": shooter})
-            for peer in arena_players:
-                if peer not in bootstrap_due:
-                    combat_send(peer, packet)
-
-    def deliver(peer, packet, essential=False):
-        """Session state: reliable and ordered with sustained delivery.
-
-        The 2.9.2 receive loop unwraps 0x1B in place and joins the plain
-        path at 0x486464 with the inner type, so any message type can be
-        wrapped. Without sustained delivery this stays best effort.
-        """
-        if not args.sustained_delivery:
-            arena.sendto(codec.encode(*packet, key), peer)
-            return
-        if peer not in arena_connections:
-            return
-        queued = removals.queue_message(peer, *packet, time.monotonic(), essential=essential)
-        if queued is None:
-            overflowed.add(peer)  # Callers may be iterating arena state.
-        elif queued:
-            arena.sendto(codec.encode(*queued, key), peer)
-
-    refresh_server_list()
-
-    def station_depart(peer, reason):
-        arena_peer = station.peers.get(peer, {}).get("arena")
-        if station.depart(peer):
-            if arena_peer is not None:
-                depart(arena_peer, "Station session ended")
-            refresh_server_list()
-            log({"t": round(time.time(), 3), "event": "station_departure", "reason": reason})
-
-    def depart(peer, reason):
-        if peer not in arena_connections:
-            return
-        # Clear every arena-owned timer/baseline before notifying observers.
-        loaded = peer in ping_due
-        retired_endpoints.add(peer)
-        slot = arena_players.pop(peer, None)
-        removals.discard(peer)
-        if slot is not None:
-            missiles.discard(slot)
-        for state in (arena_connections, arena_pilots, arena_vessels, arena_motion, arena_reported, bootstrap_due,
-                      ping_due,
-                      expiry_due, ping_ticks, protection_probe, arena_heard, arena_rtt, traffic_mark):
-            state.pop(peer, None)
-        station.release_arena(peer, time.monotonic())
-        if loaded and slot is not None:
-            failed = []
-            for observer in list(ping_due):
-                packet = removals.queue(observer, slot, time.monotonic())
+            if self.args.sustained_delivery:
+                packet = self.removals.queue_message(peer, *packet, time.monotonic(), essential=False)
                 if packet is None:
-                    failed.append(observer)
-                elif packet:
-                    arena.sendto(codec.encode(*packet, key), observer)
-            for observer in failed:
-                depart(observer, "reliable removal history exhausted")
-        refresh_server_list()
-        log({"t": round(time.time(), 3), "event": "arena_departure", "slot": slot, "reason": reason})
-
-    def players_now(now):
-        players = []
-        for peer, slot in sorted(arena_players.items(), key=lambda item: item[1]):
-            entry = meter.endpoints.get(peer, {"rx_bytes": 0, "tx_bytes": 0})
-            then, rx, tx = traffic_mark.get(peer, (started, 0, 0))
-            elapsed = max(now - then, 1e-3)
-            kills, died, _, _ = player_stats(peer)
-            players.append({"slot": slot, "pilot": arena_pilots.get(peer) or f"LocalPilot{slot}",
-                            "loaded": peer in ping_due, "kills": kills, "deaths": died,
-                            "ping_ms": round(arena_rtt[peer]) if peer in arena_rtt else None,
-                            "in_kbps": round((entry["rx_bytes"] - rx) * 8 / elapsed / 1000, 1),
-                            "out_kbps": round((entry["tx_bytes"] - tx) * 8 / elapsed / 1000, 1),
-                            "idle_s": round(now - arena_heard.get(peer, now), 1)})
-        return players
-
-    def host_status(now):
-        players = players_now(now)
-        for peer in arena_players:
-            entry = meter.endpoints.get(peer, {"rx_bytes": 0, "tx_bytes": 0})
-            traffic_mark[peer] = (now, entry["rx_bytes"], entry["tx_bytes"])
-        return {"schema": 1, "pid": os.getpid(), "profile": args.profile, "mode": mode, "map": args.map,
-                "uptime_s": round(now - started),
-                "match": match.number, "players": players, "max_players": args.max_players,
-                "arena_joins_used": next_player_slot - 1, "arena_joins_limit": 49,
-                "station_sessions": len(station.peers), "station_admissions_used": station.next_id - 1,
-                "station_admissions_limit": station.CAPACITY, "banned_ips": len(banned_ips),
-                "sustained_delivery": args.sustained_delivery,
-                "navigation_buoys": len(buoys),
-                "warp_trial": {"objects": len(warp),
-                               "routes": [{"gate": g['name'], "destination_node": g['destination_node'],
-                                           "tag": hex(warp_trial.tag(g))} for g in warp_gates],
-                               "model": "WarpGate / WarpA",
-                               "orientation_restored": False, "host_authorized_transit": False} if warp else None,
-                "turret_trial": {"objects": len(trial) // 2, "enabled": False,
-                                 "model_assignment": "provisional TurretA", "orientation_restored": False} if trial else None,
-                "powerups": None if powerups is None else {"placed": len(powerups.items), "taken": powerups.taken},
-                "target_ships": None if targets is None else {"placed": len(targets.ships),
-                                                              "destroyed": targets.destroyed},
-                "reliable_pending": len(removals.pending), "events_expired": getattr(removals, "expired", 0),
-                "traffic": dict(meter.totals(), dropped_in=meter.dropped_in, dropped_out=meter.dropped_out),
-                "impairment": impair_out.describe() if impair_out.active else None,
-                "lifecycle": {"managed": args.managed_session, "next_map": args.next_map,
-                              "kill_limit": args.kill_limit, "time_limit_s": args.time_limit,
-                              "match_elapsed_s": None if match.started is None else round(now - match.started),
-                              "restart_reason": restart_reason,
-                              "restart_in_s": None if restart_due is None else max(0, math.ceil(restart_due - now))}}
-
-    def remove_by_host(slot, ban):
-        peer = next((peer for peer, taken in arena_players.items() if taken == slot), None)
-        if peer is None:
-            return f"no arena player in slot {slot}"
-        arena.sendto(codec.encode(*arena_message("You were removed by the host"), key), peer)
-        if ban:
-            banned_ips.add(peer[0])
-        depart(peer, "banned by host" if ban else "kicked by host")
-        station_depart(peer, "banned by host" if ban else "kicked by host")
-        log({"t": round(time.time(), 3), "event": "host_" + ("ban" if ban else "kick"), "slot": slot})
-        return f"{'banned' if ban else 'kicked'} slot {slot}"
-
-    def run_command(line, now):
-        command, value = ops.parse_command(line)
-        if command is None:
-            return value
-        if command == "help":
-            return ops.HELP
-        if command == "status":
-            return ops.player_table(players_now(now))
-        if command == "end":
-            if not arena_players or match.started is None:
-                return "no match in progress"
-            end_match("ended by host", now)
-            return "match ended"
-        if command in ("say", "quit"):
-            text = value if command == "say" else "Host is shutting down"
-            for peer in list(arena_players) if args.arena else []:
-                arena.sendto(codec.encode(*arena_message(text), key), peer)
-            log({"t": round(time.time(), 3), "event": "host_" + command})
-            return ops.QUIT if command == "quit" else f"said to {len(arena_players)} player(s)"
-        return remove_by_host(value, command == "ban")
-
-    print(f"station stub on {args.bind_address}:{s.getsockname()[1]} (replies {'ON' if reply else 'off'})", flush=True)
-    if console is not None:
-        print("Host console ready. " + ops.HELP, flush=True)
-    end = time.monotonic() + seconds if seconds else None
-    while end is None or time.monotonic() < end:
-        now = time.monotonic()
-        if args.managed_session:
-            if arena_connections:
-                idle_since = now
-            if next_player_slot - 1 >= args.recycle_arena_joins:
-                schedule_restart("arena admission threshold", now)
-            elif station.next_id - 1 >= args.recycle_station_admissions:
-                schedule_restart("Station admission threshold", now)
-            elif (args.idle_recycle and not arena_connections and station.next_id > 1
-                  and now - idle_since >= args.idle_recycle):
-                schedule_restart("idle session cleanup", now)
-            if restart_due is not None:
-                if now >= restart_due:
-                    log({"t": round(time.time(), 3), "event": "session_restart", "reason": restart_reason,
-                         "map": args.map, "next_map": args.next_map})
-                    if args.status_file is not None:
-                        ops.write_status(args.status_file, host_status(now))
-                    return SESSION_COMPLETE
-                for threshold in (10, 5):
-                    if threshold < args.restart_warning and restart_due - now <= threshold and threshold not in restart_notices:
-                        restart_notices.add(threshold)
-                        announce_restart(now)
-        for sock in sockets:
-            sock.flush(now)
-        for peer in list(overflowed):
-            depart(peer, "reliable event queue overflow")
-        overflowed.clear()
-        if console is not None:
-            for line in console.drain():
-                response = run_command(line, now)
-                if response:
-                    print(response, flush=True)
-                if response == ops.QUIT:
-                    end = now  # leave the loop; ExitStack cleanup still runs
-        if args.status_file is not None and now >= status_due:
-            try:
-                ops.write_status(args.status_file, host_status(now))
-            except OSError as error:
-                print(f"status file not written: {error}", flush=True)
-            status_due = now + 2
-        for peer, state in list(station.peers.items()):
-            if now >= state["expiry"]:
-                station_depart(peer, "inactivity timeout")
-        for peer, packet in station.pings(now):
-            s.sendto(codec.encode(*packet, key), peer)
-        retries, failed = removals.due(time.monotonic())
-        for peer in failed:
-            depart(peer, "essential event unacknowledged")
-        for peer, packet in retries:
-            if peer in arena_connections:
-                arena.sendto(codec.encode(*packet, key), peer)
-        for peer, (due, step) in list(protection_probe.items()):
-            if now < due or any(p == peer for p, _ in removals.pending):
-                continue
-            desired = (1, 1, 0, 0)[step]
-            packet = removals.queue_message(peer, 0x81, bytes([desired]), now)
-            if packet is None:
-                depart(peer, "protection probe delivery exhausted")
-                continue
+                    depart(peer, "reliable event queue overflow")
+                    return
+            elif self.args.experimental_reliable_combat:
+                packet = self.removals.queue_message(peer, *packet, time.monotonic())
+                if packet is None:
+                    depart(peer, "essential event history exhausted")
+                    return
             if packet:
-                arena.sendto(codec.encode(*packet, key), peer)
-            log({"t": round(time.time(), 3), "event": "protection_probe_step", "status": desired})
-            print(f"Protection probe {step + 1}/4: state={desired}", flush=True)
-            if step == 3:
-                del protection_probe[peer]
-            else:
-                protection_probe[peer] = (now + 3, step + 1)
-        for peer, due in list(expiry_due.items()):
-            if time.monotonic() >= due:
-                depart(peer, "inactivity timeout")
-        if args.experimental_relay:
-            if not arena_players:
-                match.stop()
-            elif match.started is not None:
-                reason = match.ended(deaths.kills, now)
-                if reason:
-                    end_match(reason, now)
-        if args.experimental_relay and now >= motion_refresh_due:
-            for subject, state in arena_motion.items():
-                if subject not in ping_due:
-                    continue
-                packet = codec.encode(0x1F, protocol_motion.snapshot(arena_players[subject], state,
-                                                                    stats=player_stats(subject)), key)
-                for observer in ping_due:
-                    if observer != subject:
-                        arena.sendto(packet, observer)
-            motion_refresh_due = now + 1
-        for peer, due in list(bootstrap_due.items()):
-            if time.monotonic() >= due:
-                if args.experimental_relay:
-                    for other, slot in arena_players.items():
-                        if other != peer and other in bootstrap_due:
-                            continue
-                        # Its own record replaces the client's (0x4A641C): keep
-                        # the Station ID that its TCP requests carry (9.40).
-                        own_id = struct.unpack_from("<I", arena_connections[peer], 0x1F + 0x7B)[0]
-                        deliver(peer, load_player(slot, arena_motion[other][0x40], arena_pilots.get(other),
-                                                  ffa_team(slot) if args.experimental_teams else None,
-                                                  arena_vessels.get(other, start_vessel),
-                                                  own_id if other == peer else None), True)
-                        if other != peer:
-                            deliver(other, load_player(arena_players[peer], arena_motion[peer][0x40],
-                                                       arena_pilots.get(peer),
-                                                       ffa_team(arena_players[peer]) if args.experimental_teams
-                                                       else None, arena_vessels.get(peer, start_vessel)), True)
-                    for other, slot in arena_players.items():
-                        if other != peer and other not in bootstrap_due:
-                            arena.sendto(codec.encode(0x1F, protocol_motion.snapshot(
-                                slot, arena_motion[other], stats=player_stats(other)), key), peer)
-                position = arena_motion[peer][0x40] if peer in arena_motion else None
-                for packet in flight_bootstrap(position, registry.marker(args.map)
-                                               if args.experimental_terrain else None,
-                                               arena_vessels.get(peer, start_vessel)):
-                    deliver(peer, packet, True)
-                if args.experimental_teams:
-                    slot = arena_players[peer]
-                    arena.sendto(codec.encode(*object_to_team(player_tag(slot), ffa_team(slot)), key), peer)
-                if args.experimental_object:
-                    rtype, rpay = scenario_test_object()
-                    arena.sendto(codec.encode(rtype, rpay, key), peer)
-                if powerups is not None:
-                    for packet in powerups.spawns():
-                        deliver(peer, packet, True)
-                if targets is not None:
-                    for packet in targets.loads():
-                        deliver(peer, packet, True)
-                for packet in buoys:
-                    deliver(peer, packet, True)
-                for packet in trial:
-                    deliver(peer, packet, True)
-                for packet in warp:
-                    deliver(peer, packet, True)
-                del bootstrap_due[peer]
-                ping_due[peer] = time.monotonic()
-                if args.experimental_protection_probe:
-                    protection_probe[peer] = (time.monotonic() + 3, 0)
-                if args.experimental_relay:
-                    match.start(time.monotonic())
-        if targets is not None:
-            for packet in targets.respawns(time.monotonic()):
-                for peer in arena_players:
-                    if peer not in bootstrap_due:
-                        deliver(peer, packet, True)
-        for peer, due in list(ping_due.items()):
-            now = time.monotonic()
-            if now >= due:
-                rtype, rpay = arena_ping(int(now * 1000))
-                ticks = ping_ticks.setdefault(peer, [])
-                ticks.append(rpay[:4])
-                del ticks[:-4]
-                arena.sendto(codec.encode(rtype, rpay, key), peer)
-                ping_due[peer] = now + 1
-        # BeginSerialLoad precedes Station dialog initialization. Wait until
-        # its first server-list TCP job so the alias observer is registered.
-        # This delivery timing is experimental, not a recovered server rule.
-        # Bound each drain even if the TCP producer keeps replenishing it.
-        for _ in range(notifications.qsize()):
-            identity = notifications.get_nowait()
-            peer = station.alias_target(identity, time.monotonic())
-            if peer is not None:
-                s.sendto(codec.encode(0x9A, pilot_list(station.peers[peer]["pilot"]), key), peer)
-        ready = [sock for sock in sockets if sock.has_due()]
-        if not ready:
-            wait = 0.5
-            for due in [sock.next_due() for sock in sockets] + [getattr(removals, "next_due", lambda: None)()]:
-                if due is not None:
-                    wait = min(wait, max(0.0, due - time.monotonic()))
-            ready, _, _ = select.select(sockets, [], [], wait)
-        if not ready:
-            continue
-        receiver = ready[0]
-        sockets.remove(receiver)
-        sockets.append(receiver)  # Fair service when both UDP channels stay ready.
-        try:
-            wire, addr = receiver.recvfrom(codec.MAX_WIRE + 1)
-        except BlockingIOError:
-            continue  # Held or dropped by test impairment.
-        except ConnectionResetError:
-            # Windows reports ICMP port-unreachable here after a client exits.
-            # A dead test peer must not take down the other clients' listener.
-            continue
-        except OSError as error:
-            # Windows raises WSAEMSGSIZE for a UDP datagram larger than the
-            # buffer. POSIX truncates it to MAX_WIRE+1, rejected by decode.
-            if error.errno == errno.EMSGSIZE or getattr(error, "winerror", None) == 10040:
-                continue
-            raise
-        try:
-            if not ingress.allow((receiver.getsockname()[1], addr), time.monotonic()):
-                continue
-            m = codec.decode(wire, key)
-        except Exception as e:  # noqa: BLE001
-            m = {"type": None, "payload": b"", "crc_ok": False, "error": repr(e)}
-        rec = {"t": round(time.time(), 3), "from": f"{addr[0]}:{addr[1]}", "wire_len": len(wire),
-               "udp_port": receiver.getsockname()[1],
-               "type": m["type"], "name": TYPE_NAMES.get(m["type"], ""), "crc_ok": m["crc_ok"],
-               "len": len(m["payload"]), "payload": m["payload"].hex()}
-        log({"event": "udp_packet", **rec})
-        if reply and m["crc_ok"]:
-            if addr[0] in banned_ips:
-                # Before any reply, including reliable acks and version rejections.
-                continue
-            message_type, payload = m["type"], m["payload"]
-            if message_type == 0x1B:
-                if len(payload) < 5:
-                    continue
-                rtype, rpay = ack_reliable(payload)
-                receiver.sendto(codec.encode(rtype, rpay, key), addr)
-                message_type, payload = payload[-1], payload[:-5]
-                if message_type == 0x1B:
-                    # Only one reliable envelope is supported. Do not let a
-                    # nested envelope fall through to the stateless helper.
-                    continue
-                if (not inbound.first((receiver.getsockname()[1], addr), rpay)
-                        and message_type not in InboundReliable.REPLAYABLE):
-                    log({"t": round(time.time(), 3), "event": "reliable_duplicate", "type": message_type})
-                    continue
-            if message_type == 0x0A and len(payload) == 381:
-                if struct.unpack_from("<III", payload, 1) != (9, 2, 2):
-                    # Original 2.9.2 login error switch maps result 8 to
-                    # 'Incorrect version.' Do not allocate on rejection.
-                    receiver.sendto(codec.encode(*ack_connect(payload, kind=1 if receiver is s else 0, result=8), key), addr)
-                    log({"t": round(time.time(), 3), "event": "admission_rejected", "reason": "unsupported client version"})
-                    continue
-            if receiver is s:
-                now = time.monotonic()
-                if message_type == 0x0A and len(payload) == 381:
-                    new_session = addr not in station.peers
-                    if new_session and restart_due is not None:
-                        receiver.sendto(codec.encode(*ack_connect(payload, result=4), key), addr)
-                        continue
-                    identity = station.admit(addr, payload, now)
-                    if identity is not None:
-                        if new_session and not arena_connections:
-                            idle_since = now
-                        if new_session and args.sustained_delivery:
-                            # A player whose client crashed or lost its link logs in
-                            # again from a new endpoint on the same IP. Remove the
-                            # stale ship now instead of after the peer timeout. An
-                            # active second client on the same PC is left alone.
-                            for stale in [peer for peer in arena_connections if peer[0] == addr[0] and peer != addr
-                                          and now - arena_heard.get(peer, now) >= REJOIN_SILENCE]:
-                                depart(stale, "replaced by rejoin")
-                                station_depart(stale, "replaced by rejoin")
-                        refresh_server_list()
-                        name = station.peers[addr]["pilot"] if args.guest_sessions else None
-                        receiver.sendto(codec.encode(*ack_connect(payload, station_id=identity, pilot_name=name), key), addr)
-                    elif addr not in station.peers and addr not in station.retired and station.next_id > station.CAPACITY:
-                        receiver.sendto(codec.encode(*ack_connect(payload, result=4), key), addr)
-                elif message_type == 0x4E and len(payload) == 1:
-                    station_depart(addr, "client quit")
-                elif message_type == 9:
-                    station.heartbeat(addr, payload, now)
-                continue
-            if receiver is not s and message_type == 0x0A and len(payload) == 381:
-                # Retries (including reliable wrappers) acknowledge the same
-                # admission, without postponing or restarting flight. Endpoint
-                # replacement needs an explicit departure/expiry policy first.
-                first_join = addr not in arena_connections
-                if first_join and restart_due is not None:
-                    receiver.sendto(codec.encode(*ack_connect(payload, kind=0, result=4), key), addr)
-                    continue
-                if first_join and addr not in retired_endpoints and len(arena_connections) >= args.max_players:
-                    receiver.sendto(codec.encode(*ack_connect(payload, kind=0, result=4), key), addr)
-                    continue
-                if first_join and (addr in retired_endpoints or
-                                   len(arena_connections) + len(retired_endpoints) >= 49):
-                    continue
-                if not first_join and arena_connections[addr] != payload:
-                    continue
-                owner = None
-                if args.guest_sessions:
-                    owner = station.arena_owner(payload, addr, time.monotonic())
-                    if owner is None:
-                        receiver.sendto(codec.encode(*ack_connect(payload, kind=0, result=5), key), addr)
-                        continue
-                    arena_pilots[addr] = station.peers[station.routes[owner][0]]["pilot"]
-                player_id = 1
-                if args.experimental_relay:
-                    if first_join:
-                        if next_player_slot >= 50:
-                            continue
-                        arena_players[addr] = next_player_slot
-                        next_player_slot += 1
-                        arena_motion[addr] = protocol_motion.initial(spawn_position(
-                            arena_players[addr], args.spawn_axis, args.spawn_spacing, args.spawn_origin))
-                    player_id = 0x80010000 | arena_players[addr]
-                arena_connections[addr] = payload
+                self.arena.sendto(codec.encode(*packet, self.key), peer)
+
+        def destroy_targets(destroyed, shooter):
+            """Announce target ships the server destroyed to every loaded player."""
+            for index, packet in destroyed:
+                self.log({"t": round(time.time(), 3), "event": "target_destroyed", "ship": index, "slot": shooter})
+                for peer in self.arena_players:
+                    if peer not in self.bootstrap_due:
+                        combat_send(peer, packet)
+
+        def deliver(peer, packet, essential=False):
+            """Session state: reliable and ordered with sustained delivery.
+
+            The 2.9.2 receive loop unwraps 0x1B in place and joins the plain
+            path at 0x486464 with the inner type, so any message type can be
+            wrapped. Without sustained delivery this stays best effort.
+            """
+            if not self.args.sustained_delivery:
+                self.arena.sendto(codec.encode(*packet, self.key), peer)
+                return
+            if peer not in self.arena_connections:
+                return
+            queued = self.removals.queue_message(peer, *packet, time.monotonic(), essential=essential)
+            if queued is None:
+                self.overflowed.add(peer)  # Callers may be iterating arena state.
+            elif queued:
+                self.arena.sendto(codec.encode(*queued, self.key), peer)
+
+        refresh_server_list()
+
+        def station_depart(peer, reason):
+            arena_peer = self.station.peers.get(peer, {}).get("arena")
+            if self.station.depart(peer):
+                if arena_peer is not None:
+                    depart(arena_peer, "Station session ended")
                 refresh_server_list()
-                rtype, rpay = ack_connect(payload, 0, player_id)
-                receiver.sendto(codec.encode(rtype, rpay, key), addr)
-                if first_join and (args.experimental_flight or args.experimental_relay):
-                    bootstrap_due[addr] = time.monotonic() + 3
-                if first_join:
-                    expiry_due[addr] = time.monotonic() + peer_timeout + (3 if addr in bootstrap_due else 0)
-                    if owner is None and addr in station.peers and station.peers[addr]["arena"] is None:
-                        # The 2.9.2 client uses one UDP socket for Station and
-                        # arena. Bind them so Station stops pinging this socket
-                        # once the arena owns it, and the lease follows arena
-                        # activity (findings 9.28).
-                        owner = station.peers[addr]["id"]
-                    if owner is not None:
-                        station.bind_arena(owner, addr, expiry_due[addr])
-                continue
-            if receiver is not s and addr in arena_connections:
-                arena_heard[addr] = time.monotonic()
-                if message_type == 0x0F:
-                    removals.acknowledge(addr, payload)
+                self.log({"t": round(time.time(), 3), "event": "station_departure", "reason": reason})
+
+        def depart(peer, reason):
+            if peer not in self.arena_connections:
+                return
+            # Clear every arena-owned timer/baseline before notifying observers.
+            loaded = peer in self.ping_due
+            self.retired_endpoints.add(peer)
+            slot = self.arena_players.pop(peer, None)
+            self.removals.discard(peer)
+            if slot is not None:
+                self.missiles.discard(slot)
+            for state in (self.arena_connections, self.arena_pilots, self.arena_vessels, self.arena_motion, self.arena_reported, self.bootstrap_due,
+                          self.ping_due,
+                          self.expiry_due, self.ping_ticks, self.protection_probe, self.arena_heard, self.arena_rtt, self.traffic_mark):
+                state.pop(peer, None)
+            self.station.release_arena(peer, time.monotonic())
+            if loaded and slot is not None:
+                failed = []
+                for observer in list(self.ping_due):
+                    packet = self.removals.queue(observer, slot, time.monotonic())
+                    if packet is None:
+                        failed.append(observer)
+                    elif packet:
+                        self.arena.sendto(codec.encode(*packet, self.key), observer)
+                for observer in failed:
+                    depart(observer, "reliable removal history exhausted")
+            refresh_server_list()
+            self.log({"t": round(time.time(), 3), "event": "arena_departure", "slot": slot, "reason": reason})
+
+        def players_now(now):
+            players = []
+            for peer, slot in sorted(self.arena_players.items(), key=lambda item: item[1]):
+                entry = self.meter.endpoints.get(peer, {"rx_bytes": 0, "tx_bytes": 0})
+                then, rx, tx = self.traffic_mark.get(peer, (self.started, 0, 0))
+                elapsed = max(now - then, 1e-3)
+                kills, died, _, _ = player_stats(peer)
+                players.append({"slot": slot, "pilot": self.arena_pilots.get(peer) or f"LocalPilot{slot}",
+                                "loaded": peer in self.ping_due, "kills": kills, "deaths": died,
+                                "ping_ms": round(self.arena_rtt[peer]) if peer in self.arena_rtt else None,
+                                "in_kbps": round((entry["rx_bytes"] - rx) * 8 / elapsed / 1000, 1),
+                                "out_kbps": round((entry["tx_bytes"] - tx) * 8 / elapsed / 1000, 1),
+                                "idle_s": round(now - self.arena_heard.get(peer, now), 1)})
+            return players
+
+        def host_status(now):
+            players = players_now(now)
+            for peer in self.arena_players:
+                entry = self.meter.endpoints.get(peer, {"rx_bytes": 0, "tx_bytes": 0})
+                self.traffic_mark[peer] = (now, entry["rx_bytes"], entry["tx_bytes"])
+            return {"schema": 1, "pid": os.getpid(), "profile": self.args.profile, "mode": self.mode, "map": self.args.map,
+                    "uptime_s": round(now - self.started),
+                    "match": self.match.number, "players": players, "max_players": self.args.max_players,
+                    "arena_joins_used": self.next_player_slot - 1, "arena_joins_limit": 49,
+                    "station_sessions": len(self.station.peers), "station_admissions_used": self.station.next_id - 1,
+                    "station_admissions_limit": self.station.CAPACITY, "banned_ips": len(self.banned_ips),
+                    "sustained_delivery": self.args.sustained_delivery,
+                    "navigation_buoys": len(self.buoys),
+                    "warp_trial": {"objects": len(self.warp),
+                                   "routes": [{"gate": g['name'], "destination_node": g['destination_node'],
+                                               "tag": hex(warp_trial.tag(g))} for g in self.warp_gates],
+                                   "model": "WarpGate / WarpA",
+                                   "orientation_restored": False, "host_authorized_transit": False} if self.warp else None,
+                    "turret_trial": {"objects": len(self.trial) // 2, "enabled": False,
+                                     "model_assignment": "provisional TurretA", "orientation_restored": False} if self.trial else None,
+                    "powerups": None if self.powerups is None else {"placed": len(self.powerups.items), "taken": self.powerups.taken},
+                    "target_ships": None if self.targets is None else {"placed": len(self.targets.ships),
+                                                                  "destroyed": self.targets.destroyed},
+                    "reliable_pending": len(self.removals.pending), "events_expired": getattr(self.removals, "expired", 0),
+                    "traffic": dict(self.meter.totals(), dropped_in=self.meter.dropped_in, dropped_out=self.meter.dropped_out),
+                    "impairment": self.impair_out.describe() if self.impair_out.active else None,
+                    "lifecycle": {"managed": self.args.managed_session, "next_map": self.args.next_map,
+                                  "kill_limit": self.args.kill_limit, "time_limit_s": self.args.time_limit,
+                                  "match_elapsed_s": None if self.match.started is None else round(now - self.match.started),
+                                  "restart_reason": self.restart_reason,
+                                  "restart_in_s": None if self.restart_due is None else max(0, math.ceil(self.restart_due - now))}}
+
+        def remove_by_host(slot, ban):
+            peer = next((peer for peer, taken in self.arena_players.items() if taken == slot), None)
+            if peer is None:
+                return f"no arena player in slot {slot}"
+            self.arena.sendto(codec.encode(*arena_message("You were removed by the host"), self.key), peer)
+            if ban:
+                self.banned_ips.add(peer[0])
+            depart(peer, "banned by host" if ban else "kicked by host")
+            station_depart(peer, "banned by host" if ban else "kicked by host")
+            self.log({"t": round(time.time(), 3), "event": "host_" + ("ban" if ban else "kick"), "slot": slot})
+            return f"{'banned' if ban else 'kicked'} slot {slot}"
+
+        def run_command(line, now):
+            command, value = ops.parse_command(line)
+            if command is None:
+                return value
+            if command == "help":
+                return ops.HELP
+            if command == "status":
+                return ops.player_table(players_now(now))
+            if command == "end":
+                if not self.arena_players or self.match.started is None:
+                    return "no match in progress"
+                end_match("ended by host", now)
+                return "match ended"
+            if command in ("say", "quit"):
+                text = value if command == "say" else "Host is shutting down"
+                for peer in list(self.arena_players) if self.args.arena else []:
+                    self.arena.sendto(codec.encode(*arena_message(text), self.key), peer)
+                self.log({"t": round(time.time(), 3), "event": "host_" + command})
+                return ops.QUIT if command == "quit" else f"said to {len(self.arena_players)} player(s)"
+            return remove_by_host(value, command == "ban")
+
+        print(f"station stub on {self.args.bind_address}:{self.s.getsockname()[1]} (replies {'ON' if self.reply else 'off'})", flush=True)
+        if self.console is not None:
+            print("Host console ready. " + ops.HELP, flush=True)
+        end = time.monotonic() + seconds if seconds else None
+        while end is None or time.monotonic() < end:
+            now = time.monotonic()
+            if self.args.managed_session:
+                if self.arena_connections:
+                    self.idle_since = now
+                if self.next_player_slot - 1 >= self.args.recycle_arena_joins:
+                    schedule_restart("arena admission threshold", now)
+                elif self.station.next_id - 1 >= self.args.recycle_station_admissions:
+                    schedule_restart("Station admission threshold", now)
+                elif (self.args.idle_recycle and not self.arena_connections and self.station.next_id > 1
+                      and now - self.idle_since >= self.args.idle_recycle):
+                    schedule_restart("idle session cleanup", now)
+                if self.restart_due is not None:
+                    if now >= self.restart_due:
+                        self.log({"t": round(time.time(), 3), "event": "session_restart", "reason": self.restart_reason,
+                             "map": self.args.map, "next_map": self.args.next_map})
+                        if self.args.status_file is not None:
+                            ops.write_status(self.args.status_file, host_status(now))
+                        return SESSION_COMPLETE
+                    for threshold in (10, 5):
+                        if threshold < self.args.restart_warning and self.restart_due - now <= threshold and threshold not in self.restart_notices:
+                            self.restart_notices.add(threshold)
+                            announce_restart(now)
+            for sock in self.sockets:
+                sock.flush(now)
+            for peer in list(self.overflowed):
+                depart(peer, "reliable event queue overflow")
+            self.overflowed.clear()
+            if self.console is not None:
+                for line in self.console.drain():
+                    response = run_command(line, now)
+                    if response:
+                        print(response, flush=True)
+                    if response == ops.QUIT:
+                        end = now  # leave the loop; ExitStack cleanup still runs
+            if self.args.status_file is not None and now >= self.status_due:
+                try:
+                    ops.write_status(self.args.status_file, host_status(now))
+                except OSError as error:
+                    print(f"status file not written: {error}", flush=True)
+                self.status_due = now + 2
+            for peer, state in list(self.station.peers.items()):
+                if now >= state["expiry"]:
+                    station_depart(peer, "inactivity timeout")
+            for peer, packet in self.station.pings(now):
+                self.s.sendto(codec.encode(*packet, self.key), peer)
+            retries, failed = self.removals.due(time.monotonic())
+            for peer in failed:
+                depart(peer, "essential event unacknowledged")
+            for peer, packet in retries:
+                if peer in self.arena_connections:
+                    self.arena.sendto(codec.encode(*packet, self.key), peer)
+            for peer, (due, step) in list(self.protection_probe.items()):
+                if now < due or any(p == peer for p, _ in self.removals.pending):
                     continue
-                if message_type == 0x4E and len(payload) == 1:
-                    # SendImQuitting (0x4871C0) sends the reason byte, not a
-                    # target slot. Only the sending endpoint can depart.
-                    depart(addr, "client quit")
+                desired = (1, 1, 0, 0)[step]
+                packet = self.removals.queue_message(peer, 0x81, bytes([desired]), now)
+                if packet is None:
+                    depart(peer, "protection probe delivery exhausted")
                     continue
-                if message_type == 9 and len(payload) == 12:
-                    ticks = ping_ticks.get(addr, [])
-                    if payload[6] == arena_players.get(addr, 1) and payload[:4] in ticks:
-                        ticks.remove(payload[:4])
-                        sample = (int(time.monotonic() * 1000) - struct.unpack_from("<I", payload)[0]) & 0xFFFFFFFF
-                        if sample < 60000:
-                            previous = arena_rtt.get(addr)
-                            arena_rtt[addr] = sample if previous is None else previous * 0.8 + sample * 0.2
-                        expiry_due[addr] = time.monotonic() + peer_timeout
-                        station.renew_arena(addr, expiry_due[addr])
-                    continue
-            if receiver is not s and args.experimental_relay:
-                if (message_type == 0x1F and addr in arena_players and
-                        addr not in bootstrap_due and len(payload) >= 8):
-                    # Movement deltas are not made reliable by this stub;
-                    # replaying a wrapped delta would apply it twice.
-                    if m["type"] == 0x1B:
+                if packet:
+                    self.arena.sendto(codec.encode(*packet, self.key), peer)
+                self.log({"t": round(time.time(), 3), "event": "protection_probe_step", "status": desired})
+                print(f"Protection probe {step + 1}/4: state={desired}", flush=True)
+                if step == 3:
+                    del self.protection_probe[peer]
+                else:
+                    self.protection_probe[peer] = (now + 3, step + 1)
+            for peer, due in list(self.expiry_due.items()):
+                if time.monotonic() >= due:
+                    depart(peer, "inactivity timeout")
+            if self.args.experimental_relay:
+                if not self.arena_players:
+                    self.match.stop()
+                elif self.match.started is not None:
+                    reason = self.match.ended(self.deaths.kills, now)
+                    if reason:
+                        end_match(reason, now)
+            if self.args.experimental_relay and now >= self.motion_refresh_due:
+                for subject, state in self.arena_motion.items():
+                    if subject not in self.ping_due:
                         continue
-                    p = protocol_motion.movement_update(payload, arena_players[addr])
-                    if p is not None:
-                        try:
-                            state, present, missing = protocol_motion.update(p, arena_motion[addr])
-                        except (ValueError, OverflowError):
+                    packet = codec.encode(0x1F, protocol_motion.snapshot(self.arena_players[subject], state,
+                                                                        stats=player_stats(subject)), self.key)
+                    for observer in self.ping_due:
+                        if observer != subject:
+                            self.arena.sendto(packet, observer)
+                self.motion_refresh_due = now + 1
+            for peer, due in list(self.bootstrap_due.items()):
+                if time.monotonic() >= due:
+                    if self.args.experimental_relay:
+                        for other, slot in self.arena_players.items():
+                            if other != peer and other in self.bootstrap_due:
+                                continue
+                            # Its own record replaces the client's (0x4A641C): keep
+                            # the Station ID that its TCP requests carry (9.40).
+                            own_id = struct.unpack_from("<I", self.arena_connections[peer], 0x1F + 0x7B)[0]
+                            deliver(peer, load_player(slot, self.arena_motion[other][0x40], self.arena_pilots.get(other),
+                                                      ffa_team(slot) if self.args.experimental_teams else None,
+                                                      self.arena_vessels.get(other, self.start_vessel),
+                                                      own_id if other == peer else None), True)
+                            if other != peer:
+                                deliver(other, load_player(self.arena_players[peer], self.arena_motion[peer][0x40],
+                                                           self.arena_pilots.get(peer),
+                                                           ffa_team(self.arena_players[peer]) if self.args.experimental_teams
+                                                           else None, self.arena_vessels.get(peer, self.start_vessel)), True)
+                        for other, slot in self.arena_players.items():
+                            if other != peer and other not in self.bootstrap_due:
+                                self.arena.sendto(codec.encode(0x1F, protocol_motion.snapshot(
+                                    slot, self.arena_motion[other], stats=player_stats(other)), self.key), peer)
+                    position = self.arena_motion[peer][0x40] if peer in self.arena_motion else None
+                    for packet in flight_bootstrap(position, registry.marker(self.args.map)
+                                                   if self.args.experimental_terrain else None,
+                                                   self.arena_vessels.get(peer, self.start_vessel)):
+                        deliver(peer, packet, True)
+                    if self.args.experimental_teams:
+                        slot = self.arena_players[peer]
+                        self.arena.sendto(codec.encode(*object_to_team(player_tag(slot), ffa_team(slot)), self.key), peer)
+                    if self.args.experimental_object:
+                        rtype, rpay = scenario_test_object()
+                        self.arena.sendto(codec.encode(rtype, rpay, self.key), peer)
+                    if self.powerups is not None:
+                        for packet in self.powerups.spawns():
+                            deliver(peer, packet, True)
+                    if self.targets is not None:
+                        for packet in self.targets.loads():
+                            deliver(peer, packet, True)
+                    for packet in self.buoys:
+                        deliver(peer, packet, True)
+                    for packet in self.trial:
+                        deliver(peer, packet, True)
+                    for packet in self.warp:
+                        deliver(peer, packet, True)
+                    del self.bootstrap_due[peer]
+                    self.ping_due[peer] = time.monotonic()
+                    if self.args.experimental_protection_probe:
+                        self.protection_probe[peer] = (time.monotonic() + 3, 0)
+                    if self.args.experimental_relay:
+                        self.match.start(time.monotonic())
+            if self.targets is not None:
+                for packet in self.targets.respawns(time.monotonic()):
+                    for peer in self.arena_players:
+                        if peer not in self.bootstrap_due:
+                            deliver(peer, packet, True)
+            for peer, due in list(self.ping_due.items()):
+                now = time.monotonic()
+                if now >= due:
+                    rtype, rpay = arena_ping(int(now * 1000))
+                    ticks = self.ping_ticks.setdefault(peer, [])
+                    ticks.append(rpay[:4])
+                    del ticks[:-4]
+                    self.arena.sendto(codec.encode(rtype, rpay, self.key), peer)
+                    self.ping_due[peer] = now + 1
+            # BeginSerialLoad precedes Station dialog initialization. Wait until
+            # its first server-list TCP job so the alias observer is registered.
+            # This delivery timing is experimental, not a recovered server rule.
+            # Bound each drain even if the TCP producer keeps replenishing it.
+            for _ in range(self.notifications.qsize()):
+                identity = self.notifications.get_nowait()
+                peer = self.station.alias_target(identity, time.monotonic())
+                if peer is not None:
+                    self.s.sendto(codec.encode(0x9A, pilot_list(self.station.peers[peer]["pilot"]), self.key), peer)
+            ready = [sock for sock in self.sockets if sock.has_due()]
+            if not ready:
+                wait = 0.5
+                for due in [sock.next_due() for sock in self.sockets] + [getattr(self.removals, "next_due", lambda: None)()]:
+                    if due is not None:
+                        wait = min(wait, max(0.0, due - time.monotonic()))
+                ready, _, _ = select.select(self.sockets, [], [], wait)
+            if not ready:
+                continue
+            receiver = ready[0]
+            self.sockets.remove(receiver)
+            self.sockets.append(receiver)  # Fair service when both UDP channels stay ready.
+            try:
+                wire, addr = receiver.recvfrom(codec.MAX_WIRE + 1)
+            except BlockingIOError:
+                continue  # Held or dropped by test impairment.
+            except ConnectionResetError:
+                # Windows reports ICMP port-unreachable here after a client exits.
+                # A dead test peer must not take down the other clients' listener.
+                continue
+            except OSError as error:
+                # Windows raises WSAEMSGSIZE for a UDP datagram larger than the
+                # buffer. POSIX truncates it to MAX_WIRE+1, rejected by decode.
+                if error.errno == errno.EMSGSIZE or getattr(error, "winerror", None) == 10040:
+                    continue
+                raise
+            try:
+                if not self.ingress.allow((receiver.getsockname()[1], addr), time.monotonic()):
+                    continue
+                m = codec.decode(wire, self.key)
+            except Exception as e:  # noqa: BLE001
+                m = {"type": None, "payload": b"", "crc_ok": False, "error": repr(e)}
+            rec = {"t": round(time.time(), 3), "from": f"{addr[0]}:{addr[1]}", "wire_len": len(wire),
+                   "udp_port": receiver.getsockname()[1],
+                   "type": m["type"], "name": TYPE_NAMES.get(m["type"], ""), "crc_ok": m["crc_ok"],
+                   "len": len(m["payload"]), "payload": m["payload"].hex()}
+            self.log({"event": "udp_packet", **rec})
+            if self.reply and m["crc_ok"]:
+                if addr[0] in self.banned_ips:
+                    # Before any reply, including reliable acks and version rejections.
+                    continue
+                message_type, payload = m["type"], m["payload"]
+                if message_type == 0x1B:
+                    if len(payload) < 5:
+                        continue
+                    rtype, rpay = ack_reliable(payload)
+                    receiver.sendto(codec.encode(rtype, rpay, self.key), addr)
+                    message_type, payload = payload[-1], payload[:-5]
+                    if message_type == 0x1B:
+                        # Only one reliable envelope is supported. Do not let a
+                        # nested envelope fall through to the stateless helper.
+                        continue
+                    if (not self.inbound.first((receiver.getsockname()[1], addr), rpay)
+                            and message_type not in InboundReliable.REPLAYABLE):
+                        self.log({"t": round(time.time(), 3), "event": "reliable_duplicate", "type": message_type})
+                        continue
+                if message_type == 0x0A and len(payload) == 381:
+                    if struct.unpack_from("<III", payload, 1) != (9, 2, 2):
+                        # Original 2.9.2 login error switch maps result 8 to
+                        # 'Incorrect version.' Do not allocate on rejection.
+                        receiver.sendto(codec.encode(*ack_connect(payload, kind=1 if receiver is self.s else 0, result=8), self.key), addr)
+                        self.log({"t": round(time.time(), 3), "event": "admission_rejected", "reason": "unsupported client version"})
+                        continue
+                if receiver is self.s:
+                    now = time.monotonic()
+                    if message_type == 0x0A and len(payload) == 381:
+                        new_session = addr not in self.station.peers
+                        if new_session and self.restart_due is not None:
+                            receiver.sendto(codec.encode(*ack_connect(payload, result=4), self.key), addr)
                             continue
-                        arena_motion[addr] = state
-                        raw_mask = struct.unpack_from("<I", payload, 4)[0]
-                        # Locate the client's own stats only when the relayed
-                        # prefix/gun block match the original byte layout.
-                        if not raw_mask & protocol_motion.GUN_STATE or protocol_motion.GUN_STATE in present:
+                        identity = self.station.admit(addr, payload, now)
+                        if identity is not None:
+                            if new_session and not self.arena_connections:
+                                self.idle_since = now
+                            if new_session and self.args.sustained_delivery:
+                                # A player whose client crashed or lost its link logs in
+                                # again from a new endpoint on the same IP. Remove the
+                                # stale ship now instead of after the peer timeout. An
+                                # active second client on the same PC is left alone.
+                                for stale in [peer for peer in self.arena_connections if peer[0] == addr[0] and peer != addr
+                                              and now - self.arena_heard.get(peer, now) >= self.REJOIN_SILENCE]:
+                                    depart(stale, "replaced by rejoin")
+                                    station_depart(stale, "replaced by rejoin")
+                            refresh_server_list()
+                            name = self.station.peers[addr]["pilot"] if self.args.guest_sessions else None
+                            receiver.sendto(codec.encode(*ack_connect(payload, station_id=identity, pilot_name=name), self.key), addr)
+                        elif addr not in self.station.peers and addr not in self.station.retired and self.station.next_id > self.station.CAPACITY:
+                            receiver.sendto(codec.encode(*ack_connect(payload, result=4), self.key), addr)
+                    elif message_type == 0x4E and len(payload) == 1:
+                        station_depart(addr, "client quit")
+                    elif message_type == 9:
+                        self.station.heartbeat(addr, payload, now)
+                    continue
+                if receiver is not self.s and message_type == 0x0A and len(payload) == 381:
+                    # Retries (including reliable wrappers) acknowledge the same
+                    # admission, without postponing or restarting flight. Endpoint
+                    # replacement needs an explicit departure/expiry policy first.
+                    first_join = addr not in self.arena_connections
+                    if first_join and self.restart_due is not None:
+                        receiver.sendto(codec.encode(*ack_connect(payload, kind=0, result=4), self.key), addr)
+                        continue
+                    if first_join and addr not in self.retired_endpoints and len(self.arena_connections) >= self.args.max_players:
+                        receiver.sendto(codec.encode(*ack_connect(payload, kind=0, result=4), self.key), addr)
+                        continue
+                    if first_join and (addr in self.retired_endpoints or
+                                       len(self.arena_connections) + len(self.retired_endpoints) >= 49):
+                        continue
+                    if not first_join and self.arena_connections[addr] != payload:
+                        continue
+                    owner = None
+                    if self.args.guest_sessions:
+                        owner = self.station.arena_owner(payload, addr, time.monotonic())
+                        if owner is None:
+                            receiver.sendto(codec.encode(*ack_connect(payload, kind=0, result=5), self.key), addr)
+                            continue
+                        self.arena_pilots[addr] = self.station.peers[self.station.routes[owner][0]]["pilot"]
+                    player_id = 1
+                    if self.args.experimental_relay:
+                        if first_join:
+                            if self.next_player_slot >= 50:
+                                continue
+                            self.arena_players[addr] = self.next_player_slot
+                            self.next_player_slot += 1
+                            self.arena_motion[addr] = protocol_motion.initial(spawn_position(
+                                self.arena_players[addr], self.args.spawn_axis, self.args.spawn_spacing, self.args.spawn_origin))
+                        player_id = 0x80010000 | self.arena_players[addr]
+                    self.arena_connections[addr] = payload
+                    refresh_server_list()
+                    rtype, rpay = ack_connect(payload, 0, player_id)
+                    receiver.sendto(codec.encode(rtype, rpay, self.key), addr)
+                    if first_join and (self.args.experimental_flight or self.args.experimental_relay):
+                        self.bootstrap_due[addr] = time.monotonic() + 3
+                    if first_join:
+                        self.expiry_due[addr] = time.monotonic() + self.peer_timeout + (3 if addr in self.bootstrap_due else 0)
+                        if owner is None and addr in self.station.peers and self.station.peers[addr]["arena"] is None:
+                            # The 2.9.2 client uses one UDP socket for Station and
+                            # arena. Bind them so Station stops pinging this socket
+                            # once the arena owns it, and the lease follows arena
+                            # activity (findings 9.28).
+                            owner = self.station.peers[addr]["id"]
+                        if owner is not None:
+                            self.station.bind_arena(owner, addr, self.expiry_due[addr])
+                    continue
+                if receiver is not self.s and addr in self.arena_connections:
+                    self.arena_heard[addr] = time.monotonic()
+                    if message_type == 0x0F:
+                        self.removals.acknowledge(addr, payload)
+                        continue
+                    if message_type == 0x4E and len(payload) == 1:
+                        # SendImQuitting (0x4871C0) sends the reason byte, not a
+                        # target slot. Only the sending endpoint can depart.
+                        depart(addr, "client quit")
+                        continue
+                    if message_type == 9 and len(payload) == 12:
+                        ticks = self.ping_ticks.get(addr, [])
+                        if payload[6] == self.arena_players.get(addr, 1) and payload[:4] in ticks:
+                            ticks.remove(payload[:4])
+                            sample = (int(time.monotonic() * 1000) - struct.unpack_from("<I", payload)[0]) & 0xFFFFFFFF
+                            if sample < 60000:
+                                previous = self.arena_rtt.get(addr)
+                                self.arena_rtt[addr] = sample if previous is None else previous * 0.8 + sample * 0.2
+                            self.expiry_due[addr] = time.monotonic() + self.peer_timeout
+                            self.station.renew_arena(addr, self.expiry_due[addr])
+                        continue
+                if receiver is not self.s and self.args.experimental_relay:
+                    if (message_type == 0x1F and addr in self.arena_players and
+                            addr not in self.bootstrap_due and len(payload) >= 8):
+                        # Movement deltas are not made reliable by this stub;
+                        # replaying a wrapped delta would apply it twice.
+                        if m["type"] == 0x1B:
+                            continue
+                        p = protocol_motion.movement_update(payload, self.arena_players[addr])
+                        if p is not None:
                             try:
-                                reported = protocol_motion.client_stats(payload, len(p), raw_mask)
-                            except ValueError:
-                                reported = None
-                            if reported is not None:
-                                arena_reported[addr] = reported
-                            if targets is not None:
+                                state, present, missing = protocol_motion.update(p, self.arena_motion[addr])
+                            except (ValueError, OverflowError):
+                                continue
+                            self.arena_motion[addr] = state
+                            raw_mask = struct.unpack_from("<I", payload, 4)[0]
+                            # Locate the client's own stats only when the relayed
+                            # prefix/gun block match the original byte layout.
+                            if not raw_mask & protocol_motion.GUN_STATE or protocol_motion.GUN_STATE in present:
                                 try:
-                                    hits = protocol_motion.perceived_damage(payload, len(p), raw_mask)
+                                    reported = protocol_motion.client_stats(payload, len(p), raw_mask)
                                 except ValueError:
-                                    hits = []
-                                destroy_targets(targets.gun_hits(arena_vessels.get(addr, start_vessel), hits,
-                                                                time.monotonic()), arena_players[addr])
-                        p = protocol_motion.snapshot(arena_players[addr], state, include_control=0x400 in present,
-                                                  stats=player_stats(addr))
-                        expiry_due[addr] = time.monotonic() + peer_timeout
-                        station.renew_arena(addr, expiry_due[addr])
-                        for peer in arena_players:
-                            if peer != addr and peer not in bootstrap_due:
-                                receiver.sendto(codec.encode(0x1F, p, key), peer)
-                elif message_type == 0xA0 and addr in arena_players and addr not in bootstrap_due:
-                    change_vessel(addr, payload)
-                elif message_type == 0x44 and powerups is not None and addr in arena_players \
-                        and addr not in bootstrap_due:
-                    taken = powerups.pickup(payload, time.monotonic())
-                    log({"t": round(time.time(), 3), "event": "powerup_pickup", "slot": arena_players[addr],
-                         "status": taken[0] if taken else "rejected"})
-                    if taken is not None:
-                        for peer in list(ping_due):
-                            deliver(peer, taken[1], True)
-                elif message_type in (0x2A, 0x30, 0x37, 0x48) and addr in arena_players and addr not in bootstrap_due:
-                    sender = arena_players[addr]
-                    loaded = {slot: peer for peer, slot in arena_players.items() if peer not in bootstrap_due}
-                    if message_type in (0x2A, 0x30):
-                        # Optional ordered delivery shares the removal budget.
-                        handle = missiles.launch if message_type == 0x2A else missiles.impact
-                        result = handle(sender, payload, loaded, time.monotonic())
-                        log({"t": round(time.time(), 3), "event": "missile_" + ("launch" if message_type == 0x2A
-                                                                                else "impact"),
-                             "slot": sender, "accepted": result is not None})
-                        if result is not None:
-                            for peer in loaded.values():
-                                combat_send(peer, result)
-                            if message_type == 0x30:
-                                missile, hit = struct.unpack_from("<II", payload)
-                                name = missiles.names.pop(missile, None)
-                                if targets is not None:
-                                    died = targets.missile_hit(hit, name, time.monotonic())
-                                    destroy_targets([died] if died else [], sender)
-                    elif message_type == 0x48:
-                        target = collision_target(payload, sender, loaded)
-                        if target is not None:
-                            receiver.sendto(codec.encode(0x48, payload, key), loaded[target])
-                    else:
-                        death = deaths.report(sender, payload, loaded, time.monotonic())
-                        if death is not None:
-                            log({"t": round(time.time(), 3), "event": "player_died", "slot": sender,
-                                 "reason": "killed" if death[1][4:] != bytes(4) else "no valid killer"})
-                            for slot, peer in loaded.items():
-                                if slot != sender:
-                                    combat_send(peer, death)
-                            # The victim resets itself to the origin (9.27);
-                            # restore its assigned spawn like flight entry.
-                            spawn = spawn_position(sender, args.spawn_axis, args.spawn_spacing, args.spawn_origin)
-                            if addr in arena_connections:
-                                deliver(addr, (0x24, struct.pack("<3f", *spawn)))
-                            killer_slot = struct.unpack_from("<I", death[1], 4)[0] & 0xFFFF
-                            for peer in {addr, loaded.get(killer_slot)} - {None}:
-                                if peer in arena_connections:
-                                    deliver(peer, own_record(peer))
+                                    reported = None
+                                if reported is not None:
+                                    self.arena_reported[addr] = reported
+                                if self.targets is not None:
+                                    try:
+                                        hits = protocol_motion.perceived_damage(payload, len(p), raw_mask)
+                                    except ValueError:
+                                        hits = []
+                                    destroy_targets(self.targets.gun_hits(self.arena_vessels.get(addr, self.start_vessel), hits,
+                                                                    time.monotonic()), self.arena_players[addr])
+                            p = protocol_motion.snapshot(self.arena_players[addr], state, include_control=0x400 in present,
+                                                      stats=player_stats(addr))
+                            self.expiry_due[addr] = time.monotonic() + self.peer_timeout
+                            self.station.renew_arena(addr, self.expiry_due[addr])
+                            for peer in self.arena_players:
+                                if peer != addr and peer not in self.bootstrap_due:
+                                    receiver.sendto(codec.encode(0x1F, p, self.key), peer)
+                    elif message_type == 0xA0 and addr in self.arena_players and addr not in self.bootstrap_due:
+                        change_vessel(addr, payload)
+                    elif message_type == 0x44 and self.powerups is not None and addr in self.arena_players \
+                            and addr not in self.bootstrap_due:
+                        taken = self.powerups.pickup(payload, time.monotonic())
+                        self.log({"t": round(time.time(), 3), "event": "powerup_pickup", "slot": self.arena_players[addr],
+                             "status": taken[0] if taken else "rejected"})
+                        if taken is not None:
+                            for peer in list(self.ping_due):
+                                deliver(peer, taken[1], True)
+                    elif message_type in (0x2A, 0x30, 0x37, 0x48) and addr in self.arena_players and addr not in self.bootstrap_due:
+                        sender = self.arena_players[addr]
+                        loaded = {slot: peer for peer, slot in self.arena_players.items() if peer not in self.bootstrap_due}
+                        if message_type in (0x2A, 0x30):
+                            # Optional ordered delivery shares the removal budget.
+                            handle = self.missiles.launch if message_type == 0x2A else self.missiles.impact
+                            result = handle(sender, payload, loaded, time.monotonic())
+                            self.log({"t": round(time.time(), 3), "event": "missile_" + ("launch" if message_type == 0x2A
+                                                                                    else "impact"),
+                                 "slot": sender, "accepted": result is not None})
+                            if result is not None:
+                                for peer in loaded.values():
+                                    combat_send(peer, result)
+                                if message_type == 0x30:
+                                    missile, hit = struct.unpack_from("<II", payload)
+                                    name = self.missiles.names.pop(missile, None)
+                                    if self.targets is not None:
+                                        died = self.targets.missile_hit(hit, name, time.monotonic())
+                                        destroy_targets([died] if died else [], sender)
+                        elif message_type == 0x48:
+                            target = collision_target(payload, sender, loaded)
+                            if target is not None:
+                                receiver.sendto(codec.encode(0x48, payload, self.key), loaded[target])
+                        else:
+                            death = self.deaths.report(sender, payload, loaded, time.monotonic())
+                            if death is not None:
+                                self.log({"t": round(time.time(), 3), "event": "player_died", "slot": sender,
+                                     "reason": "killed" if death[1][4:] != bytes(4) else "no valid killer"})
+                                for slot, peer in loaded.items():
+                                    if slot != sender:
+                                        combat_send(peer, death)
+                                # The victim resets itself to the origin (9.27);
+                                # restore its assigned spawn like flight entry.
+                                spawn = spawn_position(sender, self.args.spawn_axis, self.args.spawn_spacing, self.args.spawn_origin)
+                                if addr in self.arena_connections:
+                                    deliver(addr, (0x24, struct.pack("<3f", *spawn)))
+                                killer_slot = struct.unpack_from("<I", death[1], 4)[0] & 0xFFFF
+                                for peer in {addr, loaded.get(killer_slot)} - {None}:
+                                    if peer in self.arena_connections:
+                                        deliver(peer, own_record(peer))
+
+
+def run(args, key, log, resources, objects=None):
+    return ArenaServer(args, key, log, resources, objects).serve()
 
 
 if __name__ == "__main__":
