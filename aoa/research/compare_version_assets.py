@@ -13,9 +13,8 @@ import json
 import os
 from pathlib import Path
 import sys
-import zipfile
 
-from aoa.formats import aoapack
+from aoa.formats import aoapack, installer
 from aoa import cli
 
 ROOT = Path('work/asset-review')
@@ -60,18 +59,16 @@ def main(argv=None):
             assert report['client_sha256'] == spec['client_sha256']
             reports[version] = report
             continue
-        with zipfile.ZipFile(source) as zf:
-            for i, zi in enumerate(zf.infolist()):
-                data = zf.read(zi)  # ZipFile validates each member CRC.
-                name = zi.filename.replace('\\', '/').split('/')[-1].upper()
-                dest = members / f'{i:02d}_{name}'
-                dest.write_bytes(data)
-                report['members'].append({'name': name, 'bytes': len(data),
-                                          'sha256': sha(data), 'path': dest.as_posix()})
-                if name == 'AOACLIENT.EXE':
-                    assert sha(data) == spec['client_sha256']
-                    report['client'] = dest.as_posix()
-                    report['client_sha256'] = sha(data)
+        for i, zi, base, data in installer.members(source):  # zipfile checks each member CRC.
+            name = base.upper()
+            dest = members / f'{i:02d}_{name}'
+            dest.write_bytes(data)
+            report['members'].append({'name': name, 'bytes': len(data),
+                                      'sha256': sha(data), 'path': dest.as_posix()})
+            if name == 'AOACLIENT.EXE':
+                assert sha(data) == spec['client_sha256']
+                report['client'] = dest.as_posix()
+                report['client_sha256'] = sha(data)
         for member in report['members']:
             if Path(member['name']).suffix not in ('.AOA', '.ODB'):
                 continue
