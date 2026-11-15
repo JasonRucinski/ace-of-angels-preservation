@@ -29,7 +29,7 @@ written, with its traceback, to `work/logs/host.log`.
 | Mode | **This PC only** (`local-guests` on 127.0.0.1, with the guest admission and sustained delivery that LAN and VPN players get), **LAN** (`lan-dogfight`) or **VPN (internet)** (`vpn-dogfight`) |
 | Host address | LAN/VPN only: pick this PC's address from the list (found automatically) or type it |
 | Map | Any of the 20 entries in [map-viewer.md](map-viewer.md); 11 have real content ([which](STATUS.md#maps)) |
-| Build map terrain | Sends the map so clients build it on flight entry. Clients need the online terrain hook, patch level 11 or later (the window's label says "patch v11"); without it they still join, in empty space |
+| Build map terrain | Sends the map so clients build it on flight entry. Clients need the online terrain hook, patch level 11 or later (the label says "terrain needs client patch level 11 or later"); without it they still join, in empty space |
 | Navigation buoys | Restore navigation markers for the selected map. Initially checked, preserving the previous automatic behavior when exported assets are available |
 | Turret trial | Restore five Arena1a turrets with firing disabled. Initially unchecked; this does not enable turret combat |
 | Warp gates trial | Restore all nine Arena1a gates with their original destinations. Initially unchecked; available only in **This PC only** mode |

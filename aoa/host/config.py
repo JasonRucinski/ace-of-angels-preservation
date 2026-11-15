@@ -184,7 +184,7 @@ class HostConfig:
         if len(maps) > 1 and self.managed is None:
             raise ConfigError("a rotation of several maps needs managed sessions (\"managed\": {})")
         if len(maps) > 1 and not self.terrain:
-            raise ConfigError("terrain must be on for a multi-map rotation (clients load each map's terrain)")
+            raise ConfigError(f"terrain must be on for a multi-map rotation ({defaults.requirement('terrain')})")
         if self.managed is not None:
             unknown = sorted(set(self.managed) - set(MANAGED_BOUNDS))
             if unknown:

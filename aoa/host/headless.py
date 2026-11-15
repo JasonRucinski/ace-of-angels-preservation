@@ -32,7 +32,7 @@ from types import SimpleNamespace
 
 from aoa.host import dedicated, ops
 from aoa.host.config import ConfigError, HostConfig
-from aoa.host.defaults import ALIASES, BACKDROPS, LIMITS, PORTS, PROFILES
+from aoa.host.defaults import ALIASES, BACKDROPS, LIMITS, PORTS, PROFILES, requirement
 from aoa.host.supervisor import HostProcess, RestartBudget, Supervisor, SupervisorError
 from aoa.maps import registry
 
@@ -122,6 +122,11 @@ def describe(config):
              f"{'; terrain on' if config.terrain else ''}; backdrop {config.backdrop}",
              f"UDP {config.ports['station']} + {config.ports['arena']}; TCP {config.ports['tcp']}. "
              f"Status: {config.status_path()}"]
+    needs = [requirement("terrain")] if config.terrain else []
+    if config.objects.get("powerups") and any(config.powerup_zones(name) for name in config.maps):
+        needs.append(requirement("power-ups"))
+    if needs:
+        lines.append("Clients: " + "; ".join(needs))
     if config.profile in ALIASES:
         lines.append(f"Each client hosts-file entry: {config.bind_address} {ALIASES[config.profile]}; "
                      f"prepare each client for Station {ALIASES[config.profile]}")

@@ -13,7 +13,7 @@ from pathlib import Path
 from collections import Counter, OrderedDict
 
 from aoa.host import object_slots as slots
-from aoa.host.defaults import (OBJECT_PROFILES, OBJECT_RULE, ARENA_JOINS, BACKDROPS, DEFAULT_BACKDROP, DEFAULT_MAP, DOGFIGHT_MAX_PLAYERS,
+from aoa.host.defaults import (OBJECT_PROFILES, OBJECT_RULE, requirement, ARENA_JOINS, BACKDROPS, DEFAULT_BACKDROP, DEFAULT_MAP, DOGFIGHT_MAX_PLAYERS,
                                DOGFIGHT_PROFILES, GUEST_PROFILES, HOST_DEFAULTS, LOOPBACK, LOOPBACK_PROFILES,
                                MANAGED, PEER_TIMEOUT, PORTS, PRIVATE_NETWORKS, PROFILES, STATION_ADMISSIONS,
                                SUSTAINED_PROFILES, VPN_NETWORKS)
@@ -105,8 +105,8 @@ def parse_args(argv=None, *, raise_errors=False):
                         help="relay match length in seconds; 0 disables")
     parser.add_argument("--raw-capture", action="store_true")
     parser.add_argument("--terrain", action="store_true",
-                        help="native terrain for --map; requires the online-terrain-v2 (or later) client patch "
-                             "(v1 clients load Arena1a only)")
+                        help=f"native terrain for --map; {requirement('terrain')} "
+                             "(clients without it join in empty space)")
     parser.add_argument("--experimental-terrain", dest="terrain", action="store_true",
                         default=argparse.SUPPRESS, help=argparse.SUPPRESS)
     parser.add_argument("--spawn-at", type=float, nargs=3, metavar=("X", "Y", "Z"),

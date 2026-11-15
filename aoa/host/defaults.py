@@ -32,6 +32,20 @@ OBJECT_PROFILES = {"navigation_buoys": LOOPBACK_PROFILES + DOGFIGHT_PROFILES,
                    "turret_trial": LOOPBACK_PROFILES + DOGFIGHT_PROFILES,
                    "warp_trial": LOOPBACK_PROFILES}
 
+# Client features a host relies on, by the client patch level (aoa/client/prepare.py
+# PATCH_VERSION) that first had them. Hosts name a requirement with requirement().
+CLIENT_PATCH_LEVELS = {
+    "terrain": 11,      # online terrain hook for any recovered map (online-terrain-v2; v3 since 18)
+    "safe zones": 18,   # safe zones drawn on online terrain (online-terrain-v3)
+    "power-ups": 19,    # power-up pickup (findings 9.44)
+}
+
+
+def requirement(feature):
+    """'terrain needs client patch level 11 or later'."""
+    return f"{feature} needs client patch level {CLIENT_PATCH_LEVELS[feature]} or later"
+
+
 PORTS = {"station": 5033, "arena": 5031, "tcp": 5034}
 # Hosts-file names the docs suggest for players (host window display).
 ALIASES = {"lan-dogfight": "aoalan", "vpn-dogfight": "aoavpn"}

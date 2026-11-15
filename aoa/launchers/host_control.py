@@ -35,7 +35,7 @@ from aoa.host import ops  # noqa: E402
 from aoa.maps import registry  # noqa: E402
 from aoa.host import supervisor  # noqa: E402
 from aoa.host.config import ConfigError, HostConfig  # noqa: E402
-from aoa.host.defaults import ALIASES, BACKDROPS, DEFAULT_BACKDROP, LIMITS, OBJECT_PROFILES  # noqa: E402
+from aoa.host.defaults import ALIASES, BACKDROPS, DEFAULT_BACKDROP, LIMITS, OBJECT_PROFILES, requirement  # noqa: E402
 
 from aoa.paths import ROOT
 from aoa import paths
@@ -262,7 +262,7 @@ def gui(autostart=False, run=True):
     ttk.Label(box, text="Map").grid(row=row, column=0, sticky="w", pady=(6, 0))
     ttk.Combobox(box, textvariable=v["map"], values=list(registry.MAP_NAMES), state="readonly",
                  width=16).grid(row=row, column=1, sticky="w", padx=4, pady=(6, 0))
-    ttk.Checkbutton(box, text="Build map terrain (clients need patch v11)", variable=v["terrain"]).grid(
+    ttk.Checkbutton(box, text=f"Build map terrain ({requirement('terrain')})", variable=v["terrain"]).grid(
         row=row, column=2, columnspan=2, sticky="w", padx=(12, 0), pady=(6, 0))
     ttk.Label(box, text="Backdrop").grid(row=row, column=4, sticky="e", pady=(6, 0))
     ttk.Combobox(box, textvariable=v["backdrop"], values=BACKDROPS, state="readonly", width=11).grid(

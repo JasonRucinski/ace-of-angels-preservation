@@ -20,7 +20,7 @@ from aoa.host import ops
 from aoa.host.config import HostConfig
 from aoa.host.supervisor import HostProcess, RestartBudget, Supervisor, Watchdog, stop_process
 from aoa.maps import registry
-from aoa.host.defaults import LIMITS, MANAGED, PORTS, SESSION_COMPLETE
+from aoa.host.defaults import LIMITS, MANAGED, PORTS, SESSION_COMPLETE, requirement
 from aoa.host.runtime import ConfigError, parse_args as server_config
 
 __all__ = ["DEFAULTS", "SESSION_COMPLETE", "child_args", "host_config", "load_config", "load_state", "main",
@@ -62,7 +62,7 @@ def load_config(path):
     if not (settings["kill_limit"] or settings["time_limit_seconds"]):
         raise ValueError("enable at least one of kill_limit or time_limit_seconds")
     if type(settings["terrain"]) is not bool or (len(maps) > 1 and not settings["terrain"]):
-        raise ValueError("terrain must be true for a multi-map rotation (clients need online-terrain-v2 or later)")
+        raise ValueError(f"terrain must be true for a multi-map rotation ({requirement('terrain')})")
     return settings
 
 
