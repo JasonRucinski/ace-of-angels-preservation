@@ -110,8 +110,7 @@ class HostConfig:
                 argv += [flag, _number(self.ports[key])]
         argv += ["--map", name, "--backdrop", self.backdrop,
                  "--kill-limit", _number(self.kill_limit), "--time-limit", _number(self.time_limit_seconds)]
-        if self.target_ships:
-            argv += ["--target-ships", _number(self.target_ships)]
+        argv += ["--target-ships", _number(self.target_ships)]
         if self.console:
             argv.append("--console")
         argv += ["--status-file", str(self.status_path())]

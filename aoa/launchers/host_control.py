@@ -3,7 +3,8 @@
   .venv/Scripts/python.exe tools/host_control.py [--autostart]
 
 It runs tools/station_stub.py as a child process with --console and
---status-file. The window reads the status file every second for the
+--status-file; the command line comes from aoa/host/config.py (HostConfig)
+and the process handling and crash-restart policy from aoa/host/supervisor.py. The window reads the status file every second for the
 player/score table and host counters, and sends the server's own console
 commands (kick, ban, end, say, quit). "Load map" checks the new settings,
 then stops the host cleanly and starts it again on the chosen map; players
@@ -26,13 +27,14 @@ import math
 import queue
 import subprocess
 import sys
-import threading
 import time
 import traceback
 from pathlib import Path
 
 from aoa.host import ops  # noqa: E402
 from aoa.maps import registry  # noqa: E402
+from aoa.host import supervisor  # noqa: E402
+from aoa.host.config import ConfigError, HostConfig  # noqa: E402
 from aoa.host.defaults import ALIASES, BACKDROPS, DEFAULT_BACKDROP, LIMITS  # noqa: E402
 
 from aoa.paths import ROOT
@@ -52,7 +54,7 @@ NODE_LABELS = {"navigation_buoys": "Navigation buoys",
                "turret_trial": "Turret trial (5 turrets, firing disabled; Arena1a)",
                "warp_trial": "Warp gates trial (9 gates; Arena1a, this PC only)"}
 NO_WINDOW = getattr(subprocess, "CREATE_NO_WINDOW", 0)
-RESTARTS_PER_10_MIN = 3
+RESTARTS_PER_10_MIN = supervisor.RESTARTS
 
 
 def profile_of(mode):
@@ -75,35 +77,29 @@ def node_availability(settings):
             "warp_trial": arena or ("Select This PC only mode." if profile_of(settings["mode"]) != LOCAL else "")}
 
 
-def server_args(settings, extra=()):
-    """station_stub.py arguments for these settings; the server validates them."""
+def host_config(settings, extra=()):
+    """The HostConfig of the window's settings; options the window shows as unavailable are left out."""
     profile = profile_of(settings["mode"])
     address = "127.0.0.1" if profile == LOCAL else settings["address"].strip()
-    game = Path(settings["game"])
-    game = game if game.is_absolute() else ROOT / game
-    args = [str(paths.entry("station_stub", ROOT)), str(game / "SCRTY.BIN"), str(WORK / f"{profile}.jsonl"),
-            "--profile", profile, "--bind-address", address, "--max-players", str(int(settings["max_players"])),
-            "--map", settings["map"], "--backdrop", settings["backdrop"],
-            "--kill-limit", str(int(settings["kill_limit"])),
-            "--time-limit", str(int(float(settings["time_limit_min"]) * 60)),
-            "--target-ships", str(int(settings["target_ships"])),
-            "--console", "--status-file", str(status_path(settings))]
-    if settings["terrain"]:
-        args.append("--experimental-terrain")
-        source = ROOT / 'work/2.9.2/export/AOAOBJECTS'
-        enabled = [key for key, reason in node_availability(settings).items()
-                   if not reason and settings.get(key, DEFAULTS[key])]
-        for key in enabled:
-            args += ['--' + key.replace('_', '-'), str(source)]
-        if enabled or profile == LOCAL:
-            args.append('--sustained-delivery')
-        _, kind, target, _ = registry.MAPS[registry.MAP_NAMES.index(settings["map"])]
-        if kind == registry.TRN:
-            # The map's own power-up zones (findings 9.44); layouts have none.
-            args += ["--powerup-zones", str(game / target)]
-    elif profile == LOCAL:
-        args.append('--sustained-delivery')
-    return args + list(extra)
+    enabled = [key for key, reason in node_availability(settings).items()
+               if not reason and settings.get(key, DEFAULTS[key])] if settings["terrain"] else []
+    objects = {**dict.fromkeys(NODE_LABELS, False), **dict.fromkeys(enabled, True),
+               # The map's own power-up zones (findings 9.44); layouts have none.
+               "powerups": bool(settings["terrain"])}
+    return HostConfig(profile=profile, bind_address=address, maps=[settings["map"]], backdrop=settings["backdrop"],
+                      terrain=bool(settings["terrain"]), max_players=int(settings["max_players"]),
+                      kill_limit=int(settings["kill_limit"]),
+                      time_limit_seconds=int(float(settings["time_limit_min"]) * 60),
+                      target_ships=int(settings["target_ships"]), objects=objects,
+                      sustained_delivery=True if enabled or profile == LOCAL else None, console=True,
+                      paths={"game": settings["game"], "log": str(WORK / f"{profile}.jsonl"),
+                             "status": str(status_path(settings)), "export": str(ROOT / 'work/2.9.2/export/AOAOBJECTS')},
+                      extra_args=list(extra), root=ROOT)
+
+
+def server_args(settings, extra=()):
+    """The server script and its arguments for these settings (HostConfig.to_argv)."""
+    return [str(paths.entry("station_stub", ROOT)), *host_config(settings, extra).to_argv()]
 
 
 def status_path(settings):
@@ -123,24 +119,19 @@ def detect_addresses():
     return [tuple(line.split("|", 1)) for line in out.splitlines() if "|" in line]
 
 
-class HostProcess:
-    """The server child process: validated start, console commands, clean stop."""
+class HostProcess(supervisor.HostProcess):
+    """The server child process for the window's settings: validated start, commands, clean stop."""
 
     def __init__(self):
-        self.proc, self.started, self.settings = None, None, None
-        self.output = queue.Queue()
-        self.stopping = False
-
-    @property
-    def running(self):
-        return self.proc is not None and self.proc.poll() is None
+        super().__init__(script=paths.entry("station_stub", ROOT), cwd=ROOT)
+        self.settings = None
 
     def validate(self, settings, extra=()):
-        result = subprocess.run([sys.executable, "-I", *server_args(settings, extra), "--print-config"],
-                                capture_output=True, text=True, cwd=ROOT, creationflags=NO_WINDOW)
-        if result.returncode:
-            lines = [l for l in result.stderr.strip().splitlines() if l.strip()]
-            raise ValueError(lines[-1] if lines else "invalid settings")
+        """The server's own checks, in process (HostConfig.validate)."""
+        try:
+            host_config(settings, extra).validate(key=False)
+        except ConfigError as error:
+            raise ValueError(str(error)) from None
 
     def check(self, settings, extra=()):
         """Everything start() checks, without starting: files, then the server's own validation."""
@@ -158,47 +149,8 @@ class HostProcess:
         if not checked:
             self.check(settings, extra)
         WORK.mkdir(parents=True, exist_ok=True)
-        status_path(settings).unlink(missing_ok=True)
-        self.proc = subprocess.Popen([sys.executable, "-u", "-I", *server_args(settings, extra)], cwd=ROOT,
-                                     stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-                                     text=True, bufsize=1, creationflags=NO_WINDOW)
-        self.started, self.settings, self.stopping = time.time(), dict(settings), False
-        threading.Thread(target=self._read, args=(self.proc,), daemon=True).start()
-
-    def _read(self, proc):
-        for line in proc.stdout:
-            self.output.put(line.rstrip("\n"))
-        self.output.put(f"[host exited with code {proc.wait()}]")
-
-    def command(self, line):
-        if not self.running:
-            return False
-        try:
-            self.proc.stdin.write(line.strip() + "\n")
-            self.proc.stdin.flush()
-            return True
-        except OSError:
-            return False
-
-    def stop(self, timeout=10.0):
-        """Ask the server to quit (players get a notice); force it after `timeout`."""
-        if self.proc is None:
-            return None
-        self.stopping = True
-        if self.running:
-            self.command("quit")
-            try:
-                self.proc.wait(timeout)
-            except subprocess.TimeoutExpired:
-                self.proc.terminate()
-                self.proc.wait(5)
-        return self.proc.returncode
-
-    def status(self):
-        """(status dict or None, age in seconds or None) from this run's status file."""
-        if self.settings is None:
-            return None, None
-        return ops.read_status(status_path(self.settings), self.proc.pid)
+        super().start(host_config(settings, extra))
+        self.settings = dict(settings)
 
 
 def valid_setting(key, value):
@@ -282,7 +234,7 @@ def gui(autostart=False, run=True):
          "target_ships": tk.IntVar(value=saved["target_ships"]),
          "game": tk.StringVar(value=saved["game"])}
     v.update({key: tk.BooleanVar(value=saved[key]) for key in NODE_LABELS})
-    restarts = []
+    budget = supervisor.RestartBudget()
 
     def settings():
         out = {}
@@ -435,16 +387,22 @@ def gui(autostart=False, run=True):
                                 f"firewall open for UDP 5033 + 5031 and TCP 5034 "
                                 f"(docs/{'vpn' if profile == 'vpn-dogfight' else 'lan'}-dogfight.md).")
 
-    def do_start(quiet=False):
+    def do_start(quiet=False, crashed=None):
+        """Start on the window's settings, or on `crashed`, the settings of a run that crashed."""
         try:
-            s = settings()
+            s = crashed or settings()
             host.start(s)
         except (ValueError, RuntimeError, OSError) as error:
             if not quiet:
                 messagebox.showerror("Cannot start host", str(error))
             write_log(f"[not started: {error}]")
             return False
-        save_settings(s)
+        if crashed is None:
+            save_settings(s)
+        try:
+            host.config.save(WORK / "host.json")  # the run's HostConfig, the headless host's format
+        except OSError:
+            pass
         write_log(f"[starting {MODES[s['mode']]} host: map {s['map']}{' with terrain' if s['terrain'] else ''}]")
         refresh_controls()
         return True
@@ -525,12 +483,11 @@ def gui(autostart=False, run=True):
         if host.proc is not None and not host.running and not host.stopping:
             code = host.proc.returncode
             host.stopping = True
-            now = time.time()
-            restarts[:] = [t for t in restarts if now - t < 600]
-            if code and len(restarts) < RESTARTS_PER_10_MIN and host.started and now - host.started > 5:
-                restarts.append(now)
-                write_log(f"[host crashed with code {code}; restarting in 5 s, players must rejoin]")
-                root.after(5000, lambda: do_start(quiet=True))
+            uptime = time.time() - host.started if host.started else 0
+            if code and budget.allow(uptime, time.monotonic()):
+                crashed = dict(host.settings)  # restart as it ran, not with later edits in the window
+                write_log(f"[host crashed with code {code}; restarting in {budget.delay:g} s, players must rejoin]")
+                root.after(int(budget.delay * 1000), lambda: do_start(quiet=True, crashed=crashed))
             elif code:
                 write_log(f"[host stopped with code {code}; not restarting]")
             refresh_controls()

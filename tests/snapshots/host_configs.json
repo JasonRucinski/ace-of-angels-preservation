@@ -19,6 +19,8 @@
     "10",
     "--time-limit",
     "900",
+    "--target-ships",
+    "0",
     "--status-file",
     "/var/lib/ace-of-angels/status.json",
     "--experimental-terrain",
@@ -114,6 +116,8 @@
     "10",
     "--time-limit",
     "900",
+    "--target-ships",
+    "0",
     "--status-file",
     "/var/lib/ace-of-angels/status.json",
     "--experimental-terrain",
@@ -213,6 +217,8 @@
     "10",
     "--time-limit",
     "900",
+    "--target-ships",
+    "0",
     "--status-file",
     "/var/lib/ace-of-angels/status.json",
     "--experimental-terrain",
@@ -2215,9 +2221,9 @@
     "--status-file",
     "work/host/local-guests-status.json",
     "--experimental-terrain",
-    "--sustained-delivery",
     "--powerup-zones",
-    "game/2.9.2/jrmap292.trn"
+    "game/2.9.2/jrmap292.trn",
+    "--sustained-delivery"
    ],
    "assets_exported": true,
    "config": {
