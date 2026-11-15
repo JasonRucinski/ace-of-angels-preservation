@@ -1,0 +1,728 @@
+{
+ "about": "SHA-256, Station and inspect() patch IDs of prepare inputs and outputs for fixed options, generated once at commit e92a392 (before the patch registry, phase 2a). Never regenerate: see tests/test_prepare_outputs.py.",
+ "cases": {
+  "asteroids-kept-texture32-on": {
+   "host": "localhost",
+   "patches": [
+    "archive-terminator-v1",
+    "asteroid-mesh-distance-v1",
+    "background-network-v1",
+    "cursor-warp-origin-v1",
+    "frame-clock-v1",
+    "logger-lock-v1",
+    "logger-size-v1",
+    "online-terrain-v3",
+    "own-ship-menu-model-v1",
+    "own-ship-model-v1",
+    "powerup-pickup-v1",
+    "ship-menu-aspect-v1",
+    "texture-argb8888-v1",
+    "third-person-camera-v3",
+    "visibility-math-v1",
+    "zero-time-physics-v1"
+   ],
+   "sha256": "96108e439af36eb346aceecc45b3ae06cf1e468b623b2be9721e8948a727b945"
+  },
+  "asteroids-replaced-by-solids": {
+   "host": "localhost",
+   "patches": [
+    "archive-terminator-v1",
+    "background-network-v1",
+    "cursor-warp-origin-v1",
+    "frame-clock-v1",
+    "logger-lock-v1",
+    "logger-size-v1",
+    "online-terrain-v3",
+    "own-ship-menu-model-v1",
+    "own-ship-model-v1",
+    "powerup-pickup-v1",
+    "ship-menu-aspect-v1",
+    "solid-world-mesh-distance-v1",
+    "third-person-camera-v3",
+    "visibility-math-v1",
+    "zero-time-physics-v1"
+   ],
+   "sha256": "5f0a7a575fed837980767a03beb4e5dadb6731a7224dd36e69d77c93fb62694e"
+  },
+  "fresh-asteroids": {
+   "host": "localhost",
+   "patches": [
+    "archive-terminator-v1",
+    "asteroid-mesh-distance-v1",
+    "background-network-v1",
+    "cursor-warp-origin-v1",
+    "frame-clock-v1",
+    "logger-lock-v1",
+    "logger-size-v1",
+    "online-terrain-v3",
+    "own-ship-menu-model-v1",
+    "own-ship-model-v1",
+    "powerup-pickup-v1",
+    "ship-menu-aspect-v1",
+    "third-person-camera-v3",
+    "visibility-math-v1",
+    "zero-time-physics-v1"
+   ],
+   "sha256": "c5bd66f01afb3fb7a1337f9d3afdc944e8e5ebd0327ca32d93a81f68657f1ec4"
+  },
+  "fresh-defaults": {
+   "host": "localhost",
+   "patches": [
+    "archive-terminator-v1",
+    "background-network-v1",
+    "cursor-warp-origin-v1",
+    "frame-clock-v1",
+    "logger-lock-v1",
+    "logger-size-v1",
+    "online-terrain-v3",
+    "own-ship-menu-model-v1",
+    "own-ship-model-v1",
+    "powerup-pickup-v1",
+    "ship-menu-aspect-v1",
+    "third-person-camera-v3",
+    "visibility-math-v1",
+    "zero-time-physics-v1"
+   ],
+   "sha256": "64dac9afe97f3664fe6d909d68c3abc65afe2a4fbcab57f0dad1c7cab52d6666"
+  },
+  "fresh-distant-solids": {
+   "host": "aoalan",
+   "patches": [
+    "archive-terminator-v1",
+    "background-network-v1",
+    "cursor-warp-origin-v1",
+    "distant-world-objects-v1",
+    "frame-clock-v1",
+    "logger-lock-v1",
+    "logger-size-v1",
+    "online-terrain-v3",
+    "own-ship-menu-model-v1",
+    "own-ship-model-v1",
+    "powerup-pickup-v1",
+    "ship-menu-aspect-v1",
+    "solid-world-mesh-distance-v1",
+    "third-person-camera-v3",
+    "visibility-math-v1",
+    "zero-time-physics-v1"
+   ],
+   "sha256": "659dc7a385b876d2afb8be6706d46f43b05e52e5600e4cd107f0d2f6082c7430"
+  },
+  "fresh-everything-a": {
+   "host": "localhost",
+   "patches": [
+    "archive-terminator-v1",
+    "asteroid-mesh-distance-v1",
+    "background-network-v1",
+    "cursor-warp-origin-v1",
+    "distant-world-objects-v1",
+    "explicit-protection-v1",
+    "frame-clock-v1",
+    "logger-lock-v1",
+    "logger-size-v1",
+    "online-terrain-v3",
+    "own-ship-menu-model-v1",
+    "own-ship-model-v1",
+    "powerup-pickup-v1",
+    "ship-menu-aspect-v1",
+    "station-full-detail-v1",
+    "texture-argb8888-v1",
+    "third-person-camera-v3",
+    "visibility-math-v1",
+    "zero-time-physics-v1"
+   ],
+   "sha256": "c72843ac8f050bff72b26ead2b1c7004332b8a4b67e60e2aa764e606614d5414"
+  },
+  "fresh-everything-b": {
+   "host": "127.0.0.1",
+   "patches": [
+    "archive-terminator-v1",
+    "background-network-v1",
+    "cursor-warp-origin-v1",
+    "distant-world-objects-v1",
+    "explicit-protection-v1",
+    "frame-clock-v1",
+    "logger-lock-v1",
+    "logger-size-v1",
+    "online-terrain-v3",
+    "own-ship-menu-model-v1",
+    "own-ship-model-v1",
+    "powerup-pickup-v1",
+    "ship-menu-aspect-v1",
+    "solid-world-mesh-distance-v1",
+    "texture-argb8888-v1",
+    "third-person-camera-v3",
+    "visibility-math-v1",
+    "world-full-detail-v1",
+    "zero-time-physics-v1"
+   ],
+   "sha256": "32164f6749f9f5643c184ec81f38f8ee8f4f4871fa9a996af50c23e272b19908"
+  },
+  "fresh-everything-off": {
+   "host": "localhost",
+   "patches": [
+    "archive-terminator-v1",
+    "background-network-v1",
+    "cursor-warp-origin-v1",
+    "logger-lock-v1",
+    "logger-size-v1",
+    "online-terrain-v3",
+    "zero-time-physics-v1"
+   ],
+   "sha256": "2f915af1295d10515846f81042b72c6283ee0142c0540c217f971f25ce7450d5"
+  },
+  "fresh-solids": {
+   "host": "localhost",
+   "patches": [
+    "archive-terminator-v1",
+    "background-network-v1",
+    "cursor-warp-origin-v1",
+    "frame-clock-v1",
+    "logger-lock-v1",
+    "logger-size-v1",
+    "online-terrain-v3",
+    "own-ship-menu-model-v1",
+    "own-ship-model-v1",
+    "powerup-pickup-v1",
+    "ship-menu-aspect-v1",
+    "solid-world-mesh-distance-v1",
+    "third-person-camera-v3",
+    "visibility-math-v1",
+    "zero-time-physics-v1"
+   ],
+   "sha256": "5f0a7a575fed837980767a03beb4e5dadb6731a7224dd36e69d77c93fb62694e"
+  },
+  "fresh-station-detail": {
+   "host": "localhost",
+   "patches": [
+    "archive-terminator-v1",
+    "background-network-v1",
+    "cursor-warp-origin-v1",
+    "frame-clock-v1",
+    "logger-lock-v1",
+    "logger-size-v1",
+    "online-terrain-v3",
+    "own-ship-menu-model-v1",
+    "own-ship-model-v1",
+    "powerup-pickup-v1",
+    "ship-menu-aspect-v1",
+    "station-full-detail-v1",
+    "third-person-camera-v3",
+    "visibility-math-v1",
+    "zero-time-physics-v1"
+   ],
+   "sha256": "50c55a34e07a04a253ba2a79acf6ca1c92cf34af1ed00092066de5b71e1149b2"
+  },
+  "fresh-world-detail": {
+   "host": "localhost",
+   "patches": [
+    "archive-terminator-v1",
+    "background-network-v1",
+    "cursor-warp-origin-v1",
+    "frame-clock-v1",
+    "logger-lock-v1",
+    "logger-size-v1",
+    "online-terrain-v3",
+    "own-ship-menu-model-v1",
+    "own-ship-model-v1",
+    "powerup-pickup-v1",
+    "ship-menu-aspect-v1",
+    "third-person-camera-v3",
+    "visibility-math-v1",
+    "world-full-detail-v1",
+    "zero-time-physics-v1"
+   ],
+   "sha256": "4b3bbec0cbca1118eeac5dd2a80804dfb1bc6271850fe3e77eaa93c639e652dd"
+  },
+  "prepared-everything-off": {
+   "host": "localhost",
+   "patches": [
+    "archive-terminator-v1",
+    "background-network-v1",
+    "cursor-warp-origin-v1",
+    "logger-lock-v1",
+    "logger-size-v1",
+    "online-terrain-v3",
+    "zero-time-physics-v1"
+   ],
+   "sha256": "2f915af1295d10515846f81042b72c6283ee0142c0540c217f971f25ce7450d5"
+  },
+  "stable-defaults": {
+   "host": "localhost",
+   "patches": [
+    "archive-terminator-v1",
+    "background-network-v1",
+    "cursor-warp-origin-v1",
+    "frame-clock-v1",
+    "logger-lock-v1",
+    "logger-size-v1",
+    "online-terrain-v3",
+    "own-ship-menu-model-v1",
+    "own-ship-model-v1",
+    "powerup-pickup-v1",
+    "ship-menu-aspect-v1",
+    "third-person-camera-v3",
+    "visibility-math-v1",
+    "zero-time-physics-v1"
+   ],
+   "sha256": "64dac9afe97f3664fe6d909d68c3abc65afe2a4fbcab57f0dad1c7cab52d6666"
+  },
+  "stable-localhost-physics": {
+   "host": "localhost",
+   "patches": [
+    "archive-terminator-v1",
+    "background-network-v1",
+    "cursor-warp-origin-v1",
+    "frame-clock-v1",
+    "logger-lock-v1",
+    "logger-size-v1",
+    "online-terrain-v3",
+    "own-ship-menu-model-v1",
+    "own-ship-model-v1",
+    "powerup-pickup-v1",
+    "third-person-camera-v3",
+    "visibility-math-v1",
+    "zero-time-physics-v1"
+   ],
+   "sha256": "9f7f57ba7e103949758959ab169f269e5eae0b042060c41f5620fb0741a1e87f"
+  },
+  "stable-physics-defaults": {
+   "host": "10.0.0.1",
+   "patches": [
+    "archive-terminator-v1",
+    "background-network-v1",
+    "cursor-warp-origin-v1",
+    "frame-clock-v1",
+    "logger-lock-v1",
+    "logger-size-v1",
+    "online-terrain-v3",
+    "own-ship-menu-model-v1",
+    "own-ship-model-v1",
+    "powerup-pickup-v1",
+    "ship-menu-aspect-v1",
+    "third-person-camera-v3",
+    "visibility-math-v1",
+    "zero-time-physics-v1"
+   ],
+   "sha256": "5bb8258c6fb09d484387b66dee1e7c1e2ae40e9820c1d2cdb967eea6041ab0f7"
+  },
+  "station-only-change": {
+   "host": "aoalan",
+   "patches": [
+    "archive-terminator-v1",
+    "background-network-v1",
+    "cursor-warp-origin-v1",
+    "frame-clock-v1",
+    "logger-lock-v1",
+    "logger-size-v1",
+    "online-terrain-v3",
+    "powerup-pickup-v1",
+    "ship-menu-aspect-v1",
+    "visibility-math-v1",
+    "zero-time-physics-v1"
+   ],
+   "sha256": "10829804fc0e828c927717dcc4de107cc35f972a011a77847ce73d98df8e4df6"
+  },
+  "unchanged-reprepare": {
+   "host": "localhost",
+   "patches": [
+    "archive-terminator-v1",
+    "background-network-v1",
+    "cursor-warp-origin-v1",
+    "frame-clock-v1",
+    "logger-lock-v1",
+    "logger-size-v1",
+    "online-terrain-v3",
+    "powerup-pickup-v1",
+    "ship-menu-aspect-v1",
+    "visibility-math-v1",
+    "zero-time-physics-v1"
+   ],
+   "sha256": "aed52bcb9d29f251282521e74087dd74f515b35f09e5edb5d28df9c3d3c76cb1"
+  },
+  "upgrade-online-arena1a-v1": {
+   "host": "aoalan",
+   "patches": [
+    "archive-terminator-v1",
+    "background-network-v1",
+    "cursor-warp-origin-v1",
+    "frame-clock-v1",
+    "logger-lock-v1",
+    "logger-size-v1",
+    "online-terrain-v3",
+    "own-ship-menu-model-v1",
+    "own-ship-model-v1",
+    "powerup-pickup-v1",
+    "ship-menu-aspect-v1",
+    "third-person-camera-v3",
+    "visibility-math-v1",
+    "zero-time-physics-v1"
+   ],
+   "sha256": "d7481f590ce6305b303070c3f551a87af9055193b7dbf0f0c66e2cc8b94a8b2c"
+  },
+  "upgrade-online-terrain-v2": {
+   "host": "localhost",
+   "patches": [
+    "archive-terminator-v1",
+    "background-network-v1",
+    "cursor-warp-origin-v1",
+    "frame-clock-v1",
+    "logger-lock-v1",
+    "logger-size-v1",
+    "online-terrain-v3",
+    "own-ship-menu-model-v1",
+    "own-ship-model-v1",
+    "powerup-pickup-v1",
+    "ship-menu-aspect-v1",
+    "third-person-camera-v3",
+    "visibility-math-v1",
+    "zero-time-physics-v1"
+   ],
+   "sha256": "64dac9afe97f3664fe6d909d68c3abc65afe2a4fbcab57f0dad1c7cab52d6666"
+  },
+  "upgrade-own-ship-menu": {
+   "host": "localhost",
+   "patches": [
+    "archive-terminator-v1",
+    "background-network-v1",
+    "cursor-warp-origin-v1",
+    "frame-clock-v1",
+    "logger-lock-v1",
+    "logger-size-v1",
+    "online-terrain-v3",
+    "own-ship-menu-model-v1",
+    "own-ship-model-v1",
+    "powerup-pickup-v1",
+    "ship-menu-aspect-v1",
+    "third-person-camera-v3",
+    "visibility-math-v1",
+    "zero-time-physics-v1"
+   ],
+   "sha256": "64dac9afe97f3664fe6d909d68c3abc65afe2a4fbcab57f0dad1c7cab52d6666"
+  },
+  "upgrade-third-person-v1": {
+   "host": "localhost",
+   "patches": [
+    "archive-terminator-v1",
+    "background-network-v1",
+    "cursor-warp-origin-v1",
+    "frame-clock-v1",
+    "logger-lock-v1",
+    "logger-size-v1",
+    "online-terrain-v3",
+    "own-ship-menu-model-v1",
+    "own-ship-model-v1",
+    "powerup-pickup-v1",
+    "ship-menu-aspect-v1",
+    "third-person-camera-v3",
+    "visibility-math-v1",
+    "zero-time-physics-v1"
+   ],
+   "sha256": "64dac9afe97f3664fe6d909d68c3abc65afe2a4fbcab57f0dad1c7cab52d6666"
+  },
+  "upgrade-third-person-v2": {
+   "host": "localhost",
+   "patches": [
+    "archive-terminator-v1",
+    "background-network-v1",
+    "cursor-warp-origin-v1",
+    "frame-clock-v1",
+    "logger-lock-v1",
+    "logger-size-v1",
+    "online-terrain-v3",
+    "own-ship-menu-model-v1",
+    "own-ship-model-v1",
+    "powerup-pickup-v1",
+    "ship-menu-aspect-v1",
+    "third-person-camera-v3",
+    "visibility-math-v1",
+    "zero-time-physics-v1"
+   ],
+   "sha256": "64dac9afe97f3664fe6d909d68c3abc65afe2a4fbcab57f0dad1c7cab52d6666"
+  },
+  "upgrade-third-person-v2-off": {
+   "host": "localhost",
+   "patches": [
+    "archive-terminator-v1",
+    "background-network-v1",
+    "cursor-warp-origin-v1",
+    "frame-clock-v1",
+    "logger-lock-v1",
+    "logger-size-v1",
+    "online-terrain-v3",
+    "powerup-pickup-v1",
+    "ship-menu-aspect-v1",
+    "visibility-math-v1",
+    "zero-time-physics-v1"
+   ],
+   "sha256": "aed52bcb9d29f251282521e74087dd74f515b35f09e5edb5d28df9c3d3c76cb1"
+  },
+  "version-1-upgrade": {
+   "host": "127.0.0.1",
+   "patches": [
+    "archive-terminator-v1",
+    "background-network-v1",
+    "cursor-warp-origin-v1",
+    "frame-clock-v1",
+    "logger-lock-v1",
+    "logger-size-v1",
+    "online-terrain-v3",
+    "own-ship-menu-model-v1",
+    "own-ship-model-v1",
+    "powerup-pickup-v1",
+    "ship-menu-aspect-v1",
+    "third-person-camera-v3",
+    "visibility-math-v1",
+    "zero-time-physics-v1"
+   ],
+   "sha256": "9a592116ce58b49cca661a502c39104cee36e5234895f84c8ab3432507d50f9e"
+  },
+  "world-replaced-by-station": {
+   "host": "localhost",
+   "patches": [
+    "archive-terminator-v1",
+    "background-network-v1",
+    "cursor-warp-origin-v1",
+    "frame-clock-v1",
+    "logger-lock-v1",
+    "logger-size-v1",
+    "online-terrain-v3",
+    "own-ship-menu-model-v1",
+    "own-ship-model-v1",
+    "powerup-pickup-v1",
+    "ship-menu-aspect-v1",
+    "station-full-detail-v1",
+    "third-person-camera-v3",
+    "visibility-math-v1",
+    "zero-time-physics-v1"
+   ],
+   "sha256": "50c55a34e07a04a253ba2a79acf6ca1c92cf34af1ed00092066de5b71e1149b2"
+  }
+ },
+ "inputs": {
+  "legacy-online-arena1a-v1": {
+   "host": "localhost",
+   "patches": [
+    "archive-terminator-v1",
+    "background-network-v1",
+    "cursor-warp-origin-v1",
+    "frame-clock-v1",
+    "logger-lock-v1",
+    "logger-size-v1",
+    "online-arena1a-v1",
+    "own-ship-menu-model-v1",
+    "own-ship-model-v1",
+    "powerup-pickup-v1",
+    "ship-menu-aspect-v1",
+    "third-person-camera-v3",
+    "visibility-math-v1",
+    "zero-time-physics-v1"
+   ],
+   "sha256": "b3f0ebb9c5a19f8e0d817a56903e51d5f6e4afe890dfe724a9c65a8f37a3bb0d"
+  },
+  "legacy-online-terrain-v2": {
+   "host": "localhost",
+   "patches": [
+    "archive-terminator-v1",
+    "background-network-v1",
+    "cursor-warp-origin-v1",
+    "frame-clock-v1",
+    "logger-lock-v1",
+    "logger-size-v1",
+    "online-terrain-v2",
+    "own-ship-menu-model-v1",
+    "own-ship-model-v1",
+    "powerup-pickup-v1",
+    "ship-menu-aspect-v1",
+    "third-person-camera-v3",
+    "visibility-math-v1",
+    "zero-time-physics-v1"
+   ],
+   "sha256": "62c7e789b9162bee8ee380502241c5ccf0991593760f4a87e76c3ced543f19f8"
+  },
+  "legacy-own-ship-menu": {
+   "host": "localhost",
+   "patches": [
+    "archive-terminator-v1",
+    "background-network-v1",
+    "cursor-warp-origin-v1",
+    "frame-clock-v1",
+    "logger-lock-v1",
+    "logger-size-v1",
+    "online-terrain-v3",
+    "own-ship-menu-model-legacy",
+    "own-ship-model-v1",
+    "powerup-pickup-v1",
+    "ship-menu-aspect-v1",
+    "third-person-camera-v3",
+    "visibility-math-v1",
+    "zero-time-physics-v1"
+   ],
+   "sha256": "f249063e2931b4f56d72892843c08875ef69b1d3b2fe799292fd28b4d883e735"
+  },
+  "legacy-third-person-v1": {
+   "host": "localhost",
+   "patches": [
+    "archive-terminator-v1",
+    "background-network-v1",
+    "cursor-warp-origin-v1",
+    "frame-clock-v1",
+    "logger-lock-v1",
+    "logger-size-v1",
+    "online-terrain-v3",
+    "own-ship-model-v1",
+    "powerup-pickup-v1",
+    "ship-menu-aspect-v1",
+    "third-person-camera-v1",
+    "visibility-math-v1",
+    "zero-time-physics-v1"
+   ],
+   "sha256": "83883a41628d0663ab33cf323af2d235c754f499d08fee40a576526d8fdae55e"
+  },
+  "legacy-third-person-v2": {
+   "host": "localhost",
+   "patches": [
+    "archive-terminator-v1",
+    "background-network-v1",
+    "cursor-warp-origin-v1",
+    "frame-clock-v1",
+    "logger-lock-v1",
+    "logger-size-v1",
+    "online-terrain-v3",
+    "powerup-pickup-v1",
+    "ship-menu-aspect-v1",
+    "third-person-camera-v2",
+    "visibility-math-v1",
+    "zero-time-physics-v1"
+   ],
+   "sha256": "ec2d1d02cb5887876c2f3f5ddfad8eba0a971b4bdcfc4ce8e6040918149721d9"
+  },
+  "prepared": {
+   "host": "localhost",
+   "patches": [
+    "archive-terminator-v1",
+    "background-network-v1",
+    "cursor-warp-origin-v1",
+    "frame-clock-v1",
+    "logger-lock-v1",
+    "logger-size-v1",
+    "online-terrain-v3",
+    "own-ship-menu-model-v1",
+    "own-ship-model-v1",
+    "powerup-pickup-v1",
+    "ship-menu-aspect-v1",
+    "third-person-camera-v3",
+    "visibility-math-v1",
+    "zero-time-physics-v1"
+   ],
+   "sha256": "64dac9afe97f3664fe6d909d68c3abc65afe2a4fbcab57f0dad1c7cab52d6666"
+  },
+  "prepared-asteroids": {
+   "host": "localhost",
+   "patches": [
+    "archive-terminator-v1",
+    "asteroid-mesh-distance-v1",
+    "background-network-v1",
+    "cursor-warp-origin-v1",
+    "frame-clock-v1",
+    "logger-lock-v1",
+    "logger-size-v1",
+    "online-terrain-v3",
+    "own-ship-menu-model-v1",
+    "own-ship-model-v1",
+    "powerup-pickup-v1",
+    "ship-menu-aspect-v1",
+    "third-person-camera-v3",
+    "visibility-math-v1",
+    "zero-time-physics-v1"
+   ],
+   "sha256": "c5bd66f01afb3fb7a1337f9d3afdc944e8e5ebd0327ca32d93a81f68657f1ec4"
+  },
+  "prepared-chase-off": {
+   "host": "localhost",
+   "patches": [
+    "archive-terminator-v1",
+    "background-network-v1",
+    "cursor-warp-origin-v1",
+    "frame-clock-v1",
+    "logger-lock-v1",
+    "logger-size-v1",
+    "online-terrain-v3",
+    "powerup-pickup-v1",
+    "ship-menu-aspect-v1",
+    "visibility-math-v1",
+    "zero-time-physics-v1"
+   ],
+   "sha256": "aed52bcb9d29f251282521e74087dd74f515b35f09e5edb5d28df9c3d3c76cb1"
+  },
+  "prepared-world-detail": {
+   "host": "localhost",
+   "patches": [
+    "archive-terminator-v1",
+    "background-network-v1",
+    "cursor-warp-origin-v1",
+    "frame-clock-v1",
+    "logger-lock-v1",
+    "logger-size-v1",
+    "online-terrain-v3",
+    "own-ship-menu-model-v1",
+    "own-ship-model-v1",
+    "powerup-pickup-v1",
+    "ship-menu-aspect-v1",
+    "third-person-camera-v3",
+    "visibility-math-v1",
+    "world-full-detail-v1",
+    "zero-time-physics-v1"
+   ],
+   "sha256": "4b3bbec0cbca1118eeac5dd2a80804dfb1bc6271850fe3e77eaa93c639e652dd"
+  },
+  "pristine": {
+   "host": "aoahost.com",
+   "patches": [],
+   "sha256": "e1d768c6b0fe59832c6a37673cba1db885ef61802db14e0d152e654e185c2301"
+  },
+  "stable": {
+   "host": "aoahost.com",
+   "patches": [
+    "logger-lock-v1",
+    "logger-size-v1"
+   ],
+   "sha256": "5f700cabf077e6e16024db6cd06160764efdab4421a658944970e8dbe833723b"
+  },
+  "stable-localhost-physics": {
+   "host": "localhost",
+   "patches": [
+    "logger-lock-v1",
+    "logger-size-v1",
+    "zero-time-physics-v1"
+   ],
+   "sha256": "da4a2d6d4da7771f69919e5f854943339d0a0204f6f98806677ae266f4a60b3a"
+  },
+  "stable-physics": {
+   "host": "aoahost.com",
+   "patches": [
+    "logger-lock-v1",
+    "logger-size-v1",
+    "zero-time-physics-v1"
+   ],
+   "sha256": "d6a2e75c737e9569ea19616c6ed0a3d2a160b118aabc1166b65f9e1ead03861e"
+  },
+  "version-1": {
+   "host": "localhost",
+   "patches": [
+    "cursor-warp-origin-v1",
+    "frame-clock-v1",
+    "logger-lock-v1",
+    "logger-size-v1",
+    "online-terrain-v3",
+    "own-ship-menu-model-v1",
+    "own-ship-model-v1",
+    "powerup-pickup-v1",
+    "ship-menu-aspect-v1",
+    "third-person-camera-v3",
+    "visibility-math-v1",
+    "zero-time-physics-v1"
+   ],
+   "sha256": "1d1a6bff11cf143bb89fd81a5332d49dc0f6ebea176f3c61cfb3343a83e7c873"
+  }
+ }
+}

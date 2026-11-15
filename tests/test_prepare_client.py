@@ -14,6 +14,7 @@ from aoa.client.patches import physics_timestep
 from aoa.client import prepare as setup
 from aoa.client.patches.station_host import STABLE_SHA256
 from aoa.paths import ROOT
+from tests import support_patches
 
 SOURCE = ROOT / "game/2.9.2/AOACLIENT.EXE.orig"
 
@@ -174,19 +175,10 @@ class SyntheticClientTests(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        from tests import support_patches
         cls.pristine = support_patches.synthetic_pristine()
-        pristine_sha = hashlib.sha256(cls.pristine).hexdigest()
-        with patch.object(base, "PRISTINE_292", pristine_sha):
-            stable_sha = hashlib.sha256(base.configure(cls.pristine)[0]).hexdigest()
-        cls.hashes = (patch.object(base, "PRISTINE_292", pristine_sha),
-                      patch.object(setup, "STABLE_SHA256", stable_sha),
-                      patch.object(physics_timestep, "STABLE_SHA256", stable_sha))
 
     def setUp(self):
-        for mocked in self.hashes:
-            mocked.start()
-            self.addCleanup(mocked.stop)
+        self.enterContext(support_patches.synthetic_client(self.pristine))
         temp = tempfile.TemporaryDirectory()
         self.addCleanup(temp.cleanup)
         self.exe = Path(temp.name) / "AOACLIENT.EXE"

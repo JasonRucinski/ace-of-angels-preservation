@@ -7,6 +7,7 @@ pe_facts.json) and every patch's original bytes at its sites. Used by
 test_patch_layout, test_prepare_client and test_client_launcher. Standard
 library and aoa only; no game file is read.
 """
+import contextlib
 import hashlib
 import json
 import struct
@@ -89,6 +90,20 @@ def synthetic_pristine():
                     owner[offset + i] = (byte, name)
                     image[offset + i] = byte
     return bytes(image)
+
+
+@contextlib.contextmanager
+def synthetic_client(pristine=None):
+    """Make the preparation code accept the synthetic client: its pristine and
+    stability-patched hashes stand in for the real 2.9.2 ones."""
+    pristine = synthetic_pristine() if pristine is None else pristine
+    pristine_sha = hashlib.sha256(pristine).hexdigest()
+    with mock.patch.object(base, "PRISTINE_292", pristine_sha):
+        stable_sha = hashlib.sha256(base.configure(pristine)[0]).hexdigest()
+    with mock.patch.object(base, "PRISTINE_292", pristine_sha), \
+            mock.patch.object(prepare, "STABLE_SHA256", stable_sha), \
+            mock.patch.object(physics_timestep, "STABLE_SHA256", stable_sha):
+        yield
 
 
 def region(offset, old, new):

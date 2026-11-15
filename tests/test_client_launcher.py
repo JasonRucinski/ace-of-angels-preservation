@@ -55,18 +55,10 @@ class SyntheticLauncherTests(unittest.TestCase):
     """apply_settings on the synthetic client of tests/support_patches.py; game-free."""
 
     def setUp(self):
-        import hashlib
-        from aoa.client import base
-        from aoa.client.patches import physics_timestep
         from tests import support_patches
         pristine = support_patches.synthetic_pristine()
-        pristine_sha = hashlib.sha256(pristine).hexdigest()
-        with patch.object(base, "PRISTINE_292", pristine_sha):
-            stable_sha = hashlib.sha256(base.configure(pristine)[0]).hexdigest()
-        for mocked in (patch.object(base, "PRISTINE_292", pristine_sha),
-                       patch.object(setup, "STABLE_SHA256", stable_sha),
-                       patch.object(physics_timestep, "STABLE_SHA256", stable_sha),
-                       patch.object(setup, "check_assets", return_value=0),
+        self.enterContext(support_patches.synthetic_client(pristine))
+        for mocked in (patch.object(setup, "check_assets", return_value=0),
                        patch.object(launcher, "require_closed")):
             mocked.start()
             self.addCleanup(mocked.stop)
