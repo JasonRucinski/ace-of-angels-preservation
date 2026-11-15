@@ -21,6 +21,7 @@ that the engine and prepare's composition write exactly these regions.
 Standard library only; no game file is read.
 """
 import json
+import re
 import struct
 import sys
 import unittest
@@ -132,6 +133,15 @@ class PatchLayoutTests(unittest.TestCase):
                 for _, regions in p.variants:
                     vas = [r.va for r in regions]
                     self.assertEqual(len(vas), len(set(vas)))
+
+    def test_patch_level_table_in_the_docs_matches_the_registry(self):
+        text = (ROOT / "docs/client-setup.md").read_text(encoding="utf-8")
+        table = text[text.index("### Patch levels"):].split("\n\n")[2]
+        documented = {}
+        for row in table.splitlines()[2:]:
+            version, ids = (cell.strip() for cell in row.strip("|").split("|"))
+            documented[None if "not recorded" in version else int(version)] = re.findall(r"`([^`]+)`", ids)
+        self.assertEqual(documented, registry.levels())
 
     def test_reservations_disjoint_and_in_bounds(self):
         for table, bounds in ((layout.CAVES, TEXT_PADDING), (layout.DATA, DATA_TAIL)):
