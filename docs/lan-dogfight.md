@@ -62,22 +62,25 @@ and `-TestLossPercent` rehearse internet conditions on the LAN
 powershell -NoProfile -ExecutionPolicy Bypass -File tools/start_lan_dogfight.ps1 -HostAddress 192.168.0.61
 ```
 
-The launcher defaults to two players. Add `-MaxPlayers 4` or `-MaxPlayers 8` for
+The script is a wrapper around `tools/aoa_host.py` (the same headless host the
+Linux service runs) and defaults to two players. Add `-MaxPlayers 4` or `-MaxPlayers 8` for
 capacity checks. This is a configuration limit, not verified capacity. (The
 host window and the server itself default to 8.) Ctrl+C stops the host. Logs
 rotate under `work/host/lan-dogfight.jsonl` and omit raw payloads. `-Map`
 accepts any map the server accepts, and the launcher prints the map, limits
 and player count the server reports.
 
-The equivalent Python command is:
+The equivalent Python command is
+`.venv/Scripts/python.exe -I tools/aoa_host.py run --profile lan-dogfight --bind-address 192.168.0.61 --max-players 2 --console`,
+which starts the server as follows (without the restart supervision):
 
 ```powershell
 .venv/Scripts/python.exe -I tools/station_stub.py game/2.9.2/SCRTY.BIN work/lan-dogfight.jsonl --profile lan-dogfight --bind-address 192.168.0.61 --max-players 2
 ```
 
 All three listeners bind the `--bind-address`, and the server list gives
-clients that same address. (`--advertised-address` is deprecated: it had to
-equal the bind address, so it changed nothing.) A nonexistent local address or occupied
+clients that same address. (`--advertised-address`, which had to equal the
+bind address and so changed nothing, was removed on 15 November 2026.) A nonexistent local address or occupied
 port fails startup. Existing diagnostic/local profiles still bind `127.0.0.1`.
 
 ## Each client PC (including the host if it also plays)

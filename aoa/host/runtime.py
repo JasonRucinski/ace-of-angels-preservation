@@ -7,29 +7,23 @@ import os
 import queue
 import selectors
 import socket
-import sys
 import threading
 import time
 from pathlib import Path
 from collections import Counter, OrderedDict
 
+from aoa.host import object_slots as slots
+from aoa.host.defaults import (OBJECT_PROFILES, OBJECT_RULE, requirement, ARENA_JOINS, BACKDROPS, DEFAULT_BACKDROP, DEFAULT_MAP, DOGFIGHT_MAX_PLAYERS,
+                               DOGFIGHT_PROFILES, GUEST_PROFILES, HOST_DEFAULTS, LOOPBACK, LOOPBACK_PROFILES,
+                               MANAGED, PEER_TIMEOUT, PORTS, PRIVATE_NETWORKS, PROFILES, STATION_ADMISSIONS,
+                               SUSTAINED_PROFILES, VPN_NETWORKS)
+from aoa.host.vessels import DEFAULT_VESSEL, SELECTABLE_VESSELS
 from aoa.maps import registry
 
-DOGFIGHT_PROFILES = ("lan-dogfight", "vpn-dogfight")
-PRIVATE_NETWORKS = ("10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16")
-# Tailscale and other overlay networks assign addresses from the shared
-# CGNAT range. Binding one requires it to be this host's own interface.
-VPN_NETWORKS = ("100.64.0.0/10",)
-# The one table of match defaults; host_control and dedicated_host import it.
-HOST_DEFAULTS = {"kill_limit": 20, "time_limit_seconds": 600, "max_players": 8}
-DEFAULT_VESSEL = "Ym Khtat"
-# Every .Sco object in the 2.9.2 AoAObjects.odb with an engine, pods
-# excluded (work/2.9.2/sco.json): the fighters the in-flight menu offers.
-SELECTABLE_VESSELS = frozenset((
-    "AlphaFighter", "Dafusha", "Dasibaz", "Eagle", "Etat'Illraku", "Foushar", "Grathven", "Hartra",
-    "IBCH", "Janha Vari", "Kafic", "MBB", "Meskvak Su", "Mkulat", "N'Goc", "Naroch", "Natak'Illraku",
-    "Rchat", "Rhino", "Saksatar", "Shrike", "Tekan", "Test Missile Boat", "Tholfus", "Ummra Viazyem",
-    "Vagym", "Vasa Chovo", "Vermok", "Vrak Stat", "Yagari", "Ym Khtat", "Zkole"))
+__all__ = ["ConfigError", "DatagramBudget", "EventLog", "StationTCPServer", "build_parser", "parse_args",
+           # also read from here by older callers
+           "DOGFIGHT_PROFILES", "PRIVATE_NETWORKS", "VPN_NETWORKS", "HOST_DEFAULTS", "DEFAULT_VESSEL",
+           "SELECTABLE_VESSELS"]
 
 
 class ConfigError(ValueError):
@@ -77,79 +71,57 @@ class DatagramBudget:
         return allowed
 
 
-def parse_args(argv=None, *, raise_errors=False):
-    """Validated server settings. With raise_errors, an invalid setting raises
-    ConfigError for in-process callers instead of printing usage and exiting."""
+def build_parser(raise_errors=False):
+    """The server's argparse parser (aoa/host/flagdoc.py builds the docs table from it)."""
     parser = _Parser(description="AoA local diagnostics and private LAN/VPN dogfight relay")
     parser.raise_errors = raise_errors
     parser.add_argument("key", type=Path, help="256-byte SCRTY.BIN")
     parser.add_argument("log", type=Path, help="rotating JSONL output")
-    parser.add_argument("--profile", choices=("diagnostic", "local-relay", "local-guests") + DOGFIGHT_PROFILES,
-                        default="diagnostic")
-    parser.add_argument("--bind-address", default="127.0.0.1",
+    parser.add_argument("--profile", choices=PROFILES, default="diagnostic",
+                        help="diagnostic listens only; local-relay and local-guests serve this PC; "
+                             "lan-dogfight and vpn-dogfight a private LAN or VPN address")
+    parser.add_argument("--bind-address", default=LOOPBACK,
                         help="specific local IPv4; LAN profile requires RFC1918, VPN profile also 100.64.0.0/10")
-    # Deprecated: it must equal --bind-address, so it changes nothing.
-    parser.add_argument("--advertised-address", help=argparse.SUPPRESS)
-    parser.add_argument("--map", choices=registry.MAP_NAMES, default="CTF_arena",
-                        help="advertised terrain; with --experimental-terrain, the map a patched client loads")
-    parser.add_argument("--backdrop", choices=("spacebkgd", "spacebkgd2", "spacebkgd3", "spacebkgd5", "spacebkgd6"),
-                        default="spacebkgd3")
-    parser.add_argument("--port", type=int, default=5033)
-    parser.add_argument("--arena-port", type=int, default=5031)
-    parser.add_argument("--tcp", type=int, default=None)
-    for flag in ("ack", "arena", "experimental-flight", "experimental-relay", "experimental-object", "experimental-teams"):
-        parser.add_argument("--" + flag, action=argparse.BooleanOptionalAction, default=None)
-    parser.add_argument("--pilot", default="testpilot")
-    parser.add_argument("--seconds", type=float, default=0)
-    parser.add_argument("--peer-timeout", type=float, default=30)
+    parser.add_argument("--map", choices=registry.MAP_NAMES, default=DEFAULT_MAP,
+                        help="advertised terrain; with --terrain, the map a patched client loads")
+    parser.add_argument("--backdrop", choices=BACKDROPS, default=DEFAULT_BACKDROP,
+                        help="space backdrop named in the server list; the client accepts only these")
+    parser.add_argument("--port", type=int, default=PORTS["station"], help="Station UDP port; 0 picks a free one (tests)")
+    parser.add_argument("--arena-port", type=int, default=PORTS["arena"], help="arena UDP port; 0 picks a free one")
+    parser.add_argument("--tcp", type=int, default=None,
+                        help=f"Station list TCP port; {PORTS['tcp']} in every relay profile, off in diagnostic")
+    parser.add_argument("--ack", action=argparse.BooleanOptionalAction, default=None,
+                        help="answer Station and arena handshakes (on in every relay profile)")
+    parser.add_argument("--arena", action=argparse.BooleanOptionalAction, default=None,
+                        help="open the arena UDP port (on in every relay profile)")
+    parser.add_argument("--relay", action=argparse.BooleanOptionalAction, default=None,
+                        help="assign player tags and relay movement and combat (on in every relay profile)")
+    # Old names, kept for one release; hidden from --help.
+    parser.add_argument("--experimental-relay", dest="relay", action=argparse.BooleanOptionalAction,
+                        default=argparse.SUPPRESS, help=argparse.SUPPRESS)
+    parser.add_argument("--pilot", default="testpilot",
+                        help="synthetic Station pilot name, 1..19 ASCII characters (a prefix with guest profiles)")
+    parser.add_argument("--seconds", type=float, default=0, help="stop after this many seconds; 0 runs until stopped")
+    parser.add_argument("--peer-timeout", type=float, default=PEER_TIMEOUT,
+                        help="seconds of silence before a Station or arena peer expires")
     parser.add_argument("--max-players", type=int, default=HOST_DEFAULTS["max_players"],
                         help="simultaneous arena admissions, 1..49")
-    parser.add_argument("--spawn-axis", choices=("x", "z"), default="x",
-                        help="diagnostic relay spawn line; ships initially face +z")
-    parser.add_argument("--spawn-spacing", type=float, default=1000.0, help="distance between relay spawns")
     parser.add_argument("--kill-limit", type=int, default=HOST_DEFAULTS["kill_limit"],
                         help="relay match ends at this many kills; 0 disables")
     parser.add_argument("--time-limit", type=float, default=float(HOST_DEFAULTS["time_limit_seconds"]),
                         help="relay match length in seconds; 0 disables")
-    parser.add_argument("--managed-session", action="store_true",
-                        help="dedicated controller: warn, drain and exit 75 after a match or admission limit")
-    parser.add_argument("--next-map", choices=registry.MAP_NAMES,
-                        help="next map announced by the dedicated controller")
-    parser.add_argument("--restart-warning", type=float, default=30, help="managed restart countdown in seconds")
-    parser.add_argument("--recycle-arena-joins", type=int, default=40)
-    parser.add_argument("--recycle-station-admissions", type=int, default=56)
-    parser.add_argument("--idle-recycle", type=float, default=300,
-                        help="managed session: recycle used admissions after this long with no arena players")
-    parser.add_argument("--raw-capture", action="store_true")
-    parser.add_argument("--experimental-terrain", action="store_true",
-                        help="native terrain for --map; requires the online-terrain-v2 (or later) client patch "
-                             "(v1 clients load Arena1a only)")
+    parser.add_argument("--raw-capture", action="store_true",
+                        help="log payloads and addresses too (private diagnostic captures only)")
+    parser.add_argument("--terrain", action="store_true",
+                        help=f"native terrain for --map; {requirement('terrain')} "
+                             "(clients without it join in empty space)")
+    parser.add_argument("--experimental-terrain", dest="terrain", action="store_true",
+                        default=argparse.SUPPRESS, help=argparse.SUPPRESS)
     parser.add_argument("--spawn-at", type=float, nargs=3, metavar=("X", "Y", "Z"),
                         help="first relay spawn; defaults to the map's viewing spawn with terrain, else the origin")
-    parser.add_argument("--powerup-zones", type=Path, metavar="TRN",
-                        help="place power-ups in the kind-6 zones of this 2.9.2 terrain file "
-                             "(e.g. game/2.9.2/jrmap292.trn); needs the relay")
-    parser.add_argument("--target-ships", type=int, default=0, metavar="N",
-                        help="N passive hostile ships ahead of the spawn that the target keys can select "
-                             "(0..98); needs the relay")
     parser.add_argument("--start-vessel", default=DEFAULT_VESSEL, choices=sorted(SELECTABLE_VESSELS), metavar="NAME",
                         help=f"fighter every pilot starts in until they pick another (default {DEFAULT_VESSEL}); "
                              "needs the relay")
-    parser.add_argument("--arena1a-buoys", type=Path, metavar="GOB",
-                        help="restore ten native navigation buoys from original Arena1a.Gob; requires Arena1a terrain and sustained delivery")
-    parser.add_argument('--navigation-buoys', type=Path, metavar='EXPORT_DIR',
-                        help='restore the selected map navigation objects from exported AOAOBJECTS, with original archive order')
-    parser.add_argument('--buoy-trn', type=Path, help='original JRMAP.TRN for navigation; defaults beside SCRTY.BIN')
-    parser.add_argument('--map-waypoints', type=Path, metavar='TRN',
-                        help='navigation waypoints (kind 3) of a 2.9.2 terrain file from tools/make_map.py')
-    parser.add_argument('--turret-trial', type=Path, metavar='EXPORT_DIR',
-                        help='inactive five-turret Arena1a placement trial; model assignment is provisional and orientation is zero')
-    parser.add_argument('--warp-trial', type=Path, metavar='EXPORT_DIR',
-                        help='nine native Arena1a warp gates on loopback; local client transit, editor orientation not restored')
-    parser.add_argument("--experimental-reliable-combat", action="store_true",
-                        help="ordered combat delivery; retires peers at 30 total essential events")
-    parser.add_argument("--experimental-protection-probe", action="store_true",
-                        help="single-client explicit 0x81 probe; requires the opt-in prepared client")
     parser.add_argument("--sustained-delivery", action=argparse.BooleanOptionalAction, default=None,
                         help="windowed ordered delivery of despawns/combat events for a whole session "
                              "(default on for vpn-dogfight); see aoa/host/delivery.py")
@@ -157,63 +129,120 @@ def parse_args(argv=None, *, raise_errors=False):
                         help="seconds a stale datagram may trail later ones (sustained delivery)")
     parser.add_argument("--status-file", type=Path, help="JSON host status, rewritten every two seconds")
     parser.add_argument("--console", action="store_true", help="read host commands (status, kick, ban) from stdin")
-    parser.add_argument("--impair-rtt-ms", type=float, default=0.0, help="TEST ONLY: added round trip")
-    parser.add_argument("--impair-jitter-ms", type=float, default=0.0, help="TEST ONLY: random extra delay per direction")
-    parser.add_argument("--impair-loss", type=float, default=0.0, help="TEST ONLY: percent dropped per direction")
-    parser.add_argument("--impair-duplicate", type=float, default=0.0, help="TEST ONLY: percent duplicated per direction")
-    parser.add_argument("--impair-seed", type=int, help="TEST ONLY: repeatable impairment")
-    parser.add_argument("--log-max-bytes", type=int, default=1024 * 1024)
-    parser.add_argument("--log-backups", type=int, default=3)
+    parser.add_argument("--log-max-bytes", type=int, default=1024 * 1024, help="log file size before rotation")
+    parser.add_argument("--log-backups", type=int, default=3, help="rotated log files kept, 1..10")
     parser.add_argument("--print-config", action="store_true", help="validate and print settings without reading key or binding")
+
+    objects = parser.add_argument_group("map objects", "server-placed objects; each needs the relay")
+    objects.add_argument("--powerup-zones", type=Path, metavar="TRN",
+                         help="place power-ups in the kind-6 zones of this 2.9.2 terrain file "
+                              "(e.g. game/2.9.2/jrmap292.trn)")
+    objects.add_argument("--target-ships", type=int, default=0, metavar="N",
+                         help="N passive hostile ships ahead of the spawn that the target keys can select "
+                              f"(0..{slots.target_limit()})")
+    objects.add_argument('--navigation-buoys', type=Path, metavar='EXPORT_DIR',
+                         help='restore the selected map navigation objects from exported AOAOBJECTS, with original archive order')
+    objects.add_argument('--buoy-trn', type=Path, help='original JRMAP.TRN for navigation on JRMAP; defaults beside SCRTY.BIN')
+    objects.add_argument('--map-waypoints', type=Path, metavar='TRN',
+                         help='navigation waypoints (kind 3) of a 2.9.2 terrain file from tools/make_map.py')
+    objects.add_argument('--turret-trial', type=Path, metavar='EXPORT_DIR',
+                         help='inactive five-turret Arena1a placement trial; model assignment is provisional and orientation is zero')
+    objects.add_argument('--warp-trial', type=Path, metavar='EXPORT_DIR',
+                         help='nine native Arena1a warp gates on loopback; local client transit, editor orientation not restored')
+
+    managed = parser.add_argument_group("managed session", "the headless host's rotation; each needs --managed-session")
+    managed.add_argument("--managed-session", action="store_true",
+                         help="warn, drain and exit 75 after a match or admission limit")
+    managed.add_argument("--next-map", choices=registry.MAP_NAMES, help="next map announced")
+    managed.add_argument("--restart-warning", type=float, default=MANAGED["restart_warning_seconds"],
+                         help="restart countdown in seconds")
+    managed.add_argument("--recycle-arena-joins", type=int, default=MANAGED["recycle_arena_joins"],
+                         help=f"end the session after this many arena joins (below the {ARENA_JOINS} per run)")
+    managed.add_argument("--recycle-station-admissions", type=int, default=MANAGED["recycle_station_admissions"],
+                         help=f"end the session after this many Station logins (below the {STATION_ADMISSIONS} per run)")
+    managed.add_argument("--idle-recycle", type=float, default=MANAGED["idle_recycle_seconds"],
+                         help="recycle used admissions after this long with no arena players")
+
+    diagnostics = parser.add_argument_group("diagnostics", "protocol experiments and test conditions; not for play")
+    diagnostics.add_argument("--experimental-flight", action=argparse.BooleanOptionalAction, default=None,
+                             help="flight entry without the relay")
+    diagnostics.add_argument("--experimental-object", action=argparse.BooleanOptionalAction, default=None,
+                             help="one passive test object (slot 1)")
+    diagnostics.add_argument("--experimental-teams", action=argparse.BooleanOptionalAction, default=None,
+                             help="free-for-all teams (crashed a client: findings 9.30-9.31)")
+    diagnostics.add_argument("--experimental-reliable-combat", action="store_true",
+                             help="ordered combat delivery; retires peers at 30 total essential events")
+    diagnostics.add_argument("--experimental-protection-probe", action="store_true",
+                             help="single-client explicit 0x81 probe; requires the opt-in prepared client")
+    diagnostics.add_argument("--spawn-axis", choices=("x", "z"), default="x",
+                             help="relay spawn line; ships initially face +z")
+    diagnostics.add_argument("--spawn-spacing", type=float, default=1000.0, help="distance between relay spawns")
+    diagnostics.add_argument("--impair-rtt-ms", type=float, default=0.0, help="TEST ONLY: added round trip")
+    diagnostics.add_argument("--impair-jitter-ms", type=float, default=0.0, help="TEST ONLY: random extra delay per direction")
+    diagnostics.add_argument("--impair-loss", type=float, default=0.0, help="TEST ONLY: percent dropped per direction")
+    diagnostics.add_argument("--impair-duplicate", type=float, default=0.0, help="TEST ONLY: percent duplicated per direction")
+    diagnostics.add_argument("--impair-seed", type=int, help="TEST ONLY: repeatable impairment")
+    return parser
+
+
+def parse_args(argv=None, *, raise_errors=False):
+    """Validated server settings. With raise_errors, an invalid setting raises
+    ConfigError for in-process callers instead of printing usage and exiting."""
+    parser = build_parser(raise_errors)
     args = parser.parse_args(argv)
-    for flag in ("ack", "arena", "experimental_flight", "experimental_relay", "experimental_object", "experimental_teams"):
+
+    def given(name):
+        return getattr(args, name) != parser.get_default(name)
+
+    for flag in ("ack", "arena", "experimental_flight", "relay", "experimental_object", "experimental_teams"):
         if getattr(args, flag) is None:
-            setattr(args, flag, args.profile in ("local-relay", "local-guests") + DOGFIGHT_PROFILES
-                    and flag in ("ack", "arena", "experimental_relay"))
-    args.guest_sessions = args.profile in ("local-guests",) + DOGFIGHT_PROFILES
+            setattr(args, flag, args.profile in LOOPBACK_PROFILES + DOGFIGHT_PROFILES
+                    and flag in ("ack", "arena", "relay"))
+    args.guest_sessions = args.profile in GUEST_PROFILES
     if args.sustained_delivery is None:
-        args.sustained_delivery = args.profile == "vpn-dogfight"
-    if args.experimental_terrain and not (
-            args.profile in DOGFIGHT_PROFILES or
-            args.profile in ("local-relay", "local-guests")):
-        parser.error("experimental terrain requires a dogfight or loopback relay/guest profile")
-    if args.powerup_zones is not None and not args.experimental_relay:
-        parser.error("--powerup-zones requires the relay")
-    if not 0 <= args.target_ships <= 98:
-        parser.error("--target-ships must be 0..98")
-    if args.target_ships and not args.experimental_relay:
+        args.sustained_delivery = args.profile in SUSTAINED_PROFILES
+    if args.terrain and args.profile not in DOGFIGHT_PROFILES + LOOPBACK_PROFILES:
+        parser.error("--terrain requires a dogfight or loopback relay/guest profile")
+    # Settings that would be ignored in this mode are refused (audit H10).
+    for name in ("next_map", "restart_warning", "recycle_arena_joins", "recycle_station_admissions", "idle_recycle"):
+        if given(name) and not args.managed_session:
+            parser.error(f"--{name.replace('_', '-')} needs --managed-session")
+    for name in ("kill_limit", "time_limit", "spawn_axis", "spawn_spacing", "start_vessel", "powerup_zones"):
+        if given(name) and not args.relay:
+            parser.error(f"--{name.replace('_', '-')} requires the relay")
+    if given("reorder_margin") and not args.sustained_delivery:
+        parser.error("--reorder-margin needs sustained delivery")
+    if given("buoy_trn") and not (args.navigation_buoys and args.map == "JRMAP"):
+        parser.error("--buoy-trn needs --navigation-buoys on JRMAP")
+    if not 0 <= args.target_ships <= slots.target_limit():
+        parser.error(f"--target-ships must be 0..{slots.target_limit()}")
+    if args.target_ships and not args.relay:
         parser.error("--target-ships requires the relay")
-    if args.start_vessel != DEFAULT_VESSEL and not args.experimental_relay:
-        parser.error("--start-vessel requires the relay")
+    for name in OBJECT_PROFILES:
+        if getattr(args, name) is not None and args.profile not in OBJECT_PROFILES[name]:
+            parser.error(f"--{name.replace('_', '-')} is not offered on {args.profile} ({OBJECT_RULE})")
     if args.warp_trial is not None:
-        if not (args.profile in ('local-relay', 'local-guests') and args.experimental_relay
-                and args.experimental_terrain and args.sustained_delivery and args.map == 'Arena1a'):
+        if not (args.relay and args.terrain and args.sustained_delivery and args.map == 'Arena1a'):
             parser.error('--warp-trial requires a loopback relay, Arena1a terrain and sustained delivery')
-        if args.target_ships > 69:
-            parser.error('--warp-trial reserves slots 71..79; at most 69 target ships')
+        if args.target_ships > slots.target_limit(["warp_gates"]):
+            parser.error(f'--warp-trial reserves {slots.reservation("warp_gates")}; '
+                         f'at most {slots.target_limit(["warp_gates"])} target ships')
         if not args.warp_trial.is_dir():
             parser.error('--warp-trial requires an original exported AOAOBJECTS directory')
     if args.turret_trial is not None:
-        if not (args.experimental_relay and args.experimental_terrain and args.sustained_delivery and args.map == 'Arena1a'):
+        if not (args.relay and args.terrain and args.sustained_delivery and args.map == 'Arena1a'):
             parser.error('--turret-trial requires relay, Arena1a terrain and sustained delivery')
-        if args.target_ships > 78:
-            parser.error('--turret-trial reserves slots 80..84; at most 78 target ships')
+        if args.target_ships > slots.target_limit(["turrets"]):
+            parser.error(f'--turret-trial reserves {slots.reservation("turrets")}; '
+                         f'at most {slots.target_limit(["turrets"])} target ships')
         if not args.turret_trial.is_dir():
             parser.error('--turret-trial requires an original exported AOAOBJECTS directory')
-    if args.arena1a_buoys is not None:
-        if not (args.experimental_relay and args.experimental_terrain and args.map == 'Arena1a' and args.sustained_delivery):
-            parser.error('--arena1a-buoys requires relay, Arena1a terrain and --sustained-delivery')
-        if args.target_ships > 88:
-            parser.error('--arena1a-buoys reserves object slots 90..99; at most 88 target ships')
-        if not args.arena1a_buoys.is_file():
-            parser.error('--arena1a-buoys requires an existing original layout file')
     if args.navigation_buoys is not None:
-        if args.arena1a_buoys:
-            parser.error('choose --navigation-buoys or the legacy --arena1a-buoys option')
-        if not (args.experimental_relay and args.experimental_terrain and args.sustained_delivery):
+        if not (args.relay and args.terrain and args.sustained_delivery):
             parser.error('--navigation-buoys requires relay, terrain and sustained delivery')
-        if args.target_ships > 88:
-            parser.error('--navigation-buoys reserves slots 90..99; at most 88 target ships')
+        if args.target_ships > slots.target_limit(["buoys"]):
+            parser.error(f'--navigation-buoys reserves {slots.reservation("buoys")}; '
+                         f'at most {slots.target_limit(["buoys"])} target ships')
         if not args.navigation_buoys.is_dir():
             parser.error('--navigation-buoys requires an exported AOAOBJECTS directory')
         if args.map == 'JRMAP':
@@ -221,12 +250,13 @@ def parse_args(argv=None, *, raise_errors=False):
             if not trn.is_file():
                 parser.error(f'--navigation-buoys on JRMAP needs the original JRMAP.TRN: no file {trn} (see --buoy-trn)')
     if args.map_waypoints is not None:
-        if args.arena1a_buoys or args.navigation_buoys:
+        if args.navigation_buoys:
             parser.error('--map-waypoints replaces the other navigation options')
-        if not (args.experimental_relay and args.experimental_terrain and args.sustained_delivery):
+        if not (args.relay and args.terrain and args.sustained_delivery):
             parser.error('--map-waypoints requires relay, terrain and sustained delivery')
-        if args.target_ships > 88:
-            parser.error('--map-waypoints reserves slots 90..99; at most 88 target ships')
+        if args.target_ships > slots.target_limit(["buoys"]):
+            parser.error(f'--map-waypoints reserves {slots.reservation("buoys")}; '
+                         f'at most {slots.target_limit(["buoys"])} target ships')
         if not args.map_waypoints.is_file():
             parser.error(f'--map-waypoints: no file {args.map_waypoints}')
     if args.powerup_zones is not None and not args.powerup_zones.is_file():
@@ -236,29 +266,22 @@ def parse_args(argv=None, *, raise_errors=False):
             parser.error("--spawn-at coordinates must be finite and within 1e7")
         args.spawn_origin = tuple(args.spawn_at)
     else:
-        args.spawn_origin = registry.spawn(args.map) if args.experimental_terrain else None
-    if args.tcp is None and args.profile in ("local-relay", "local-guests") + DOGFIGHT_PROFILES:
-        args.tcp = 5034
-    if args.advertised_address is not None:
-        print("warning: --advertised-address is deprecated and changes nothing; it must equal --bind-address",
-              file=sys.stderr)
-    args.advertised_address = args.advertised_address or args.bind_address
+        args.spawn_origin = registry.spawn(args.map) if args.terrain else None
+    if args.tcp is None and args.profile in LOOPBACK_PROFILES + DOGFIGHT_PROFILES:
+        args.tcp = PORTS["tcp"]
     try:
         bind = ipaddress.IPv4Address(args.bind_address)
-        advertised = ipaddress.IPv4Address(args.advertised_address)
     except ipaddress.AddressValueError:
-        parser.error("bind and advertised addresses must be literal IPv4 addresses")
-    if bind != advertised:
-        parser.error("advertised address must match the bound address")
+        parser.error("--bind-address must be a literal IPv4 address")
     if args.profile in DOGFIGHT_PROFILES:
         networks = PRIVATE_NETWORKS + (VPN_NETWORKS if args.profile == "vpn-dogfight" else ())
         if not any(bind in ipaddress.IPv4Network(network) for network in networks):
             parser.error(f"{args.profile} requires a specific IPv4 address on this host in " + ", ".join(networks))
-        if not (args.ack and args.arena and args.experimental_relay) or args.experimental_flight:
+        if not (args.ack and args.arena and args.relay) or args.experimental_flight:
             parser.error(f"{args.profile} requires replies, arena and relay; standalone flight is unsupported")
         if args.experimental_reliable_combat or args.experimental_protection_probe or args.experimental_object or args.experimental_teams:
             parser.error(f"{args.profile} does not enable experimental combat delivery, protection, objects or teams")
-        if args.max_players > 8:
+        if args.max_players > DOGFIGHT_MAX_PLAYERS:
             parser.error(f"{args.profile} supports at most eight configured players; tested capacity may be lower")
     elif not bind.is_loopback:
         parser.error("diagnostic/local profiles require IPv4 loopback; use lan-dogfight or vpn-dogfight")
@@ -274,24 +297,24 @@ def parse_args(argv=None, *, raise_errors=False):
         parser.error("--spawn-spacing must be finite, positive and at most 100000")
     if not 0 <= args.kill_limit <= 1000 or not math.isfinite(args.time_limit) or not 0 <= args.time_limit <= 86400:
         parser.error("--kill-limit must be 0..1000 and --time-limit 0..86400 seconds")
-    if not 1 <= args.max_players <= 49:
-        parser.error("--max-players must be 1..49")
+    if not 1 <= args.max_players <= ARENA_JOINS:
+        parser.error(f"--max-players must be 1..{ARENA_JOINS}")
     if not math.isfinite(args.restart_warning) or not 0 <= args.restart_warning <= 300:
         parser.error("--restart-warning must be 0..300 seconds")
     if not math.isfinite(args.idle_recycle) or not 0 <= args.idle_recycle <= 86400:
         parser.error("--idle-recycle must be 0..86400 seconds")
-    if not 1 <= args.recycle_arena_joins <= 48 or not 1 <= args.recycle_station_admissions <= 63:
+    if not 1 <= args.recycle_arena_joins < ARENA_JOINS or not 1 <= args.recycle_station_admissions < STATION_ADMISSIONS:
         parser.error("recycling thresholds must be below the 49 arena / 64 Station lifetime limits")
-    if args.managed_session and not (args.experimental_relay and args.sustained_delivery and args.next_map):
+    if args.managed_session and not (args.relay and args.sustained_delivery and args.next_map):
         parser.error("--managed-session requires the relay, sustained delivery and --next-map")
-    if args.experimental_flight or args.experimental_relay:
+    if args.experimental_flight or args.relay:
         if not args.arena or not args.ack:
-            parser.error("experimental flight/relay requires --arena and --ack")
-    if args.experimental_teams and not args.experimental_relay:
+            parser.error("experimental flight and the relay require --arena and --ack")
+    if args.experimental_teams and not args.relay:
         parser.error("experimental teams requires the relay")
-    if args.experimental_reliable_combat and not args.experimental_relay:
+    if args.experimental_reliable_combat and not args.relay:
         parser.error("reliable combat requires the relay")
-    if args.sustained_delivery and (not args.experimental_relay or args.experimental_reliable_combat
+    if args.sustained_delivery and (not args.relay or args.experimental_reliable_combat
                                     or args.experimental_protection_probe):
         parser.error("sustained delivery requires the relay and replaces the 30-event reliable experiments")
     if not math.isfinite(args.reorder_margin) or not 0.5 <= args.reorder_margin <= 30:
@@ -303,9 +326,9 @@ def parse_args(argv=None, *, raise_errors=False):
         if not math.isfinite(getattr(args, name)) or not 0 <= getattr(args, name) <= 50:
             parser.error(f"--{name.replace('_', '-')} must be 0..50 percent")
     if args.experimental_protection_probe and (
-            not args.experimental_flight or args.experimental_relay or args.max_players != 1):
+            not args.experimental_flight or args.relay or args.max_players != 1):
         parser.error("protection probe requires --experimental-flight --max-players 1 and no relay")
-    if args.experimental_object and not (args.experimental_flight or args.experimental_relay):
+    if args.experimental_object and not (args.experimental_flight or args.relay):
         parser.error("experimental object requires flight or relay")
     if args.log_max_bytes < 16384 or not 1 <= args.log_backups <= 10:
         parser.error("logs require at least 16384 bytes per file and 1..10 backups")

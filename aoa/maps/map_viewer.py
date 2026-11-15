@@ -6,8 +6,9 @@
 
 `install` converts the user's own JRMAP.TRN (2.0.0 record layout) into
 jrmap292.trn beside the client; nothing is downloaded. `serve` runs the
-loopback relay with --experimental-terrain, so a client prepared with
-online-terrain-v2 or later builds that map's native terrain on flight entry. The
+loopback relay with --terrain, so a client at patch level 11 or later
+(aoa/host/defaults.py CLIENT_PATCH_LEVELS) builds that map's native terrain on
+flight entry. The
 client loads terrain once per flight session: quit the client (Alt+Q, then
 close the relaunched copy) before switching maps.
 
@@ -67,7 +68,7 @@ def main():
     log.parent.mkdir(parents=True, exist_ok=True)
     command = [sys.executable, "-I", str(paths.entry("station_stub", ROOT)), str(args.game / "SCRTY.BIN"), str(log),
                "--profile", "local-relay", "--map", args.map, "--backdrop", args.backdrop,
-               "--experimental-terrain"]
+               "--terrain"]
     if args.spawn_at:
         command += ["--spawn-at", *map(str, args.spawn_at)]
     if args.seconds:

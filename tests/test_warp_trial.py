@@ -34,7 +34,7 @@ class WarpTests(unittest.TestCase):
         base = ['key', 'log', '--profile', 'local-relay', '--experimental-terrain',
                 '--sustained-delivery', '--map', 'Arena1a', '--warp-trial', str(SOURCE)]
         self.assertEqual(parse_args(base + ['--target-ships', '69']).target_ships, 69)
-        self.assertEqual(parse_args(base + ['--bind-address', '127.0.0.2']).advertised_address, '127.0.0.2')
+        self.assertEqual(parse_args(base + ['--bind-address', '127.0.0.2']).bind_address, '127.0.0.2')
         self.assertEqual(parse_args(base + ['--profile', 'local-guests']).profile, 'local-guests')
         for extra in (['--map', 'JRMAP'], ['--no-sustained-delivery'],
                       ['--no-experimental-relay'], ['--target-ships', '70'],

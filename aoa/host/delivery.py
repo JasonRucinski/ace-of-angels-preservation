@@ -2,9 +2,9 @@
 
 The client keeps the last 30 distinct reliable IDs per sender in a circular
 buffer (findings 9.13). An old copy executes again only if 30 newer distinct
-IDs reach the client first. The lifetime budget in station_stub's
-ReliableRemovals prevents that by never sending more than 30 IDs. This
-class prevents it with a time window instead, so delivery can continue for a
+IDs reach the client first. The lifetime budget of the diagnostic
+ReliableRemovals (aoa/host/diagnostics.py) prevents that by never sending
+more than 30 IDs. WindowedReliable, the engine for play, prevents it with a time window instead, so delivery can continue for a
 whole session.
 
 Assumption (stated, like TCP's maximum segment lifetime): a datagram is
@@ -22,10 +22,64 @@ abandoned after their deadline and later messages continue.
 """
 import math
 import struct
-from collections import deque
+from collections import OrderedDict, deque
 
 
-class WindowedReliable:
+class Delivery:
+    """What the server needs from an outbound reliable (0x1B) engine.
+
+    queue_message(peer, kind, body, now, essential=True)
+        the packet to send now, () when it waits behind earlier traffic, or
+        None when the peer's budget or queue is exhausted (the server then
+        retires the peer). Droppable (essential=False) events may be
+        abandoned after their deadline; essential ones retire the peer.
+    queue(peer, slot, now)      the despawn (0x2D) of a player slot, as above
+    acknowledge(peer, payload, now=None)  a 0x0F ACK; True if it matched
+    due(now)        (packets to resend now, peers whose essential event failed)
+    next_due()      the next time due() has work, or None
+    discard(peer)   forget a departed peer
+    pending         the unacknowledged events, keyed (peer, sequence)
+    expired         droppable events abandoned so far
+    """
+    expired = 0
+
+    def queue_message(self, peer, kind, body, now, essential=True):
+        raise NotImplementedError
+
+    def queue(self, peer, slot, now):
+        raise NotImplementedError
+
+    def acknowledge(self, peer, payload, now=None):
+        raise NotImplementedError
+
+    def due(self, now):
+        raise NotImplementedError
+
+    def next_due(self):
+        return None
+
+    def discard(self, peer):
+        raise NotImplementedError
+
+
+def engine(args, deadline):
+    """The delivery engine for these server settings.
+
+    Sustained delivery uses WindowedReliable, the engine for play. Without
+    it the bounded 30-event engine of aoa/host/diagnostics.py carries the
+    despawns (and, with --experimental-reliable-combat or the protection
+    probe, ordered combat): it is what a host without sustained delivery
+    has always sent, kept so that a lan-dogfight host without map objects
+    behaves as before.
+    """
+    if args.sustained_delivery:
+        return WindowedReliable(deadline=deadline, margin=args.reorder_margin)
+    from aoa.host.diagnostics import ReliableRemovals
+    return ReliableRemovals(deadline=deadline,
+                            ordered=args.experimental_reliable_combat or args.experimental_protection_probe)
+
+
+class WindowedReliable(Delivery):
     HISTORY = 30
     INTERVAL = 0.3
     MAX_INTERVAL = 2.0
@@ -150,3 +204,36 @@ class WindowedReliable:
         self.queues.pop(peer, None)
         self.history.pop(peer, None)
         self.sent.pop(peer, None)
+
+
+class InboundReliable:
+    """Per-channel/endpoint duplicate suppression for inbound 0x1B envelopes.
+
+    Mirrors the client's own receive history (a fixed count of recent IDs),
+    with a larger window. Callers ACK every copy, since an earlier ACK may
+    have been lost; only the first copy may cause side effects. Sequence zero
+    is not pre-filled: the client's send counter origin is unverified.
+    History outlives departure (endpoints are never reused); the table is
+    bounded instead. A replay older than WINDOW newer distinct IDs, or from
+    an endpoint evicted from the table, is treated as new, so handlers must
+    remain idempotent.
+    """
+    WINDOW = 64
+    MAX_ENDPOINTS = 512
+    # Repeated handshakes must be re-answered: the reply may have been lost.
+    REPLAYABLE = frozenset({0x0A})
+
+    def __init__(self):
+        self.history = OrderedDict()
+        self.duplicates = 0
+
+    def first(self, endpoint, sequence):
+        recent = self.history.pop(endpoint, None) or deque(maxlen=self.WINDOW)
+        self.history[endpoint] = recent
+        if len(self.history) > self.MAX_ENDPOINTS:
+            self.history.popitem(last=False)
+        if sequence in recent:
+            self.duplicates += 1
+            return False
+        recent.append(sequence)
+        return True

@@ -11,12 +11,14 @@ Type=simple
 User=aoa
 Group=aoa
 WorkingDirectory=/opt/ace-of-angels
-EnvironmentFile=/etc/ace-of-angels/host.env
+# Only for hosts still on the older rotation.json + host.env pair (aoa_host.py reads it too).
+EnvironmentFile=-/etc/ace-of-angels/host.env
 StateDirectory=ace-of-angels
 StateDirectoryMode=0750
 UMask=0027
-# tools/dedicated_host.py is the shim for aoa/host/dedicated.py: install aoa/ and tools/.
-ExecStart=/usr/bin/python3 -I -u /opt/ace-of-angels/tools/dedicated_host.py /etc/ace-of-angels/SCRTY.BIN /var/lib/ace-of-angels/host.jsonl --config /etc/ace-of-angels/rotation.json --state-file /var/lib/ace-of-angels/rotation-state.json --profile vpn-dogfight --bind-address ${AOA_BIND_ADDRESS} --max-players ${AOA_MAX_PLAYERS} --status-file /var/lib/ace-of-angels/status.json
+# tools/aoa_host.py is the shim for aoa/host/headless.py: install aoa/ and tools/.
+# It restarts a crashed game process itself (3 per 10 minutes); systemd restarts the controller.
+ExecStart=/usr/bin/python3 -I -u /opt/ace-of-angels/tools/aoa_host.py run /etc/ace-of-angels/host.json
 Restart=on-failure
 RestartSec=30
 # The controller stops its child; both unwind socket/log context managers.

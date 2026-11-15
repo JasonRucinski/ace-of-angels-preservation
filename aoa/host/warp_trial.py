@@ -5,13 +5,14 @@ host-authorized transit or restore editor orientation.
 """
 import struct
 
+from aoa.host import object_slots as slots
 from aoa.maps import navigation
 from aoa.maps.turret_hierarchy import hierarchy
 from aoa.maps.warp_routes import routes
 
-FIRST_INDEX, COUNT = 71, 9
+FIRST_INDEX, COUNT = slots.first("warp_gates"), slots.count("warp_gates")
 INDEX = FIRST_INDEX  # First-gate diagnostic compatibility.
-TAG = 0x40010000 | INDEX
+TAG = slots.OBJECT_TAG | INDEX
 GATE = 'Rail_Hy1 HyBase1_Rail'
 ROUTES = (
     (GATE, 'WarpTgt01'),
@@ -41,7 +42,7 @@ def placements(source):
 
 
 def tag(gate):
-    return 0x40010000 | (FIRST_INDEX + ROUTES.index((gate['name'], gate['destination_node'])))
+    return slots.OBJECT_TAG | (FIRST_INDEX + ROUTES.index((gate['name'], gate['destination_node'])))
 
 
 def load(gate):

@@ -3,33 +3,33 @@
 Planned child exit 75 advances the map. Unexpected exit or stale status stops
 the controller with an error so systemd applies its bounded crash restart.
 Players must quit/relaunch between sessions; this adds no client reconnect hook.
+
+This is the original command line of deployed Linux hosts (a rotation.json
+plus host.env arguments); it is kept working as it is. It builds a HostConfig
+and runs the shared Supervisor with no restarts of its own. New hosts use
+tools/aoa_host.py with one host.json (docs/linux-host.md).
 """
 import argparse
 import json
 import math
-import os
-import signal
-import subprocess
 import sys
 import time
 from pathlib import Path
 
 from aoa.host import ops
+from aoa.host.config import HostConfig
+from aoa.host.supervisor import HostProcess, RestartBudget, Supervisor, Watchdog, stop_process
 from aoa.maps import registry
-from aoa.host.runtime import HOST_DEFAULTS, ConfigError, parse_args as server_config
-from aoa import paths as aoa_paths
+from aoa.host.defaults import LIMITS, MANAGED, PORTS, SESSION_COMPLETE, requirement
+from aoa.host.runtime import ConfigError, parse_args as server_config
 
-SESSION_COMPLETE = 75
+__all__ = ["DEFAULTS", "SESSION_COMPLETE", "child_args", "host_config", "load_config", "load_state", "main",
+           "monitor", "run", "stop_child", "supervisor"]
 DEFAULTS = {
     "maps": ["CTF_arena", "CTF_arena_b", "ast_fld_a"],
-    "kill_limit": HOST_DEFAULTS["kill_limit"],
-    "time_limit_seconds": HOST_DEFAULTS["time_limit_seconds"],
-    "restart_warning_seconds": 30,
-    "intermission_seconds": 5,
-    "idle_recycle_seconds": 300,
-    "recycle_arena_joins": 40,
-    "recycle_station_admissions": 56,
-    "health_timeout_seconds": 30,
+    "kill_limit": LIMITS["kill_limit"],
+    "time_limit_seconds": LIMITS["time_limit_seconds"],
+    **MANAGED,
     "terrain": True,
 }
 
@@ -62,8 +62,27 @@ def load_config(path):
     if not (settings["kill_limit"] or settings["time_limit_seconds"]):
         raise ValueError("enable at least one of kill_limit or time_limit_seconds")
     if type(settings["terrain"]) is not bool or (len(maps) > 1 and not settings["terrain"]):
-        raise ValueError("terrain must be true for a multi-map rotation (clients need online-terrain-v2 or later)")
+        raise ValueError(f"terrain must be true for a multi-map rotation ({requirement('terrain')})")
     return settings
+
+
+def host_config(args, settings):
+    """The HostConfig of a rotation.json `settings` and the controller's arguments."""
+    return HostConfig(profile=args.profile, bind_address=args.bind_address, maps=list(settings["maps"]),
+                      terrain=settings["terrain"], max_players=args.max_players,
+                      kill_limit=settings["kill_limit"], time_limit_seconds=settings["time_limit_seconds"],
+                      ports={"station": args.port, "arena": args.arena_port, "tcp": args.tcp},
+                      sustained_delivery=True, managed={key: settings[key] for key in MANAGED},
+                      paths={"key": str(args.key), "log": str(args.log), "status": str(args.status_file),
+                             "state": str(args.state_file)})
+
+
+def supervisor(args, settings, report=print):
+    """The shared Supervisor with no restarts of its own: systemd restarts the controller."""
+    return Supervisor(host_config(args, settings), HostProcess(console=False, capture=False),
+                      budget=RestartBudget(restarts=0), state_path=args.state_file,
+                      watchdog=settings["health_timeout_seconds"],
+                      report=lambda text: report(text, flush=True))
 
 
 def load_state(path, maps):
@@ -81,84 +100,24 @@ def load_state(path, maps):
 
 
 def child_args(args, settings, name):
-    next_map = settings["maps"][(settings["maps"].index(name) + 1) % len(settings["maps"])]
-    result = [str(args.key), str(args.log), "--profile", args.profile,
-              "--bind-address", args.bind_address, "--max-players", str(args.max_players),
-              "--port", str(args.port), "--arena-port", str(args.arena_port), "--tcp", str(args.tcp),
-              "--map", name, "--status-file", str(args.status_file), "--sustained-delivery",
-              "--managed-session", "--next-map", next_map,
-              "--kill-limit", str(settings["kill_limit"]),
-              "--time-limit", str(settings["time_limit_seconds"]),
-              "--restart-warning", str(settings["restart_warning_seconds"]),
-              "--idle-recycle", str(settings["idle_recycle_seconds"]),
-              "--recycle-arena-joins", str(settings["recycle_arena_joins"]),
-              "--recycle-station-admissions", str(settings["recycle_station_admissions"])]
-    if settings["terrain"]:
-        result.append("--experimental-terrain")
-    return result
+    return host_config(args, settings).to_argv(name)
 
 
 def stop_child(proc):
-    if proc is None or proc.poll() is not None:
-        return
-    try:
-        if os.name == "posix":
-            proc.send_signal(signal.SIGINT)
-        else:
-            proc.terminate()
-        proc.wait(timeout=10)
-    except ProcessLookupError:
-        pass
-    except subprocess.TimeoutExpired:
-        proc.kill()
-        proc.wait(timeout=3)
+    stop_process(proc)
 
 
 def monitor(proc, status_path, timeout):
-    """Only a fresh status from this child feeds the watchdog; clocks may change."""
-    last_update, last_mtime = time.monotonic(), None
-    latest = None
+    """(exit code, final status) of a child; RuntimeError if its status goes stale."""
+    watchdog = Watchdog(status_path, proc.pid, timeout)
     while proc.poll() is None:
-        try:
-            mtime = status_path.stat().st_mtime_ns
-        except OSError:
-            mtime = None
-        status, _ = ops.read_status(status_path, proc.pid)
-        if status is not None and mtime != last_mtime:
-            last_update, last_mtime, latest = time.monotonic(), mtime, status
-        if time.monotonic() - last_update >= timeout:
-            raise RuntimeError(f"game process {proc.pid} has not updated its status for {timeout:g}s")
+        watchdog.check()
         time.sleep(0.25)
-    # The final state is written immediately before a planned exit.
-    status, _ = ops.read_status(status_path, proc.pid)
-    return proc.returncode, status or latest
+    return proc.returncode, watchdog.final()
 
 
 def run(args, settings):
-    state = load_state(args.state_file, settings["maps"])
-    ops.write_status(args.state_file, state)
-    while True:
-        name = state["map"]
-        args.status_file.unlink(missing_ok=True)
-        command = [sys.executable, "-I", "-u", str(aoa_paths.entry("station_stub")),
-                   *child_args(args, settings, name)]
-        print(f"Starting map {name}; completed sessions={state['sessions_completed']}", flush=True)
-        proc = None
-        try:
-            proc = subprocess.Popen(command, stdin=subprocess.DEVNULL,
-                                    creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
-            code, status = monitor(proc, args.status_file, settings["health_timeout_seconds"])
-        finally:
-            stop_child(proc)
-        if code != SESSION_COMPLETE or not status or not status.get("lifecycle", {}).get("restart_reason"):
-            raise RuntimeError(f"game process exited unexpectedly ({code}); retaining map {name}")
-        state = {"schema": 1,
-                 "map": settings["maps"][(settings["maps"].index(name) + 1) % len(settings["maps"])],
-                 "sessions_completed": state["sessions_completed"] + 1,
-                 "last_map": name, "last_reason": status["lifecycle"]["restart_reason"]}
-        ops.write_status(args.state_file, state)
-        print(f"Session complete ({state['last_reason']}); next map {state['map']}", flush=True)
-        time.sleep(settings["intermission_seconds"])
+    supervisor(args, settings).run()
 
 
 def main(argv=None):
@@ -172,10 +131,10 @@ def main(argv=None):
     parser.add_argument("--profile", default="vpn-dogfight", choices=("vpn-dogfight", "lan-dogfight", "local-guests"))
     parser.add_argument("--bind-address", help="this host's LAN or VPN IPv4; required except for local-guests, "
                                                "which uses 127.0.0.1")
-    parser.add_argument("--max-players", type=int, default=HOST_DEFAULTS["max_players"])
-    parser.add_argument("--port", type=int, default=5033)
-    parser.add_argument("--arena-port", type=int, default=5031)
-    parser.add_argument("--tcp", type=int, default=5034)
+    parser.add_argument("--max-players", type=int, default=LIMITS["max_players"])
+    parser.add_argument("--port", type=int, default=PORTS["station"])
+    parser.add_argument("--arena-port", type=int, default=PORTS["arena"])
+    parser.add_argument("--tcp", type=int, default=PORTS["tcp"])
     parser.add_argument("--check", action="store_true", help="validate without opening sockets or writing state")
     args = parser.parse_args(argv)
     if args.bind_address is None:

@@ -234,7 +234,7 @@ def serve(spec, client, seconds=0):
     log.parent.mkdir(parents=True, exist_ok=True)
     command = [sys.executable, "-I", str(paths.entry("station_stub", ROOT)), str(client / "SCRTY.BIN"), str(log),
                "--profile", "local-relay", "--map", SLOT_MAP, "--backdrop", spec.get("backdrop", "spacebkgd3"),
-               "--experimental-terrain", "--spawn-at", *map(str, spec["spawn"])]
+               "--terrain", "--spawn-at", *map(str, spec["spawn"])]
     if any(e.get("zone") == "powerup" for e in spec["objects"]):
         command += ["--powerup-zones", str(trn)]
     if any("nav" in e for e in spec["objects"]):

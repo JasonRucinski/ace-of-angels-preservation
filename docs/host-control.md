@@ -29,7 +29,7 @@ written, with its traceback, to `work/logs/host.log`.
 | Mode | **This PC only** (`local-guests` on 127.0.0.1, with the guest admission and sustained delivery that LAN and VPN players get), **LAN** (`lan-dogfight`) or **VPN (internet)** (`vpn-dogfight`) |
 | Host address | LAN/VPN only: pick this PC's address from the list (found automatically) or type it |
 | Map | Any of the 20 entries in [map-viewer.md](map-viewer.md); 11 have real content ([which](STATUS.md#maps)) |
-| Build map terrain | Sends the map so clients build it on flight entry. Clients need the online terrain hook, patch level 11 or later (the window's label says "patch v11"); without it they still join, in empty space |
+| Build map terrain | Sends the map so clients build it on flight entry. Clients need the online terrain hook, patch level 11 or later (the label says "terrain needs client patch level 11 or later"); without it they still join, in empty space |
 | Navigation buoys | Restore navigation markers for the selected map. Initially checked, preserving the previous automatic behavior when exported assets are available |
 | Turret trial | Restore five Arena1a turrets with firing disabled. Initially unchecked; this does not enable turret combat |
 | Warp gates trial | Restore all nine Arena1a gates with their original destinations. Initially unchecked; available only in **This PC only** mode |
@@ -87,8 +87,12 @@ and kill counts. If it hasn't exited after 10 seconds, it is terminated.
 Closing the window offers to stop a running host.
 
 If the host crashes (a non-zero exit after running for 5 seconds), the window
-restarts it after 5 seconds, at most three times in 10 minutes, like
-`start_lan_dogfight.ps1`. Players must rejoin after a restart.
+restarts it after 5 seconds, at most three times in 10 minutes, with the
+settings that run had (not later edits in the window): the one restart policy
+of `aoa/host/supervisor.py`, which `tools/aoa_host.py` and
+`start_lan_dogfight.ps1` use too. Players must rejoin after a restart. Each
+start also writes that run's settings to `work/host/host.json`, in the format
+the headless host reads (`python -I tools/aoa_host.py run work/host/host.json`).
 
 ## Server console additions
 

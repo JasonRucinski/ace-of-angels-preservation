@@ -5,10 +5,11 @@ objects and systems. No restoration patch was applied during this investigation.
 
 ## Navigation-buoy restoration experiment
 
-The server now supports `--arena1a-buoys <original Arena1a.Gob>`. It reads and
-hash-checks the user's layout, selects the ten category-4 placements, and sends
-native `Buoy` objects with kind 3 and neutral relations after flight entry.
-It requires `--map Arena1a --experimental-terrain --sustained-delivery`.
+The server supported `--arena1a-buoys <original Arena1a.Gob>` until 15 November
+2026; `--navigation-buoys` (below) replaced it and the old option was removed.
+It read and hash-checked the user's layout, selected the ten category-4
+placements, and sent native `Buoy` objects with kind 3 and neutral relations
+after flight entry. It required `--map Arena1a --terrain --sustained-delivery`.
 Every joining player gets the same names, positions and tags; retries use the
 existing ordered delivery and the client's duplicate-tag protection.
 
@@ -21,7 +22,7 @@ This restores navigation-object placements, not turret/flag/warp gameplay.
 Example, with a prepared client and previously exported original assets:
 
 ```powershell
-.venv/Scripts/python.exe -I tools/station_stub.py game/2.9.2/SCRTY.BIN work/buoy-host.jsonl --profile local-relay --map Arena1a --experimental-terrain --sustained-delivery --arena1a-buoys work/2.9.2/export/AOAOBJECTS/Arena1a.Gob
+.venv/Scripts/python.exe -I tools/station_stub.py game/2.9.2/SCRTY.BIN work/buoy-host.jsonl --profile local-relay --map Arena1a --terrain --sustained-delivery --navigation-buoys work/2.9.2/export/AOAOBJECTS
 ```
 
 Stop any other local host first. The host window now uses the generalized
@@ -35,8 +36,8 @@ not substitute for looking at the rendered model or testing collision behavior.
 
 ### All-map navigation support
 
-Use `--navigation-buoys work/2.9.2/export/AOAOBJECTS` in place of the legacy
-`--arena1a-buoys` argument to follow `--map`. Original Gobs, object configurations
+`--navigation-buoys work/2.9.2/export/AOAOBJECTS` follows `--map` (it replaced
+the Arena1a-only `--arena1a-buoys`). Original Gobs, object configurations
 and archive ordering are validated before any network socket opens. Nested
 placements use their parent transforms; repeated labels retain distinct tags.
 JRMAP reads the original `JRMAP.TRN` beside the server key (override with
@@ -137,12 +138,12 @@ the trial to bind 127.0.0.2 while the regular host uses 127.0.0.1. Wildcard
 and LAN addresses remain rejected for these profiles.
 
 ```powershell
-.venv/Scripts/python.exe -I tools/station_stub.py game/2.9.2/SCRTY.BIN work/turret-host.jsonl --profile local-relay --bind-address 127.0.0.2 --advertised-address 127.0.0.2 --map Arena1a --experimental-terrain --sustained-delivery --navigation-buoys work/2.9.2/export/AOAOBJECTS --turret-trial work/2.9.2/export/AOAOBJECTS --target-ships 0 --spawn-at 145041 -29123 100278 --seconds 1800
+.venv/Scripts/python.exe -I tools/station_stub.py game/2.9.2/SCRTY.BIN work/turret-host.jsonl --profile local-relay --bind-address 127.0.0.2 --map Arena1a --terrain --sustained-delivery --navigation-buoys work/2.9.2/export/AOAOBJECTS --turret-trial work/2.9.2/export/AOAOBJECTS --target-ships 0 --spawn-at 145041 -29123 100278 --seconds 1800
 ```
 
-`--advertised-address` in this command is deprecated and changes nothing (it
-must equal `--bind-address`); the server prints a deprecation line and runs
-the same without it.
+(Until 15 November 2026 this command also passed `--advertised-address
+127.0.0.2`, which had to equal `--bind-address` and changed nothing; the
+option has been removed.)
 
 Connect the prepared client to Station IP 127.0.0.2. Once flying,
 `verify_turret_trial.py <PID> <export-directory> <output.json>` checks the
@@ -271,10 +272,10 @@ gate crossings. Visual geometry/orientation, actual collision entry/exit,
 observer synchronization and map cleanup require live checks.
 
 ```powershell
-.venv/Scripts/python.exe -I tools/station_stub.py game/2.9.2/SCRTY.BIN work/warp-research/host.jsonl --profile local-relay --bind-address 127.0.0.2 --advertised-address 127.0.0.2 --map Arena1a --experimental-terrain --sustained-delivery --navigation-buoys work/2.9.2/export/AOAOBJECTS --warp-trial work/2.9.2/export/AOAOBJECTS --target-ships 0 --spawn-at 19018.6543 0 -3742.1543 --status-file work/warp-research/status.json --seconds 1800
+.venv/Scripts/python.exe -I tools/station_stub.py game/2.9.2/SCRTY.BIN work/warp-research/host.jsonl --profile local-relay --bind-address 127.0.0.2 --map Arena1a --terrain --sustained-delivery --navigation-buoys work/2.9.2/export/AOAOBJECTS --warp-trial work/2.9.2/export/AOAOBJECTS --target-ships 0 --spawn-at 19018.6543 0 -3742.1543 --status-file work/warp-research/status.json --seconds 1800
 ```
 
-As above, `--advertised-address` is deprecated and can be left out.
+As above, the removed `--advertised-address` is no longer passed.
 
 Connect the prepared client to Station IP 127.0.0.2, select Local Relay and
 press Play. The spawn is 6,000 units behind the gate along +Z. Once flying:

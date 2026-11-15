@@ -94,29 +94,35 @@ sudo chown -R root:root /opt/ace-of-angels/aoa /opt/ace-of-angels/tests /opt/ace
 sudo chmod -R a+rX /opt/ace-of-angels/aoa /opt/ace-of-angels/tests /opt/ace-of-angels/tools
 sudo install -d -o root -g aoa -m 0750 /etc/ace-of-angels
 sudo install -o root -g aoa -m 0640 ~/aoa-upload/SCRTY.BIN /etc/ace-of-angels/SCRTY.BIN
-sudo install -o root -g aoa -m 0640 ~/aoa-upload/deploy/linux/host.env.example /etc/ace-of-angels/host.env
-sudo install -o root -g aoa -m 0640 ~/aoa-upload/deploy/linux/rotation.json.example /etc/ace-of-angels/rotation.json
+sudo install -o root -g aoa -m 0640 ~/aoa-upload/deploy/linux/host.json.example /etc/ace-of-angels/host.json
 sudo install -o root -g root -m 0644 ~/aoa-upload/deploy/linux/aoa-host.service /etc/systemd/system/aoa-host.service
-sudoedit /etc/ace-of-angels/host.env
+sudoedit /etc/ace-of-angels/host.json
 ```
 
-Set `AOA_BIND_ADDRESS` to the VM's private LAN address for the first test,
-or the actual `tailscale ip -4` result for VPN play. Keep
-`AOA_MAX_PLAYERS=2` for the first session (without it the host allows 8, as
-the Windows host window does; `start_lan_dogfight.ps1` defaults to 2). Do not reinstall the example over
-an existing configuration during later updates. The rotation example selects
-10 kills or 15 minutes, with native terrain enabled; see section 5 to change it.
+Set `bind_address` to the VM's private LAN address for the first test, or the
+actual `tailscale ip -4` result for VPN play. Keep `"max_players": 2` for the
+first session (without it the host allows 8, as the Windows host window does).
+Do not reinstall the example over an existing configuration during later
+updates. The example selects 10 kills or 15 minutes, with native terrain
+enabled; see section 5 to change it. `host.json` uses the same settings format
+(`HostConfig`, `aoa/host/config.py`) as the `work/host/host.json` the Windows
+host window writes for each run; an unknown setting is refused with its name.
 
-The unit file runs `tools/dedicated_host.py` with every path given. That
-script is a shim for `aoa/host/dedicated.py`, so the host needs `aoa/` as
-well as `tools/` and `deploy/` (`tests/` only for the checks below). If you
-run it by hand: `--bind-address` is required for the `vpn-dogfight` (default)
-and `lan-dogfight` profiles, and must be this machine's own LAN or VPN IPv4;
-only `local-guests` defaults to 127.0.0.1. `--status-file` is optional and
-defaults to `work/host/<profile>-status.json` inside the checkout. The
-service names `/var/lib/ace-of-angels/status.json` instead, because the
-checkout under `/opt` is read-only. `--check` validates the settings for every
-map in the rotation without opening sockets or writing state.
+The unit file runs `tools/aoa_host.py run /etc/ace-of-angels/host.json`. That
+script is a shim for `aoa/host/headless.py`, so the host needs `aoa/` as well
+as `tools/` and `deploy/` (`tests/` only for the checks below). By hand:
+`python3 -I tools/aoa_host.py check /etc/ace-of-angels/host.json` validates
+every map of the rotation, assets and key included, without opening sockets
+or writing state; `status` prints the status file. `--profile`,
+`--bind-address` and `--map` override the file for one run.
+
+**Hosts set up before 15 November 2026** used `host.env` and `rotation.json`
+with `tools/dedicated_host.py`. That command still works with its arguments,
+and `aoa_host.py run /etc/ace-of-angels/rotation.json` reads the same pair
+(`AOA_BIND_ADDRESS` and `AOA_MAX_PLAYERS` from the environment or the
+`host.env` beside it). To move to the new unit, write a `host.json` from
+`deploy/linux/host.json.example` with your address, player count and rotation
+settings, check it, then install the new unit file and restart the service.
 
 ## 3. Check and start
 
@@ -145,10 +151,12 @@ Verify all three listeners use the configured address. `updated_utc` in the stat
 file should advance every two seconds; check it again after a few seconds.
 An `active` systemd state alone does not prove the game loop is healthy.
 
-The service starts the dedicated controller after the network (and Tailscale
-when enabled), and retries failed starts every 30 seconds, up to four starts
-in ten minutes. Planned map changes happen inside the controller and do not
-consume this crash budget. A missing VPN
+The service starts the host controller after the network (and Tailscale
+when enabled). The controller restarts a crashed game process itself, with
+the settings and map it had, at most three times in ten minutes (5 seconds
+apart); after that it exits with an error, and systemd retries the controller
+every 30 seconds, up to four starts in ten minutes. Planned map changes happen
+inside the controller and consume neither budget. A missing VPN
 address, incorrect key or occupied port is visible in the journal. After
 fixing a failure or connecting a slow VPN, recover with:
 
@@ -203,7 +211,8 @@ Timed rotation was tested with an accelerated timer; the deployed limit is
 visual map loading after real-client rejoin remains an acceptance check.
 See the [rotation verification](../evidence/2.9.2/linux_rotation_20261026.json).
 
-Edit `/etc/ace-of-angels/rotation.json`, then restart `aoa-host` to apply changes.
+Edit `/etc/ace-of-angels/host.json` (`maps`, the limits and the `managed`
+group), run `aoa_host.py check` on it, then restart `aoa-host` to apply changes.
 An unknown setting is refused with its name; a `"comment"` text is allowed.
 A setting left out takes the host default. The shipped example is:
 
@@ -216,7 +225,7 @@ A setting left out takes the host default. The shipped example is:
 | Arena admissions | Recycle at **40**, before the hard lifetime limit of 49 |
 | Station admissions | Recycle at **56**, before the hard lifetime limit of 64 |
 | Empty used session | Recycle after **5 minutes** without arena players; an unused server stays idle |
-| Health timeout | Stop an unresponsive game process after **30 seconds** without fresh status; systemd restarts the controller |
+| Health timeout | Stop an unresponsive game process after **30 seconds** without fresh status, then restart it (the crash budget above) |
 
 During the countdown, the arena disappears from new server listings and new
 logins/joins are refused; connected players still receive announcements and
@@ -237,8 +246,8 @@ Pilots, scores and bans reset with each fresh game process. Only the selected
 map and completed-session counter persist. Logs record `match_end`,
 `session_restart_scheduled` and `session_restart` with the reason and map names.
 The controller verifies status belongs to its own child, so an old status file
-cannot satisfy the health check. Repeated crashes still hit systemd's restart
-limit and require fixing the cause before `systemctl reset-failed aoa-host`.
+cannot satisfy the health check. Repeated crashes still exhaust both restart
+budgets and require fixing the cause before `systemctl reset-failed aoa-host`.
 
 Direct `station_stub.py` launches retain their existing same-map round behavior
 unless `--managed-session` is supplied. Their lifetime admission limits still

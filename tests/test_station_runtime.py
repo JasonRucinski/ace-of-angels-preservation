@@ -78,7 +78,7 @@ class RuntimeTests(unittest.TestCase):
         diagnostic = parse_args(base)
         self.assertFalse(diagnostic.ack or diagnostic.arena or diagnostic.raw_capture)
         local = parse_args(base + ["--profile", "local-relay", "--arena-port", "6001"])
-        self.assertTrue(local.ack and local.arena and local.experimental_relay)
+        self.assertTrue(local.ack and local.arena and local.relay)
         self.assertEqual((local.tcp, local.arena_port), (5034, 6001))
         for options in (["--unknown"], ["--port", "65536"], ["--seconds", "nan"],
                         ["--max-players", "0"], ["--max-players", "50"],
@@ -104,23 +104,19 @@ class RuntimeTests(unittest.TestCase):
                                  "nonexistent.key", "nonexistent.log", "--profile", "local-relay", "--print-config"],
                                 capture_output=True, text=True, timeout=5)
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertTrue(json.loads(result.stdout)["experimental_relay"])
+        self.assertTrue(json.loads(result.stdout)["relay"])
 
-    def test_advertised_address_is_hidden_and_deprecated(self):
+    def test_advertised_address_is_removed(self):
         help_text = io.StringIO()
         with contextlib.redirect_stdout(help_text), self.assertRaises(SystemExit):
             parse_args(["--help"])
         self.assertNotIn("--advertised-address", help_text.getvalue())
-        warning = io.StringIO()
-        with contextlib.redirect_stderr(warning):
-            args = parse_args(["key", "log", "--advertised-address", "127.0.0.1"])
-        self.assertEqual(args.advertised_address, "127.0.0.1")
-        self.assertIn("--advertised-address is deprecated", warning.getvalue())
         with contextlib.redirect_stderr(io.StringIO()) as quiet:
             parse_args(["key", "log"])
         self.assertEqual(quiet.getvalue(), "")
-        with contextlib.redirect_stderr(io.StringIO()), self.assertRaises(SystemExit):
-            parse_args(["key", "log", "--advertised-address", "127.0.0.2"])
+        for value in ("127.0.0.1", "127.0.0.2"):
+            with contextlib.redirect_stderr(io.StringIO()), self.assertRaises(SystemExit):
+                parse_args(["key", "log", "--advertised-address", value])
 
     def test_validation_covers_what_run_rejects(self):
         """--print-config fails, naming the problem, on everything run() would reject at start."""
