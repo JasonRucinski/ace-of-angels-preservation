@@ -28,6 +28,7 @@ import hashlib
 import struct
 
 from aoa.builds import CLIENT_SHA256
+from aoa.client.asm import Asm, d32, jmp_patch  # noqa: F401 (also imported from here)
 
 PRISTINE_292 = CLIENT_SHA256["2.9.2"]
 IMAGE_BASE = 0x400000
@@ -39,48 +40,6 @@ LOCK_DEPTH = 0x60D204
 CAVE = 0x58B200         # .text zero padding, beyond the original VirtualSize
 TEXT_VSIZE = 0x18B000   # was 0x18A1E0; now covers the cave (== SizeOfRawData)
 DATA_VSIZE = 0x4D000    # was 0x4C10C; now covers the lock words (ends at .rsrc)
-
-
-class Asm:
-    """Just enough of an x86 assembler for the cave: bytes, labels, rel8/rel32."""
-
-    def __init__(self, origin):
-        self.origin, self.code, self.labels, self.fixups = origin, bytearray(), {}, []
-
-    def here(self):
-        return self.origin + len(self.code)
-
-    def label(self, name):
-        self.labels[name] = self.here()
-
-    def emit(self, *parts):
-        for p in parts:
-            self.code += p if isinstance(p, (bytes, bytearray)) else bytes([p])
-
-    def rel8(self, opcode, target):
-        self.emit(opcode)
-        self.fixups.append(("rel8", len(self.code), target))
-        self.emit(0)
-
-    def rel32(self, opcode, target):
-        self.emit(opcode)
-        self.fixups.append(("rel32", len(self.code), target))
-        self.emit(b"\0\0\0\0")
-
-    def resolve(self):
-        for kind, pos, target in self.fixups:
-            dest = self.labels[target] if isinstance(target, str) else target
-            if kind == "rel8":
-                disp = dest - (self.origin + pos + 1)
-                assert -128 <= disp <= 127, (target, disp)
-                self.code[pos] = disp & 0xFF
-            else:
-                struct.pack_into("<i", self.code, pos, dest - (self.origin + pos + 4))
-        return bytes(self.code)
-
-
-def d32(v):
-    return struct.pack("<I", v)
 
 
 def build_cave():
@@ -135,11 +94,6 @@ def build_cave():
     a.rel32(0xE8, "release")
     a.emit(0xC3)
     return a.resolve(), a.labels
-
-
-def jmp_patch(at, target, length):
-    code = b"\xE9" + struct.pack("<i", target - (at + 5))
-    return code + b"\x90" * (length - len(code))
 
 
 def configure(source):

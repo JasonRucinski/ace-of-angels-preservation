@@ -7,6 +7,7 @@ from unicorn.x86_const import (UC_X86_REG_EAX, UC_X86_REG_EBX, UC_X86_REG_ECX, U
                                UC_X86_REG_EDI, UC_X86_REG_EBP, UC_X86_REG_ESI, UC_X86_REG_ESP,
                                UC_X86_REG_EIP)
 
+from aoa.client.patches import base as patching
 from aoa.client.patches import cursor_warp
 from aoa.client import prepare
 from aoa.paths import ROOT
@@ -64,7 +65,7 @@ class CursorWarpTests(unittest.TestCase):
     def setUpClass(cls):
         cls.original = ORIGINAL.read_bytes()
         cls.prepared = prepare.configure(cls.original)
-        cls.unfixed = cursor_warp.configure(cls.prepared, False)
+        cls.unfixed = patching.apply(cursor_warp.PATCH, cls.prepared, False)
 
     def test_original_sends_stale_origin_to_the_corner(self):
         calls = warp(self.unfixed, 960, 540, cached=(65535, 65535), window=(0, 0))
@@ -86,12 +87,12 @@ class CursorWarpTests(unittest.TestCase):
 
     def test_reversible_and_rejects_corruption(self):
         self.assertIn(cursor_warp.NAME, prepare.inspect(self.prepared)["patches"])
-        self.assertEqual(cursor_warp.configure(self.prepared), self.prepared)
+        self.assertEqual(patching.apply(cursor_warp.PATCH, self.prepared, True), self.prepared)
         for off in [cursor_warp.CAVE - 0x400000, cursor_warp.SITE - 0x400000]:
             bad = bytearray(self.prepared)
             bad[off] ^= 0xFF
             with self.assertRaises(ValueError):
-                cursor_warp.configure(bad)
+                patching.apply(cursor_warp.PATCH, bad, True)
             with self.assertRaises(ValueError):
                 prepare.inspect(bytes(bad))
 

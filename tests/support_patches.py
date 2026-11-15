@@ -111,6 +111,11 @@ def region(offset, old, new):
     return {"va": h(offset + BASE), "offset": h(offset), "size": len(old), "old": old.hex(), "new": new.hex()}
 
 
+def triples(patch, regions=None):
+    """(file offset, old, new) of a Patch descriptor's regions (default: its current variant)."""
+    return [(r.va - BASE, r.old, r.new) for r in (patch.regions if regions is None else regions)]
+
+
 def listed(triples):
     return sorted((region(off, old, new) for off, old, new in triples), key=lambda r: r["va"])
 
@@ -165,7 +170,9 @@ def collect():
     add(m.NAME, "online_terrain", {
         label: [jump, (m.CAVE_OFFSET, bytes(m.REGION), cave)]
         for label, cave in (("current", m.cave_code()), (m.V2_NAME, m.v2_code()), (m.LEGACY_NAME, m.legacy_code()))})
-    for m in (menu_aspect, cursor_warp, frame_clock, visibility_fix, own_ship_model, powerup_pickup,
+    for m in (cursor_warp,):
+        add(m.NAME, m.__name__.rpartition(".")[2], {"current": triples(m.PATCH)})
+    for m in (menu_aspect, frame_clock, visibility_fix, own_ship_model, powerup_pickup,
               asteroid_render, solid_world_render, station_detail, world_detail, texture32, object_persistence):
         add(m.NAME, m.__name__.rpartition(".")[2], {"current": m.regions()})
     add(third_person.NAME, "third_person", {"current" if v == "v3" else v: third_person.regions(v)

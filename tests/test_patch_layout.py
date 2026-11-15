@@ -35,6 +35,7 @@ from aoa.client.patches import online_terrain  # noqa: E402
 from aoa.client.patches import own_ship_menu  # noqa: E402
 from aoa.client.patches import own_ship_model  # noqa: E402
 from aoa.client import base  # noqa: E402
+from aoa.client.patches import base as patching  # noqa: E402
 from aoa.client.patches import physics_timestep  # noqa: E402
 from aoa.client.patches import powerup_pickup  # noqa: E402
 from aoa.client import prepare  # noqa: E402
@@ -158,6 +159,10 @@ class PatchLayoutTests(unittest.TestCase):
         for name, module in modules.items():
             with self.subTest(patch=name):
                 patched = apply(self.pristine, self.patches[name]["variants"]["current"])
+                if hasattr(module, "PATCH"):
+                    self.assertEqual(patching.apply(module.PATCH, self.pristine, True), patched)
+                    self.assertEqual(patching.apply(module.PATCH, patched, False), self.pristine)
+                    continue
                 self.assertEqual(module.configure(self.pristine, True), patched)
                 self.assertEqual(module.configure(patched, False), self.pristine)
         patched = apply(self.pristine, self.patches["zero-time-physics-v1"]["variants"]["current"])

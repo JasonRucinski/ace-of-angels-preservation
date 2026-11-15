@@ -18,6 +18,7 @@ from aoa.client.patches import explicit_protection
 from aoa.client.patches import frame_clock
 from aoa.client.patches import visibility_fix
 from aoa.client import base
+from aoa.client.patches import base as patching
 from aoa.client.patches import physics_timestep
 from aoa.client.patches import menu_aspect
 from aoa.client.patches import online_terrain
@@ -110,8 +111,8 @@ def inspect(data):
     data = online_terrain.configure(data, False)
     menu = menu_aspect.state(data)
     data = menu_aspect.configure(data, False)
-    cursor = cursor_warp.state(data)
-    data = cursor_warp.configure(data, False)
+    cursor = patching.state(cursor_warp.PATCH, data)
+    data = patching.apply(cursor_warp.PATCH, data, False)
     background = data[BACKGROUND_OFFSET:BACKGROUND_OFFSET + 2] == BACKGROUND_NOP
     terminated = archive_terminator.state(data)
     protection = explicit_protection.state(data)
@@ -204,7 +205,7 @@ def configure(data, host=None, experimental_protection=None, experimental_astero
     data = asteroid_render.configure(data, False)
     data = online_terrain.configure(data, False)
     data = menu_aspect.configure(data, False)
-    data = cursor_warp.configure(data, False)
+    data = patching.apply(cursor_warp.PATCH, data, False)
     protection = choose(state, experimental_protection, explicit_protection.NAME, False)
     if protection and host not in LOOPBACK:
         raise ValueError("experimental protection requires a loopback Station")
@@ -216,7 +217,7 @@ def configure(data, host=None, experimental_protection=None, experimental_astero
     result = archive_terminator.configure(background_site(guarded[:OFFSET] + field + guarded[OFFSET + 12:], True))
     result = explicit_protection.configure(result, protection)
     result = menu_aspect.configure(result, framing)
-    result = cursor_warp.configure(result)
+    result = patching.apply(cursor_warp.PATCH, result, True)
     result = online_terrain.configure(result)
     result = asteroid_render.configure(result, asteroids)
     result = solid_world_render.configure(result, solids)
