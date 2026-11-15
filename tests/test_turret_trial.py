@@ -6,7 +6,7 @@ import unittest
 
 from aoa.maps import navigation
 from aoa.host import turret_trial
-from tests import test_navigation_buoys
+from tests.support import check_buoy_delivery
 from aoa.host.runtime import parse_args
 from aoa.paths import ROOT
 
@@ -45,7 +45,7 @@ class TrialTests(unittest.TestCase):
     def test_first_late_join_with_buoys_and_lost_ack(self):
         expected = navigation.loads(navigation.map_placements(SOURCE, 'Arena1a'))
         expected += turret_trial.loads(turret_trial.placements(SOURCE))
-        test_navigation_buoys.BuoyTests.check_delivery(
+        check_buoy_delivery(
             self, 'Arena1a', ('--turret-trial', str(SOURCE)), expected)
 
 

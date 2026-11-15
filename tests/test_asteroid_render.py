@@ -1,45 +1,14 @@
 """Original-x86 distance-gate regression; no game launch or GPU claim."""
-import struct
 import tempfile
 import unittest
 from pathlib import Path
 
 from aoa.client.patches import asteroid_render as patch
 from aoa.client import prepare
-from aoa.emulation.emu import Emu, SCRATCH, STACK, STUBS
-from aoa.analysis.pe_util import PE
-from unicorn.x86_const import (UC_X86_REG_ESI, UC_X86_REG_ESP, UC_X86_REG_EAX,
-                               UC_X86_REG_EFLAGS, UC_X86_REG_FPCW)
-
-from aoa.paths import ROOT
-SOURCE = ROOT / 'game/2.9.2/AOACLIENT.EXE.orig'
+from tests.support_emulation import AsteroidGate, SOURCE
 
 
-class AsteroidRenderTests(unittest.TestCase):
-    def setUp(self):
-        self.emu = Emu(PE(SOURCE))
-
-    def gate(self, name, distance, patched=True, control=0x7F):
-        e = self.emu
-        for offset, old, new in patch.regions():
-            e.write(offset + 0x400000, new if patched else old)
-            # Unicorn retains translated blocks after mem_write; this fixture
-            # alternates original and patched code in the same emulator.
-            e.uc.ctl_remove_cache(offset + 0x400000, offset + 0x400000 + len(new))
-        e.write(SCRATCH, bytes(0x200))
-        e.write(SCRATCH + 0x20, struct.pack('<I', SCRATCH + 0x1000 if name is not None else 0))
-        if name is not None:
-            e.write(SCRATCH + 0x1000, name.encode() + b'\0')
-        e.write(SCRATCH + 0x168, struct.pack('<f', distance + 5000))
-        e.write(STACK + 0x8018, struct.pack('<f', distance))
-        e.uc.reg_write(UC_X86_REG_ESI, SCRATCH)
-        e.uc.reg_write(UC_X86_REG_ESP, STACK + 0x8000)
-        e.uc.reg_write(UC_X86_REG_FPCW, control)
-        e.uc.emu_start(0x54320B, 0x54323E, count=200)
-        self.assertEqual(e.uc.reg_read(UC_X86_REG_ESP), STACK + 0x8000)
-        self.assertEqual(e.uc.reg_read(UC_X86_REG_FPCW), control)
-        return bool(e.read(SCRATCH + 0x154, 1)[0])
-
+class AsteroidRenderTests(AsteroidGate, unittest.TestCase):
     def test_original_handoff_and_extended_asteroid_mesh_range(self):
         for control in (0x7F, 0x27F, 0x37F):
             for name in ('Astr-A__mip', 'Astr-B_mip', 'Astr-C_mip', 'Astr_06-A'):
@@ -54,22 +23,7 @@ class AsteroidRenderTests(unittest.TestCase):
                 self.assertEqual(self.gate(name, distance), self.gate(name, distance, False))
 
     def test_hook_preserves_integer_state(self):
-        e = self.emu
-        for offset, _, new in patch.regions():
-            e.write(offset + 0x400000, new)
-        e.write(SCRATCH + 0x20, struct.pack('<I', SCRATCH + 0x1000))
-        e.write(SCRATCH + 0x1000, b'Astr-B_mip\0')
-        e.write(SCRATCH + 0x2000, struct.pack('<f', 100000))
-        e.write(STUBS + 0x500, b'\xd9\x05' + struct.pack('<I', SCRATCH + 0x2000))
-        e.uc.reg_write(UC_X86_REG_ESI, SCRATCH)
-        e.uc.reg_write(UC_X86_REG_ESP, STACK + 0x8000)
-        e.uc.emu_start(STUBS + 0x500, STUBS + 0x506, count=1)
-        e.uc.reg_write(UC_X86_REG_EAX, 0x12345678)
-        e.uc.reg_write(UC_X86_REG_EFLAGS, 0x247)
-        e.uc.emu_start(patch.SITE, patch.SITE + 6, count=100)
-        self.assertEqual(e.uc.reg_read(UC_X86_REG_EAX), 0x12345678)
-        self.assertEqual(e.uc.reg_read(UC_X86_REG_EFLAGS), 0x247)
-        self.assertEqual(e.uc.reg_read(UC_X86_REG_ESP), STACK + 0x8000)
+        self.check_hook_preserves_integer_state()
 
     def test_exact_undo_idempotence_and_corruption_rejection(self):
         before = prepare.configure(SOURCE.read_bytes())

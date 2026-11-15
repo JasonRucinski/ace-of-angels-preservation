@@ -167,15 +167,15 @@ class ClientPreparationTests(unittest.TestCase):
 
 
 class SyntheticClientTests(unittest.TestCase):
-    """Option handling on the synthetic client of test_patch_layout; game-free."""
+    """Option handling on the synthetic client of tests/support_patches.py; game-free."""
     FORCED = {"smooth_frame_clock": "frame-clock-v1", "bounded_visibility": "visibility-math-v1",
               "chase_camera": "third-person-camera-v3", "powerup_pickups": "powerup-pickup-v1",
               "menu_framing": "ship-menu-aspect-v1"}
 
     @classmethod
     def setUpClass(cls):
-        from tests import test_patch_layout
-        cls.pristine = test_patch_layout.synthetic_pristine()
+        from tests import support_patches
+        cls.pristine = support_patches.synthetic_pristine()
         pristine_sha = hashlib.sha256(cls.pristine).hexdigest()
         with patch.object(base, "PRISTINE_292", pristine_sha):
             stable_sha = hashlib.sha256(base.configure(cls.pristine)[0]).hexdigest()

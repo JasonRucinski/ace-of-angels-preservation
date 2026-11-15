@@ -11,7 +11,7 @@ from aoa.host import turret_trial
 from aoa.host import warp_trial
 from aoa.live import verify_warp_trial
 from aoa.host.runtime import parse_args
-from tests import test_navigation_buoys
+from tests.support import check_buoy_delivery
 from aoa.builds import CLIENT_SHA256
 
 from aoa.paths import ROOT
@@ -92,9 +92,9 @@ class WarpTests(unittest.TestCase):
         expected += turret_trial.loads(turret_trial.placements(SOURCE))
         gates = warp_trial.placements(SOURCE)
         expected += warp_trial.loads(gates)
-        test_navigation_buoys.BuoyTests.check_delivery(self, 'Arena1a',
-                                ('--turret-trial', str(SOURCE), '--warp-trial', str(SOURCE)),
-                                expected, drop_ack_tag=warp_trial.tag(gates[-1]))
+        check_buoy_delivery(self, 'Arena1a',
+                            ('--turret-trial', str(SOURCE), '--warp-trial', str(SOURCE)),
+                            expected, drop_ack_tag=warp_trial.tag(gates[-1]))
 
     def test_live_verifier_rejects_missing_or_broken_destinations(self):
         gate = warp_trial.placement(SOURCE)

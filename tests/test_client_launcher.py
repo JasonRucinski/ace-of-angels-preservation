@@ -52,14 +52,14 @@ class TextureToggleTests(unittest.TestCase):
 
 
 class SyntheticLauncherTests(unittest.TestCase):
-    """apply_settings on the synthetic client of test_patch_layout; game-free."""
+    """apply_settings on the synthetic client of tests/support_patches.py; game-free."""
 
     def setUp(self):
         import hashlib
         from aoa.client import base
         from aoa.client.patches import physics_timestep
-        from tests import test_patch_layout
-        pristine = test_patch_layout.synthetic_pristine()
+        from tests import support_patches
+        pristine = support_patches.synthetic_pristine()
         pristine_sha = hashlib.sha256(pristine).hexdigest()
         with patch.object(base, "PRISTINE_292", pristine_sha):
             stable_sha = hashlib.sha256(base.configure(pristine)[0]).hexdigest()

@@ -2,29 +2,26 @@
 import tempfile
 import unittest
 from pathlib import Path
-from unittest.mock import patch as mock_patch
 
 from aoa.client.patches import asteroid_render
 from aoa.client.patches import solid_world_render as patch
 from aoa.client import prepare
-from tests import test_asteroid_render as fixture
+from tests import support_emulation as support
 from aoa.analysis.pe_util import Disasm, PE
 
 
 class SolidWorldRenderTests(unittest.TestCase):
     def test_world_model_cutoff_and_integer_state(self):
-        probe = fixture.AsteroidRenderTests()
-        probe.setUp()
-        with mock_patch.object(fixture, 'patch', patch):
-            for control in (0x7F, 0x27F, 0x37F):
-                for name in ('Astr-B_mip', 'Base', 'Vermok', None):
-                    for distance in (100, 60999, 61000, 61001, 100000, 899999, 900000, 900001):
-                        self.assertEqual(probe.gate(name, distance, False, control), distance < 61000)
-                        self.assertEqual(probe.gate(name, distance, True, control), distance < 900000)
-            probe.test_hook_preserves_integer_state()
+        probe = support.probe(support.AsteroidGate, patch)
+        for control in (0x7F, 0x27F, 0x37F):
+            for name in ('Astr-B_mip', 'Base', 'Vermok', None):
+                for distance in (100, 60999, 61000, 61001, 100000, 899999, 900000, 900001):
+                    self.assertEqual(probe.gate(name, distance, False, control), distance < 61000)
+                    self.assertEqual(probe.gate(name, distance, True, control), distance < 900000)
+        probe.check_hook_preserves_integer_state()
 
     def test_scope_is_model_visibility_not_global_billboard_setting(self):
-        pe = PE(fixture.SOURCE)
+        pe = PE(support.SOURCE)
         with tempfile.TemporaryDirectory() as directory:
             dis = Disasm(pe, Path(directory) / 'code.pkl')
             self.assertEqual(dis.refs_to_func(0x543000), [0x546BCE])
@@ -37,7 +34,7 @@ class SolidWorldRenderTests(unittest.TestCase):
         self.assertEqual(before[patch.OFFSET + 6:], after[patch.OFFSET + 6:])
 
     def test_legacy_migration_preservation_and_exact_undo(self):
-        clean = prepare.configure(fixture.SOURCE.read_bytes())
+        clean = prepare.configure(support.SOURCE.read_bytes())
         legacy = prepare.configure(clean, experimental_asteroids=True)
         broad = prepare.configure(legacy, experimental_solids=True)
         self.assertEqual(broad, prepare.configure(clean, experimental_solids=True))
@@ -52,7 +49,7 @@ class SolidWorldRenderTests(unittest.TestCase):
             prepare.configure(clean, experimental_asteroids=True, experimental_solids=True)
 
     def test_corruption_and_abandoned_cave_rejected(self):
-        broad = prepare.configure(fixture.SOURCE.read_bytes(), experimental_solids=True)
+        broad = prepare.configure(support.SOURCE.read_bytes(), experimental_solids=True)
         for offset in (patch.OFFSET, asteroid_render.CAVE - 0x400000, 0x12345):
             broken = bytearray(broad)
             broken[offset] ^= 1
@@ -62,7 +59,7 @@ class SolidWorldRenderTests(unittest.TestCase):
     def test_install_reapply_and_undo_turns_it_off(self):
         with tempfile.TemporaryDirectory() as directory:
             exe = Path(directory) / 'AOACLIENT.EXE'
-            exe.write_bytes(fixture.SOURCE.read_bytes())
+            exe.write_bytes(support.SOURCE.read_bytes())
             prepare.prepare(exe, experimental_asteroids=True)
             before = exe.read_bytes()
             patch.install(exe)
