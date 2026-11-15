@@ -58,7 +58,7 @@ class BuoyTests(unittest.TestCase):
 
     def test_configuration_guards(self):
         base = ['key', 'log', '--profile', 'local-relay', '--map', 'Arena1a', '--experimental-terrain',
-                '--sustained-delivery', '--arena1a-buoys', str(SOURCE)]
+                '--sustained-delivery', '--navigation-buoys', str(SOURCE.parent)]
         self.assertEqual(parse_args(base).map, 'Arena1a')
         general = ['key', 'log', '--profile', 'local-relay', '--experimental-terrain',
                    '--sustained-delivery', '--navigation-buoys', str(SOURCE.parent)]
@@ -67,8 +67,7 @@ class BuoyTests(unittest.TestCase):
                       ['--arena1a-buoys', str(SOURCE)]):
             with contextlib.redirect_stderr(io.StringIO()), self.assertRaises(SystemExit):
                 parse_args(general + extra)
-        for extra in (['--map', 'CTF_arena'], ['--target-ships', '89'],
-                      ['--no-sustained-delivery'], ['--no-experimental-relay']):
+        for extra in (['--target-ships', '89'], ['--no-sustained-delivery'], ['--no-experimental-relay']):
             with self.subTest(extra=extra), contextlib.redirect_stderr(io.StringIO()), self.assertRaises(SystemExit):
                 parse_args(base + extra)
 

@@ -19,6 +19,19 @@ PRIVATE_NETWORKS = ("10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16")
 VPN_NETWORKS = ("100.64.0.0/10",)
 LOOPBACK = "127.0.0.1"
 
+# One rule for map objects and trials on every profile (audit H11). Objects the
+# server only places, that do nothing on their own (navigation buoys and
+# waypoints, the inactive turret trial with firing disabled), may run wherever
+# the relay runs: placement is all the host claims. The warp gates let each
+# client move itself between gates with no host check (no host-authorised
+# transit), so they stay on this PC until the host authorises transit.
+OBJECT_RULE = "objects that only sit in place run on any relay profile; warp gates, which move players " \
+              "without a host check, only on this PC (loopback)"
+OBJECT_PROFILES = {"navigation_buoys": LOOPBACK_PROFILES + DOGFIGHT_PROFILES,
+                   "map_waypoints": LOOPBACK_PROFILES + DOGFIGHT_PROFILES,
+                   "turret_trial": LOOPBACK_PROFILES + DOGFIGHT_PROFILES,
+                   "warp_trial": LOOPBACK_PROFILES}
+
 PORTS = {"station": 5033, "arena": 5031, "tcp": 5034}
 # Hosts-file names the docs suggest for players (host window display).
 ALIASES = {"lan-dogfight": "aoalan", "vpn-dogfight": "aoavpn"}

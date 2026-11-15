@@ -79,8 +79,8 @@ which starts the server as follows (without the restart supervision):
 ```
 
 All three listeners bind the `--bind-address`, and the server list gives
-clients that same address. (`--advertised-address` is deprecated: it had to
-equal the bind address, so it changed nothing.) A nonexistent local address or occupied
+clients that same address. (`--advertised-address`, which had to equal the
+bind address and so changed nothing, was removed on 15 November 2026.) A nonexistent local address or occupied
 port fails startup. Existing diagnostic/local profiles still bind `127.0.0.1`.
 
 ## Each client PC (including the host if it also plays)

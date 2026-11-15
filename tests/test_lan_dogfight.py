@@ -24,8 +24,8 @@ class LanDogfightTests(unittest.TestCase):
         base = ["key", "log", "--profile", "lan-dogfight"]
         for address in ("10.1.2.3", "172.16.1.2", "172.31.255.254", "192.168.1.55"):
             args = parse_args(base + ["--bind-address", address])
-            self.assertEqual(args.advertised_address, address)
-            self.assertTrue(args.guest_sessions and args.experimental_relay and args.ack and args.arena)
+            self.assertEqual(args.bind_address, address)
+            self.assertTrue(args.guest_sessions and args.relay and args.ack and args.arena)
             self.assertEqual((args.port, args.arena_port, args.tcp), (5033, 5031, 5034))
             self.assertFalse(args.experimental_reliable_combat)
         for address in ("127.0.0.1", "0.0.0.0", "8.8.8.8", "100.64.0.1", "169.254.1.2",
@@ -40,7 +40,7 @@ class LanDogfightTests(unittest.TestCase):
                 parse_args(base + ["--bind-address", "192.168.1.55"] + options)
         for profile in ("diagnostic", "local-relay", "local-guests"):
             args = parse_args(["key", "log", "--profile", profile])
-            self.assertEqual((args.bind_address, args.advertised_address), ("127.0.0.1", "127.0.0.1"))
+            self.assertEqual(args.bind_address, "127.0.0.1")
             with contextlib.redirect_stderr(io.StringIO()), self.assertRaises(SystemExit):
                 parse_args(["key", "log", "--profile", profile, "--bind-address", "192.168.1.55"])
 

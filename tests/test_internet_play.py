@@ -43,8 +43,8 @@ class ConfigTests(unittest.TestCase):
         base = ["key", "log", "--profile", "vpn-dogfight", "--bind-address"]
         for address in ("100.64.0.1", VPN_ADDRESS, "100.127.255.254", "10.147.17.5", "192.168.1.55"):
             args = parse_args(base + [address])
-            self.assertTrue(args.sustained_delivery and args.guest_sessions and args.experimental_relay)
-            self.assertEqual((args.advertised_address, args.tcp), (address, 5034))
+            self.assertTrue(args.sustained_delivery and args.guest_sessions and args.relay)
+            self.assertEqual((args.bind_address, args.tcp), (address, 5034))
         for address in ("100.63.255.255", "100.128.0.1", "8.8.8.8", "127.0.0.1", "0.0.0.0", "169.254.1.1"):
             with self.subTest(address=address), self.assertRaises(SystemExit):
                 quiet_parse(base + [address])
@@ -55,7 +55,7 @@ class ConfigTests(unittest.TestCase):
         self.assertTrue(parse_args(["key", "log", "--profile", "lan-dogfight", "--bind-address", "192.168.1.55",
                                     "--sustained-delivery"]).sustained_delivery)
         terrain = parse_args(base + [VPN_ADDRESS, "--map", "Arena1a", "--experimental-terrain"])
-        self.assertTrue(terrain.experimental_terrain)
+        self.assertTrue(terrain.terrain)
         # online-terrain-v2 selects any recovered map, not only Arena1a.
         self.assertEqual(parse_args(base + [VPN_ADDRESS, "--experimental-terrain"]).map, "CTF_arena")
         for options in (["--map", "NoSuchMap"], ["--advertised-address", "100.64.0.2"],

@@ -12,7 +12,7 @@ def load_objects(args):
     warp_gates = warp_trial.placements(args.warp_trial) if args.warp_trial else []
     warp = warp_trial.loads(warp_gates)
     trial = turret_trial.loads(turret_trial.placements(args.turret_trial)) if args.turret_trial else []
-    buoys = navigation.loads(navigation.placements(args.arena1a_buoys)) if args.arena1a_buoys else []
+    buoys = []
     if args.navigation_buoys:
         buoys = navigation.loads(navigation.map_placements(
             args.navigation_buoys, args.map, args.buoy_trn or args.key.parent / 'JRMAP.TRN'))

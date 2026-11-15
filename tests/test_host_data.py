@@ -3,13 +3,16 @@
     python -I tools/test.py test_host_data
 """
 import ast
+import contextlib
+import io
+import tempfile
 import unittest
 
 from aoa.host import defaults, object_slots, turret_trial, vessel_combat, vessels, warp_trial
 from aoa.host.combat import MissileLedger
 from aoa.host.objects.powerups import PowerUps
 from aoa.host.objects.targets import TargetShips
-from aoa.host.runtime import parse_args
+from aoa.host.runtime import ConfigError, parse_args
 from aoa.maps import navigation
 from aoa.paths import ROOT
 
@@ -74,6 +77,68 @@ class HostDataTests(unittest.TestCase):
                                                             "recycle_arena_joins", "recycle_station_admissions")))
         self.assertEqual(set(defaults.PROFILES), set(defaults.LOOPBACK_PROFILES + defaults.DOGFIGHT_PROFILES)
                          | {defaults.DIAGNOSTIC})
+
+
+class FlagRoleTests(unittest.TestCase):
+    def parse(self, *extra, profile="local-relay"):
+        return parse_args(["key", "log", "--profile", profile, *extra], raise_errors=True)
+
+    def test_role_names_and_hidden_aliases(self):
+        self.assertTrue(self.parse("--terrain").terrain)
+        self.assertTrue(self.parse("--experimental-terrain").terrain)
+        self.assertFalse(self.parse("--no-relay").relay)
+        self.assertFalse(self.parse("--no-experimental-relay").relay)
+        self.assertTrue(self.parse().relay)
+        help_text = io.StringIO()
+        with contextlib.redirect_stdout(help_text), self.assertRaises(SystemExit):
+            parse_args(["--help"])
+        text = help_text.getvalue()
+        for name in ("--experimental-terrain", "--experimental-relay", "--advertised-address", "--arena1a-buoys"):
+            self.assertNotIn(name, text)
+        diagnostics = text[text.index("diagnostics:"):]
+        for name in ("--experimental-flight", "--experimental-object", "--experimental-teams",
+                     "--experimental-reliable-combat", "--experimental-protection-probe", "--spawn-axis",
+                     "--impair-rtt-ms"):
+            self.assertIn(name, diagnostics)
+
+    def test_removed_flags(self):
+        for extra in (("--advertised-address", "127.0.0.1"), ("--arena1a-buoys", "x.gob")):
+            with self.subTest(extra=extra), self.assertRaisesRegex(ConfigError, "unrecognized arguments"):
+                self.parse(*extra)
+
+    def test_settings_ignored_in_this_mode_are_refused(self):
+        cases = [(("--next-map", "JRMAP"), "--next-map needs --managed-session"),
+                 (("--restart-warning", "10"), "--restart-warning needs --managed-session"),
+                 (("--idle-recycle", "5"), "--idle-recycle needs --managed-session"),
+                 (("--recycle-arena-joins", "5"), "--recycle-arena-joins needs --managed-session"),
+                 (("--reorder-margin", "5"), "--reorder-margin needs sustained delivery"),
+                 (("--buoy-trn", "JRMAP.TRN"), "--buoy-trn needs --navigation-buoys on JRMAP")]
+        for extra, message in cases:
+            with self.subTest(extra=extra), self.assertRaisesRegex(ConfigError, message):
+                self.parse(*extra)
+        for extra in (("--kill-limit", "5"), ("--time-limit", "60"), ("--spawn-axis", "z"),
+                      ("--spawn-spacing", "300"), ("--start-vessel", "Vermok")):
+            with self.subTest(extra=extra), self.assertRaisesRegex(ConfigError, "requires the relay"):
+                self.parse(*extra, profile="diagnostic")
+        # The same values are accepted where they act.
+        self.assertEqual(self.parse("--kill-limit", "5", "--reorder-margin", "5", "--sustained-delivery").kill_limit, 5)
+        # A value equal to the default is not "given".
+        self.assertEqual(self.parse("--kill-limit", "20", profile="diagnostic").kill_limit, 20)
+
+    def test_one_rule_for_objects_on_each_profile(self):
+        rule = defaults.OBJECT_PROFILES
+        self.assertEqual(set(rule["warp_trial"]), set(defaults.LOOPBACK_PROFILES))
+        for name in ("navigation_buoys", "map_waypoints", "turret_trial"):
+            self.assertEqual(set(rule[name]), set(defaults.LOOPBACK_PROFILES + defaults.DOGFIGHT_PROFILES))
+        with tempfile.TemporaryDirectory() as temp:
+            with self.assertRaisesRegex(ConfigError, "--warp-trial is not offered on lan-dogfight"):
+                parse_args(["key", "log", "--profile", "lan-dogfight", "--bind-address", "192.168.1.5",
+                            "--terrain", "--sustained-delivery", "--map", "Arena1a", "--warp-trial", temp],
+                           raise_errors=True)
+            args = parse_args(["key", "log", "--profile", "lan-dogfight", "--bind-address", "192.168.1.5",
+                               "--terrain", "--sustained-delivery", "--map", "Arena1a", "--turret-trial", temp],
+                              raise_errors=True)
+            self.assertEqual(str(args.turret_trial), temp)
 
 
 if __name__ == "__main__":

@@ -35,7 +35,7 @@ from aoa.host import ops  # noqa: E402
 from aoa.maps import registry  # noqa: E402
 from aoa.host import supervisor  # noqa: E402
 from aoa.host.config import ConfigError, HostConfig  # noqa: E402
-from aoa.host.defaults import ALIASES, BACKDROPS, DEFAULT_BACKDROP, LIMITS  # noqa: E402
+from aoa.host.defaults import ALIASES, BACKDROPS, DEFAULT_BACKDROP, LIMITS, OBJECT_PROFILES  # noqa: E402
 
 from aoa.paths import ROOT
 from aoa import paths
@@ -74,7 +74,7 @@ def node_availability(settings):
                   source.is_dir() and (source.parent / '_export.json').is_file()) else "")
     arena = common or ("Select Arena1a." if settings["map"] != "Arena1a" else "")
     return {"navigation_buoys": common, "turret_trial": arena,
-            "warp_trial": arena or ("Select This PC only mode." if profile_of(settings["mode"]) != LOCAL else "")}
+            "warp_trial": arena or ("Select This PC only mode." if profile_of(settings["mode"]) not in OBJECT_PROFILES["warp_trial"] else "")}
 
 
 def host_config(settings, extra=()):

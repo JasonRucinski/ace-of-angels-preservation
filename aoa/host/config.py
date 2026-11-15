@@ -115,7 +115,7 @@ class HostConfig:
             argv.append("--console")
         argv += ["--status-file", str(self.status_path())]
         if self.terrain:
-            argv.append("--experimental-terrain")
+            argv.append("--terrain")
         for key in ("navigation_buoys", "turret_trial", "warp_trial"):
             if self.objects.get(key):
                 argv += ["--" + key.replace("_", "-"), str(self.path("export"))]

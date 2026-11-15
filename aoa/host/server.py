@@ -77,11 +77,11 @@ class ArenaServer:
         self.transport = Transport(self.args, self.key, self.log, self.resources, self.meter,
                                    self.impair_in, self.impair_out)
         self.s, self.arena, self.sockets = self.transport.station, self.transport.arena, self.transport.sockets
-        self.mode = "Local Relay" if self.args.experimental_relay else ("Local Flight" if self.args.experimental_flight else "Handshake Test")
+        self.mode = "Local Relay" if self.args.relay else ("Local Flight" if self.args.experimental_flight else "Handshake Test")
         self.mode = MODE_NAMES.get(self.args.profile, self.mode)
         hosted_port = self.arena.getsockname()[1] if self.args.arena and self.reply else None
         self.job_bodies = {4: TCP_JOB_BODIES[4], 14: TCP_JOB_BODIES[14], 5: server_list_body(0, hosted_port, self.mode,
-                                                             advertised_address=self.args.advertised_address,
+                                                             address=self.args.bind_address,
                                                              terrain=self.args.map, backdrop=self.args.backdrop)}
 
         if self.args.tcp is not None:
@@ -239,7 +239,7 @@ class ArenaServer:
         available = (self.restart_due is None and len(self.arena_connections) < self.args.max_players and
                      len(self.arena_connections) + len(self.retired_endpoints) < ARENA_JOINS)
         self.job_bodies[5] = server_list_body(len(self.arena_connections), hosted_port, self.mode, available, len(self.station.peers),
-                                       self.args.advertised_address, self.args.map, self.args.backdrop)
+                                       self.args.bind_address, self.args.map, self.args.backdrop)
 
     def combat_send(self, peer, packet):
         if peer not in self.arena_connections:
@@ -369,14 +369,14 @@ class ArenaServer:
         for peer, due in list(self.expiry_due.items()):
             if time.monotonic() >= due:
                 self.depart(peer, "inactivity timeout")
-        if self.args.experimental_relay:
+        if self.args.relay:
             if not self.arena_players:
                 self.match.stop()
             elif self.match.started is not None:
                 reason = self.match.ended(self.deaths.kills, now)
                 if reason:
                     self.end_match(reason, now)
-        if self.args.experimental_relay and now >= self.motion_refresh_due:
+        if self.args.relay and now >= self.motion_refresh_due:
             for subject, state in self.arena_motion.items():
                 if subject not in self.ping_due:
                     continue
@@ -458,7 +458,7 @@ class ArenaServer:
 
     def bootstrap(self, peer):
         """Flight entry three seconds after admission: players, ship, terrain and map objects."""
-        if self.args.experimental_relay:
+        if self.args.relay:
             for other, slot in self.arena_players.items():
                 if other != peer and other in self.bootstrap_due:
                     continue
@@ -480,7 +480,7 @@ class ArenaServer:
                         slot, self.arena_motion[other], stats=self.player_stats(other)), self.key), peer)
         position = self.arena_motion[peer][0x40] if peer in self.arena_motion else None
         for packet in flight_bootstrap(position, registry.marker(self.args.map)
-                                       if self.args.experimental_terrain else None,
+                                       if self.args.terrain else None,
                                        self.arena_vessels.get(peer, self.start_vessel)):
             self.deliver(peer, packet, True)
         if self.args.experimental_teams:
@@ -505,7 +505,7 @@ class ArenaServer:
         self.ping_due[peer] = time.monotonic()
         if self.args.experimental_protection_probe:
             self.protection_probe[peer] = (time.monotonic() + 3, 0)
-        if self.args.experimental_relay:
+        if self.args.relay:
             self.match.start(time.monotonic())
 
     def receive(self):
@@ -524,7 +524,7 @@ class ArenaServer:
             return
         if addr in self.arena_connections and self.on_arena(addr, message_type, payload):
             return
-        if self.args.experimental_relay:
+        if self.args.relay:
             self.on_relay(receiver, addr, message_type, payload, wrapped)
 
     def on_station(self, receiver, addr, message_type, payload):
@@ -581,7 +581,7 @@ class ArenaServer:
                 return
             self.arena_pilots[addr] = self.station.peers[self.station.routes[owner][0]]["pilot"]
         player_id = 1
-        if self.args.experimental_relay:
+        if self.args.relay:
             if first_join:
                 if self.next_player_slot > ARENA_JOINS:
                     return
@@ -594,7 +594,7 @@ class ArenaServer:
         self.refresh_server_list()
         rtype, rpay = ack_connect(payload, 0, player_id)
         receiver.sendto(codec.encode(rtype, rpay, self.key), addr)
-        if first_join and (self.args.experimental_flight or self.args.experimental_relay):
+        if first_join and (self.args.experimental_flight or self.args.relay):
             self.bootstrap_due[addr] = time.monotonic() + 3
         if first_join:
             self.expiry_due[addr] = time.monotonic() + self.peer_timeout + (3 if addr in self.bootstrap_due else 0)

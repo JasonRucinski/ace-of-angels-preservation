@@ -33,12 +33,10 @@ class TrialTests(unittest.TestCase):
         base = ['key', 'log', '--profile', 'local-relay', '--experimental-terrain',
                 '--sustained-delivery', '--map', 'Arena1a', '--turret-trial', str(SOURCE)]
         self.assertEqual(parse_args(base + ['--target-ships', '78']).target_ships, 78)
-        self.assertEqual(parse_args(base + ['--bind-address', '127.0.0.2',
-                                           '--advertised-address', '127.0.0.2']).bind_address, '127.0.0.2')
+        self.assertEqual(parse_args(base + ['--bind-address', '127.0.0.2']).bind_address, '127.0.0.2')
         for extra in (['--map', 'JRMAP'], ['--no-sustained-delivery'],
                       ['--no-experimental-relay'], ['--target-ships', '79'],
-                      ['--bind-address', '0.0.0.0', '--advertised-address', '0.0.0.0'],
-                      ['--bind-address', '192.168.1.5', '--advertised-address', '192.168.1.5']):
+                      ['--bind-address', '0.0.0.0'], ['--bind-address', '192.168.1.5']):
             with self.subTest(extra=extra), contextlib.redirect_stderr(io.StringIO()), self.assertRaises(SystemExit):
                 parse_args(base + extra)
 

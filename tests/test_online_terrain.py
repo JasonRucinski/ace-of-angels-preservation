@@ -173,7 +173,7 @@ class TerrainTests(unittest.TestCase):
             flight_bootstrap(terrain=b'MAP')
         args = ['key', 'log', '--profile', 'local-relay', '--map', 'Arena1a', '--experimental-terrain']
         parsed = parse_args(args)
-        self.assertTrue(parsed.experimental_terrain)
+        self.assertTrue(parsed.terrain)
         self.assertIsNone(parsed.spawn_origin)
         self.assertEqual(parse_args(args + ['--map', 'CTF_base']).spawn_origin, (0.0, 0.0, -12000.0))
         self.assertEqual(parse_args(args + ['--spawn-at', '1', '2', '3']).spawn_origin, (1.0, 2.0, 3.0))

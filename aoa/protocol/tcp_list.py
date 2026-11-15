@@ -59,12 +59,12 @@ def tcp_reply(job, bodies=None):
 
 
 def server_list_body(population, arena_port=None, mode="Local Arena", available=True, station_population=0,
-                     advertised_address="127.0.0.1", terrain="CTF_arena", backdrop="spacebkgd3"):
+                     address="127.0.0.1", terrain="CTF_arena", backdrop="spacebkgd3"):
     """Publish admitted arena population; no arena row when unavailable.
 
     Existing recovered fields 0x20/0x40 are terrain/backdrop, not mode enums.
     """
     body = server_record(0, "station", "", "", "", 0, station_population)
     if arena_port is not None and available:
-        body += server_record(1, mode, terrain, backdrop, advertised_address, arena_port, population)
+        body += server_record(1, mode, terrain, backdrop, address, arena_port, population)
     return body
