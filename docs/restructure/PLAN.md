@@ -174,9 +174,11 @@ Done 14 Nov ([phase1-tests.md](phase1-tests.md)): the snapshots are the same
 git blobs as before the move, every suite has its baseline outcome, and
 `tools/test.py --tier ci` passes 28 of 28. Not done: the Windows run of
 `verify_local.py`, both windows, the reel and the live verifiers (section 4).
-Left for phase 2: 17 known layering violations listed in
-`tests/test_layering.py`, five suites that still import another suite, and
-old `tools/x.py` names in docstrings and usage lines.
+Phase 2-pre (15 Nov, [phase2pre-tests.md](phase2pre-tests.md)) then removed
+all 17 layering violations that the move left, the five suites that imported
+another suite, and the old `tools/x.py` names in docstrings and usage lines:
+`aoa/builds.py`, `aoa/formats/pe.py` and `aoa/maps/registry.py` are new, and
+the layering test has no exceptions.
 
 ### Phase 2. Rebuild inside the packages
 
