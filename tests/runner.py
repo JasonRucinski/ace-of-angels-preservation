@@ -7,6 +7,9 @@
   python -I tools/test.py test_cli_help -- -k fetch_known_builds
 
 Prints one line per suite and a summary; exits non-zero if any suite fails.
+A suite that cannot start because an optional package is not installed
+(unicorn, capstone, pefile, Pillow, tkinter) is reported as SKIP and does not
+fail the run, unless --strict is given. CI uses --strict: it installs them.
 Arguments after `--` are passed to every suite (unittest's -k, -v, or a
 suite's own --update). Suites are listed in tests/tiers.py.
 """
@@ -25,6 +28,9 @@ BOOT = ("import runpy, sys; root, name = sys.argv[1:3]; sys.path[:0] = [root]; "
         "sys.argv = [sys.argv[0], *sys.argv[3:]]; "
         "runpy.run_module(name, run_name='__main__', alter_sys=True)")
 TIMEOUT = 900
+# Optional packages (requirements.txt and tkinter), by the module a suite imports.
+OPTIONAL = {"unicorn", "capstone", "pefile", "PIL", "tkinter", "_tkinter"}
+MISSING = re.compile(r"^ModuleNotFoundError: No module named '([\w.]+)'", re.M)
 
 
 def module(name):
@@ -56,6 +62,15 @@ def summary(output):
     return (int(ran[1]) if ran else None), (int(skipped[1]) if skipped else 0)
 
 
+def missing_optional(output):
+    """The optional package whose absence stopped a suite before any test ran, or None."""
+    if re.search(r"^Ran \d+ tests? in", output, re.M):
+        return None
+    found = MISSING.findall(output)
+    package = found[-1].split(".")[0] if found else None
+    return package if package in OPTIONAL else None
+
+
 def run(name, args=(), stream=False):
     """Run one suite; return (exit code, output, seconds)."""
     start = time.monotonic()
@@ -74,6 +89,8 @@ def main(argv=None):
     ap.add_argument("suites", nargs="*", help="suite names (default: --tier ci)")
     ap.add_argument("--tier", choices=("ci", "local", "all"), help="run the suites of a tier")
     ap.add_argument("-v", "--verbose", action="store_true", help="show each suite's own output as it runs")
+    ap.add_argument("--strict", action="store_true",
+                    help="a suite that needs an optional package that is not installed fails instead of skipping")
     argv = sys.argv[1:] if argv is None else list(argv)
     extra = []
     if "--" in argv:
@@ -87,12 +104,18 @@ def main(argv=None):
     unknown = [n for n in names if n not in known]
     if unknown:
         ap.error(f"no such suite: {', '.join(unknown)}")
-    failed = []
+    failed, skipped_suites = [], []
     for name in names:
         if args.verbose:
             print(f"== {name}", flush=True)
+        # Verbose runs stream the suite's output, so a missing package shows there and fails as before.
         code, output, seconds = run(name, extra, stream=args.verbose)
         ran, skipped = summary(output)
+        package = None if (code == 0 or args.strict) else missing_optional(output)
+        if package:
+            skipped_suites.append(name)
+            print(f"SKIP  {name:<55} {'needs ' + package:<22} {seconds:6.1f}s", flush=True)
+            continue
         counts = "" if args.verbose else (f"ran {ran}, skipped {skipped}" if ran is not None else "did not run")
         print(f"{'PASS' if code == 0 else 'FAIL'}  {name:<55} {counts:<22} {seconds:6.1f}s", flush=True)
         if code != 0:
@@ -100,7 +123,8 @@ def main(argv=None):
     for name, output in failed:
         if output:
             print(f"\n== {name} (exit non-zero), last lines:\n" + "\n".join(output.rstrip().splitlines()[-40:]))
-    print(f"\n{len(names) - len(failed)} of {len(names)} suites passed"
+    print(f"\n{len(names) - len(failed) - len(skipped_suites)} of {len(names)} suites passed"
+          + (f"; skipped (optional package not installed): {', '.join(skipped_suites)}" if skipped_suites else "")
           + (f"; failed: {', '.join(n for n, _ in failed)}" if failed else ""))
     return 1 if failed else 0
 

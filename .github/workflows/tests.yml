@@ -40,4 +40,4 @@ jobs:
         run: systemd-analyze verify deploy/linux/aoa-host.service
       # The suite list is tests/tiers.py (CI, plus CI_WINDOWS on Windows).
       - name: Run game-free suites
-        run: python -I tools/test.py --tier ci
+        run: python -I tools/test.py --tier ci --strict
