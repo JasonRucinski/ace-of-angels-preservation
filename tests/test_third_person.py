@@ -14,6 +14,8 @@ from aoa.client.patches import own_ship_model  # noqa: E402
 from aoa.client import prepare  # noqa: E402
 from aoa.client.patches import third_person as tp  # noqa: E402
 from aoa.paths import ROOT
+from aoa.client.patches import base as patching
+from tests.support_patches import triples
 
 ORIGINAL = ROOT / "game/2.9.2/AOACLIENT.EXE.orig"
 NODE, RECORD, GRAPHICS, STACK = 0x700000, 0x701000, 0x702000, 0x720000
@@ -327,10 +329,10 @@ class ThirdPersonTests(unittest.TestCase):
         off = prepare.configure(self.raw, chase_camera=False)
         self.assertIn(tp.NAME, prepare.inspect(on)["patches"])
         self.assertNotIn(tp.NAME, prepare.inspect(off)["patches"])
-        self.assertEqual(own_ship_menu.configure(own_ship_model.configure(tp.configure(on, False), False), False), off)
+        self.assertEqual(own_ship_menu.configure(patching.apply(own_ship_model.PATCH, tp.configure(on, False), False), False), off)
         self.assertEqual(prepare.configure(on), on)
         self.assertEqual(prepare.configure(off, chase_camera=True), on)
-        allowed = {i for o, old, new in tp.regions() + own_ship_model.regions() + own_ship_menu.regions() for i in range(o, o + len(old))}
+        allowed = {i for o, old, new in tp.regions() + triples(own_ship_model.PATCH) + own_ship_menu.regions() for i in range(o, o + len(old))}
         self.assertTrue(all(i in allowed for i, (a, b) in enumerate(zip(on, off)) if a != b))
         for o, old, new in tp.regions():
             bad = bytearray(on)
@@ -420,7 +422,7 @@ class OwnShipModelTests(unittest.TestCase):
         return calls
 
     def test_original_skips_own_ship(self):
-        off = own_ship_model.configure(self.prepared, False)
+        off = patching.apply(own_ship_model.PATCH, self.prepared, False)
         self.assertEqual(self.attaches(off, 0), [(0x702000, 0x704000, NODE)])
         self.assertEqual(self.attaches(off, 1), [])
 
@@ -433,11 +435,11 @@ class OwnShipModelTests(unittest.TestCase):
         off = prepare.configure(self.raw, chase_camera=False)
         self.assertIn(own_ship_model.NAME, prepare.inspect(self.prepared)["patches"])
         self.assertNotIn(own_ship_model.NAME, prepare.inspect(off)["patches"])
-        self.assertEqual(own_ship_menu.configure(own_ship_model.configure(tp.configure(self.prepared, False), False), False), off)
+        self.assertEqual(own_ship_menu.configure(patching.apply(own_ship_model.PATCH, tp.configure(self.prepared, False), False), False), off)
         # A client prepared at patch version 15 (camera, no model) upgrades in place.
-        v15 = own_ship_menu.configure(own_ship_model.configure(self.prepared, False), False)
+        v15 = own_ship_menu.configure(patching.apply(own_ship_model.PATCH, self.prepared, False), False)
         self.assertEqual(prepare.configure(v15), self.prepared)
-        for o, old, new in own_ship_model.regions():
+        for o, old, new in triples(own_ship_model.PATCH):
             bad = bytearray(self.prepared)
             bad[o] ^= 0xFF
             with self.assertRaises(ValueError):
@@ -445,12 +447,12 @@ class OwnShipModelTests(unittest.TestCase):
             partial = bytearray(self.prepared)
             partial[o:o + len(old)] = old
             with self.assertRaises(ValueError):
-                own_ship_model.state(bytes(partial))
+                patching.state(own_ship_model.PATCH, bytes(partial))
 
     def test_own_children_stay_visible_only_with_chase_on(self):
         # The store at 0x48FAE5 that ends 0x48F730's pass over your ship's children.
         for image, flag, want in ((self.prepared, 0, 0), (self.prepared, 1, 1),
-                                  (own_ship_model.configure(self.prepared, False), 1, 0)):
+                                  (patching.apply(own_ship_model.PATCH, self.prepared, False), 1, 0)):
             with self.subTest(patched=image is self.prepared, flag=flag):
                 u = Uc(UC_ARCH_X86, UC_MODE_32)
                 u.mem_map(0x400000, 0x20F000)

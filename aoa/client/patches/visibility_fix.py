@@ -24,9 +24,9 @@ visible; promoted, that would draw the player's own hull at the camera.
 
 Library use only (prepare_client.py composes it); no file is written here.
 """
-import struct
-
-from aoa.client.base import Asm, jmp_patch  # noqa: E402
+from aoa.client import layout
+from aoa.client.asm import Asm, jmp_patch
+from aoa.client.patches.base import Patch, Region
 
 NAME = "visibility-math-v1"
 CENTER_VISIBLE = False      # distance-0 nodes keep the original (hidden) result
@@ -34,7 +34,7 @@ SITE = 0x5431A1
 ORIGINAL = bytes.fromhex("d98674010000")  # fld dword [esi+174] ; the dot, for acos
 ACOS_CALL = 0x5431A7                     # call _CIacos, consumes ST0
 VISIBILITY_DONE = 0x543238               # mov [esi+154], al ; then LOD selection
-CAVE = 0x58B700                          # below online terrain (0x58B800)
+CAVE = layout.cave(NAME).start          # below online terrain
 
 
 def code(cave=CAVE):
@@ -57,33 +57,12 @@ def code(cave=CAVE):
     return a.resolve()
 
 
-def regions():
-    """(file offset, original bytes, patched bytes); image base 0x400000."""
+def _regions():
     body = code()
-    assert CAVE + len(body) <= 0x58B800
-    return [(CAVE - 0x400000, bytes(len(body)), body),
-            (SITE - 0x400000, ORIGINAL, jmp_patch(SITE, CAVE, len(ORIGINAL)))]
+    return (Region(CAVE, bytes(len(body)), body, "cave"),
+            Region(SITE, ORIGINAL, jmp_patch(SITE, CAVE, len(ORIGINAL))))
 
 
-def state(data):
-    """True if applied, False if absent; raises on anything else."""
-    found = set()
-    for offset, old, new in regions():
-        actual = data[offset:offset + len(old)]
-        if actual == old:
-            found.add(False)
-        elif actual == new:
-            found.add(True)
-        else:
-            raise ValueError("unexpected visibility-math code or cave")
-    if len(found) != 1:
-        raise ValueError("partial visibility-math patch")
-    return found.pop()
-
-
-def configure(data, enabled=True):
-    state(data)
-    out = bytearray(data)
-    for offset, old, new in regions():
-        out[offset:offset + len(old)] = new if enabled else old
-    return bytes(out)
+PATCH = Patch(
+    id=NAME, since=14, policy="option", option="bounded_visibility", label="Corrected object visibility math",
+    group="fixes", default=True, regions=_regions())

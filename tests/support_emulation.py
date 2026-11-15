@@ -12,6 +12,7 @@ from aoa.analysis.pe_util import PE
 from aoa.formats import gob
 from aoa.maps.lod import mesh_nodes
 from aoa.paths import ROOT
+from tests.support_patches import triples
 from unicorn import UC_HOOK_CODE
 from unicorn.x86_const import (UC_X86_REG_EAX, UC_X86_REG_ECX, UC_X86_REG_EFLAGS, UC_X86_REG_ESI,
                                UC_X86_REG_ESP, UC_X86_REG_FPCW)
@@ -23,7 +24,7 @@ class GroupProbe:
     def __init__(self, distant=False, extras=()):
         self.emu = e = Emu(PE(SOURCE))
         for module in (visibility_fix, *extras, *((patch,) if distant else ())):
-            for offset, _, new in module.regions():
+            for offset, _, new in (triples(module.PATCH) if hasattr(module, "PATCH") else module.regions()):
                 e.write(offset + 0x400000, new)
         # Only the C runtime's x87 asin/acos calls are replaced. All group,
         # distance, projected-size and mesh-selection instructions are original.

@@ -4,12 +4,13 @@ Changes the CAOAComm 0x81 receive case from a toggle to a one-byte state.
 This is not session authentication, ordered delivery, or spawn protection
 policy. Use only in the localhost extension gate with a prepared client.
 """
-
-from aoa.client.base import Asm, jmp_patch
+from aoa.client import layout
+from aoa.client.asm import Asm, jmp_patch
+from aoa.client.patches.base import Patch, Region
 
 NAME = "explicit-protection-v1"
-SITE, SITE_OFFSET = 0x4867C3, 0x867C3
-CAVE, CAVE_OFFSET = 0x58B480, 0x18B480
+SITE = 0x4867C3
+CAVE = layout.cave(NAME).start
 DISPLACED = bytes.fromhex("8b0d28775e00e8127d0200")
 RESUME, TOGGLE = 0x4867CE, 0x4AE4E0
 WORLD_POINTER, FLAG = 0x5E7728, 0xD34EC
@@ -31,22 +32,9 @@ def cave_code():
     return a.resolve()
 
 
-def state(data):
-    code = cave_code()
-    current = (data[SITE_OFFSET:SITE_OFFSET + len(DISPLACED)],
-               data[CAVE_OFFSET:CAVE_OFFSET + len(code)])
-    if current == (DISPLACED, bytes(len(code))):
-        return False
-    if current == (jmp_patch(SITE, CAVE, len(DISPLACED)), code):
-        return True
-    raise ValueError("unexpected explicit-protection code or cave")
-
-
-def configure(data, enabled=True):
-    state(data)
-    code = cave_code()
-    out = bytearray(data)
-    out[SITE_OFFSET:SITE_OFFSET + len(DISPLACED)] = (
-        jmp_patch(SITE, CAVE, len(DISPLACED)) if enabled else DISPLACED)
-    out[CAVE_OFFSET:CAVE_OFFSET + len(code)] = code if enabled else bytes(len(code))
-    return bytes(out)
+# No launcher checkbox: it works only with a loopback Station, and prepare
+# refuses it with any other.
+PATCH = Patch(
+    id=NAME, since=None, policy="option", option="experimental_protection", group="experimental",
+    regions=(Region(SITE, DISPLACED, jmp_patch(SITE, CAVE, len(DISPLACED))),
+             Region(CAVE, bytes(len(cave_code())), cave_code(), "cave")))

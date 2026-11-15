@@ -9,6 +9,8 @@ from aoa.live import frame_pacing  # noqa: E402
 from aoa.client import prepare  # noqa: E402
 from aoa.client.experiments import render_clock_experiment  # noqa: E402
 from aoa.paths import ROOT
+from aoa.client.patches import base as patching
+from tests.support_patches import triples
 
 ORIGINAL = ROOT / "game/2.9.2/AOACLIENT.EXE.orig"
 QPF_STUB, QPC_STUB, FRAME_STUB_EXIT, RETURN = 0x500000, 0x500010, 0x500020, 0x500100
@@ -50,7 +52,7 @@ def run_gate(now_ms, last_frame_ms):
 class FrameClockTests(unittest.TestCase):
     def test_clock_matches_verified_experiment(self):
         self.assertEqual(frame_clock.clock_code(), render_clock_experiment.code())
-        sites = {off: new for off, old, new in frame_clock.regions()}
+        sites = {off: new for off, old, new in triples(frame_clock.PATCH)}
         for off, old, new in render_clock_experiment.regions():
             self.assertEqual(sites[off], new)
 
@@ -72,23 +74,23 @@ class FrameClockTests(unittest.TestCase):
         off = prepare.configure(raw, smooth_frame_clock=False)
         self.assertIn(frame_clock.NAME, prepare.inspect(on)["patches"])
         self.assertNotIn(frame_clock.NAME, prepare.inspect(off)["patches"])
-        self.assertEqual(frame_clock.configure(on, False), off)
+        self.assertEqual(patching.apply(frame_clock.PATCH, on, False), off)
         self.assertEqual(prepare.configure(on), on)                       # idempotent
         self.assertEqual(prepare.configure(on, smooth_frame_clock=False), off)
-        allowed = {i for o, old, new in frame_clock.regions() for i in range(o, o + len(old))}
+        allowed = {i for o, old, new in triples(frame_clock.PATCH) for i in range(o, o + len(old))}
         self.assertTrue(all(i in allowed for i, (a, b) in enumerate(zip(on, off)) if a != b))
-        for o, old, new in frame_clock.regions():
+        for o, old, new in triples(frame_clock.PATCH):
             bad = bytearray(on)
             bad[o] ^= 0xFF
             with self.assertRaises(ValueError):
-                frame_clock.state(bytes(bad))
+                patching.state(frame_clock.PATCH, bytes(bad))
 
     def test_partial_patch_rejected(self):
         off = prepare.configure(ORIGINAL.read_bytes(), smooth_frame_clock=False)
-        o, old, new = frame_clock.regions()[-1]          # gate call only
+        o, old, new = triples(frame_clock.PATCH)[-1]          # gate call only
         partial = off[:o] + new + off[o + len(old):]
         with self.assertRaises(ValueError):
-            frame_clock.state(partial)
+            patching.state(frame_clock.PATCH, partial)
 
     def test_pacing_summary(self):
         frames = [{"t": n / 60, "counter": n, "clock": round(n * 1000 / 60), "camera": (0, 0, n * 8.0),

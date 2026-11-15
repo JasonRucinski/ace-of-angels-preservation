@@ -11,12 +11,13 @@ the data; binary callers ignore it.
 
 Library use only (prepare_client.py composes it); no file is written here.
 """
-import struct
+from aoa.client import layout
+from aoa.client.asm import Asm, jmp_patch
+from aoa.client.patches.base import Patch, Region
 
-from aoa.client.base import Asm, jmp_patch  # noqa: E402
-
-SITE, SITE_OFFSET = 0x52A6E3, 0x12A6E3
-CAVE, CAVE_OFFSET = 0x58B440, 0x18B440
+NAME = "archive-terminator-v1"
+SITE = 0x52A6E3
+CAVE = layout.cave(NAME).start
 DISPLACED = bytes.fromhex("8b4c241051e851290500")  # mov ecx,[esp+10]; push ecx; call new
 NEW = 0x57D03E      # MFC42 ord823 (operator new) thunk
 RESUME = 0x52A6ED   # mov ecx,[esp+14] after the original call
@@ -33,21 +34,7 @@ def cave_code():
     return a.resolve()
 
 
-def state(data):
-    """True if applied, False if original; raises on anything else."""
-    code, jump = cave_code(), jmp_patch(SITE, CAVE, len(DISPLACED))
-    current = (data[SITE_OFFSET:SITE_OFFSET + len(DISPLACED)], data[CAVE_OFFSET:CAVE_OFFSET + len(code)])
-    if current == (DISPLACED, bytes(len(code))):
-        return False
-    if current == (jump, code):
-        return True
-    raise ValueError("unexpected archive-terminator code or cave")
-
-
-def configure(data, enabled=True):
-    state(data)
-    code, jump = cave_code(), jmp_patch(SITE, CAVE, len(DISPLACED))
-    out = bytearray(data)
-    out[SITE_OFFSET:SITE_OFFSET + len(jump)] = jump if enabled else DISPLACED
-    out[CAVE_OFFSET:CAVE_OFFSET + len(code)] = code if enabled else bytes(len(code))
-    return bytes(out)
+PATCH = Patch(
+    id=NAME, since=3, policy="always",
+    regions=(Region(SITE, DISPLACED, jmp_patch(SITE, CAVE, len(DISPLACED))),
+             Region(CAVE, bytes(len(cave_code())), cave_code(), "cave")))

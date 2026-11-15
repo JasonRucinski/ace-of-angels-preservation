@@ -14,6 +14,7 @@ from aoa.client.patches import physics_timestep
 from aoa.client import prepare as setup
 from aoa.client.patches.station_host import STABLE_SHA256
 from aoa.paths import ROOT
+from aoa.client.patches import base as patching
 from tests import support_patches
 
 SOURCE = ROOT / "game/2.9.2/AOACLIENT.EXE.orig"
@@ -41,18 +42,18 @@ class ClientPreparationTests(unittest.TestCase):
             self.assertEqual(prepared[setup.BACKGROUND_OFFSET:setup.BACKGROUND_OFFSET + 2], b"\x90\x90")
             self.assertEqual(setup.configure(changed), prepared)
         # A version-1 setup (no background patch) upgrades in place.
-        version1 = archive_terminator.configure(
+        version1 = patching.apply(archive_terminator.PATCH,
             setup.background_site(setup.configure(self.stable, "127.0.0.1"), False), False)
         self.assertNotIn("background-network-v1", setup.inspect(version1)["patches"])
         self.assertEqual(setup.configure(version1, "127.0.0.1"), setup.configure(self.stable, "127.0.0.1"))
 
     def test_explicit_protection_opt_in_and_exact_undo(self):
         normal = setup.configure(self.original)
-        self.assertFalse(explicit_protection.state(normal))
+        self.assertFalse(patching.state(explicit_protection.PATCH, normal))
         experimental = setup.configure(normal, experimental_protection=True)
         self.assertIn(explicit_protection.NAME, setup.inspect(experimental)["patches"])
         self.assertEqual(setup.configure(experimental), experimental)
-        self.assertTrue(explicit_protection.state(setup.configure(experimental, "127.0.0.1")))
+        self.assertTrue(patching.state(explicit_protection.PATCH, setup.configure(experimental, "127.0.0.1")))
         self.assertEqual(setup.configure(experimental, experimental_protection=False), normal)
         with self.assertRaisesRegex(ValueError, "loopback"):
             setup.configure(experimental, "10.0.0.1")
