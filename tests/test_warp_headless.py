@@ -184,7 +184,7 @@ class HeadlessWarpTests(unittest.TestCase):
                         self.assertIn(body, self.packets)
                         gate_clients[peer].load(body)
                     if kind == 0x1f and struct.unpack_from('<H', body, 2)[0] == 1:
-                        filtered = server.movement_update(body, 1)
+                        filtered = motion.movement_update(body, 1)
                         state, _, missing = motion.update(filtered, states[peer])
                         self.assertFalse(missing)
                         if peer is observer and not dropped and state[0x40] == drop_position:
@@ -218,13 +218,13 @@ class HeadlessWarpTests(unittest.TestCase):
                 velocity = (0., 0., 100.)
                 for packet in self.packets:
                     origin = gate_clients[pilot].load(packet)['position']
-                    send(pilot, *server.motion_snapshot(1, (origin, velocity)))
+                    send(pilot, *motion.motion_snapshot(1, (origin, velocity)))
                     until(lambda: states[observer][0x40] == origin)
                     transit = gate_clients[pilot].overlap(origin, velocity)
                     self.assertTrue(transit['warped'])
                     drop_position = transit['position']
                     dropped = False
-                    send(pilot, *server.motion_snapshot(1, (drop_position, velocity)))
+                    send(pilot, *motion.motion_snapshot(1, (drop_position, velocity)))
                     until(lambda: dropped)
                     self.assertEqual(states[observer][0x40], origin)
                     # No second upload: periodic absolute refresh recovers loss.

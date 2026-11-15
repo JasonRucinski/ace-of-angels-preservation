@@ -1,26 +1,16 @@
-"""Recover Arena1a turret hierarchy and verify transforms in original x86 code.
+"""Decode the Arena1a node hierarchy (parent links and world transforms).
 
-Read-only research: no host packets or client patches. Coordinates are written
-only to an optional local report, not the committed count-only evidence.
-
-The report goes to work/evidence/2.9.2/turret_groups_20261026.json unless
---evidence names the file (the committed copy is evidence/2.9.2/...).
+Used by the opt-in turret and warp-gate trials of the host
+(aoa/host/turret_trial.py, aoa/host/warp_trial.py). The audit that checks
+these transforms in original client code is
+archive/analysis/audit_turret_groups.py.
 """
-import collections
 import hashlib
-import json
 import struct
-import sys
-from pathlib import Path
 
-from aoa import cli
 from aoa.formats import gob
 from aoa.formats import scene
 from aoa.maps.navigation import ARENA1A_SHA256
-from aoa.builds import CLIENT_SHA256
-
-from aoa.paths import ROOT
-EVIDENCE = 'evidence/2.9.2/turret_groups_20261026.json'
 
 
 def hierarchy(data):
@@ -58,77 +48,3 @@ def hierarchy(data):
     for node in nodes:
         resolve(node, set())
     return nodes
-
-
-def native_checks(client, nodes):
-    if hashlib.sha256(client.read_bytes()).hexdigest() != CLIENT_SHA256["2.9.2"]:
-        raise ValueError('requires the original 2.9.2 executable')
-    from aoa.emulation.emu import Emu, HEAP, SCRATCH
-    from aoa.analysis.pe_util import PE
-    emu = Emu(PE(client))
-    # Original animation writer: parent pointer +0x18 serializes its ID +8;
-    # own ID +8 follows the animation-key array. No hooks or game calls needed.
-    obj, parent, stream, output = HEAP, HEAP + 0x1000, HEAP + 0x2000, SCRATCH
-    emu.write(obj + 8, struct.pack('<I', 120))
-    emu.write(obj + 0x18, struct.pack('<I', parent))
-    emu.write(parent + 8, struct.pack('<I', 119))
-    emu.write(stream + 4, struct.pack('<I', output))
-    emu.thiscall(0x5490c0, obj, stream)
-    assert struct.unpack('<I', emu.read(output + 0xc, 4))[0] == 119
-    assert struct.unpack('<I', emu.read(output + 0x28, 4))[0] == 120
-    # Use the native recursive world-transform routine, including its original
-    # multiplication implementation, on every decoded node. No stubs involved.
-    addresses = {n['node_id']: HEAP + 0x10000 + i * 0x400 for i, n in enumerate(nodes)}
-    for node in nodes:
-        address = addresses[node['node_id']]
-        emu.write(address + 0x7c, struct.pack('<16f', *node['matrix']))
-        emu.write(address + 0x144, struct.pack('<I', addresses.get(node['parent_id'], 0)))
-    errors = []
-    for node in nodes:
-        address = addresses[node['node_id']]
-        result = emu.thiscall(0x542c80, address)
-        assert result == address + 0x1a8
-        matrix = struct.unpack('<16f', emu.read(result, 64))
-        error = max(abs(a-b) for a, b in zip(matrix, node['world_matrix']))
-        assert error < .1, (node['name'], error)
-        errors.append(error)
-    # Dispatch proof: packet kind 1 enters the turret-AI allocation branch.
-    pe = emu.pe
-    selector = pe.read_va(0x4a6d80, 1)[0]
-    assert pe.u32(0x4a6d64 + 4 * selector) == 0x4a69dc
-    return {'parent_id_writer': 'passed', 'native_world_transforms': len(nodes),
-            'maximum_matrix_error': max(errors), 'load_object_turret_kind': 1}
-
-
-def main(argv=None):
-    parser = cli.parser(__doc__)
-    parser.add_argument('--local-report', type=Path, help='also write the full node coordinates here')
-    cli.add_evidence_option(parser, EVIDENCE)
-    args = parser.parse_args(argv)
-    nodes = hierarchy((ROOT / 'work/2.9.2/export/AOAOBJECTS/Arena1a.Gob').read_bytes())
-    by_id = {n['node_id']: n for n in nodes}
-    turrets = [n for n in nodes if n['category'] == 1]
-    flags = [n for n in nodes if n['category'] == 5]
-    assert len(turrets) == 80 and len(flags) == 18
-    assert all(by_id[n['parent_id']]['category'] == 5 for n in turrets)
-    groups = [{'flag': flag['name'], 'parent': by_id[flag['parent_id']]['name'],
-               'turrets': [n['name'] for n in turrets if n['parent_id'] == flag['node_id']]}
-              for flag in flags]
-    report = {'scope': 'Hierarchy and native transform verification; no objects spawned',
-              'client_sha256': CLIENT_SHA256["2.9.2"], 'map_sha256': ARENA1A_SHA256,
-              'turrets': len(turrets), 'groups': groups,
-              'group_size_histogram': dict(collections.Counter(len(g['turrets']) for g in groups)),
-              'native_checks': native_checks(ROOT / 'game/2.9.2/AOACLIENT.EXE.orig', nodes),
-              'remaining': ['Per-marker model choice', 'Initial ownership and capture rules',
-                            'Orientation delivery', 'Single-authority aiming/firing and damage',
-                            'Live visual and multiplayer acceptance']}
-    if args.local_report:
-        args.local_report.parent.mkdir(parents=True, exist_ok=True)
-        args.local_report.write_text(json.dumps({'summary': report, 'nodes': nodes}, indent=2) + '\n')
-    path = cli.evidence_target(args.evidence, EVIDENCE)
-    path.write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
-    print(json.dumps(report, indent=2))
-
-
-if __name__ == '__main__':
-    sys.exit(cli.run(main))

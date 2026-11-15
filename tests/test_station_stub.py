@@ -434,10 +434,10 @@ class ProtocolTests(unittest.TestCase):
                 messages[b].clear()
                 messages[a].clear()
                 send(b, 10, request())
-                send(b, *stub.motion_snapshot(2, ((1, 2, 3), (4, 5, 6))))
+                send(b, *protocol_motion.motion_snapshot(2, ((1, 2, 3), (4, 5, 6))))
                 alive[d] = 4
                 send(d, 10, request())
-                send(d, *stub.motion_snapshot(4, ((1, 2, 3), (4, 5, 6))))
+                send(d, *protocol_motion.motion_snapshot(4, ((1, 2, 3), (4, 5, 6))))
                 pump(3.4)
                 self.assertFalse(payloads(b, 0x0B))
                 self.assertFalse(payloads(b, 8))
@@ -565,12 +565,12 @@ class ProtocolTests(unittest.TestCase):
         state = ((12.0, 24.0, 36.0), (1.5, -2.5, 3.5))
         for mask, fmt, delta in ((2, "3h", (300, -400, 500)), (4, "3b", (1, -2, 3))):
             packet = struct.pack("<HHI" + fmt, 0x8000, 1, mask, *delta)
-            result = stub.reported_motion(packet, state)
+            result = protocol_motion.reported_motion(packet, state)
             self.assertEqual(result[0], state[0])
             self.assertEqual(result[1], tuple(a + b for a, b in zip(state[1], delta)))
         bad = struct.pack("<HHI3f", 0x8000, 1, 0x40, float("nan"), 0, 0)
         with self.assertRaises(ValueError):
-            stub.reported_motion(bad, state)
+            protocol_motion.reported_motion(bad, state)
 
     def test_arena_ping(self):
         self.assertEqual(stub.arena_ping(0x100000001), (8, b"\x01" + bytes(11)))
@@ -580,22 +580,22 @@ class ProtocolTests(unittest.TestCase):
         prefix = bytes(range(60))
         packet = struct.pack("<HHI", 0x8000, 1, 0xD1207381) + prefix + bytes(73)
         # A zero-record gun-state block survives; later optional blocks do not.
-        self.assertEqual(stub.movement_update(packet, 1),
+        self.assertEqual(protocol_motion.movement_update(packet, 1),
                          struct.pack("<HHI", 0x8000, 1, 0x11207381) + prefix + b"\x00")
         guns = bytes([0x82]) + struct.pack("<HBHB", 2, 15, 7, 15)
         firing = struct.pack("<HHI", 0x8000, 1, 0x91207381) + prefix + guns + bytes(9)
-        self.assertEqual(stub.movement_update(firing, 1),
+        self.assertEqual(protocol_motion.movement_update(firing, 1),
                          struct.pack("<HHI", 0x8000, 1, 0x11207381) + prefix + guns)
         # Out-of-range system indexes or a truncated block drop only the block.
         for bad in (bytes([1]) + struct.pack("<HB", 128, 15), bytes([3]) + struct.pack("<HB", 2, 15)):
             packet_bad = struct.pack("<HHI", 0x8000, 1, 0x11207381) + prefix + bad
-            self.assertEqual(stub.movement_update(packet_bad, 1),
+            self.assertEqual(protocol_motion.movement_update(packet_bad, 1),
                              struct.pack("<HHI", 0x8000, 1, 0x01207381) + prefix)
         for n in range(68):
-            self.assertIsNone(stub.movement_update(packet[:n], 1))
-        self.assertIsNone(stub.movement_update(packet, 2))
-        self.assertIsNone(stub.movement_update(struct.pack("<HHI", 0, 1, 1) + bytes(12), 1))
-        self.assertIsNone(stub.movement_update(struct.pack("<HHI", 0x8000, 1, 0x80000000), 1))
+            self.assertIsNone(protocol_motion.movement_update(packet[:n], 1))
+        self.assertIsNone(protocol_motion.movement_update(packet, 2))
+        self.assertIsNone(protocol_motion.movement_update(struct.pack("<HHI", 0, 1, 1) + bytes(12), 1))
+        self.assertIsNone(protocol_motion.movement_update(struct.pack("<HHI", 0x8000, 1, 0x80000000), 1))
 
     def test_experimental_relay_transport(self):
         # Two synthetic sockets verify transport only, not game simulation.
@@ -669,7 +669,7 @@ class ProtocolTests(unittest.TestCase):
                     # Move A, then join C. C must see the last reported
                     # coordinates and a full velocity seed, not A's spawn.
                     motion = ((1250.0, -250.0, 80.0), (12.0, -4.0, 7.0))
-                    rtype, rpay = stub.motion_snapshot(1, motion)
+                    rtype, rpay = protocol_motion.motion_snapshot(1, motion)
                     a.sendto(codec.encode(rtype, rpay, key), endpoint)
                     while codec.decode(b.recv(512), key)["type"] != 0x1F:
                         pass

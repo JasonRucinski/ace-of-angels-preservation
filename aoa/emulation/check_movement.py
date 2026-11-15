@@ -18,8 +18,8 @@ from aoa import cli
 from aoa.builds import CLIENT_SHA256
 from aoa.emulation.emu import Emu, HEAP, SCRATCH, STACK, STOP
 from aoa.analysis.pe_util import PE
-from aoa.host.server import movement_update, reported_motion, motion_snapshot
 from aoa.protocol import motion
+from aoa.protocol.motion import movement_update, reported_motion, motion_snapshot
 from aoa.client.patches.physics_timestep import SITE, CAVE, DISPLACED, guard_code
 from aoa.client.base import jmp_patch
 

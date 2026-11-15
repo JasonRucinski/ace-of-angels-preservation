@@ -227,13 +227,13 @@ independent.
 Reproduce with:
 
 ```powershell
-.venv/Scripts/python.exe -I tools/run.py aoa.maps.warp_routes --local-report work/warp-research/routes.json
+.venv/Scripts/python.exe -I tools/run.py archive.analysis.audit_warp_gates --local-report work/warp-research/routes.json
 ```
 
 The report goes to `work/evidence/2.9.2/warp_gates_20261026.json`; add
 `--evidence evidence/2.9.2/warp_gates_20261026.json` to replace the committed
-copy. `audit_turret_groups.py` and `audit_arena1a_rebuild.py` work the same
-way.
+copy. `archive.analysis.audit_turret_groups` and `archive.analysis.audit_arena1a_rebuild`
+work the same way.
 
 The audit pins the original client and map hashes. Full coordinates remain in
 the ignored local report; names, checks and limitations are recorded in

@@ -944,78 +944,6 @@ def scenario_test_object():
     return 0x25, bytes(p)
 
 
-def reported_motion(payload, previous):
-    """Read position/velocity from a validated movement_update result.
-
-    Decoder 0x495330 puts 0x40 first, followed by velocity flags 1/2/4.
-    Keep last reported coordinates, without inventing server-side motion.
-    Delta velocities require the previous value; float32 round like client.
-    """
-    mask = struct.unpack_from("<I", payload, 4)[0]
-    offset = 8
-    position, velocity = previous
-    if mask & 0x40:
-        position = struct.unpack_from("<3f", payload, offset)
-        offset += 12
-    if mask & 1:
-        velocity = struct.unpack_from("<3f", payload, offset)
-    elif mask & 6:
-        delta = struct.unpack_from("<3h" if mask & 2 else "<3b", payload, offset)
-        velocity = struct.unpack("<3f", struct.pack("<3f", *(a + b for a, b in zip(velocity, delta))))
-    if not all(math.isfinite(v) for v in (*position, *velocity)):
-        raise ValueError("non-finite movement")
-    return position, velocity
-
-
-def motion_snapshot(slot, motion):
-    """Absolute position and velocity seed for a newly connected observer."""
-    position, velocity = motion
-    return 0x1F, struct.pack("<HHI6f", 0x8000, slot, 0x41, *position, *velocity)
-
-
-def movement_update(payload, slot):
-    """Keep the first player's kinematic prefix and validated gun state.
-
-    Decoder 0x495330 consumes these fields before the optional blocks. The
-    0x20000000/0x40000000/0x80000000 blocks cannot safely be forwarded: the
-    client receive caller leaves some destination pointers uninitialized.
-    Discard them and any additional records. Delta fields retain their
-    original encoding; this is not state recovery or authoritative simulation.
-    """
-    if len(payload) < 8:
-        return None
-    trip, player, raw_mask = struct.unpack_from("<HHI", payload)
-    if not trip & 0x8000 or player != slot:
-        return None
-    mask = raw_mask & 0x07FFFFFF
-    if not mask:
-        return None
-    size = 12 if mask & 0x40 else 0
-    # Absolute float triplets or signed short/byte delta triplets, in the
-    # decoder's order (not ascending flag order).
-    for absolute in (0x1, 0x8, 0x40000):
-        size += next((n for flag, n in ((absolute, 12), (absolute << 1, 6),
-                                      (absolute << 2, 3)) if mask & flag), 0)
-    size += 4 * sum(bool(mask & flag) for flag in (0x80, 0x100, 0x200))
-    size += 4 if mask & 0x400 else (2 if mask & 0x800 else 0)
-    size += 4 * sum(bool(mask & flag) for flag in (0x1000, 0x2000, 0x4000,
-                                                0x8000, 0x10000, 0x20000))
-    for absolute in (0x200000, 0x1000000):
-        size += next((n for flag, n in ((absolute, 12), (absolute << 1, 6),
-                                      (absolute << 2, 3)) if mask & flag), 0)
-    if len(payload) < 8 + size:
-        return None
-    end = 8 + size
-    if raw_mask & protocol_motion.GUN_STATE:
-        # The per-gun fire state directly follows the prefix. Keep it only
-        # when well formed with bounded indexes; otherwise drop the block.
-        try:
-            end = protocol_motion.gun_state(payload, end)[1]
-            mask |= protocol_motion.GUN_STATE
-        except ValueError:
-            pass
-    return struct.pack("<HHI", trip, slot, mask) + payload[8:end]
-
 # Uncompressed TCP reply bodies per job type. Job 14 (resource file-state
 # list, handler 0x432ED0): a 128-byte name header, then 168-byte records,
 # count = (len - 0x80) / 0xA8; zero records = "every file is current".
@@ -1805,7 +1733,7 @@ def run(args, key, log, resources, objects=None):
                     # replaying a wrapped delta would apply it twice.
                     if m["type"] == 0x1B:
                         continue
-                    p = movement_update(payload, arena_players[addr])
+                    p = protocol_motion.movement_update(payload, arena_players[addr])
                     if p is not None:
                         try:
                             state, present, missing = protocol_motion.update(p, arena_motion[addr])

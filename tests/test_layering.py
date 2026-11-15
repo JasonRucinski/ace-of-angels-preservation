@@ -12,9 +12,9 @@ and checks each edge against the layers:
   host or launchers imports them.
 - nothing in aoa imports archive/ or tests/.
 
-Edges that break a rule today are listed in KNOWN with the audit finding
-that covers them (docs/restructure/audits/); phase 2 removes them. The test
-fails on a new violation and on a KNOWN entry that no longer occurs.
+Edges that break a rule would be listed in KNOWN with the audit finding
+that covers them (docs/restructure/audits/); phase 2-pre removed them all.
+The test fails on a new violation and on a KNOWN entry that no longer occurs.
 
     python -I tools/test.py test_layering
 """
@@ -35,18 +35,9 @@ MAY_IMPORT = {
     **{leaf: {"formats", "protocol", "maps", "client", "host", "launchers"} | LEAVES for leaf in LEAVES},
 }
 
-# (importer, imported): why it is allowed for now. Remove an entry when phase 2 fixes it.
-KNOWN = {
-    # Audit scripts kept as libraries: the emulator for their CLIs, and the
-    # server cycle through warp_routes (R4, H12).
-    ("aoa.maps.arena1a_audit", "aoa.analysis.pe_util"): "R4: audit CLI in a library module",
-    ("aoa.maps.turret_hierarchy", "aoa.analysis.pe_util"): "R4: audit CLI in a library module",
-    ("aoa.maps.turret_hierarchy", "aoa.emulation.emu"): "R4: audit CLI in a library module",
-    ("aoa.maps.warp_routes", "aoa.analysis.pe_util"): "R4: audit CLI in a library module",
-    ("aoa.maps.warp_routes", "aoa.emulation.emu"): "R4: audit CLI in a library module",
-    ("aoa.maps.warp_routes", "aoa.host.server"): "H12, R4: the server import cycle",
-    ("aoa.maps.warp_routes", "aoa.protocol.motion"): "R4: audit CLI in a library module",
-}
+# (importer, imported): why it is allowed for now. Empty since phase 2-pre;
+# fix a new violation instead of listing it here.
+KNOWN = {}
 
 
 def module_name(path):

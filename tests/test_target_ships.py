@@ -62,7 +62,7 @@ class LayoutTests(unittest.TestCase):
 
 class PerceivedDamageTests(unittest.TestCase):
     def test_real_upload(self):
-        prefix = stub.movement_update(HIT_REPORT, 1)
+        prefix = motion.movement_update(HIT_REPORT, 1)
         mask = struct.unpack_from("<I", HIT_REPORT, 4)[0]
         self.assertEqual(motion.perceived_damage(HIT_REPORT, len(prefix), mask), HIT_ENTRIES)
         with self.assertRaises(ValueError):

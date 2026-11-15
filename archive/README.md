@@ -19,9 +19,12 @@ executables, `work/` exports), which this repository does not contain.
 | Script | Frozen output |
 |---|---|
 | `arena_inventory.py` | `evidence/2.9.2/arena_inventory.json` |
+| `audit_arena1a.py` | `evidence/2.9.2/arena1a_audit_20261021.json` (its dispatch table stays in `aoa/maps/arena1a_audit.py`) |
 | `audit_arena1a_rebuild.py` | `evidence/2.9.2/arena1a_rebuild_20261026.json` |
 | `audit_level_data.py` | `evidence/asset-review/level-data.json` |
 | `audit_map_nodes.py` | `evidence/2.9.2/map_nodes_20261026.json` |
+| `audit_turret_groups.py` | `evidence/2.9.2/turret_groups_20261026.json` (`hierarchy()` stays in `aoa/maps/turret_hierarchy.py`) |
+| `audit_warp_gates.py` | `evidence/2.9.2/warp_gates_20261026.json` (`routes()` stays in `aoa/maps/warp_routes.py`) |
 | `compare_client_resources.py` | `evidence/asset-review/client-resources.json` |
 | `config_records.py` | `evidence/2.7.1/config_records.{json,txt}`, `evidence/2.9.2/config_records.{json,txt}` |
 | `emulate_cipher.py` | `evidence/2.7.1/cipher_emulation.json`, `evidence/2.9.2/cipher_emulation.json` |

@@ -32,9 +32,9 @@ class ReelTests(unittest.TestCase):
 
     def test_packets_pass_the_relay_parsers(self):
         payload = bot.movement(3, (1.5, -2, 3e4), (0, 0, 900))
-        prefix = stub.movement_update(payload, 3)
+        prefix = motion.movement_update(payload, 3)
         self.assertEqual(prefix, payload)
-        self.assertIsNone(stub.movement_update(payload, 4))  # the header slot must be the sender's
+        self.assertIsNone(motion.movement_update(payload, 4))  # the header slot must be the sender's
         state, present, _ = motion.update(prefix, {})
         self.assertEqual(state[0x40], (1.5, -2.0, 3e4))
         self.assertEqual(state[1], (0.0, 0.0, 900.0))
