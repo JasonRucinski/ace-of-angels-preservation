@@ -52,7 +52,7 @@ def status(server, now):
             "powerups": None if server.powerups is None else {"placed": len(server.powerups.items), "taken": server.powerups.taken},
             "target_ships": None if server.targets is None else {"placed": len(server.targets.ships),
                                                           "destroyed": server.targets.destroyed},
-            "reliable_pending": len(server.removals.pending), "events_expired": getattr(server.removals, "expired", 0),
+            "reliable_pending": len(server.removals.pending), "events_expired": server.removals.expired,
             "traffic": dict(server.meter.totals(), dropped_in=server.meter.dropped_in, dropped_out=server.meter.dropped_out),
             "impairment": server.impair_out.describe() if server.impair_out.active else None,
             "lifecycle": {"managed": server.args.managed_session, "next_map": server.args.next_map,

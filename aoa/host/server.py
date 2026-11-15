@@ -18,7 +18,9 @@ from aoa.formats import trn
 from aoa.host import console, ops
 from aoa.host.combat import DeathLedger, MissileLedger
 from aoa.host.defaults import ARENA_JOINS, MODE_NAMES, SESSION_COMPLETE
-from aoa.host.delivery import InboundReliable, ReliableRemovals, WindowedReliable
+from aoa.host import delivery
+from aoa.host.delivery import InboundReliable, WindowedReliable
+from aoa.host.diagnostics import ReliableRemovals
 from aoa.host.match import Match
 from aoa.host.net_impair import Impairment, TrafficMeter
 from aoa.host.objects import load_objects
@@ -104,13 +106,10 @@ class ArenaServer:
         self.next_player_slot = 1
         self.retired_endpoints = set()
         self.protection_probe = {}  # peer -> (next due, index in explicit 1,1,0,0 probe)
+        self.removals = delivery.engine(self.args, self.peer_timeout)  # a delivery.Delivery
         if self.args.sustained_delivery:
-            self.removals = WindowedReliable(deadline=self.peer_timeout, margin=self.args.reorder_margin)
             self.resources.callback(lambda: print(f"sustained delivery: expired_events={self.removals.expired} "
                                              f"window_waits={self.removals.window_waits}", flush=True))
-        else:
-            self.removals = ReliableRemovals(deadline=self.peer_timeout,
-                                       ordered=self.args.experimental_reliable_combat or self.args.experimental_protection_probe)
         self.resources.callback(lambda: print("traffic: " + json.dumps(dict(self.meter.totals(), dropped_in=self.meter.dropped_in,
                                                                        dropped_out=self.meter.dropped_out)), flush=True))
         self.deaths = DeathLedger()
@@ -510,7 +509,7 @@ class ArenaServer:
 
     def receive(self):
         """Handle at most one datagram; waits up to 0.5 s or until the next due retry."""
-        datagram = self.transport.receive(self.banned_ips, getattr(self.removals, "next_due", lambda: None)())
+        datagram = self.transport.receive(self.banned_ips, self.removals.next_due())
         if datagram is not None:
             self.dispatch(*datagram)
 

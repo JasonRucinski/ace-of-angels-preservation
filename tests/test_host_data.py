@@ -79,6 +79,26 @@ class HostDataTests(unittest.TestCase):
                          | {defaults.DIAGNOSTIC})
 
 
+class DeliveryTests(unittest.TestCase):
+    def test_one_interface_and_the_engine_for_play(self):
+        from aoa.host import delivery
+        from aoa.host.diagnostics import ReliableRemovals
+        play = delivery.engine(parse_args(["key", "log", "--profile", "local-relay", "--sustained-delivery"]), 30)
+        self.assertIsInstance(play, delivery.WindowedReliable)
+        legacy = delivery.engine(parse_args(["key", "log", "--profile", "local-relay"]), 30)
+        self.assertIsInstance(legacy, ReliableRemovals)
+        for engine in (play, legacy):
+            self.assertIsInstance(engine, delivery.Delivery)
+            self.assertEqual(engine.expired, 0)
+            packet = engine.queue_message("peer", 0x38, b"x", 0, essential=False)
+            self.assertEqual(packet[0], 0x1B)
+            self.assertTrue(engine.acknowledge("peer", packet[1][-5:-1], now=0.1))
+        self.assertIsNone(legacy.next_due())
+        ordered = delivery.engine(parse_args(["key", "log", "--profile", "local-relay",
+                                              "--experimental-reliable-combat"]), 30)
+        self.assertTrue(ordered.ordered)
+
+
 class FlagRoleTests(unittest.TestCase):
     def parse(self, *extra, profile="local-relay"):
         return parse_args(["key", "log", "--profile", profile, *extra], raise_errors=True)

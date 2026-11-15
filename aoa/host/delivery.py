@@ -2,9 +2,9 @@
 
 The client keeps the last 30 distinct reliable IDs per sender in a circular
 buffer (findings 9.13). An old copy executes again only if 30 newer distinct
-IDs reach the client first. The lifetime budget in station_stub's
-ReliableRemovals prevents that by never sending more than 30 IDs. This
-class prevents it with a time window instead, so delivery can continue for a
+IDs reach the client first. The lifetime budget of the diagnostic
+ReliableRemovals (aoa/host/diagnostics.py) prevents that by never sending
+more than 30 IDs. WindowedReliable, the engine for play, prevents it with a time window instead, so delivery can continue for a
 whole session.
 
 Assumption (stated, like TCP's maximum segment lifetime): a datagram is
@@ -22,13 +22,64 @@ abandoned after their deadline and later messages continue.
 """
 import math
 import struct
-import time
 from collections import OrderedDict, deque
 
-from aoa.protocol.arena import remove_player
+
+class Delivery:
+    """What the server needs from an outbound reliable (0x1B) engine.
+
+    queue_message(peer, kind, body, now, essential=True)
+        the packet to send now, () when it waits behind earlier traffic, or
+        None when the peer's budget or queue is exhausted (the server then
+        retires the peer). Droppable (essential=False) events may be
+        abandoned after their deadline; essential ones retire the peer.
+    queue(peer, slot, now)      the despawn (0x2D) of a player slot, as above
+    acknowledge(peer, payload, now=None)  a 0x0F ACK; True if it matched
+    due(now)        (packets to resend now, peers whose essential event failed)
+    next_due()      the next time due() has work, or None
+    discard(peer)   forget a departed peer
+    pending         the unacknowledged events, keyed (peer, sequence)
+    expired         droppable events abandoned so far
+    """
+    expired = 0
+
+    def queue_message(self, peer, kind, body, now, essential=True):
+        raise NotImplementedError
+
+    def queue(self, peer, slot, now):
+        raise NotImplementedError
+
+    def acknowledge(self, peer, payload, now=None):
+        raise NotImplementedError
+
+    def due(self, now):
+        raise NotImplementedError
+
+    def next_due(self):
+        return None
+
+    def discard(self, peer):
+        raise NotImplementedError
 
 
-class WindowedReliable:
+def engine(args, deadline):
+    """The delivery engine for these server settings.
+
+    Sustained delivery uses WindowedReliable, the engine for play. Without
+    it the bounded 30-event engine of aoa/host/diagnostics.py carries the
+    despawns (and, with --experimental-reliable-combat or the protection
+    probe, ordered combat): it is what a host without sustained delivery
+    has always sent, kept so that a lan-dogfight host without map objects
+    behaves as before.
+    """
+    if args.sustained_delivery:
+        return WindowedReliable(deadline=deadline, margin=args.reorder_margin)
+    from aoa.host.diagnostics import ReliableRemovals
+    return ReliableRemovals(deadline=deadline,
+                            ordered=args.experimental_reliable_combat or args.experimental_protection_probe)
+
+
+class WindowedReliable(Delivery):
     HISTORY = 30
     INTERVAL = 0.3
     MAX_INTERVAL = 2.0
@@ -152,85 +203,6 @@ class WindowedReliable:
     def discard(self, peer):
         self.queues.pop(peer, None)
         self.history.pop(peer, None)
-        self.sent.pop(peer, None)
-
-
-class ReliableRemovals:
-    """Bounded 0x1B delivery; preserve the client's 30-entry duplicate cache.
-
-    All outbound reliable messages must use this shared history budget.
-    Sequence zero is pre-filled in the client cache.
-    Retries back off from INTERVAL to MAX_INTERVAL and give up after
-    `deadline` seconds. A real 2.9.2 client in a background window stops
-    servicing UDP for tens of seconds and then drains its queue (findings
-    9.23), so the server passes its peer timeout here: an observer is not
-    retired for a stall it would otherwise survive.
-    """
-    INTERVAL = 0.5
-    MAX_INTERVAL = 4.0
-    HISTORY = 30
-
-    def __init__(self, deadline=2.5, ordered=False):
-        self.deadline = deadline
-        self.ordered = ordered
-        self.pending = {}
-        self.sent = {}
-        self.sequence = 1
-
-    def queue(self, peer, slot, now):
-        kind, body = remove_player(slot)
-        return self.queue_message(peer, kind, body, now)
-
-    def queue_message(self, peer, kind, body, now):
-        """Share one lifetime history budget across every essential event.
-
-        Ordered mode holds subsequent packets until the preceding ACK. This
-        prevents an impact overtaking its launch. None means budget exhausted;
-        an empty tuple means accepted but waiting behind another event.
-        """
-        if not 0 <= kind <= 255 or kind == 0x1B or len(body) > 503:
-            raise ValueError("invalid reliable inner message")
-        if self.sent.get(peer, 0) >= self.HISTORY or self.sequence > 0xFFFFFFFF:
-            return None
-        seq = self.sequence
-        self.sequence += 1
-        packet = (0x1B, body + struct.pack("<I", seq) + bytes([kind]))
-        waiting = self.ordered and any(p == peer for p, _ in self.pending)
-        self.pending[peer, seq] = (packet, math.inf if waiting else now + self.INTERVAL,
-                                  self.INTERVAL, now + self.deadline)
-        self.sent[peer] = self.sent.get(peer, 0) + 1
-        return () if waiting else packet
-
-    def acknowledge(self, peer, payload, now=None):
-        if len(payload) != 4:
-            return False
-        identity = peer, struct.unpack("<I", payload)[0]
-        entry = self.pending.get(identity)
-        if entry is None or entry[1] == math.inf:
-            return False
-        del self.pending[identity]
-        if self.ordered:
-            for next_id, (packet, due, interval, deadline) in self.pending.items():
-                if next_id[0] == peer:
-                    self.pending[next_id] = (packet, time.monotonic() if now is None else now,
-                                             interval, deadline)
-                    break
-        return True
-
-    def due(self, now):
-        failed = {peer for (peer, _), (_, _, _, give_up) in self.pending.items() if now >= give_up}
-        packets = []
-        for (peer, seq), (packet, due, interval, give_up) in list(self.pending.items()):
-            if peer not in failed and now >= due:
-                packets.append((peer, packet))
-                interval = min(interval * 2, self.MAX_INTERVAL)
-                self.pending[peer, seq] = (packet, now + interval, interval, give_up)
-        return packets, failed
-
-    def discard(self, peer):
-        for identity in list(self.pending):
-            if identity[0] == peer:
-                del self.pending[identity]
         self.sent.pop(peer, None)
 
 
