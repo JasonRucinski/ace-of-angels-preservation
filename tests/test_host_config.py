@@ -2,11 +2,14 @@
 
     python -I tools/test.py test_host_config
 """
+import contextlib
+import io
 import json
 import tempfile
 import unittest
 from pathlib import Path
 
+from aoa.host import headless
 from aoa.host.config import ConfigError, HostConfig
 from aoa.host.runtime import parse_args
 from aoa.paths import ROOT
@@ -133,6 +136,20 @@ class HostConfigTests(unittest.TestCase):
             with self.subTest(data=data), self.assertRaises(ConfigError) as caught:
                 HostConfig.from_json(data, root=self.root)
             self.assertIn(text, str(caught.exception))
+
+    def test_headless_check_and_overrides(self):
+        path = self.root / "host.json"
+        self.config(paths={"key": str(self.root / "game/2.9.2/SCRTY.BIN"),
+                           "log": str(self.root / "host.jsonl"), "status": str(self.root / "status.json")}).save(path)
+        out, err = io.StringIO(), io.StringIO()
+        with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+            self.assertEqual(headless.main(["check", str(path), "--map", "JRMAP", "--max-players", "3"]), 0)
+            self.assertEqual(headless.main(["check", str(path), "--profile", "lan-dogfight"]), 2)
+            self.assertEqual(headless.main(["status", str(path)]), 1)
+        settings = json.loads(out.getvalue())
+        self.assertEqual((list(settings), settings["JRMAP"]["max_players"]), (["JRMAP"], 3))
+        self.assertIn("aoa_host.py: error: lan-dogfight requires a specific IPv4 address", err.getvalue())
+        self.assertEqual(len(err.getvalue().strip().splitlines()), 2)
 
     def test_deploy_example(self):
         example = ROOT / "deploy/linux/host.json.example"

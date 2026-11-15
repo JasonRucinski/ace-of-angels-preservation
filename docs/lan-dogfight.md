@@ -62,14 +62,17 @@ and `-TestLossPercent` rehearse internet conditions on the LAN
 powershell -NoProfile -ExecutionPolicy Bypass -File tools/start_lan_dogfight.ps1 -HostAddress 192.168.0.61
 ```
 
-The launcher defaults to two players. Add `-MaxPlayers 4` or `-MaxPlayers 8` for
+The script is a wrapper around `tools/aoa_host.py` (the same headless host the
+Linux service runs) and defaults to two players. Add `-MaxPlayers 4` or `-MaxPlayers 8` for
 capacity checks. This is a configuration limit, not verified capacity. (The
 host window and the server itself default to 8.) Ctrl+C stops the host. Logs
 rotate under `work/host/lan-dogfight.jsonl` and omit raw payloads. `-Map`
 accepts any map the server accepts, and the launcher prints the map, limits
 and player count the server reports.
 
-The equivalent Python command is:
+The equivalent Python command is
+`.venv/Scripts/python.exe -I tools/aoa_host.py run --profile lan-dogfight --bind-address 192.168.0.61 --max-players 2 --console`,
+which starts the server as follows (without the restart supervision):
 
 ```powershell
 .venv/Scripts/python.exe -I tools/station_stub.py game/2.9.2/SCRTY.BIN work/lan-dogfight.jsonl --profile lan-dogfight --bind-address 192.168.0.61 --max-players 2

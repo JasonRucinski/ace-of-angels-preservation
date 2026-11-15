@@ -2,12 +2,14 @@
 .SYNOPSIS
 Start the private LAN or VPN dogfight relay. Does not change firewall or client files.
 .DESCRIPTION
+A wrapper around tools/aoa_host.py run (the headless host; see docs/lan-dogfight.md).
 -Vpn selects the vpn-dogfight profile for players who reach this PC through a
 private VPN such as Tailscale, ZeroTier or WireGuard (see docs/vpn-dogfight.md).
 The host reads console commands (status, kick <slot>, ban <slot>, end,
 say <text>, quit, help) and rewrites work/host/<profile>-status.json every
-two seconds, the file the host window uses. -TestRttMs/-TestJitterMs/-TestLossPercent add artificial delay and
-loss for testing only.
+two seconds, the file the host window uses. A crashed host restarts up to 3
+times in 10 minutes. -TestRttMs/-TestJitterMs/-TestLossPercent add artificial
+delay and loss for testing only. -PrintConfig validates and prints the settings.
 .EXAMPLE
 powershell -NoProfile -ExecutionPolicy Bypass -File tools/start_lan_dogfight.ps1 -HostAddress 192.168.1.55
 .EXAMPLE
@@ -17,84 +19,30 @@ param(
     [Parameter(Mandatory = $true)][string]$HostAddress,
     [switch]$Vpn,
     [ValidateRange(1, 8)][int]$MaxPlayers = 2,
-    # Any map the server accepts; --print-config below rejects unknown names.
+    # Any map the server accepts; aoa_host.py rejects unknown names.
     [string]$Map = 'CTF_arena',
-    [ValidateSet('spacebkgd', 'spacebkgd2', 'spacebkgd3', 'spacebkgd5', 'spacebkgd6')][string]$Backdrop = 'spacebkgd3',
+    [string]$Backdrop = 'spacebkgd3',
     [switch]$Terrain,
     [ValidateRange(0, 5000)][double]$TestRttMs = 0,
     [ValidateRange(0, 5000)][double]$TestJitterMs = 0,
     [ValidateRange(0, 50)][double]$TestLossPercent = 0,
-    [ValidateRange(0, 10)][int]$MaxRestarts = 3,
-    [string]$Key = "game/2.9.2/SCRTY.BIN",
-    [string]$Log = "",
     [switch]$PrintConfig
 )
 $ErrorActionPreference = "Stop"
 $repoRoot = Split-Path $PSScriptRoot -Parent
-$profileName = if ($Vpn) { "vpn-dogfight" } else { "lan-dogfight" }
-if (-not $Log) { $Log = "work/host/$profileName.jsonl" }
-$status = "work/host/$profileName-status.json"
+$python = Join-Path $repoRoot ".venv/Scripts/python.exe"
+if (-not (Test-Path -LiteralPath $python)) { throw "Missing project Python environment: $python" }
+$hostArgs = @(if ($PrintConfig) { "check" } else { "run" })
+$hostArgs += @("--profile", $(if ($Vpn) { "vpn-dogfight" } else { "lan-dogfight" }), "--bind-address", $HostAddress,
+               "--max-players", "$MaxPlayers", "--map", $Map, "--backdrop", $Backdrop, "--console")
+if ($Terrain) { $hostArgs += "--terrain" }
+if ($TestRttMs -or $TestJitterMs -or $TestLossPercent) {
+    $hostArgs += @("--", "--impair-rtt-ms", "$TestRttMs", "--impair-jitter-ms", "$TestJitterMs", "--impair-loss", "$TestLossPercent")
+}
 Push-Location $repoRoot
 try {
-    $python = Join-Path $repoRoot ".venv/Scripts/python.exe"
-    if (-not (Test-Path -LiteralPath $python)) {
-        throw "Missing project Python environment: $python"
-    }
-    $serverArgs = @("-I", "tools/station_stub.py", $Key, $Log, "--profile", $profileName,
-                    "--bind-address", $HostAddress, "--max-players", "$MaxPlayers", "--map", $Map, "--backdrop", $Backdrop,
-                    "--console", "--status-file", $status)
-    if ($Terrain) { $serverArgs += "--experimental-terrain" }
-    $testing = $TestRttMs -or $TestJitterMs -or $TestLossPercent
-    if ($testing) {
-        $serverArgs += @("--impair-rtt-ms", "$TestRttMs", "--impair-jitter-ms", "$TestJitterMs", "--impair-loss", "$TestLossPercent")
-    }
-    # Validation has no socket, log, key-file or client side effects.
-    $config = & $python @serverArgs --print-config
-    if ($LASTEXITCODE -ne 0) { throw "Invalid $profileName host configuration." }
-    if ($PrintConfig) {
-        $config
-        return
-    }
-    # Report the settings the server will actually use, not this script's guesses.
-    $settings = ($config -join "`n") | ConvertFrom-Json
-    $address = Get-NetIPAddress -AddressFamily IPv4 -ErrorAction Stop |
-               Where-Object { $_.IPAddress -eq $HostAddress -and $_.AddressState -eq "Preferred" } |
-               Select-Object -First 1
-    if (-not $address) {
-        throw "$HostAddress is not a preferred IPv4 address on this PC. Check ipconfig (or the VPN app)."
-    }
-    if (-not (Test-Path -LiteralPath $Key -PathType Leaf)) { throw "Missing game key: $Key" }
-    $logDirectory = Split-Path ([System.IO.Path]::GetFullPath($Log)) -Parent
-    [System.IO.Directory]::CreateDirectory($logDirectory) | Out-Null
-    $alias = if ($Vpn) { "aoavpn" } else { "aoalan" }
-    Write-Host "$(if ($Vpn) { 'VPN' } else { 'LAN' }) Dogfight: $HostAddress on adapter '$($address.InterfaceAlias)' | up to $($settings.max_players) players (capacity requires testing)"
-    Write-Host "Map: $($settings.map)$(if ($settings.experimental_terrain) { " with $($settings.map) terrain" }) | Backdrop: $($settings.backdrop)"
-    if ($Map -eq 'Arena1a') { Write-Host "Arena1a validation build: see docs/arena1a.md for unresolved nodes and gameplay." }
-    Write-Host "UDP 5033 + 5031; TCP 5034. Firewall rules: docs/$(if ($Vpn) { 'vpn' } else { 'lan' })-dogfight.md"
-    Write-Host "Each client hosts-file entry: $HostAddress $alias"
-    Write-Host "Prepare each client for Station $alias; use dummy login values."
-    if ($Vpn) {
-        Write-Host "Sustained delivery is on: players can rejoin after a crash or dropout (49 joins per host run)."
-    } else {
-        Write-Host "Restart host and clients for reconnects."
-    }
-    $kills = if ($settings.kill_limit) { "$($settings.kill_limit) kills" } else { "no kill limit" }
-    $time = if ($settings.time_limit) { "$($settings.time_limit) seconds" } else { "no time limit" }
-    Write-Host "$kills / $time; score reset only. Status: $status"
-    if ($testing) { Write-Host "TEST IMPAIRMENT ON: do not use this host for normal play." -ForegroundColor Yellow }
-    Write-Host "Type 'help' for host commands. Ctrl+C stops the host."
-    $starts = @()
-    while ($true) {
-        $starts = @($starts | Where-Object { $_ -gt (Get-Date).AddMinutes(-10) }) + (Get-Date)
-        & $python @serverArgs
-        $code = $LASTEXITCODE
-        if ($code -eq 0) { break }
-        if ($starts.Count -gt $MaxRestarts) {
-            throw "Host stopped with exit code $code; $MaxRestarts restarts in 10 minutes already used."
-        }
-        Write-Host "Host stopped with exit code $code. Restarting in 5 seconds; players must rejoin." -ForegroundColor Yellow
-        Start-Sleep -Seconds 5
-    }
+    & $python -I tools/aoa_host.py @hostArgs
+    exit $LASTEXITCODE
 } finally {
     Pop-Location
 }

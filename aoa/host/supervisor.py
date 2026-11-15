@@ -111,10 +111,13 @@ class RestartBudget:
 class HostProcess:
     """The server child process: start from a HostConfig, commands, clean stop, status."""
 
-    def __init__(self, script=None, python=None, cwd=None, console=True, capture=True, popen=subprocess.Popen):
+    def __init__(self, script=None, python=None, cwd=None, console=True, capture=True, popen=subprocess.Popen,
+                 inherit_stdin=False):
+        """console: send commands on a stdin pipe; inherit_stdin: the server reads this terminal itself."""
         self.script = Path(script) if script is not None else paths.entry("station_stub")
         self.python = python or sys.executable
-        self.cwd, self.console, self.capture, self.popen = cwd or paths.ROOT, console, capture, popen
+        self.cwd, self.console, self.capture, self.popen = cwd or paths.ROOT, console and not inherit_stdin, capture, popen
+        self.inherit_stdin = inherit_stdin
         self.proc, self.config, self.map, self.started = None, None, None, None
         self.output = queue.Queue()
         self.stopping = False
@@ -137,7 +140,7 @@ class HostProcess:
         status.parent.mkdir(parents=True, exist_ok=True)
         status.unlink(missing_ok=True)
         self.proc = self.popen(self.argv(config, map_name), cwd=self.cwd,
-                               stdin=subprocess.PIPE if self.console else subprocess.DEVNULL,
+                               stdin=None if self.inherit_stdin else subprocess.PIPE if self.console else subprocess.DEVNULL,
                                stdout=subprocess.PIPE if self.capture else None,
                                stderr=subprocess.STDOUT if self.capture else None,
                                text=True, bufsize=1, creationflags=NO_WINDOW)
@@ -264,8 +267,11 @@ class Supervisor:
                 stop_process(proc, console=self.process.console)
                 return self._unplanned(str(error), now)
             return "running"
-        if self.process.stopping:
+        if self.process.stopping or code == 0:
+            # Stopped from here, or by the server's own console `quit` or --seconds.
             self.stopped = True
+            if code == 0 and not self.process.stopping:
+                self.report("Host stopped (exit code 0)")
             return "stopped"
         status = self.watchdog.final()
         lifecycle = (status or {}).get("lifecycle") or {}

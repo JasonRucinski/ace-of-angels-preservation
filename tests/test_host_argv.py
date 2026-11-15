@@ -28,6 +28,8 @@ from pathlib import Path
 from unittest import mock
 
 from aoa.host import dedicated  # noqa: E402
+from aoa.host import headless  # noqa: E402
+from aoa.host.config import HostConfig  # noqa: E402
 from aoa.launchers import host_control  # noqa: E402
 from aoa.host import ops  # noqa: E402
 from aoa.maps import map_viewer  # noqa: E402
@@ -120,11 +122,25 @@ def host_control_cases():
 
 
 def deploy_cases():
-    """dedicated_host as aoa-host.service starts it, with host.env.example and rotation.json.example."""
+    """aoa_host.py as aoa-host.service starts it, with host.json.example as its host.json."""
+    line = next(l for l in (DEPLOY / "aoa-host.service").read_text().splitlines() if l.startswith("ExecStart="))
+    argv = shlex.split(line[len("ExecStart="):])
+    action, config = argv[[Path(a).name for a in argv].index("aoa_host.py") + 1:]
+    if (action, config) != ("run", "/etc/ace-of-angels/host.json"):
+        raise ValueError(f"unexpected aoa-host.service command: {action} {config}")
+    config = headless.load(DEPLOY / "host.json.example")
+    return {f"aoa-host.service: {name}": case(config.to_argv(name), []) for name in config.maps}
+
+
+def legacy_deploy_cases():
+    """dedicated_host with the older host.env.example and rotation.json.example, as the unit started it before."""
     env = dict(line.split("=", 1) for line in (DEPLOY / "host.env.example").read_text().splitlines()
                if line.strip() and not line.startswith("#"))
-    line = next(l for l in (DEPLOY / "aoa-host.service").read_text().splitlines() if l.startswith("ExecStart="))
-    command = re.sub(r"\$\{(\w+)\}", lambda m: env[m.group(1)], line[len("ExecStart="):])
+    command = ("/usr/bin/python3 -I -u /opt/ace-of-angels/tools/dedicated_host.py /etc/ace-of-angels/SCRTY.BIN "
+               "/var/lib/ace-of-angels/host.jsonl --config /etc/ace-of-angels/rotation.json --state-file "
+               "/var/lib/ace-of-angels/rotation-state.json --profile vpn-dogfight --bind-address ${AOA_BIND_ADDRESS} "
+               "--max-players ${AOA_MAX_PLAYERS} --status-file /var/lib/ace-of-angels/status.json")
+    command = re.sub(r"\$\{(\w+)\}", lambda m: env[m.group(1)], command)
     argv = shlex.split(command)
     argv = argv[[Path(a).name for a in argv].index("dedicated_host.py") + 1:]
     with tempfile.TemporaryDirectory() as temp:
@@ -149,6 +165,17 @@ def deploy_cases():
                 for name in settings["maps"]}
 
 
+class DeployTests(unittest.TestCase):
+    def test_old_two_file_form_reads_as_host_json(self):
+        # A host still on rotation.json + host.env runs the same server as host.json.example.
+        self.assertEqual(legacy_deploy_cases(), deploy_cases())
+        with tempfile.TemporaryDirectory() as temp:
+            shutil.copyfile(DEPLOY / "rotation.json.example", Path(temp) / "rotation.json")
+            shutil.copyfile(DEPLOY / "host.env.example", Path(temp) / "host.env")
+            legacy = headless.load(Path(temp) / "rotation.json", environ={})
+        self.assertEqual(legacy, headless.load(DEPLOY / "host.json.example"))
+
+
 def map_viewer_cases():
     out = {}
     for extra in MAP_VIEWER_CASES:
@@ -165,19 +192,25 @@ def map_viewer_cases():
     return out
 
 
-def ps1_args(HostAddress, Vpn=False, MaxPlayers=2, Map="CTF_arena", Backdrop="spacebkgd3", Terrain=False,
-             TestRttMs=0, TestJitterMs=0, TestLossPercent=0, Key="game/2.9.2/SCRTY.BIN", Log=""):
-    """start_lan_dogfight.ps1's $serverArgs (its lines 33-50), mirrored by hand: keep the two in step."""
-    profile = "vpn-dogfight" if Vpn else "lan-dogfight"
-    args = [Key, Log or f"work/host/{profile}.jsonl", "--profile", profile, "--bind-address", HostAddress,
-            "--max-players", str(MaxPlayers), "--map", Map, "--backdrop", Backdrop,
-            "--console", "--status-file", f"work/host/{profile}-status.json"]
+def ps1_args(root, HostAddress, Vpn=False, MaxPlayers=2, Map="CTF_arena", Backdrop="spacebkgd3", Terrain=False,
+             TestRttMs=0, TestJitterMs=0, TestLossPercent=0):
+    """The server arguments of start_lan_dogfight.ps1: its aoa_host.py command (mirrored by hand: keep
+    the two in step), resolved by aoa_host.py's own option handling."""
+    words = ["run", "--profile", "vpn-dogfight" if Vpn else "lan-dogfight", "--bind-address", HostAddress,
+             "--max-players", str(MaxPlayers), "--map", Map, "--backdrop", Backdrop, "--console"]
     if Terrain:
-        args.append("--experimental-terrain")
+        words.append("--terrain")
     if TestRttMs or TestJitterMs or TestLossPercent:
-        args += ["--impair-rtt-ms", f"{TestRttMs:g}", "--impair-jitter-ms", f"{TestJitterMs:g}",
-                 "--impair-loss", f"{TestLossPercent:g}"]
-    return args
+        words += ["--", "--impair-rtt-ms", f"{TestRttMs:g}", "--impair-jitter-ms", f"{TestJitterMs:g}",
+                  "--impair-loss", f"{TestLossPercent:g}"]
+    seen = []
+    with mock.patch.object(headless, "run", side_effect=seen.append), \
+            mock.patch.object(headless, "HostConfig", lambda: HostConfig(root=root)), \
+            mock.patch.object(HostConfig, "validate", lambda self, **_: {}), \
+            contextlib.redirect_stdout(io.StringIO()):
+        if headless.main(words) != 0 or len(seen) != 1:
+            raise ValueError("aoa_host.py did not reach its run loop")
+    return seen[0].to_argv()
 
 
 def doc_commands():
@@ -206,7 +239,7 @@ def text_cases():
                 docs[text] = case(shlex.split(text), [(root, "")], sources=sorted(set(sources)))
             for params in PS1_CASES:
                 label = " ".join(f"-{k}" if v is True else f"-{k} {v}" for k, v in params.items())
-                ps1[label] = case(ps1_args(**params), [(root, "")])
+                ps1[label] = case(ps1_args(root, **params), [(root, "")])
     return docs, ps1
 
 

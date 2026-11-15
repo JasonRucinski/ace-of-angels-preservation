@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "comment": "Copy to /etc/ace-of-angels/host.json. bind_address: this machine's address from tailscale ip -4 (public addresses and 0.0.0.0 are rejected). Start with two real clients; raise max_players only after checking performance (max 8). 10 kills / 900 s here override the host defaults of 20 kills / 600 s.",
+  "profile": "vpn-dogfight",
+  "bind_address": "100.101.102.103",
+  "maps": ["CTF_arena", "CTF_arena_b", "ast_fld_a"],
+  "terrain": true,
+  "max_players": 2,
+  "kill_limit": 10,
+  "time_limit_seconds": 900,
+  "sustained_delivery": true,
+  "managed": {
+    "restart_warning_seconds": 30,
+    "intermission_seconds": 5,
+    "idle_recycle_seconds": 300,
+    "recycle_arena_joins": 40,
+    "recycle_station_admissions": 56,
+    "health_timeout_seconds": 30
+  },
+  "paths": {
+    "key": "/etc/ace-of-angels/SCRTY.BIN",
+    "log": "/var/lib/ace-of-angels/host.jsonl",
+    "status": "/var/lib/ace-of-angels/status.json",
+    "state": "/var/lib/ace-of-angels/rotation-state.json"
+  }
+}

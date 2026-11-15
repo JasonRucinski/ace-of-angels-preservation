@@ -165,6 +165,15 @@ class SupervisorTests(unittest.TestCase):
         self.assertEqual(sup.poll(), "stopped")
         self.assertEqual(len(self.host.starts), 1)
 
+    def test_clean_exit_ends_supervision(self):
+        sup = self.supervisor()
+        sup.start()
+        self.clock.now += 60
+        self.host.proc.returncode = 0  # console quit
+        self.assertEqual(sup.poll(), "stopped")
+        self.assertEqual(sup.poll(), "stopped")
+        self.assertEqual(len(self.host.starts), 1)
+
     def test_invalid_state_file(self):
         state = self.root / "state.json"
         state.write_text("{}")

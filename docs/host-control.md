@@ -87,8 +87,12 @@ and kill counts. If it hasn't exited after 10 seconds, it is terminated.
 Closing the window offers to stop a running host.
 
 If the host crashes (a non-zero exit after running for 5 seconds), the window
-restarts it after 5 seconds, at most three times in 10 minutes, like
-`start_lan_dogfight.ps1`. Players must rejoin after a restart.
+restarts it after 5 seconds, at most three times in 10 minutes, with the
+settings that run had (not later edits in the window): the one restart policy
+of `aoa/host/supervisor.py`, which `tools/aoa_host.py` and
+`start_lan_dogfight.ps1` use too. Players must rejoin after a restart. Each
+start also writes that run's settings to `work/host/host.json`, in the format
+the headless host reads (`python -I tools/aoa_host.py run work/host/host.json`).
 
 ## Server console additions
 
