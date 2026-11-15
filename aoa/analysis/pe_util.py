@@ -1,10 +1,8 @@
 """Shared static-analysis helpers for the AoA clients (pefile + capstone).
 
-Address spaces:
-  file offset  <->  RVA  <->  VA (= ImageBase + RVA)
-Mapping goes through the section table. Bytes past a section's SizeOfRawData
-but inside its VirtualSize are zero-initialised at load time and have no file
-backing; `read_va` returns zeros for them and `va_to_off` returns None.
+The address mapping (file offset <-> RVA <-> VA, `read_va`, `u32`, `cstr`)
+lives in aoa.formats.pe, which needs only the standard library; PE adds the
+import table from pefile, and Disasm the capstone sweep.
 """
 import pickle
 import re
@@ -14,86 +12,21 @@ from pathlib import Path
 import capstone
 import pefile
 
+from aoa.formats.pe import Image
+
 HEX = re.compile(r"0x[0-9a-f]+")
 
 
-class PE:
+class PE(Image):
     def __init__(self, path):
-        self.path = Path(path)
-        self.data = self.path.read_bytes()
+        super().__init__(Path(path))
         self.pe = pefile.PE(data=self.data, fast_load=False)
-        self.base = self.pe.OPTIONAL_HEADER.ImageBase
-        self.sections = []
-        for s in self.pe.sections:
-            self.sections.append({
-                "name": s.Name.rstrip(b"\0").decode("latin1"),
-                "va": self.base + s.VirtualAddress,
-                "vsize": s.Misc_VirtualSize,
-                "raw_off": s.PointerToRawData,
-                "raw_size": s.SizeOfRawData,
-                "chars": s.Characteristics,
-            })
         self.imports = {}  # IAT VA -> "dll!name"
         for entry in getattr(self.pe, "DIRECTORY_ENTRY_IMPORT", []):
             dll = entry.dll.decode("latin1")
             for imp in entry.imports:
                 name = imp.name.decode("latin1") if imp.name else f"ord{imp.ordinal}"
                 self.imports[imp.address] = f"{dll}!{name}"
-
-    # ---- address mapping -------------------------------------------------
-    def section_of_va(self, va):
-        for s in self.sections:
-            if s["va"] <= va < s["va"] + max(s["vsize"], s["raw_size"]):
-                return s
-        return None
-
-    def va_to_off(self, va):
-        s = self.section_of_va(va)
-        if s is None:
-            return None
-        delta = va - s["va"]
-        if delta >= s["raw_size"]:
-            return None  # virtual zero-fill
-        return s["raw_off"] + delta
-
-    def off_to_va(self, off):
-        for s in self.sections:
-            if s["raw_off"] <= off < s["raw_off"] + s["raw_size"]:
-                return s["va"] + (off - s["raw_off"])
-        return None
-
-    def read_va(self, va, n):
-        out = bytearray()
-        for i in range(n):
-            o = self.va_to_off(va + i)
-            out.append(self.data[o] if o is not None else 0)
-        return bytes(out)
-
-    def u32(self, va):
-        return int.from_bytes(self.read_va(va, 4), "little")
-
-    def cstr(self, va, limit=512):
-        o = self.va_to_off(va)
-        if o is None:
-            return None
-        end = self.data.find(b"\0", o, o + limit)
-        if end < 0:
-            return None
-        raw = self.data[o:end]
-        try:
-            return raw.decode("ascii")
-        except UnicodeDecodeError:
-            return None
-
-    def find_all(self, needle: bytes):
-        out, i = [], self.data.find(needle)
-        while i >= 0:
-            out.append(i)
-            i = self.data.find(needle, i + 1)
-        return out
-
-    def text(self):
-        return next(s for s in self.sections if s["chars"] & 0x20000000)  # MEM_EXECUTE
 
 
 class Disasm:

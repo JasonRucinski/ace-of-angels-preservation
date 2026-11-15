@@ -16,6 +16,7 @@ import struct
 import sys
 
 from aoa import cli  # noqa: E402
+from aoa.formats.pe import Image
 
 FORMATS = [
     b"Entering Ace of Angels runtime client ver(%d.%d.%d)",
@@ -27,45 +28,18 @@ LOADS = {b"\xa1": 1, b"\x8b\x0d": 2, b"\x8b\x15": 2, b"\x8b\x1d": 2,
          b"\x8b\x35": 2, b"\x8b\x3d": 2}
 
 
-def sections(d):
-    pe = struct.unpack_from("<I", d, 0x3C)[0]
-    nsec = struct.unpack_from("<H", d, pe + 6)[0]
-    optsz = struct.unpack_from("<H", d, pe + 20)[0]
-    base = struct.unpack_from("<I", d, pe + 24 + 28)[0]
-    out = []
-    for k in range(nsec):
-        o = pe + 24 + optsz + 40 * k
-        vs, va, rs, ra = struct.unpack_from("<IIII", d, o + 8)
-        out.append((va, max(vs, rs), ra, rs))
-    return base, out
-
-
-def off_to_va(base, secs, off):
-    for va, _vs, ra, rs in secs:
-        if ra <= off < ra + rs:
-            return base + va + off - ra
-    return None
-
-
-def va_to_off(base, secs, v):
-    for va, vs, ra, rs in secs:
-        if base + va <= v < base + va + min(vs, rs):
-            return ra + v - base - va
-    return None
-
-
 def main(argv=None):
     ap = cli.parser(__doc__)
     ap.add_argument("client", help="the AOACLIENT.EXE to read")
     a = ap.parse_args(argv)
     d = open(a.client, "rb").read()
-    base, secs = sections(d)
+    image = Image(d)
     results = set()
     for fmt in FORMATS:
         soff = d.find(fmt)
         if soff < 0:
             continue
-        sva = off_to_va(base, secs, soff)
+        sva = image.off_to_va(soff)
         push = b"\x68" + struct.pack("<I", sva)
         p = 0
         while (p := d.find(push, p)) >= 0:
@@ -78,7 +52,7 @@ def main(argv=None):
             # The last three loads before the push are the arguments.
             cand = sorted(set(addrs[-3:]))
             if len(cand) == 3 and cand[1] - cand[0] == 4 and cand[2] - cand[1] == 4:
-                o = va_to_off(base, secs, cand[0])
+                o = image.va_to_off(cand[0])
                 if o is not None:
                     v = struct.unpack_from("<III", d, o)
                     results.add(v)

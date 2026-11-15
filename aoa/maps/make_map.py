@@ -213,10 +213,7 @@ def install(spec, client, copy_from=None):
         copy_client(source, client)
     if not (client / "SCRTY.BIN").is_file():
         raise SystemExit(f"{client} is not a client folder (no SCRTY.BIN)")
-    try:
-        check_objects(spec, odb_objects(client))
-    except ImportError as error:  # the archive key lookup needs requirements.txt
-        print(f"object names not checked ({error.name} missing); a missing object is skipped by the client")
+    check_objects(spec, odb_objects(client))
     data = build(spec)
     trn, backup = client / SLOT_FILE, client / (SLOT_FILE + SLOT_BACKUP)
     if trn.exists() and not backup.exists():

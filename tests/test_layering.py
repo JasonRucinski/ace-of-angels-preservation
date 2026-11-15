@@ -37,8 +37,6 @@ MAY_IMPORT = {
 
 # (importer, imported): why it is allowed for now. Remove an entry when phase 2 fixes it.
 KNOWN = {
-    # The stdlib PE section mapper in pe_util moves to aoa/formats/pe.py (research.md section 4).
-    ("aoa.formats.aoapack", "aoa.analysis.pe_util"): "research section 4: formats/pe.py",
     # online_terrain holds both the client patch and the server's map registry (H12).
     ("aoa.host.dedicated", "aoa.client.patches.online_terrain"): "H12: map registry in a client patch",
     ("aoa.host.runtime", "aoa.client.patches.online_terrain"): "H12: map registry in a client patch",

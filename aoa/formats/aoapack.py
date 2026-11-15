@@ -36,6 +36,7 @@ import sys
 from pathlib import Path
 
 from aoa.formats import aoacrypt  # noqa: E402
+from aoa.formats.pe import Image
 from aoa import cli  # noqa: E402
 from aoa.builds import CLIENT_SHA256
 
@@ -56,8 +57,7 @@ def builtin_key(client_path):
     """Return the built-in key: at the pinned VA for a known original client,
     otherwise at a candidate VA whose bytes match KEY_SHA256 (for example a
     2.9.2 client after prepare_client.py)."""
-    from aoa.analysis.pe_util import PE
-    pe = PE(client_path)
+    pe = Image(client_path)
     sha = hashlib.sha256(pe.data).hexdigest()
     if sha in BUILTIN_KEY_VA:
         return pe.read_va(BUILTIN_KEY_VA[sha], 256)

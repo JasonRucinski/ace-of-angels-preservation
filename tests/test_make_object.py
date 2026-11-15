@@ -1,7 +1,7 @@
 """New objects: glTF reading, winding, triplanar UVs, Gob/Sco writing, archive append.
 
 Game-free except the template and Bennu checks, which need the user's 2.9.2
-client (and requirements.txt for the archive key) or the downloaded model.
+client or the downloaded model.
 """
 import hashlib
 import json
@@ -21,12 +21,7 @@ from aoa.paths import ROOT
 GAME = ROOT / "game/2.9.2"
 SPEC = ROOT / "config/objects/bennu.json"
 BENNU = ROOT / "builds/bennu-nasa/bennu.glb"
-try:
-    import capstone  # noqa: F401  (pe_util, for the archive key)
-    HAVE_ANALYSIS = True
-except ImportError:
-    HAVE_ANALYSIS = False
-HAVE_GAME = HAVE_ANALYSIS and (GAME / "AOAOBJECTS.ODB").exists()
+HAVE_GAME = (GAME / "AOAOBJECTS.ODB").exists()
 
 # Octahedron of radius 2 centred at (1, 0, 0), wound inward with inward normals.
 OCTA = [(3, 0, 0), (-1, 0, 0), (1, 2, 0), (1, -2, 0), (1, 0, 2), (1, 0, -2)]
@@ -174,7 +169,7 @@ class ArchiveAppendTests(unittest.TestCase):
             self.assertEqual(contents(), original)
 
 
-@unittest.skipUnless(HAVE_GAME, "requires the user's 2.9.2 client and requirements.txt")
+@unittest.skipUnless(HAVE_GAME, "requires the user's 2.9.2 client")
 class TemplateTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):

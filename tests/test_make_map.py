@@ -17,11 +17,6 @@ from aoa.maps import make_map
 from aoa.paths import ROOT
 SPEC = ROOT / "config/maps/crucible.json"
 GAME = ROOT / "game/2.9.2"
-try:
-    import capstone  # noqa: F401  (pe_util, for the archive key)
-    HAVE_ANALYSIS = True
-except ImportError:
-    HAVE_ANALYSIS = False
 
 
 def one(entry):
@@ -168,8 +163,7 @@ class CrucibleTests(unittest.TestCase):
         nearest = min(math.dist(spawn, e["pos"]) for e in self.spec["objects"] if "zone" not in e)
         self.assertGreater(nearest, 3000)
 
-    @unittest.skipUnless((GAME / "AOAOBJECTS.ODB").exists() and HAVE_ANALYSIS,
-                         "requires the user's 2.9.2 client and requirements.txt")
+    @unittest.skipUnless((GAME / "AOAOBJECTS.ODB").exists(), "requires the user's 2.9.2 client")
     def test_objects_exist_in_client(self):
         # New objects (tools/make_object.py) are added to the play copy only.
         added = {json.loads(p.read_text(encoding="utf-8"))["object"].lower()
