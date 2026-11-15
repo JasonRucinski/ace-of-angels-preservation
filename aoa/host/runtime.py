@@ -20,7 +20,7 @@ from aoa.host.defaults import (OBJECT_PROFILES, OBJECT_RULE, requirement, ARENA_
 from aoa.host.vessels import DEFAULT_VESSEL, SELECTABLE_VESSELS
 from aoa.maps import registry
 
-__all__ = ["ConfigError", "DatagramBudget", "EventLog", "StationTCPServer", "parse_args",
+__all__ = ["ConfigError", "DatagramBudget", "EventLog", "StationTCPServer", "build_parser", "parse_args",
            # also read from here by older callers
            "DOGFIGHT_PROFILES", "PRIVATE_NETWORKS", "VPN_NETWORKS", "HOST_DEFAULTS", "DEFAULT_VESSEL",
            "SELECTABLE_VESSELS"]
@@ -71,39 +71,47 @@ class DatagramBudget:
         return allowed
 
 
-def parse_args(argv=None, *, raise_errors=False):
-    """Validated server settings. With raise_errors, an invalid setting raises
-    ConfigError for in-process callers instead of printing usage and exiting."""
+def build_parser(raise_errors=False):
+    """The server's argparse parser (aoa/host/flagdoc.py builds the docs table from it)."""
     parser = _Parser(description="AoA local diagnostics and private LAN/VPN dogfight relay")
     parser.raise_errors = raise_errors
     parser.add_argument("key", type=Path, help="256-byte SCRTY.BIN")
     parser.add_argument("log", type=Path, help="rotating JSONL output")
-    parser.add_argument("--profile", choices=PROFILES, default="diagnostic")
+    parser.add_argument("--profile", choices=PROFILES, default="diagnostic",
+                        help="diagnostic listens only; local-relay and local-guests serve this PC; "
+                             "lan-dogfight and vpn-dogfight a private LAN or VPN address")
     parser.add_argument("--bind-address", default=LOOPBACK,
                         help="specific local IPv4; LAN profile requires RFC1918, VPN profile also 100.64.0.0/10")
     parser.add_argument("--map", choices=registry.MAP_NAMES, default=DEFAULT_MAP,
                         help="advertised terrain; with --terrain, the map a patched client loads")
-    parser.add_argument("--backdrop", choices=BACKDROPS, default=DEFAULT_BACKDROP)
-    parser.add_argument("--port", type=int, default=PORTS["station"])
-    parser.add_argument("--arena-port", type=int, default=PORTS["arena"])
-    parser.add_argument("--tcp", type=int, default=None)
-    for flag in ("ack", "arena"):
-        parser.add_argument("--" + flag, action=argparse.BooleanOptionalAction, default=None)
+    parser.add_argument("--backdrop", choices=BACKDROPS, default=DEFAULT_BACKDROP,
+                        help="space backdrop named in the server list; the client accepts only these")
+    parser.add_argument("--port", type=int, default=PORTS["station"], help="Station UDP port; 0 picks a free one (tests)")
+    parser.add_argument("--arena-port", type=int, default=PORTS["arena"], help="arena UDP port; 0 picks a free one")
+    parser.add_argument("--tcp", type=int, default=None,
+                        help=f"Station list TCP port; {PORTS['tcp']} in every relay profile, off in diagnostic")
+    parser.add_argument("--ack", action=argparse.BooleanOptionalAction, default=None,
+                        help="answer Station and arena handshakes (on in every relay profile)")
+    parser.add_argument("--arena", action=argparse.BooleanOptionalAction, default=None,
+                        help="open the arena UDP port (on in every relay profile)")
     parser.add_argument("--relay", action=argparse.BooleanOptionalAction, default=None,
                         help="assign player tags and relay movement and combat (on in every relay profile)")
     # Old names, kept for one release; hidden from --help.
     parser.add_argument("--experimental-relay", dest="relay", action=argparse.BooleanOptionalAction,
                         default=argparse.SUPPRESS, help=argparse.SUPPRESS)
-    parser.add_argument("--pilot", default="testpilot")
-    parser.add_argument("--seconds", type=float, default=0)
-    parser.add_argument("--peer-timeout", type=float, default=PEER_TIMEOUT)
+    parser.add_argument("--pilot", default="testpilot",
+                        help="synthetic Station pilot name, 1..19 ASCII characters (a prefix with guest profiles)")
+    parser.add_argument("--seconds", type=float, default=0, help="stop after this many seconds; 0 runs until stopped")
+    parser.add_argument("--peer-timeout", type=float, default=PEER_TIMEOUT,
+                        help="seconds of silence before a Station or arena peer expires")
     parser.add_argument("--max-players", type=int, default=HOST_DEFAULTS["max_players"],
                         help="simultaneous arena admissions, 1..49")
     parser.add_argument("--kill-limit", type=int, default=HOST_DEFAULTS["kill_limit"],
                         help="relay match ends at this many kills; 0 disables")
     parser.add_argument("--time-limit", type=float, default=float(HOST_DEFAULTS["time_limit_seconds"]),
                         help="relay match length in seconds; 0 disables")
-    parser.add_argument("--raw-capture", action="store_true")
+    parser.add_argument("--raw-capture", action="store_true",
+                        help="log payloads and addresses too (private diagnostic captures only)")
     parser.add_argument("--terrain", action="store_true",
                         help=f"native terrain for --map; {requirement('terrain')} "
                              "(clients without it join in empty space)")
@@ -121,8 +129,8 @@ def parse_args(argv=None, *, raise_errors=False):
                         help="seconds a stale datagram may trail later ones (sustained delivery)")
     parser.add_argument("--status-file", type=Path, help="JSON host status, rewritten every two seconds")
     parser.add_argument("--console", action="store_true", help="read host commands (status, kick, ban) from stdin")
-    parser.add_argument("--log-max-bytes", type=int, default=1024 * 1024)
-    parser.add_argument("--log-backups", type=int, default=3)
+    parser.add_argument("--log-max-bytes", type=int, default=1024 * 1024, help="log file size before rotation")
+    parser.add_argument("--log-backups", type=int, default=3, help="rotated log files kept, 1..10")
     parser.add_argument("--print-config", action="store_true", help="validate and print settings without reading key or binding")
 
     objects = parser.add_argument_group("map objects", "server-placed objects; each needs the relay")
@@ -148,8 +156,10 @@ def parse_args(argv=None, *, raise_errors=False):
     managed.add_argument("--next-map", choices=registry.MAP_NAMES, help="next map announced")
     managed.add_argument("--restart-warning", type=float, default=MANAGED["restart_warning_seconds"],
                          help="restart countdown in seconds")
-    managed.add_argument("--recycle-arena-joins", type=int, default=MANAGED["recycle_arena_joins"])
-    managed.add_argument("--recycle-station-admissions", type=int, default=MANAGED["recycle_station_admissions"])
+    managed.add_argument("--recycle-arena-joins", type=int, default=MANAGED["recycle_arena_joins"],
+                         help=f"end the session after this many arena joins (below the {ARENA_JOINS} per run)")
+    managed.add_argument("--recycle-station-admissions", type=int, default=MANAGED["recycle_station_admissions"],
+                         help=f"end the session after this many Station logins (below the {STATION_ADMISSIONS} per run)")
     managed.add_argument("--idle-recycle", type=float, default=MANAGED["idle_recycle_seconds"],
                          help="recycle used admissions after this long with no arena players")
 
@@ -172,6 +182,13 @@ def parse_args(argv=None, *, raise_errors=False):
     diagnostics.add_argument("--impair-loss", type=float, default=0.0, help="TEST ONLY: percent dropped per direction")
     diagnostics.add_argument("--impair-duplicate", type=float, default=0.0, help="TEST ONLY: percent duplicated per direction")
     diagnostics.add_argument("--impair-seed", type=int, help="TEST ONLY: repeatable impairment")
+    return parser
+
+
+def parse_args(argv=None, *, raise_errors=False):
+    """Validated server settings. With raise_errors, an invalid setting raises
+    ConfigError for in-process callers instead of printing usage and exiting."""
+    parser = build_parser(raise_errors)
     args = parser.parse_args(argv)
 
     def given(name):

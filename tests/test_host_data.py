@@ -2,6 +2,7 @@
 
     python -I tools/test.py test_host_data
 """
+import argparse
 import ast
 import contextlib
 import io
@@ -12,7 +13,7 @@ from aoa.host import defaults, object_slots, turret_trial, vessel_combat, vessel
 from aoa.host.combat import MissileLedger
 from aoa.host.objects.powerups import PowerUps
 from aoa.host.objects.targets import TargetShips
-from aoa.host.runtime import ConfigError, parse_args
+from aoa.host.runtime import ConfigError, build_parser, parse_args
 from aoa.maps import navigation
 from aoa.paths import ROOT
 
@@ -94,6 +95,24 @@ class RequirementTests(unittest.TestCase):
                     self.assertNotIn("patch v11", text)
                     if file.name != "defaults.py":
                         self.assertNotIn("online-terrain-v2", text)
+
+
+class FlagDocTests(unittest.TestCase):
+    def test_docs_table_is_current(self):
+        from aoa.host import flagdoc
+        text = flagdoc.DOC.read_text(encoding="utf-8")
+        self.assertEqual(flagdoc.splice(text, flagdoc.table()), text,
+                         "run python -I tools/run.py aoa.host.flagdoc --write")
+        generated = text[text.index(flagdoc.BEGIN):text.index(flagdoc.END)]
+        for action in build_parser()._actions:
+            for name in action.option_strings:
+                if name.startswith("--no-") or name in ("-h", "--help"):
+                    continue
+                with self.subTest(flag=name):
+                    if action.help == argparse.SUPPRESS:
+                        self.assertNotIn(f"`{name}", generated)
+                    else:
+                        self.assertIn(f"`{name}", generated)
 
 
 class DeliveryTests(unittest.TestCase):

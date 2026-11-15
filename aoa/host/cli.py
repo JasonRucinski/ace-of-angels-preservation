@@ -1,40 +1,22 @@
-"""Local stand-in for the AoA Station server (UDP), for observing the real client.
+"""The stand-in Station and arena server's command line (tools/station_stub.py).
 
-Usage:
-    python -I tools/station_stub.py <SCRTY.BIN> <log.jsonl> [--port 5033] [--tcp 5034] [--ack] [--arena] [--pilot testpilot] [--seconds N]
+    python -I tools/station_stub.py <SCRTY.BIN> <log.jsonl> [--profile P] [options]
 
-Defaults to 127.0.0.1; lan-dogfight opts into one private LAN IPv4 address,
-vpn-dogfight into one private or VPN (100.64.0.0/10) address.
-Decodes every datagram
-with aoa/protocol/codec.py (cipher keyed by SCRTY.BIN, CCompress, CRC16). Bounded,
-rotating metadata logs are the default; --raw-capture explicitly includes
-packet data. --profile local-relay enables the documented loopback setup.
-Use --print-config to inspect settings without opening sockets.
-See docs/lan-dogfight.md for LAN setup. Point a local client at 127.0.0.1 in the login dialog's
-"Station IP" box. Nothing is ever sent unless --ack is given; replies are
-built per message type and are experiments, not a complete server. --arena
-adds the initial game-server acknowledgement on UDP 5031. --pilot sets the
-one synthetic pilot supplied per session after its first TCP server-list request.
---experimental-flight loads a local vessel and enters flight. The separate
---experimental-relay also assigns player tags and forwards filtered movement
-fields. Synthetic-peer motion is verified; full gameplay is not implemented.
---arena-port overrides 5031 for isolated protocol tests.
---experimental-object adds one passive mission ship to the flight bootstrap.
---target-ships N adds N passive hostile ships ahead of the spawn for the target keys.
---peer-timeout sets Station/arena inactivity expiry in seconds (default 30). Retired
-relay slots and endpoints are not reused during this run (49 admissions max);
-despawn delivery uses bounded reliable retries. Use a fresh client endpoint
-to rejoin. Observers retire if removal delivery fails or its 30-ID duplicate
-history would be exceeded; safe slot reuse still requires protocol work.
-LAN sessions require restarting host and clients for reconnects.
---sustained-delivery (default for vpn-dogfight) replaces that 30-ID lifetime
-budget with a time window (aoa/host/delivery.py): despawns and combat
-events stay ordered and reliable for a whole session, and a rejoining
-client from a silent player's IP replaces the stale ship. Slots are still
-not reused (49 arena joins per host run).
-Station allows 64 lifetime admissions; expired/quit endpoints stay retired.
-TCP lists require the ID echoed in the Station player record and a matching
-source IP. This is diagnostic correlation, not authentication or ownership.
+Every flag, its default and its group: docs/local-server.md (generated from
+this parser by aoa/host/flagdoc.py), or --help. --print-config validates and
+prints the settings without opening sockets or reading the key.
+
+Profiles: diagnostic (default) only listens and logs, on 127.0.0.1;
+local-relay and local-guests serve clients on this PC; lan-dogfight binds one
+private LAN IPv4 address and vpn-dogfight also a VPN (100.64.0.0/10) address.
+Point a local client at 127.0.0.1 in the login dialog's "Station IP" box.
+Datagrams are decoded with aoa/protocol/codec.py (cipher keyed by SCRTY.BIN,
+CCompress, CRC16); bounded, rotating metadata logs are the default and
+--raw-capture explicitly includes packet data. Synthetic-peer motion,
+combat and admission are tested; full gameplay is not implemented, and
+TCP lists use diagnostic correlation, not authentication or ownership.
+Hosts with players normally start through tools/aoa_host.py or the host
+window, which build these flags from one settings file (aoa/host/config.py).
 """
 import json
 import sys
