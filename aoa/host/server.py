@@ -90,6 +90,7 @@ class ArenaServer:
             tcp = self.resources.enter_context(StationTCPServer(self.args.tcp, self.log, self.reply,
                 self.station_tcp_response, self.notifications, self.session_alive, bind_address=self.args.bind_address))
             print(f"Station TCP on {self.args.bind_address}:{tcp.port}", flush=True)
+        self.tcp_port = tcp.port if self.args.tcp is not None else None
         self.bootstrap_due = {}
         self.arena_players = {}
         self.arena_connections = {}
