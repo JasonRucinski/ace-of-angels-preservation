@@ -13,6 +13,7 @@ import subprocess
 from pathlib import Path
 
 from aoa.client import install_wrapper
+from aoa.client import patches
 from aoa.client import prepare as setup
 from aoa.client import texture_pack
 
@@ -20,20 +21,12 @@ from aoa.paths import ROOT
 DEFAULT_GAME = ROOT / "game/2.9.2"
 PACK_CACHE = "_launcher_texture_pack.json"
 PACK_SUFFIX = ".launcher-texture-pack"
-# key, visible label, patch module. Adding a patch here supplies its checkbox,
-# installed-state detection and explicit on/off argument to prepare().
-PATCHES = (
-    ("distant_objects", "Distant objects — extended visibility", setup.object_persistence),
-    ("experimental_solids", "Solid world models — reduce distant shape popping", setup.solid_world_render),
-    ("experimental_asteroids", "Asteroid models only — reduce shape popping", setup.asteroid_render),
-    ("experimental_world_detail", "Full world mesh and texture detail", setup.world_detail),
-    ("experimental_station_detail", "Full station detail only", setup.station_detail),
-    ("experimental_texture32", "32-bit textures — richer color and alpha", setup.texture32),
-    ("smooth_frame_clock", "Smoother frame timing", setup.frame_clock),
-    ("bounded_visibility", "Corrected object visibility math", setup.visibility_fix),
-    ("chase_camera", "Chase camera, orbit view and visible player ship (F2/F4)", setup.third_person),
-    ("menu_framing", "Widescreen ship-selection framing", setup.menu_aspect),
-)
+# The power-up checkbox sits with the Station, not with the visual additions.
+GAMEPLAY = "powerup_pickups"
+# key, visible label, Patch: every registry option with a checkbox label
+# (aoa/client/patches/__init__.py supplies the checkbox, installed-state
+# detection and the option prepare() takes).
+PATCHES = tuple((p.option, p.label, p) for p in patches.OPTIONS.values() if p.label and p.option != GAMEPLAY)
 # key, label, DirectX configuration key, enabled value, original value
 QUALITY = (
     ("antialiasing", "Anti-aliasing (8x)", "Antialiasing", "8x", "appdriven"),
@@ -43,8 +36,7 @@ QUALITY = (
     ("phong", "Per-pixel lighting (Phong)", "PhongShadingWhenPossible", "true", "false"),
 )
 VISUAL_KEYS = tuple(p[0] for p in PATCHES) + tuple(q[0] for q in QUALITY) + ("texture_pack",)
-EXCLUSIVE = (("experimental_solids", "experimental_asteroids"),
-             ("experimental_world_detail", "experimental_station_detail"))
+EXCLUSIVE = tuple((b.option, a.option) for a, b in patches.CONFLICTS)
 
 
 def wrapper_options(folder):
@@ -82,19 +74,18 @@ def read_settings(folder):
     setup.load_record(record, backup, current)
     setup.check_assets(folder)
     # An older variant counts as on; Apply upgrades it.
-    options = {key: bool(set(getattr(module, "NAMES", (module.NAME,))) & set(state["patches"]))
-               for key, _, module in PATCHES}
+    options = {key: any(variant in state["patches"] for variant, _ in patch.variants) for key, _, patch in PATCHES}
     quality = wrapper_options(folder)
     for key, _, conf_key, _, original in QUALITY:
         options[key] = quality is not None and quality[conf_key] != original
     active = texture_pack.verified(folder)
     cache = cached_pack(folder) if active is None else None
     options["texture_pack"] = bool(active and active["archives"])
-    options["powerup_pickups"] = setup.powerup_pickup.NAME in state["patches"]
+    options[GAMEPLAY] = patches.OPTIONS[GAMEPLAY].id in state["patches"]
     options["station"] = state["host"] if state["host"] != "aoahost.com" else "localhost"
     return options, {"wrapper": quality is not None, "texture_pack": bool(active and active["archives"] or cache),
                      "outdated": sorted(setup.OUTDATED & set(state["patches"])),
-                     "protection": setup.explicit_protection.NAME in state["patches"]}
+                     "protection": setup.LOOPBACK_ONLY in state["patches"]}
 
 
 def require_closed():
@@ -112,7 +103,7 @@ def require_closed():
 
 
 def validate_options(options, available):
-    for key in (*VISUAL_KEYS, "powerup_pickups"):
+    for key in (*VISUAL_KEYS, GAMEPLAY):
         if type(options.get(key)) is not bool:
             raise ValueError(f"{key}: expected an on/off selection")
     setup.host_field(options["station"])
@@ -152,13 +143,13 @@ def apply_settings(folder, options):
     current, available = read_settings(folder)
     validate_options(options, available)
     exe = folder / "AOACLIENT.EXE"
-    kwargs = {key: options[key] for key, _, _ in PATCHES}
-    kwargs["powerup_pickups"] = options["powerup_pickups"]
+    chosen = {key: options[key] for key, _, _ in PATCHES}
+    chosen[GAMEPLAY] = options[GAMEPLAY]
     if options["station"] not in setup.LOOPBACK:
         # The launcher has no control for this probe, which needs a loopback Station.
-        kwargs["experimental_protection"] = False
+        chosen[patches.BY_ID[setup.LOOPBACK_ONLY].option] = False
     # Preflight composition and wrapper edits before any writes.
-    setup.configure(exe.read_bytes(), host=options["station"], **kwargs)
+    setup.configure(exe.read_bytes(), options["station"], chosen)
     conf_path = folder / "dgVoodoo.conf"
     conf = conf_path.read_bytes().decode("latin1") if available["wrapper"] else None
     if conf is not None:
@@ -171,13 +162,13 @@ def apply_settings(folder, options):
              *(n + PACK_SUFFIX for n in texture_pack.ARCHIVES)]
     before = {folder / n: (folder / n).read_bytes() if (folder / n).exists() else None for n in names}
     try:
-        setup.prepare(exe, host=options["station"], **kwargs)
+        setup.prepare(exe, chosen, station=options["station"])
         if conf is not None and conf.encode("latin1") != before[conf_path]:
             setup.atomic_write(conf_path, conf.encode("latin1"))
         set_texture_pack(folder, options["texture_pack"])
         result = setup.check(exe)
         installed, _ = read_settings(folder)
-        if any(installed[key] != options[key] for key in (*VISUAL_KEYS, "powerup_pickups", "station")):
+        if any(installed[key] != options[key] for key in (*VISUAL_KEYS, GAMEPLAY, "station")):
             raise ValueError("Installed settings did not match the selected options")
         return result
     except Exception as error:
@@ -211,7 +202,7 @@ def gui(folder=DEFAULT_GAME, run=True):
     game = tk.StringVar(value=str(Path(folder).resolve()))
     station = tk.StringVar()
     status = tk.StringVar(value="Reading installed settings…")
-    variables = {key: tk.BooleanVar(value=False) for key in (*VISUAL_KEYS, "powerup_pickups")}
+    variables = {key: tk.BooleanVar(value=False) for key in (*VISUAL_KEYS, GAMEPLAY)}
     checks = {}
     loaded_folder = None
     protection = False
@@ -298,8 +289,8 @@ def gui(folder=DEFAULT_GAME, run=True):
     other.pack(fill="x", padx=12)
     ttk.Label(other, text="Station host").pack(side="left")
     ttk.Entry(other, textvariable=station, width=18).pack(side="left", padx=(8, 20))
-    ttk.Checkbutton(other, text="Restored power-up pickups", variable=variables["powerup_pickups"],
-                    command=lambda: changed("powerup_pickups")).pack(side="left")
+    ttk.Checkbutton(other, text=patches.OPTIONS[GAMEPLAY].label, variable=variables[GAMEPLAY],
+                    command=lambda: changed(GAMEPLAY)).pack(side="left")
     ttk.Label(root, text="Compatibility fixes and host-provided map content remain active.",
               foreground="#555").pack(anchor="w", padx=12, pady=(10, 0))
     ttk.Label(root, textvariable=status, wraplength=850, justify="left").pack(fill="x", padx=12, pady=10)

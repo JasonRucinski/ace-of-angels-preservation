@@ -1,5 +1,5 @@
 {
- "about": "SHA-256, Station and inspect() patch IDs of prepare inputs and outputs for fixed options, generated once at commit e92a392 (before the patch registry, phase 2a). Never regenerate: see tests/test_prepare_outputs.py.",
+ "about": "SHA-256, Station and inspect() patch IDs of prepare inputs and outputs for fixed options, generated once by the composition of commit 548cf16 (before the patch registry, phase 2a; only the synthetic image given a PE32 optional header). Never regenerate: see tests/test_prepare_outputs.py.",
  "cases": {
   "asteroids-kept-texture32-on": {
    "host": "localhost",
@@ -21,7 +21,7 @@
     "visibility-math-v1",
     "zero-time-physics-v1"
    ],
-   "sha256": "96108e439af36eb346aceecc45b3ae06cf1e468b623b2be9721e8948a727b945"
+   "sha256": "01f1651e9bbb36d9f3d8a026639391ee8bc77812a224c528badfcd7925f989df"
   },
   "asteroids-replaced-by-solids": {
    "host": "localhost",
@@ -42,7 +42,7 @@
     "visibility-math-v1",
     "zero-time-physics-v1"
    ],
-   "sha256": "5f0a7a575fed837980767a03beb4e5dadb6731a7224dd36e69d77c93fb62694e"
+   "sha256": "97bc3f02f40de739004ee04a5b467409d8d0d6159ff7aed50903ca2e3c996f29"
   },
   "fresh-asteroids": {
    "host": "localhost",
@@ -63,7 +63,7 @@
     "visibility-math-v1",
     "zero-time-physics-v1"
    ],
-   "sha256": "c5bd66f01afb3fb7a1337f9d3afdc944e8e5ebd0327ca32d93a81f68657f1ec4"
+   "sha256": "2182682bb941b022141af7382b85e9a1a5c2518bcb9f8600515c4312cca8ce5e"
   },
   "fresh-defaults": {
    "host": "localhost",
@@ -83,7 +83,7 @@
     "visibility-math-v1",
     "zero-time-physics-v1"
    ],
-   "sha256": "64dac9afe97f3664fe6d909d68c3abc65afe2a4fbcab57f0dad1c7cab52d6666"
+   "sha256": "2519a7c60e98e0d3c5c91d05f08125fb780e65c50a1767ec3eef7f2687a42da8"
   },
   "fresh-distant-solids": {
    "host": "aoalan",
@@ -105,7 +105,7 @@
     "visibility-math-v1",
     "zero-time-physics-v1"
    ],
-   "sha256": "659dc7a385b876d2afb8be6706d46f43b05e52e5600e4cd107f0d2f6082c7430"
+   "sha256": "2c6f3a457147eef12ca4cdbf958ad9a63e7565b2636f28a7bd841759d82499ad"
   },
   "fresh-everything-a": {
    "host": "localhost",
@@ -130,7 +130,7 @@
     "visibility-math-v1",
     "zero-time-physics-v1"
    ],
-   "sha256": "c72843ac8f050bff72b26ead2b1c7004332b8a4b67e60e2aa764e606614d5414"
+   "sha256": "6043956b6a79b893f3823c0303c2e74770eed4f119f1ba014421e7afd96130f0"
   },
   "fresh-everything-b": {
    "host": "127.0.0.1",
@@ -155,7 +155,7 @@
     "world-full-detail-v1",
     "zero-time-physics-v1"
    ],
-   "sha256": "32164f6749f9f5643c184ec81f38f8ee8f4f4871fa9a996af50c23e272b19908"
+   "sha256": "69b0c3f0bbce0e3cb508faf387d40c0a2333ff66a3747579a262159e3d7f424f"
   },
   "fresh-everything-off": {
    "host": "localhost",
@@ -168,7 +168,7 @@
     "online-terrain-v3",
     "zero-time-physics-v1"
    ],
-   "sha256": "2f915af1295d10515846f81042b72c6283ee0142c0540c217f971f25ce7450d5"
+   "sha256": "59a75b57aee94c0aee5f662782ce6244621a8aa88a7c5bf99327a29b5be84699"
   },
   "fresh-solids": {
    "host": "localhost",
@@ -189,7 +189,7 @@
     "visibility-math-v1",
     "zero-time-physics-v1"
    ],
-   "sha256": "5f0a7a575fed837980767a03beb4e5dadb6731a7224dd36e69d77c93fb62694e"
+   "sha256": "97bc3f02f40de739004ee04a5b467409d8d0d6159ff7aed50903ca2e3c996f29"
   },
   "fresh-station-detail": {
    "host": "localhost",
@@ -210,7 +210,7 @@
     "visibility-math-v1",
     "zero-time-physics-v1"
    ],
-   "sha256": "50c55a34e07a04a253ba2a79acf6ca1c92cf34af1ed00092066de5b71e1149b2"
+   "sha256": "df98f1649dfff606ce53c851f9cdc5f290d887a36864c1aec7d870e647092095"
   },
   "fresh-world-detail": {
    "host": "localhost",
@@ -231,7 +231,7 @@
     "world-full-detail-v1",
     "zero-time-physics-v1"
    ],
-   "sha256": "4b3bbec0cbca1118eeac5dd2a80804dfb1bc6271850fe3e77eaa93c639e652dd"
+   "sha256": "b50bc02b80d83e463727e8f797d24beb18781a59af71e2365fa5bd68acd77fb0"
   },
   "prepared-everything-off": {
    "host": "localhost",
@@ -244,7 +244,7 @@
     "online-terrain-v3",
     "zero-time-physics-v1"
    ],
-   "sha256": "2f915af1295d10515846f81042b72c6283ee0142c0540c217f971f25ce7450d5"
+   "sha256": "59a75b57aee94c0aee5f662782ce6244621a8aa88a7c5bf99327a29b5be84699"
   },
   "stable-defaults": {
    "host": "localhost",
@@ -264,7 +264,7 @@
     "visibility-math-v1",
     "zero-time-physics-v1"
    ],
-   "sha256": "64dac9afe97f3664fe6d909d68c3abc65afe2a4fbcab57f0dad1c7cab52d6666"
+   "sha256": "2519a7c60e98e0d3c5c91d05f08125fb780e65c50a1767ec3eef7f2687a42da8"
   },
   "stable-localhost-physics": {
    "host": "localhost",
@@ -283,7 +283,7 @@
     "visibility-math-v1",
     "zero-time-physics-v1"
    ],
-   "sha256": "9f7f57ba7e103949758959ab169f269e5eae0b042060c41f5620fb0741a1e87f"
+   "sha256": "55942af17cf8d80ff5ae836ce432cf36e8dbdffaebc74728a6b43e449248332f"
   },
   "stable-physics-defaults": {
    "host": "10.0.0.1",
@@ -303,7 +303,7 @@
     "visibility-math-v1",
     "zero-time-physics-v1"
    ],
-   "sha256": "5bb8258c6fb09d484387b66dee1e7c1e2ae40e9820c1d2cdb967eea6041ab0f7"
+   "sha256": "83030d6e3aa6e3ef60d59d12f292c83f0db658683dd0b54af880ec5af293c8e2"
   },
   "station-only-change": {
    "host": "aoalan",
@@ -320,7 +320,7 @@
     "visibility-math-v1",
     "zero-time-physics-v1"
    ],
-   "sha256": "10829804fc0e828c927717dcc4de107cc35f972a011a77847ce73d98df8e4df6"
+   "sha256": "5c789fd1898cb753e64224c22efbe4a4cc4b17087787320bf1b1950ad834ed19"
   },
   "unchanged-reprepare": {
    "host": "localhost",
@@ -337,7 +337,7 @@
     "visibility-math-v1",
     "zero-time-physics-v1"
    ],
-   "sha256": "aed52bcb9d29f251282521e74087dd74f515b35f09e5edb5d28df9c3d3c76cb1"
+   "sha256": "3534498fd08359aacd8529260e7bc9e6d88ec215e40246f9a1ae8b5b04146733"
   },
   "upgrade-online-arena1a-v1": {
    "host": "aoalan",
@@ -357,7 +357,7 @@
     "visibility-math-v1",
     "zero-time-physics-v1"
    ],
-   "sha256": "d7481f590ce6305b303070c3f551a87af9055193b7dbf0f0c66e2cc8b94a8b2c"
+   "sha256": "b01308d3a1a268744c3ec13abe5af45eaf74d05732a2e6444965e51e6a122543"
   },
   "upgrade-online-terrain-v2": {
    "host": "localhost",
@@ -377,7 +377,7 @@
     "visibility-math-v1",
     "zero-time-physics-v1"
    ],
-   "sha256": "64dac9afe97f3664fe6d909d68c3abc65afe2a4fbcab57f0dad1c7cab52d6666"
+   "sha256": "2519a7c60e98e0d3c5c91d05f08125fb780e65c50a1767ec3eef7f2687a42da8"
   },
   "upgrade-own-ship-menu": {
    "host": "localhost",
@@ -397,7 +397,7 @@
     "visibility-math-v1",
     "zero-time-physics-v1"
    ],
-   "sha256": "64dac9afe97f3664fe6d909d68c3abc65afe2a4fbcab57f0dad1c7cab52d6666"
+   "sha256": "2519a7c60e98e0d3c5c91d05f08125fb780e65c50a1767ec3eef7f2687a42da8"
   },
   "upgrade-third-person-v1": {
    "host": "localhost",
@@ -417,7 +417,7 @@
     "visibility-math-v1",
     "zero-time-physics-v1"
    ],
-   "sha256": "64dac9afe97f3664fe6d909d68c3abc65afe2a4fbcab57f0dad1c7cab52d6666"
+   "sha256": "2519a7c60e98e0d3c5c91d05f08125fb780e65c50a1767ec3eef7f2687a42da8"
   },
   "upgrade-third-person-v2": {
    "host": "localhost",
@@ -437,7 +437,7 @@
     "visibility-math-v1",
     "zero-time-physics-v1"
    ],
-   "sha256": "64dac9afe97f3664fe6d909d68c3abc65afe2a4fbcab57f0dad1c7cab52d6666"
+   "sha256": "2519a7c60e98e0d3c5c91d05f08125fb780e65c50a1767ec3eef7f2687a42da8"
   },
   "upgrade-third-person-v2-off": {
    "host": "localhost",
@@ -454,7 +454,7 @@
     "visibility-math-v1",
     "zero-time-physics-v1"
    ],
-   "sha256": "aed52bcb9d29f251282521e74087dd74f515b35f09e5edb5d28df9c3d3c76cb1"
+   "sha256": "3534498fd08359aacd8529260e7bc9e6d88ec215e40246f9a1ae8b5b04146733"
   },
   "version-1-upgrade": {
    "host": "127.0.0.1",
@@ -474,7 +474,7 @@
     "visibility-math-v1",
     "zero-time-physics-v1"
    ],
-   "sha256": "9a592116ce58b49cca661a502c39104cee36e5234895f84c8ab3432507d50f9e"
+   "sha256": "63deac0fcc35c3f185a7bd027e7c4f5d9de9b2da654d6b946511ec101bc7ed93"
   },
   "world-replaced-by-station": {
    "host": "localhost",
@@ -495,7 +495,7 @@
     "visibility-math-v1",
     "zero-time-physics-v1"
    ],
-   "sha256": "50c55a34e07a04a253ba2a79acf6ca1c92cf34af1ed00092066de5b71e1149b2"
+   "sha256": "df98f1649dfff606ce53c851f9cdc5f290d887a36864c1aec7d870e647092095"
   }
  },
  "inputs": {
@@ -517,7 +517,7 @@
     "visibility-math-v1",
     "zero-time-physics-v1"
    ],
-   "sha256": "b3f0ebb9c5a19f8e0d817a56903e51d5f6e4afe890dfe724a9c65a8f37a3bb0d"
+   "sha256": "42baf84dd46744cfccb728bc5a8e59e0e24caa94e6881d45202192cf98f1379b"
   },
   "legacy-online-terrain-v2": {
    "host": "localhost",
@@ -537,7 +537,7 @@
     "visibility-math-v1",
     "zero-time-physics-v1"
    ],
-   "sha256": "62c7e789b9162bee8ee380502241c5ccf0991593760f4a87e76c3ced543f19f8"
+   "sha256": "082beebf33944e0ce999a2e12574dff8e603ffacd24141ba755c8cd2b75d4398"
   },
   "legacy-own-ship-menu": {
    "host": "localhost",
@@ -557,7 +557,7 @@
     "visibility-math-v1",
     "zero-time-physics-v1"
    ],
-   "sha256": "f249063e2931b4f56d72892843c08875ef69b1d3b2fe799292fd28b4d883e735"
+   "sha256": "bdd739cd6398d7b0190f4c1f06a5305359545b11173b2afeb6f09124fabc4f27"
   },
   "legacy-third-person-v1": {
    "host": "localhost",
@@ -576,7 +576,7 @@
     "visibility-math-v1",
     "zero-time-physics-v1"
    ],
-   "sha256": "83883a41628d0663ab33cf323af2d235c754f499d08fee40a576526d8fdae55e"
+   "sha256": "8f8f9725f40f4889c627d03058077418eb059173da24c033223f77be5ff37f5a"
   },
   "legacy-third-person-v2": {
    "host": "localhost",
@@ -594,7 +594,7 @@
     "visibility-math-v1",
     "zero-time-physics-v1"
    ],
-   "sha256": "ec2d1d02cb5887876c2f3f5ddfad8eba0a971b4bdcfc4ce8e6040918149721d9"
+   "sha256": "bbfaefda3f982fdb337a8f3650ba1fae9a87bf3c495e88e9de2e39713553571b"
   },
   "prepared": {
    "host": "localhost",
@@ -614,7 +614,7 @@
     "visibility-math-v1",
     "zero-time-physics-v1"
    ],
-   "sha256": "64dac9afe97f3664fe6d909d68c3abc65afe2a4fbcab57f0dad1c7cab52d6666"
+   "sha256": "2519a7c60e98e0d3c5c91d05f08125fb780e65c50a1767ec3eef7f2687a42da8"
   },
   "prepared-asteroids": {
    "host": "localhost",
@@ -635,7 +635,7 @@
     "visibility-math-v1",
     "zero-time-physics-v1"
    ],
-   "sha256": "c5bd66f01afb3fb7a1337f9d3afdc944e8e5ebd0327ca32d93a81f68657f1ec4"
+   "sha256": "2182682bb941b022141af7382b85e9a1a5c2518bcb9f8600515c4312cca8ce5e"
   },
   "prepared-chase-off": {
    "host": "localhost",
@@ -652,7 +652,7 @@
     "visibility-math-v1",
     "zero-time-physics-v1"
    ],
-   "sha256": "aed52bcb9d29f251282521e74087dd74f515b35f09e5edb5d28df9c3d3c76cb1"
+   "sha256": "3534498fd08359aacd8529260e7bc9e6d88ec215e40246f9a1ae8b5b04146733"
   },
   "prepared-world-detail": {
    "host": "localhost",
@@ -673,12 +673,12 @@
     "world-full-detail-v1",
     "zero-time-physics-v1"
    ],
-   "sha256": "4b3bbec0cbca1118eeac5dd2a80804dfb1bc6271850fe3e77eaa93c639e652dd"
+   "sha256": "b50bc02b80d83e463727e8f797d24beb18781a59af71e2365fa5bd68acd77fb0"
   },
   "pristine": {
    "host": "aoahost.com",
    "patches": [],
-   "sha256": "e1d768c6b0fe59832c6a37673cba1db885ef61802db14e0d152e654e185c2301"
+   "sha256": "eae533733173b71a639f53d955720bc2208a09e5e357572194f840377afb2488"
   },
   "stable": {
    "host": "aoahost.com",
@@ -686,7 +686,7 @@
     "logger-lock-v1",
     "logger-size-v1"
    ],
-   "sha256": "5f700cabf077e6e16024db6cd06160764efdab4421a658944970e8dbe833723b"
+   "sha256": "9ba4ff21eae7366be2811871fd9c342ddd608a299968f50a1111468100c6dbc9"
   },
   "stable-localhost-physics": {
    "host": "localhost",
@@ -695,7 +695,7 @@
     "logger-size-v1",
     "zero-time-physics-v1"
    ],
-   "sha256": "da4a2d6d4da7771f69919e5f854943339d0a0204f6f98806677ae266f4a60b3a"
+   "sha256": "48a14bf85e93605c63c15eca0efe7858295ad508d4ea6641cc3dff4dbbb4f852"
   },
   "stable-physics": {
    "host": "aoahost.com",
@@ -704,7 +704,7 @@
     "logger-size-v1",
     "zero-time-physics-v1"
    ],
-   "sha256": "d6a2e75c737e9569ea19616c6ed0a3d2a160b118aabc1166b65f9e1ead03861e"
+   "sha256": "824e9fa6617cfa09bed821ca0d06c220011b7ddf51d7e622cce701e4b1e4274c"
   },
   "version-1": {
    "host": "localhost",
@@ -722,7 +722,7 @@
     "visibility-math-v1",
     "zero-time-physics-v1"
    ],
-   "sha256": "1d1a6bff11cf143bb89fd81a5332d49dc0f6ebea176f3c61cfb3343a83e7c873"
+   "sha256": "b34ca54c4f55d69e5f06a26fed6fe78fc3b3304259687123665ec54e510c47a2"
   }
  }
 }

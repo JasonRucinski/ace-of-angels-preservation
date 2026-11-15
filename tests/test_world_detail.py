@@ -12,6 +12,8 @@ from tests import support_emulation as support
 from aoa.emulation.emu import SCRATCH, STACK
 from aoa.paths import ROOT
 from aoa.maps.lod import audit
+from aoa.client.patches import base as patching
+from tests.support_patches import triples
 from unicorn.x86_const import UC_X86_REG_ECX, UC_X86_REG_ESP
 
 
@@ -64,17 +66,17 @@ class WorldDetailTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as folder:
             exe = Path(folder) / 'AOACLIENT.EXE'
             exe.write_bytes(support.SOURCE.read_bytes())
-            prepare.prepare(exe, experimental_solids=True, experimental_station_detail=True)
+            prepare.prepare(exe, {"experimental_solids": True, "experimental_station_detail": True})
             before = exe.read_bytes()
-            patch.install(exe)
+            prepare.prepare(exe, {"experimental_world_detail": True})
             after = exe.read_bytes()
             self.assertEqual(prepare.configure(after), after)
             self.assertIn(patch.NAME, prepare.check(exe, require_assets=False)['patches'])
             self.assertNotIn(station_detail.NAME, prepare.inspect(after)['patches'])
-            patch.install(exe)
+            prepare.prepare(exe, {"experimental_world_detail": True})
             self.assertEqual(exe.read_bytes(), after)
             # Undo turns world detail off; the station-only patch it replaced stays off.
-            patch.install(exe, undo=True)
+            prepare.prepare(exe, {"experimental_world_detail": False})
             self.assertEqual(exe.read_bytes(), prepare.configure(before, experimental_station_detail=False))
             self.assertEqual(sorted(p.name for p in Path(folder).iterdir()),
                              ['AOACLIENT.EXE', 'AOACLIENT.EXE.setup-original', '_client_setup.json'])
@@ -82,17 +84,17 @@ class WorldDetailTests(unittest.TestCase):
     def test_byte_scope_and_corruption_rejection(self):
         before = prepare.configure(support.SOURCE.read_bytes(), experimental_solids=True)
         after = prepare.configure(before, experimental_world_detail=True)
-        allowed = {i for off, old, _ in patch.regions() for i in range(off, off + len(old))}
+        allowed = {i for off, old, _ in triples(patch.PATCH) for i in range(off, off + len(old))}
         self.assertTrue(all(a == b or i in allowed for i, (a, b) in enumerate(zip(before, after))))
-        for offset in (patch.OFFSET, patch.RANGE_SITE - 0x400000, station_detail.CAVE - 0x400000, 0x12345):
+        for offset in ((patch.SITE - 0x400000), patch.RANGE_SITE - 0x400000, station_detail.CAVE - 0x400000, 0x12345):
             broken = bytearray(after)
             broken[offset] ^= 1
             with self.assertRaises(ValueError):
                 prepare.inspect(bytes(broken))
         partial = bytearray(before)
-        partial[patch.OFFSET:patch.OFFSET + 6] = patch.PATCHED
+        partial[(patch.SITE - 0x400000):(patch.SITE - 0x400000) + 6] = patch.PATCHED
         with self.assertRaises(ValueError):
-            patch.configure(bytes(partial))
+            patching.apply(patch.PATCH, bytes(partial), True)
         self.assertNotIn(patch.NAME, prepare.inspect(
             prepare.configure(after, experimental_station_detail=True))['patches'])
         with self.assertRaisesRegex(ValueError, f"{station_detail.NAME} and {patch.NAME}"):

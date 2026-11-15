@@ -24,7 +24,7 @@ class GroupProbe:
     def __init__(self, distant=False, extras=()):
         self.emu = e = Emu(PE(SOURCE))
         for module in (visibility_fix, *extras, *((patch,) if distant else ())):
-            for offset, _, new in (triples(module.PATCH) if hasattr(module, "PATCH") else module.regions()):
+            for offset, _, new in triples(module.PATCH):
                 e.write(offset + 0x400000, new)
         # Only the C runtime's x87 asin/acos calls are replaced. All group,
         # distance, projected-size and mesh-selection instructions are original.
@@ -92,7 +92,7 @@ class AsteroidGate:
 
     def gate(self, name, distance, patched=True, control=0x7F):
         e = self.emu
-        for offset, old, new in self.patch.regions():
+        for offset, old, new in triples(self.patch.PATCH):
             e.write(offset + 0x400000, new if patched else old)
             # Unicorn retains translated blocks after mem_write; this fixture
             # alternates original and patched code in the same emulator.
@@ -113,7 +113,7 @@ class AsteroidGate:
 
     def check_hook_preserves_integer_state(self):
         e = self.emu
-        for offset, _, new in self.patch.regions():
+        for offset, _, new in triples(self.patch.PATCH):
             e.write(offset + 0x400000, new)
         e.write(SCRATCH + 0x20, struct.pack('<I', SCRATCH + 0x1000))
         e.write(SCRATCH + 0x1000, b'Astr-B_mip\0')
@@ -148,7 +148,7 @@ class StationLod:
 
     def select(self, name, size, enabled=True, control=0x7F):
         e = self.emu
-        for off, old, new in self.patch.regions():
+        for off, old, new in triples(self.patch.PATCH):
             e.write(off + 0x400000, new if enabled else old)
             e.uc.ctl_remove_cache(off + 0x400000, off + 0x400000 + len(new))
         e.write(SCRATCH, bytes(0x400))
@@ -190,7 +190,7 @@ class StationLod:
         e = self.emu
         # Keep this entry-point probe cold: reusing the traversal's translated
         # blocks can skip Unicorn's new stop address inside an existing block.
-        for off, _, new in self.patch.regions():
+        for off, _, new in triples(self.patch.PATCH):
             e.write(off + 0x400000, new)
         e.write(SCRATCH + 0x20, struct.pack('<I', SCRATCH + 0x1000))
         e.write(SCRATCH + 0x1000, self.patch.MODEL)

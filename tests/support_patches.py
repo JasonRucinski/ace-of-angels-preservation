@@ -1,50 +1,43 @@
 """The client patch regions and a synthetic pristine image, for the suites that need them.
 
-collect() lists every region each patch module writes (the content of
+collect() lists every region each registered patch writes (the content of
 tests/snapshots/patch_regions.json); synthetic_pristine() is a zero image of
 the 2.9.2 client's size, with its real section table (evidence/2.9.2/
-pe_facts.json) and every patch's original bytes at its sites. Used by
-test_patch_layout, test_prepare_client and test_client_launcher. Standard
-library and aoa only; no game file is read.
+pe_facts.json) and every patch's original bytes at its sites, and
+synthetic_client() makes the preparation code accept it. Used by the client
+suites. Standard library and aoa only; no game file is read.
 """
 import contextlib
 import hashlib
 import json
 import struct
 import types
+import unittest
 from unittest import mock
 
-from aoa.client.patches import archive_terminator  # noqa: E402
-from aoa.client.patches import asteroid_render  # noqa: E402
-from aoa.client.patches import cursor_warp  # noqa: E402
-from aoa.client.patches import explicit_protection  # noqa: E402
-from aoa.client.patches import frame_clock  # noqa: E402
-from aoa.client.patches import station_host  # noqa: E402
-from aoa.client.patches import menu_aspect  # noqa: E402
-from aoa.client.patches import object_persistence  # noqa: E402
-from aoa.client.patches import online_terrain  # noqa: E402
-from aoa.client.patches import own_ship_menu  # noqa: E402
-from aoa.client.patches import own_ship_model  # noqa: E402
-from aoa.client import base  # noqa: E402
-from aoa.client.patches import physics_timestep  # noqa: E402
-from aoa.client.patches import powerup_pickup  # noqa: E402
-from aoa.client import prepare  # noqa: E402
-from aoa.client.experiments import render_clock_experiment  # noqa: E402
-from aoa.client.experiments import render_culling_experiment  # noqa: E402
-from aoa.client.patches import solid_world_render  # noqa: E402
-from aoa.client.patches import station_detail  # noqa: E402
-from aoa.client.patches import texture32  # noqa: E402
-from aoa.client.patches import third_person  # noqa: E402
-from aoa.client.patches import visibility_fix  # noqa: E402
-from aoa.client.patches import world_detail  # noqa: E402
-
-
+from aoa.client import patches as registry
+from aoa.client import prepare
+from aoa.client.experiments import render_clock_experiment
+from aoa.client.experiments import render_culling_experiment
+from aoa.client.patches import base as patching
+from aoa.client.patches import logger
+from aoa.client.patches import own_ship_menu
+from aoa.client.patches import station_host
+from aoa.client.patches import third_person
 from aoa.paths import ROOT
+
 PE_FACTS = ROOT / "evidence/2.9.2/pe_facts.json"
-BASE = base.IMAGE_BASE
-# Original bytes at patch_client's sites, as its configure() expects them.
-PATCH_CLIENT_SITES = {0x551775: "6a20", 0x526D00: "64a1000000006aff", 0x526F8C: "64890d0000000083c424c3",
-                      0x527210: "8b4c24088d44240c", 0x527233: "e868fdffff8b065ec3"}
+# The user's original client, which the needs-game halves of the client suites run on.
+ORIGINAL = ROOT / "game/2.9.2/AOACLIENT.EXE.orig"
+needs_game = unittest.skipUnless(ORIGINAL.is_file(), "needs the user's original 2.9.2 client "
+                                                     "(game/2.9.2/AOACLIENT.EXE.orig)")
+BASE = patching.IMAGE_BASE
+# Where each patch lived when the snapshot was taken, if it has moved since.
+SNAPSHOT_MODULE = {"logger-size-v1": "patch_client", "logger-lock-v1": "patch_client",
+                   "background-network-v1": "prepare_client"}
+# Snapshot labels of older variants.
+SNAPSHOT_VARIANT = {"third-person-camera-v2": "v2", "third-person-camera-v1": "v1",
+                    own_ship_menu.LEGACY_NAME: "legacy"}
 
 
 def h(value):
@@ -64,6 +57,10 @@ def pe_image():
     image[e_lfanew:e_lfanew + 4] = b"PE\0\0"
     struct.pack_into("<HH", image, e_lfanew + 4, int(facts["machine"], 16), len(facts["sections"]))
     struct.pack_into("<H", image, e_lfanew + 20, 0xE0)
+    # Optional header: PE32 magic, image base and image size, so aoa.formats.pe can map it.
+    struct.pack_into("<H", image, e_lfanew + 24, 0x10B)
+    struct.pack_into("<I", image, e_lfanew + 24 + 28, int(facts["image_base"], 16))
+    struct.pack_into("<I", image, e_lfanew + 24 + 56, int(facts["size_of_image"], 16))
     for i, section in enumerate(facts["sections"]):
         at = e_lfanew + 24 + 0xE0 + 40 * i
         image[at:at + 8] = section["name"].encode().ljust(8, b"\0")
@@ -99,11 +96,10 @@ def synthetic_client(pristine=None):
     stability-patched hashes stand in for the real 2.9.2 ones."""
     pristine = synthetic_pristine() if pristine is None else pristine
     pristine_sha = hashlib.sha256(pristine).hexdigest()
-    with mock.patch.object(base, "PRISTINE_292", pristine_sha):
-        stable_sha = hashlib.sha256(base.configure(pristine)[0]).hexdigest()
-    with mock.patch.object(base, "PRISTINE_292", pristine_sha), \
-            mock.patch.object(prepare, "STABLE_SHA256", stable_sha), \
-            mock.patch.object(physics_timestep, "STABLE_SHA256", stable_sha):
+    with mock.patch.object(logger, "PRISTINE_292", pristine_sha):
+        stable_sha = hashlib.sha256(logger.stabilize(pristine)).hexdigest()
+    with mock.patch.object(logger, "PRISTINE_292", pristine_sha), \
+            mock.patch.object(logger, "STABLE_SHA256", stable_sha):
         yield
 
 
@@ -139,13 +135,13 @@ def runtime(va, size, what):
     return {"va": h(va), "size": size, "what": what}
 
 
-def patch_client_record():
-    """patch_client.configure() run on a synthetic pristine image: its own record of every write."""
-    image = pe_image()
-    for va, old in PATCH_CLIENT_SITES.items():
-        image[va - BASE:va - BASE + len(old) // 2] = bytes.fromhex(old)
-    with mock.patch.object(base, "PRISTINE_292", hashlib.sha256(image).hexdigest()):
-        return base.configure(bytes(image))[1]["patches"]
+def module_of(patch_id):
+    """Name of the module under aoa/client/patches that exports this patch."""
+    for name, module in vars(registry).items():
+        found = getattr(module, "PATCHES", None) or (getattr(module, "PATCH", None),)
+        if any(p is not None and p.id == patch_id for p in found if hasattr(p, "id")):
+            return name
+    raise KeyError(patch_id)
 
 
 def collect():
@@ -155,39 +151,20 @@ def collect():
     def add(name, module, variants, **extra):
         patches[name] = {"module": module, "variants": {k: listed(v) for k, v in variants.items()}, **extra}
 
-    size, lock, header = [], [], []
-    for entry in patch_client_record():
-        if "va" not in entry:
-            header.append({"field": entry["patch"], "old": entry["old"], "new": entry["new"]})
-            continue
-        assert int(entry["file_offset"], 16) == int(entry["va"], 16) - BASE, entry
-        triple = (int(entry["file_offset"], 16), bytes.fromhex(entry["old"]), bytes.fromhex(entry["new"]))
-        (size if entry["patch"] == "dxgfx-logger-size" else lock).append(triple)
-    add("logger-size-v1", "patch_client", {"current": size}, pe_header=header)
-    add("logger-lock-v1", "patch_client", {"current": lock},
-        runtime_data=[runtime(base.LOCK_OWNER, 4, "lock owner"),
-                      runtime(base.LOCK_DEPTH, 4, "lock depth")])
+    extras = {
+        "logger-size-v1": {"pe_header": [{"field": f"{name} VirtualSize", "old": hex(old), "new": hex(new)}
+                                         for name, old, new in logger.HEADER]},
+        "logger-lock-v1": {"runtime_data": [runtime(logger.LOCK_OWNER, 4, "lock owner"),
+                                            runtime(logger.LOCK_DEPTH, 4, "lock depth")]},
+        third_person.NAME: {"runtime_data": [runtime(third_person.FAKE, third_person.ARMED + 1 - third_person.FAKE,
+                                                     "FAKE..ARMED block (own_ship_menu RESTRICT inside, C5)")]},
+        own_ship_menu.NAME: {"runtime_data": [runtime(own_ship_menu.RESTRICT, 1, "RESTRICT")]},
+    }
+    for patch in registry.REGISTRY:
+        add(patch.id, SNAPSHOT_MODULE.get(patch.id) or module_of(patch.id), variants(patch, SNAPSHOT_VARIANT),
+            **extras.get(patch.id, {}))
     add("station-hostname", "local_station + prepare_client.host_field",
         {"current": [(station_host.OFFSET, station_host.ORIGINAL, prepare.host_field("localhost"))]})
-    m = physics_timestep
-    add("zero-time-physics-v1", "physics_timestep", {"current": [
-        (m.SITE_OFFSET, m.DISPLACED, base.jmp_patch(m.SITE, m.CAVE, len(m.DISPLACED))),
-        (m.CAVE_OFFSET, bytes(len(m.guard_code())), m.guard_code())]})
-    add("background-network-v1", "prepare_client", {"current": [
-        (prepare.BACKGROUND_OFFSET, prepare.BACKGROUND_JNE, prepare.BACKGROUND_NOP)]})
-    for m in (archive_terminator, explicit_protection):
-        add(m.PATCH.id, m.__name__.rpartition(".")[2], {"current": triples(m.PATCH)})
-    add(online_terrain.NAME, "online_terrain", variants(online_terrain.PATCH))
-    for m in (menu_aspect, cursor_warp, frame_clock, visibility_fix, own_ship_model, powerup_pickup,
-              asteroid_render, solid_world_render, station_detail, world_detail, texture32, object_persistence):
-        add(m.NAME, m.__name__.rpartition(".")[2],
-            {"current": triples(m.PATCH) if hasattr(m, "PATCH") else m.regions()})
-    add(third_person.NAME, "third_person",
-        variants(third_person.PATCH, {"third-person-camera-v2": "v2", "third-person-camera-v1": "v1"}),
-        runtime_data=[runtime(third_person.FAKE, third_person.ARMED + 1 - third_person.FAKE,
-                              "FAKE..ARMED block (own_ship_menu RESTRICT inside, C5)")])
-    add(own_ship_menu.NAME, "own_ship_menu", variants(own_ship_menu.PATCH, {own_ship_menu.LEGACY_NAME: "legacy"}),
-        runtime_data=[runtime(own_ship_menu.RESTRICT, 1, "RESTRICT")])
     add("experiment-render-clock", "render_clock_experiment", {"current": render_clock_experiment.regions()})
     add("experiment-render-culling", "render_culling_experiment", {"current": render_culling_experiment.regions()})
     return dict(sorted(patches.items()))

@@ -19,6 +19,8 @@ from unicorn.x86_const import (UC_X86_REG_ECX, UC_X86_REG_ESP,
 
 from aoa.paths import ROOT
 from tests.support_emulation import GroupProbe, SOURCE
+from aoa.client.patches import base as patching
+from tests.support_patches import triples
 
 
 class ObjectPersistenceTests(unittest.TestCase):
@@ -136,18 +138,18 @@ class ObjectPersistenceTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as folder:
             exe = Path(folder) / "AOACLIENT.EXE"
             exe.write_bytes(SOURCE.read_bytes())
-            prepare.prepare(exe, host="127.0.0.1", smooth_frame_clock=False,
-                                   chase_camera=False, powerup_pickups=False)
+            prepare.prepare(exe, {"smooth_frame_clock": False, "chase_camera": False, "powerup_pickups": False},
+                            station="127.0.0.1")
             before = exe.read_bytes()
-            patch.install(exe)
+            prepare.prepare(exe, {"distant_objects": True})
             after = exe.read_bytes()
-            self.assertEqual(patch.configure(after, False), before)
+            self.assertEqual(patching.apply(patch.PATCH, after, False), before)
             self.assertIn(patch.NAME, prepare.check(exe, require_assets=False)["patches"])
-            patch.install(exe)
+            prepare.prepare(exe, {"distant_objects": True})
             self.assertEqual(exe.read_bytes(), after)
-            patch.install(exe, undo=True)
+            prepare.prepare(exe, {"distant_objects": False})
             self.assertEqual(exe.read_bytes(), before)
-            patch.install(exe, undo=True)
+            prepare.prepare(exe, {"distant_objects": False})
             self.assertEqual(exe.read_bytes(), before)
             self.assertEqual(sorted(p.name for p in Path(folder).iterdir()),
                              ["AOACLIENT.EXE", "AOACLIENT.EXE.setup-original", "_client_setup.json"])
@@ -155,9 +157,9 @@ class ObjectPersistenceTests(unittest.TestCase):
     def test_byte_scope_partial_corruption_and_backup_rejection(self):
         before = prepare.configure(SOURCE.read_bytes())
         after = prepare.configure(before, distant_objects=True)
-        allowed = {i for off, old, _ in patch.regions() for i in range(off, off + len(old))}
+        allowed = {i for off, old, _ in triples(patch.PATCH) for i in range(off, off + len(old))}
         self.assertTrue(all(a == b or i in allowed for i, (a, b) in enumerate(zip(before, after))))
-        for offset, old, new in patch.regions():
+        for offset, old, new in triples(patch.PATCH):
             partial = bytearray(before)
             partial[offset:offset + len(new)] = new
             with self.assertRaises(ValueError):

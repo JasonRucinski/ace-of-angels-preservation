@@ -13,6 +13,8 @@ from unicorn.x86_const import (UC_X86_REG_EAX, UC_X86_REG_ECX, UC_X86_REG_EDX, U
                                UC_X86_REG_ESI, UC_X86_REG_ESP, UC_X86_REG_EIP)
 
 from aoa.paths import ROOT
+from aoa.client.patches import base as patching
+from tests.support_patches import triples
 SOURCE = ROOT / 'game/2.9.2/AOACLIENT.EXE.orig'
 DONE, INVALID = 0x562AF9, 0x562AC4
 
@@ -37,7 +39,7 @@ class Texture32Tests(unittest.TestCase):
     def select(self, bpp, patched, preset=0):
         """Run 0x562AA0..0x562AF9: the view's depth/alpha choice for one TGA."""
         e = self.emu
-        for off, old, new in patch.regions():
+        for off, old, new in triples(patch.PATCH):
             e.write(off + 0x400000, new if patched else old)
             e.uc.ctl_remove_cache(off + 0x400000, off + 0x400000 + len(old))
         e.write(SCRATCH, struct.pack('<4I', 0, preset, 0x1234, 0xFFFFFFFF))
@@ -116,35 +118,35 @@ class Texture32Tests(unittest.TestCase):
         before = prepare.configure(SOURCE.read_bytes(), experimental_world_detail=True,
                                           experimental_solids=True)
         after = prepare.configure(before, experimental_texture32=True)
-        allowed = {i for off, old, _ in patch.regions() for i in range(off, off + len(old))}
+        allowed = {i for off, old, _ in triples(patch.PATCH) for i in range(off, off + len(old))}
         changed = {i for i, (a, b) in enumerate(zip(before, after)) if a != b}
         self.assertTrue(changed and changed <= allowed)
         self.assertEqual(prepare.configure(after), after)  # preserved by normal preparation
         self.assertIn(patch.NAME, prepare.inspect(after)['patches'])
         self.assertEqual(prepare.configure(after, experimental_texture32=False), before)
-        for off, _, _ in patch.regions():
+        for off, _, _ in triples(patch.PATCH):
             broken = bytearray(after)
             broken[off] ^= 1
             with self.assertRaises(ValueError):
                 prepare.inspect(bytes(broken))
         partial = bytearray(before)
-        off, _, new = patch.regions()[2]
+        off, _, new = triples(patch.PATCH)[2]
         partial[off:off + len(new)] = new
         with self.assertRaises(ValueError):
-            patch.configure(bytes(partial))
+            patching.apply(patch.PATCH, bytes(partial), True)
 
     def test_install_idempotence_and_exact_undo(self):
         with tempfile.TemporaryDirectory() as folder:
             exe = Path(folder) / 'AOACLIENT.EXE'
             exe.write_bytes(SOURCE.read_bytes())
-            prepare.prepare(exe, experimental_solids=True, experimental_world_detail=True)
+            prepare.prepare(exe, {"experimental_solids": True, "experimental_world_detail": True})
             before = exe.read_bytes()
-            patch.install(exe)
+            prepare.prepare(exe, {"experimental_texture32": True})
             after = exe.read_bytes()
             self.assertIn(patch.NAME, prepare.check(exe, require_assets=False)['patches'])
-            patch.install(exe)
+            prepare.prepare(exe, {"experimental_texture32": True})
             self.assertEqual(exe.read_bytes(), after)
-            patch.install(exe, undo=True)
+            prepare.prepare(exe, {"experimental_texture32": False})
             self.assertEqual(exe.read_bytes(), before)
             self.assertEqual(sorted(p.name for p in Path(folder).iterdir()),
                              ['AOACLIENT.EXE', 'AOACLIENT.EXE.setup-original', '_client_setup.json'])

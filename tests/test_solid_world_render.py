@@ -8,6 +8,7 @@ from aoa.client.patches import solid_world_render as patch
 from aoa.client import prepare
 from tests import support_emulation as support
 from aoa.analysis.pe_util import Disasm, PE
+from aoa.client.patches import base as patching
 
 
 class SolidWorldRenderTests(unittest.TestCase):
@@ -30,8 +31,8 @@ class SolidWorldRenderTests(unittest.TestCase):
         after = prepare.configure(before, experimental_solids=True)
         # Every byte outside this one comparison is identical, including all
         # sprite/effect submission, cached-image code, LOD and depth settings.
-        self.assertEqual(before[:patch.OFFSET], after[:patch.OFFSET])
-        self.assertEqual(before[patch.OFFSET + 6:], after[patch.OFFSET + 6:])
+        self.assertEqual(before[:(patch.SITE - 0x400000)], after[:(patch.SITE - 0x400000)])
+        self.assertEqual(before[(patch.SITE - 0x400000) + 6:], after[(patch.SITE - 0x400000) + 6:])
 
     def test_legacy_migration_preservation_and_exact_undo(self):
         clean = prepare.configure(support.SOURCE.read_bytes())
@@ -39,7 +40,7 @@ class SolidWorldRenderTests(unittest.TestCase):
         broad = prepare.configure(legacy, experimental_solids=True)
         self.assertEqual(broad, prepare.configure(clean, experimental_solids=True))
         self.assertEqual(prepare.configure(broad), broad)
-        self.assertEqual(patch.configure(broad, False), clean)
+        self.assertEqual(patching.apply(patch.PATCH, broad, False), clean)
         self.assertEqual(prepare.configure(broad, experimental_solids=False,
                                                 experimental_asteroids=True), legacy)
         self.assertIn(patch.NAME, prepare.inspect(broad)['patches'])
@@ -50,7 +51,7 @@ class SolidWorldRenderTests(unittest.TestCase):
 
     def test_corruption_and_abandoned_cave_rejected(self):
         broad = prepare.configure(support.SOURCE.read_bytes(), experimental_solids=True)
-        for offset in (patch.OFFSET, asteroid_render.CAVE - 0x400000, 0x12345):
+        for offset in ((patch.SITE - 0x400000), asteroid_render.CAVE - 0x400000, 0x12345):
             broken = bytearray(broad)
             broken[offset] ^= 1
             with self.assertRaises(ValueError):
@@ -60,18 +61,18 @@ class SolidWorldRenderTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             exe = Path(directory) / 'AOACLIENT.EXE'
             exe.write_bytes(support.SOURCE.read_bytes())
-            prepare.prepare(exe, experimental_asteroids=True)
+            prepare.prepare(exe, {"experimental_asteroids": True})
             before = exe.read_bytes()
-            patch.install(exe)
+            prepare.prepare(exe, {"experimental_solids": True})
             after = exe.read_bytes()
-            patch.install(exe)
+            prepare.prepare(exe, {"experimental_solids": True})
             self.assertEqual(exe.read_bytes(), after)
             self.assertIn(patch.NAME, prepare.check(exe, require_assets=False)['patches'])
             # Undo turns solid-world off; the asteroid-only patch it replaced stays off.
             off = prepare.configure(before, experimental_asteroids=False)
-            patch.install(exe, undo=True)
+            prepare.prepare(exe, {"experimental_solids": False})
             self.assertEqual(exe.read_bytes(), off)
-            patch.install(exe, undo=True)
+            prepare.prepare(exe, {"experimental_solids": False})
             self.assertEqual(exe.read_bytes(), off)
             self.assertEqual(sorted(p.name for p in Path(directory).iterdir()),
                              ['AOACLIENT.EXE', 'AOACLIENT.EXE.setup-original', '_client_setup.json'])
