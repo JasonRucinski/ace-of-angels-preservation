@@ -23,11 +23,13 @@ Library use only (prepare_client.py composes it); no file is written here.
 """
 import struct
 
-from aoa.client.base import Asm  # noqa: E402
+from aoa.client import layout
+from aoa.client.asm import Asm, call
+from aoa.client.patches.base import Patch, Region
 
 NAME = "frame-clock-v1"
-CLOCK = 0x58B600
-GATE = 0x58B680
+CLOCK = layout.cave(NAME, "clock").start
+GATE = layout.cave(NAME, "gate").start
 GATE_MS = 50
 FRAME = 0x44AD60            # app frame function (ecx = app)
 TIMER_CALL = 0x446EB1       # call FRAME inside the wakeup-timer callback
@@ -65,41 +67,16 @@ def gate_code():
     return a.resolve()
 
 
-def call(site, target):
-    return b"\xe8" + struct.pack("<i", target - site - 5)
-
-
-def regions():
-    """(file offset, original bytes, patched bytes); image base 0x400000."""
+def _regions():
     clock, gate = clock_code(), gate_code()
-    assert CLOCK + len(clock) <= GATE and GATE + len(gate) <= 0x58B700
-    return [(CLOCK - 0x400000, bytes(len(clock)), clock),
-            (GATE - 0x400000, bytes(len(gate)), gate),
-            (0x1296C4, bytes.fromhex("8b3d") + struct.pack("<I", GET_TICK_COUNT),
-             b"\xbf" + struct.pack("<I", CLOCK) + b"\x90"),          # mov edi, CLOCK (then call edi)
-            (0x129700, b"\xff\x15" + struct.pack("<I", GET_TICK_COUNT), call(0x529700, CLOCK) + b"\x90"),
-            (TIMER_CALL - 0x400000, call(TIMER_CALL, FRAME), call(TIMER_CALL, GATE))]
+    return (Region(CLOCK, bytes(len(clock)), clock, "cave"),
+            Region(GATE, bytes(len(gate)), gate, "cave"),
+            Region(0x5296C4, bytes.fromhex("8b3d") + struct.pack("<I", GET_TICK_COUNT),
+                   b"\xbf" + struct.pack("<I", CLOCK) + b"\x90"),         # mov edi, CLOCK (then call edi)
+            Region(0x529700, b"\xff\x15" + struct.pack("<I", GET_TICK_COUNT), call(0x529700, CLOCK) + b"\x90"),
+            Region(TIMER_CALL, call(TIMER_CALL, FRAME), call(TIMER_CALL, GATE)))
 
 
-def state(data):
-    """True if applied, False if absent; raises on anything else."""
-    found = set()
-    for offset, old, new in regions():
-        actual = data[offset:offset + len(old)]
-        if actual == old:
-            found.add(False)
-        elif actual == new:
-            found.add(True)
-        else:
-            raise ValueError("unexpected frame-clock code or cave")
-    if len(found) != 1:
-        raise ValueError("partial frame-clock patch")
-    return found.pop()
-
-
-def configure(data, enabled=True):
-    state(data)
-    out = bytearray(data)
-    for offset, old, new in regions():
-        out[offset:offset + len(old)] = new if enabled else old
-    return bytes(out)
+PATCH = Patch(
+    id=NAME, since=13, policy="option", option="smooth_frame_clock", label="Smoother frame timing",
+    group="fixes", default=True, regions=_regions())

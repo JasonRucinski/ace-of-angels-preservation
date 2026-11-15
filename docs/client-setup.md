@@ -60,8 +60,10 @@ so.
 
 The launcher preflights the selected patches and rolls back changed files if
 an apply operation fails. Existing setup backups and verification are retained.
-New visual patch entries should be added to `client_launcher.PATCHES`; this
-supplies their checkbox, installed-state detection and explicit on/off setting.
+The checkboxes come from the patch registry
+(`aoa/client/patches/__init__.py`): every option patch with a label gets
+one, with its installed-state detection and on/off setting, and every
+declared conflict becomes a pair that unticks its other half.
 
 Verified on temporary game copies: individual visual patch off/on transitions,
 all-off launch validation, option persistence, mutually exclusive modes,
@@ -86,7 +88,28 @@ power-up pickup and menu framing on; the rest off) apply only to a client
 that was never prepared. Asking for both halves of a pair that shares code
 (solid-world and asteroid-only rendering, or world and station-only detail)
 is an error; asking for one replaces the other if it is installed. The
-`--station` and option flags are accepted only with `prepare`.
+`--station` and option flags belong to the `prepare` subcommand only.
+
+Every option has a `--<option>` and `--no-<option>` flag, generated from the
+patch registry; the older flag names still work:
+
+| Flag | Patch | Default | Older flag |
+|---|---|---|---|
+| `--menu-framing` | `ship-menu-aspect-v1` | on | |
+| `--smooth-frame-clock` | `frame-clock-v1` | on | `--frame-clock` |
+| `--bounded-visibility` | `visibility-math-v1` | on | `--visibility-math` |
+| `--chase-camera` | `third-person-camera-v3`, `own-ship-model-v1`, `own-ship-menu-model-v1` | on | `--third-person` |
+| `--powerup-pickups` | `powerup-pickup-v1` | on | `--powerup-pickup` |
+| `--distant-objects` | `distant-world-objects-v1` | off | |
+| `--experimental-asteroids` | `asteroid-mesh-distance-v1` | off | |
+| `--experimental-solids` | `solid-world-mesh-distance-v1` | off | |
+| `--experimental-station-detail` | `station-full-detail-v1` | off | |
+| `--experimental-world-detail` | `world-full-detail-v1` | off | |
+| `--experimental-texture32` | `texture-argb8888-v1` | off | |
+| `--experimental-protection` | `explicit-protection-v1` | off | |
+
+`python -I tools/prepare_client.py prepare --help` lists them with their
+launcher labels.
 
 `prepare` accepts the exact original 2.9.2 executable, or the recognized
 stability/localhost/physics variants. It composes the logger allocation fix,
@@ -106,10 +129,12 @@ wrappers must match the verified dgVoodoo2 2.87.5 DLLs.
 
 The source executable SHA-256 is
 `4b6c35e2b3ab473bd98c0afa6538079ee78678d85c28406c07bc27a08cc78c7e`.
-Patch version 22 is recorded in `_client_setup.json`, with input/output and
-undo-backup hashes, hostname, patch IDs, wrapper and transaction status.
-`check` requires the physics guard, background-network fix, archive
-terminator, cursor-warp fix and the current online terrain hook. It fails
+Patch version 22 (the highest version in the table below) is recorded in
+`_client_setup.json`, with input/output and undo-backup hashes, hostname,
+patch IDs, wrapper and transaction status. `check` requires every patch that
+is not an option: the two logger fixes, the physics guard,
+background-network fix, archive terminator, cursor-warp fix and the current
+online terrain hook. It fails
 with "re-run prepare" when the client carries an older variant of the
 terrain hook, the chase camera or the ship-menu model, so an older setup must
 be prepared again. That upgrade happens in place and keeps the original undo
@@ -211,10 +236,13 @@ the world-model horizon to 4,500,000 units and lower the projected-size cutoff
 from 5 to 0.5. Enable with `prepare --distant-objects`; disable with
 `prepare --no-distant-objects`. Ordinary preparation preserves the installed
 choice. The original authored distant LOD remains available below its usual
-minimum, so groups have a mesh to draw. More distant draws can cost frame
-time; in-flight acceptance and GPU performance are still pending. See
+minimum, so groups have a mesh to draw. It rewrites the 61,000 and 900,000
+horizon constants, which the asteroid-only and solid-world patches also read,
+so with either of those on its horizon becomes 4,500,000 as well. More
+distant draws can cost frame time; in-flight acceptance and GPU performance
+are still pending. See
 [the rendering notes](asteroid-rendering.md#distant-object-persistence-27-october-2026)
-for the exact-undo tool, scope and original-code verification.
+for scope and original-code verification.
 
 `check` verifies the executable, setup record, backup, wrapper and ten static
 dependencies against [the pinned manifest](../config/client-2.9.2.json).
@@ -228,6 +256,31 @@ required/optional map manifest or a download/install protocol.
 folder as its working directory. It does not register ActiveSkin or change
 Windows compatibility settings. Missing OCX registration still requires the
 current-user registration step in [the Windows runbook](running-on-windows-11.md).
+
+### Patch levels
+
+The patch version each patch arrived in, from the registry's `since` field
+(`tests/test_patch_layout.py` checks that this table matches it):
+
+| Version | Patches |
+|---|---|
+| 1 | `logger-size-v1`, `logger-lock-v1` |
+| 2 | `zero-time-physics-v1`, `background-network-v1` |
+| 3 | `archive-terminator-v1` |
+| 12 | `cursor-warp-origin-v1` |
+| 13 | `frame-clock-v1` |
+| 14 | `visibility-math-v1` |
+| 16 | `own-ship-model-v1` |
+| 17 | `own-ship-menu-model-v1` |
+| 18 | `online-terrain-v3` |
+| 19 | `powerup-pickup-v1` |
+| 21 | `third-person-camera-v3` |
+| 22 | `distant-world-objects-v1` |
+| 4 to 10, not recorded | `ship-menu-aspect-v1`, `asteroid-mesh-distance-v1`, `solid-world-mesh-distance-v1`, `station-full-detail-v1`, `world-full-detail-v1`, `texture-argb8888-v1`, `explicit-protection-v1` |
+
+Older variants that `prepare` still recognizes and upgrades:
+`online-arena1a-v1` (version 6) and `online-terrain-v2` (11);
+`third-person-camera-v1` (15) and `-v2` (20); `own-ship-menu-model-legacy`.
 
 ## Change the Station host without removing physics fixes
 
@@ -268,16 +321,20 @@ is running, the old executable remains intact. Close the game and repeat
 `prepare` to finish, or `undo` to restore. An invalid backup or unrecorded
 executable change is rejected; do not delete the record to bypass that check.
 
-## Optional rendering patches: one command each
+## Optional rendering patches
 
-The launcher checkboxes are the simplest way to turn these on and off. Each
-also has its own command, which is one `prepare` that names only that option:
-every other option keeps its installed state. `--undo` turns that option off.
-They write no backups or records of their own; `prepare`'s
-`AOACLIENT.EXE.setup-original` and `_client_setup.json` cover undo, and the
-options can be turned off in any order. `.EXE.before-*` files and `_*.json`
-records left by these tools before 13 November 2026 are no longer used, and
-nothing deletes them.
+The launcher checkboxes are the simplest way to turn these on and off. On
+the command line each is a `prepare` option: name only that option, and every
+other option keeps its installed state; `--no-<option>` turns it off again.
+`prepare`'s `AOACLIENT.EXE.setup-original` and `_client_setup.json` are the
+only backup and record, and the options can be turned off in any order.
+
+The standalone command of each rendering patch (`tools/run.py
+aoa.client.patches.<name>`, with `--undo`) was removed: each was a `prepare`
+that named one option. The `AOACLIENT.EXE.before-*` backups and `_*.json`
+records such tools wrote before 13 November 2026 are no longer used; nothing
+deletes them, and `check` lists any `.before-*` file it finds as
+`unused_old_backups`.
 
 ## Optional asteroid rendering comparison
 
@@ -285,14 +342,15 @@ For the Arena1a distance-dependent shape popping investigation, close the
 client and run:
 
 ```powershell
-.venv\Scripts\python.exe -I tools/run.py aoa.client.patches.asteroid_render game/2.9.2/AOACLIENT.EXE
+.venv\Scripts\python.exe -I tools/prepare_client.py prepare game/2.9.2/AOACLIENT.EXE --experimental-asteroids
 # Turn it off again:
-.venv\Scripts\python.exe -I tools/run.py aoa.client.patches.asteroid_render game/2.9.2/AOACLIENT.EXE --undo
+.venv\Scripts\python.exe -I tools/prepare_client.py prepare game/2.9.2/AOACLIENT.EXE --no-experimental-asteroids
 ```
 
 This opt-in patch keeps `Astr-*` / `Astr_*` models on their original mesh path
 out to 900,000 surface-distance units instead of switching to cached billboards
-at 61,000. Other model names, asteroid texture LOD, transforms, and assets are
+at 61,000. With distant objects also on, both of those horizons are
+4,500,000: distant objects rewrites the two constants this patch reads. Other model names, asteroid texture LOD, transforms, and assets are
 unchanged. Preparation recognizes and preserves the selection; it does not
 enable this experiment by default. Turning on solid-world rendering replaces it.
 
@@ -309,13 +367,14 @@ To extend the accepted asteroid workaround to all world model groups while
 retaining the sprite/particle/effect renderer, close the client and run:
 
 ```powershell
-.venv\Scripts\python.exe -I tools/run.py aoa.client.patches.solid_world_render game/2.9.2/AOACLIENT.EXE
+.venv\Scripts\python.exe -I tools/prepare_client.py prepare game/2.9.2/AOACLIENT.EXE --experimental-solids
 # Turn it off (this does not bring back asteroid-only mode):
-.venv\Scripts\python.exe -I tools/run.py aoa.client.patches.solid_world_render game/2.9.2/AOACLIENT.EXE --undo
+.venv\Scripts\python.exe -I tools/prepare_client.py prepare game/2.9.2/AOACLIENT.EXE --no-experimental-solids
 ```
 
 This replaces the asteroid name filter with the same 900,000-unit mesh cutoff
-for world models. Texture LOD and other culling gates remain active.
+for world models (4,500,000 with distant objects on, which rewrites that
+constant). Texture LOD and other culling gates remain active.
 Preparation preserves the chosen mode. Turning on asteroid-only rendering
 replaces it. The user confirmed
 stable ships/stations and normal effects in flight; performance is unbenchmarked.
@@ -326,9 +385,9 @@ To keep the `Hy_base1` station on its closest mesh and texture detail, close
 the client and run:
 
 ```powershell
-.venv\Scripts\python.exe -I tools/run.py aoa.client.patches.station_detail game/2.9.2/AOACLIENT.EXE
+.venv\Scripts\python.exe -I tools/prepare_client.py prepare game/2.9.2/AOACLIENT.EXE --experimental-station-detail
 # Turn it off:
-.venv\Scripts\python.exe -I tools/run.py aoa.client.patches.station_detail game/2.9.2/AOACLIENT.EXE --undo
+.venv\Scripts\python.exe -I tools/prepare_client.py prepare game/2.9.2/AOACLIENT.EXE --no-experimental-station-detail
 ```
 
 This selects the station's high-detail mesh set at all visible distances.
@@ -342,9 +401,9 @@ affected sections as `newdock`, not `Hy_base1`. Prefer full world detail below.
 With the client closed:
 
 ```powershell
-.venv\Scripts\python.exe -I tools/run.py aoa.client.patches.world_detail game/2.9.2/AOACLIENT.EXE
+.venv\Scripts\python.exe -I tools/prepare_client.py prepare game/2.9.2/AOACLIENT.EXE --experimental-world-detail
 # Turn it off (this does not bring back station-only detail):
-.venv\Scripts\python.exe -I tools/run.py aoa.client.patches.world_detail game/2.9.2/AOACLIENT.EXE --undo
+.venv\Scripts\python.exe -I tools/prepare_client.py prepare game/2.9.2/AOACLIENT.EXE --no-experimental-world-detail
 ```
 
 This replaces station-only selection with close-up authored mesh/texture
@@ -393,16 +452,17 @@ alpha 0 to alpha 8, so it creates ARGB8888 (`0x554970`). The 32-bit surface's
 
 ```powershell
 # Close the client first (or use the launcher's 32-bit textures checkbox):
-.venv\Scripts\python.exe -I tools/run.py aoa.client.patches.texture32 game/2.9.2/AOACLIENT.EXE
+.venv\Scripts\python.exe -I tools/prepare_client.py prepare game/2.9.2/AOACLIENT.EXE --experimental-texture32
 # Turn it off:
-.venv\Scripts\python.exe -I tools/run.py aoa.client.patches.texture32 game/2.9.2/AOACLIENT.EXE --undo
+.venv\Scripts\python.exe -I tools/prepare_client.py prepare game/2.9.2/AOACLIENT.EXE --no-experimental-texture32
 .venv\Scripts\python.exe -I tools/test.py test_texture32
 ```
 
 The six tests run the original and patched loader for source depths
 0..64, the existing-view bypass and AllocTexture's format dispatch in
-emulation. They also check the converter table and installation, idempotence,
-exact undo, byte scope and corruption rejection. Normal preparation preserves
+emulation. They also check the converter table and preparation, idempotence,
+exact undo, byte scope and corruption rejection (they need your original
+client and skip without it). Normal preparation preserves
 the patch (`texture-argb8888-v1`).
 Installed 23 October 2026. In the first live session, all 17 TGA views
 loaded as `Format(8888)` with no graphics-log warnings. That covers 24-bit

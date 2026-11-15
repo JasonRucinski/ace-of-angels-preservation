@@ -6,8 +6,12 @@ from pathlib import Path
 from aoa.client.patches import station_detail as patch
 from aoa.client import prepare
 from tests.support_emulation import SOURCE, StationLod
+from aoa.client.patches import base as patching
+from tests.support_patches import needs_export, needs_game, triples
 
 
+@needs_game
+@needs_export
 class StationDetailTests(StationLod, unittest.TestCase):
     def test_finest_mesh_set_across_all_station_boundaries(self):
         self.check_finest_mesh_set_across_all_station_boundaries()
@@ -24,17 +28,17 @@ class StationDetailTests(StationLod, unittest.TestCase):
         with tempfile.TemporaryDirectory() as folder:
             exe = Path(folder) / 'AOACLIENT.EXE'
             exe.write_bytes(SOURCE.read_bytes())
-            prepare.prepare(exe, experimental_solids=True)
+            prepare.prepare(exe, {"experimental_solids": True})
             before = exe.read_bytes()
-            patch.install(exe)
+            prepare.prepare(exe, {"experimental_station_detail": True})
             after = exe.read_bytes()
             self.assertEqual(prepare.configure(after), after)
             self.assertIn(patch.NAME, prepare.check(exe, require_assets=False)['patches'])
-            patch.install(exe)
+            prepare.prepare(exe, {"experimental_station_detail": True})
             self.assertEqual(exe.read_bytes(), after)
-            patch.install(exe, undo=True)
+            prepare.prepare(exe, {"experimental_station_detail": False})
             self.assertEqual(exe.read_bytes(), before)
-            allowed = {i for off, old, _ in patch.regions() for i in range(off, off + len(old))}
+            allowed = {i for off, old, _ in triples(patch.PATCH) for i in range(off, off + len(old))}
             self.assertTrue(all(a == b or i in allowed for i, (a, b) in enumerate(zip(before, after))))
             # prepare's backup and record are the only undo; no per-tool side files.
             self.assertEqual(sorted(p.name for p in Path(folder).iterdir()),
@@ -49,10 +53,10 @@ class StationDetailTests(StationLod, unittest.TestCase):
             with self.assertRaises(ValueError):
                 prepare.inspect(bytes(broken))
         partial = bytearray(before)
-        off, _, new = patch.regions()[0]
+        off, _, new = triples(patch.PATCH)[0]
         partial[off:off + len(new)] = new
         with self.assertRaises(ValueError):
-            patch.configure(bytes(partial))
+            patching.apply(patch.PATCH, bytes(partial), True)
 
 
 if __name__ == '__main__':

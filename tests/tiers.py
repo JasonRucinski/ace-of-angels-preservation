@@ -13,9 +13,11 @@ CI = (
     "test_lan_dogfight", "test_internet_play", "test_powerups",
     "test_target_ships", "test_host_control", "test_prepare_client", "test_dedicated_host",
     "test_client_launcher", "test_make_map", "test_make_object",
-    "test_patch_layout", "test_host_argv", "test_reel",
+    "test_patch_layout", "test_prepare_outputs", "test_host_argv", "test_reel",
     "test_cli_help", "test_polite_http", "test_install_wrapper", "test_make_vessel_combat",
     "test_imports", "test_layering", "test_builds", "test_pe", "test_map_registry",
+    # Client suites with game-free halves: cave emulation and code checks (unicorn).
+    "test_frame_clock", "test_menu_aspect", "test_visibility_fix",
 )
 # The texture pack builder is a Windows player tool that needs Pillow from
 # requirements.txt, which only the Windows CI job installs.
@@ -33,7 +35,7 @@ LOCAL = (
     "test_station_detail", "test_world_detail", "test_object_persistence",
     "test_object_persistence_pipeline", "test_internet_play", "test_cursor_warp",
     "test_texture32", "test_aoapack_write", "test_frame_clock",
-    "test_visibility_fix", "test_render_culling", "test_third_person", "test_powerups",
+    "test_visibility_fix", "test_third_person", "test_powerups",
     "test_powerup_pickup", "test_target_ships", "test_build_texture_pack",
     # Suites that ran nowhere before phase 1; they need the game or its export.
     "test_menu_aspect", "test_navigation_buoys", "test_object_lod", "test_physics_timestep",
@@ -43,6 +45,7 @@ LOCAL = (
 # Suites of the archived offline-baseline experiment; only `--tier all` runs them.
 ARCHIVED = (
     "archive.offline_baseline.test_render_clock_experiment",
+    "archive.offline_baseline.test_render_culling",
     "archive.offline_baseline.test_render_motion",
 )
 

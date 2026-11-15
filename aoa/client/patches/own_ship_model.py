@@ -24,8 +24,10 @@ renderer (0x43B42C) clear every frame unless the chase camera is on.
 Library use only (prepare_client.py composes it); no file is written here.
 """
 
-from aoa.client.base import Asm, jmp_patch  # noqa: E402
-from aoa.client.patches.third_person import CHASE_FLAG  # noqa: E402
+from aoa.client import layout
+from aoa.client.asm import Asm, jmp_patch
+from aoa.client.patches.base import Patch, Region
+from aoa.client.patches.third_person import CHASE_FLAG
 
 NAME = "own-ship-model-v1"
 MODEL_SITE = 0x44C0C5                 # jne 0x44C0D8 (skip when is_self)
@@ -33,8 +35,7 @@ MODEL_ORIGINAL = bytes.fromhex("7511")
 CHILD_SITE = 0x48FAE5                 # mov byte [ecx+0x151], 0 (own LOD children)
 CHILD_ORIGINAL = bytes.fromhex("c6815101000000")
 CHILD_RESUME = 0x48FAEC
-CAVE = 0x58BE00                       # after the third-person caves
-CAVE_END = 0x58BF00
+CAVE = layout.cave(NAME).start
 
 
 def code():
@@ -45,34 +46,12 @@ def code():
     return a.resolve()
 
 
-def regions():
-    """(file offset, original bytes, patched bytes); image base 0x400000."""
+def _regions():
     body = code()
-    assert CAVE + len(body) <= CAVE_END
-    return [(MODEL_SITE - 0x400000, MODEL_ORIGINAL, b"\x90\x90"),
-            (CAVE - 0x400000, bytes(len(body)), body),
-            (CHILD_SITE - 0x400000, CHILD_ORIGINAL, jmp_patch(CHILD_SITE, CAVE, len(CHILD_ORIGINAL)))]
+    return (Region(MODEL_SITE, MODEL_ORIGINAL, b"\x90\x90"),
+            Region(CAVE, bytes(len(body)), body, "cave"),
+            Region(CHILD_SITE, CHILD_ORIGINAL, jmp_patch(CHILD_SITE, CAVE, len(CHILD_ORIGINAL))))
 
 
-def state(data):
-    """True if applied, False if absent; raises on anything else."""
-    found = set()
-    for offset, old, new in regions():
-        actual = data[offset:offset + len(old)]
-        if actual == old:
-            found.add(False)
-        elif actual == new:
-            found.add(True)
-        else:
-            raise ValueError("unexpected own-ship model code or cave")
-    if len(found) != 1:
-        raise ValueError("partial own-ship model patch")
-    return found.pop()
-
-
-def configure(data, enabled=True):
-    state(data)
-    out = bytearray(data)
-    for offset, old, new in regions():
-        out[offset:offset + len(old)] = new if enabled else old
-    return bytes(out)
+# Part of the chase-camera option: on and off with third-person-camera-v3.
+PATCH = Patch(id=NAME, since=16, policy="option", requires=("third-person-camera-v3",), regions=_regions())

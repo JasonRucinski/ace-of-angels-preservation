@@ -10,6 +10,7 @@ from unittest.mock import patch
 from aoa.launchers import client_launcher as launcher
 from aoa.client import prepare as setup
 from aoa.client import texture_pack
+from tests.support_patches import needs_game
 
 GAME = launcher.DEFAULT_GAME
 
@@ -55,18 +56,10 @@ class SyntheticLauncherTests(unittest.TestCase):
     """apply_settings on the synthetic client of tests/support_patches.py; game-free."""
 
     def setUp(self):
-        import hashlib
-        from aoa.client import base
-        from aoa.client.patches import physics_timestep
         from tests import support_patches
         pristine = support_patches.synthetic_pristine()
-        pristine_sha = hashlib.sha256(pristine).hexdigest()
-        with patch.object(base, "PRISTINE_292", pristine_sha):
-            stable_sha = hashlib.sha256(base.configure(pristine)[0]).hexdigest()
-        for mocked in (patch.object(base, "PRISTINE_292", pristine_sha),
-                       patch.object(setup, "STABLE_SHA256", stable_sha),
-                       patch.object(physics_timestep, "STABLE_SHA256", stable_sha),
-                       patch.object(setup, "check_assets", return_value=0),
+        self.enterContext(support_patches.synthetic_client(pristine))
+        for mocked in (patch.object(setup, "check_assets", return_value=0),
                        patch.object(launcher, "require_closed")):
             mocked.start()
             self.addCleanup(mocked.stop)
@@ -76,9 +69,24 @@ class SyntheticLauncherTests(unittest.TestCase):
         self.exe = self.folder / "AOACLIENT.EXE"
         self.exe.write_bytes(pristine)
 
+    def test_checkboxes_come_from_the_registry(self):
+        from aoa.client import patches
+        keys = [key for key, _, _ in launcher.PATCHES]
+        self.assertEqual(set(keys) | {launcher.GAMEPLAY, "experimental_protection"}, set(patches.OPTIONS))
+        self.assertEqual({frozenset(pair) for pair in launcher.EXCLUSIVE},
+                         {frozenset({"experimental_solids", "experimental_asteroids"}),
+                          frozenset({"experimental_world_detail", "experimental_station_detail"})})
+        options, _ = launcher.read_settings(self.folder)
+        self.assertEqual({k: options[k] for k in keys}, dict.fromkeys(keys, False))
+        launcher.apply_settings(self.folder, {**options, "station": "localhost", "chase_camera": True,
+                                              "experimental_asteroids": True})
+        options, _ = launcher.read_settings(self.folder)
+        self.assertTrue(options["chase_camera"] and options["experimental_asteroids"])
+        self.assertIn("own-ship-model-v1", setup.check(self.exe)["patches"])
+
     def test_protection_switched_off_for_a_remote_station(self):
-        name = setup.explicit_protection.NAME
-        setup.prepare(self.exe, experimental_protection=True)
+        name = setup.LOOPBACK_ONLY
+        setup.prepare(self.exe, {"experimental_protection": True})
         options, available = launcher.read_settings(self.folder)
         self.assertTrue(available["protection"])
         launcher.apply_settings(self.folder, options)
@@ -91,7 +99,7 @@ class SyntheticLauncherTests(unittest.TestCase):
         self.assertFalse(launcher.read_settings(self.folder)[1]["protection"])
 
 
-@unittest.skipUnless((GAME / "AOACLIENT.EXE.orig").exists(), "requires user's game files")
+@needs_game
 class LauncherTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
@@ -105,7 +113,7 @@ class LauncherTests(unittest.TestCase):
         self.closed = patch.object(launcher, "require_closed")
         self.closed.start()
         self.addCleanup(self.closed.stop)
-        setup.prepare(self.exe, distant_objects=True)
+        setup.prepare(self.exe, {"distant_objects": True})
 
     def test_visuals_on_off_individual_and_reopen(self):
         options, _ = launcher.read_settings(self.folder)
@@ -115,13 +123,13 @@ class LauncherTests(unittest.TestCase):
         launcher.apply_settings(self.folder, options)
         self.assertEqual(launcher.read_settings(self.folder)[0], options)
         enabled = self.exe.read_bytes()
-        for key, _, module in launcher.PATCHES:
+        for key, _, patch_ in launcher.PATCHES:
             if not options[key]:
                 continue
             with self.subTest(key=key):
                 toggled = {**options, key: False}
                 launcher.apply_settings(self.folder, toggled)
-                self.assertNotIn(module.NAME, setup.check(self.exe)["patches"])
+                self.assertNotIn(patch_.id, setup.check(self.exe)["patches"])
                 self.assertEqual(launcher.read_settings(self.folder)[0], toggled)
                 launcher.apply_settings(self.folder, options)
                 self.assertEqual(self.exe.read_bytes(), enabled)
@@ -133,9 +141,9 @@ class LauncherTests(unittest.TestCase):
         # compatibility fixes and the independently chosen pickup behavior.
         state = setup.check(self.exe)
         self.assertIn("zero-time-physics-v1", state["patches"])
-        self.assertIn(setup.powerup_pickup.NAME, state["patches"])
-        self.assertNotIn(setup.own_ship_model.NAME, state["patches"])
-        self.assertNotIn(setup.own_ship_menu.NAME, state["patches"])
+        self.assertIn("powerup-pickup-v1", state["patches"])
+        self.assertNotIn("own-ship-model-v1", state["patches"])
+        self.assertNotIn("own-ship-menu-model-v1", state["patches"])
         for key in ("experimental_asteroids", "experimental_station_detail"):
             options[key] = True
         launcher.apply_settings(self.folder, options)

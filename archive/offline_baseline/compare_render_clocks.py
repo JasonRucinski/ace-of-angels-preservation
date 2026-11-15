@@ -16,7 +16,7 @@ from aoa import cli
 from aoa.builds import require_build
 from aoa.emulation.emu import Emu, SCRATCH, STOP, STUBS
 from aoa.analysis.pe_util import PE
-from aoa.client.experiments import render_clock_experiment as clock
+from archive.offline_baseline import render_clock_experiment as clock
 from unicorn import UC_HOOK_CODE
 from unicorn.x86_const import UC_X86_REG_FPCW, UC_X86_REG_EIP, UC_X86_REG_ESP, UC_X86_REG_EAX
 

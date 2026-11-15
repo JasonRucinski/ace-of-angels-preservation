@@ -1,12 +1,11 @@
 """Pin Hy_base1 child mesh selection to its original closest detail level."""
-import argparse
-import json
-from pathlib import Path
-
-from aoa.client.base import Asm, jmp_patch
+from aoa.client import layout
+from aoa.client.asm import Asm, jmp_patch
+from aoa.client.patches.base import Patch, Region
 
 NAME = "station-full-detail-v1"
-SITE, CAVE = 0x546BE4, 0x58BB00
+SITE = 0x546BE4
+CAVE = layout.cave(NAME).start
 ORIGINAL = bytes.fromhex("8b8e7c010000")  # mov ecx,[esi+17c]
 MODEL = b"Hy_base1\0"
 
@@ -28,52 +27,8 @@ def code():
     return a.resolve()
 
 
-def regions():
-    body = code()
-    return ((SITE - 0x400000, ORIGINAL, jmp_patch(SITE, CAVE, len(ORIGINAL))),
-            (CAVE - 0x400000, bytes(len(body)), body))
-
-
-def state(data):
-    states = []
-    for offset, old, new in regions():
-        actual = data[offset:offset + len(old)]
-        if actual not in (old, new):
-            raise ValueError("unexpected station detail code or occupied cave")
-        states.append(actual == new)
-    if len(set(states)) != 1:
-        raise ValueError("partial station detail patch")
-    return states[0]
-
-
-def configure(data, enabled=True):
-    state(data)
-    result = bytearray(data)
-    for offset, old, new in regions():
-        result[offset:offset + len(old)] = new if enabled else old
-    return bytes(result)
-
-
-def install(exe, undo=False):
-    """Turn this option on, or off with undo, through prepare_client.prepare().
-
-    Every other option keeps its installed state; prepare's own backup and
-    record (_client_setup.json) cover undo.
-    """
-    from aoa.client import prepare
-    return prepare.prepare(exe, experimental_station_detail=not undo)
-
-
-def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("client", type=Path)
-    parser.add_argument("--undo", action="store_true", help="turn this option off")
-    args = parser.parse_args()
-    try:
-        print(json.dumps(install(args.client, args.undo), indent=2))
-    except (ValueError, RuntimeError, OSError) as error:
-        parser.exit(1, f"Station detail setup failed: {error}\n")
-
-
-if __name__ == "__main__":
-    main()
+PATCH = Patch(
+    id=NAME, since=None, policy="option", option="experimental_station_detail",
+    label="Full station detail only", group="experimental", conflicts=("world-full-detail-v1",),
+    regions=(Region(SITE, ORIGINAL, jmp_patch(SITE, CAVE, len(ORIGINAL))),
+             Region(CAVE, bytes(len(code())), code(), "cave")))

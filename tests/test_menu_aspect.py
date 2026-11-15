@@ -9,6 +9,8 @@ from unicorn.x86_const import UC_X86_REG_EAX, UC_X86_REG_ECX, UC_X86_REG_EDX, UC
 from aoa.client.patches import menu_aspect
 from aoa.client import prepare
 from aoa.paths import ROOT
+from aoa.client.patches import base as patching
+from tests.support_patches import needs_game
 
 
 class MenuAspectTests(unittest.TestCase):
@@ -41,19 +43,20 @@ class MenuAspectTests(unittest.TestCase):
                         fov = struct.unpack("<f", u.mem_read(0x70FFFC, 4))[0]
                         self.assertAlmostEqual(fov, 2 * math.atan((width // 2) / focal), places=6)
 
+    @needs_game
     def test_reversible_and_rejects_corruption(self):
         path = ROOT / "game/2.9.2/AOACLIENT.EXE.orig"
         source = prepare.configure(path.read_bytes())
-        source = menu_aspect.configure(source, False)
+        source = patching.apply(menu_aspect.PATCH, source, False)
         prepare.inspect(source)
-        patched = menu_aspect.configure(source)
-        self.assertEqual(menu_aspect.configure(patched), patched)
-        self.assertEqual(menu_aspect.configure(patched, False), source)
+        patched = patching.apply(menu_aspect.PATCH, source, True)
+        self.assertEqual(patching.apply(menu_aspect.PATCH, patched, True), patched)
+        self.assertEqual(patching.apply(menu_aspect.PATCH, patched, False), source)
         for off in [menu_aspect.CAVE - 0x400000, 0x63D06, 0x652A1]:
             bad = bytearray(patched)
             bad[off] ^= 0xFF
             with self.assertRaises(ValueError):
-                menu_aspect.configure(bad)
+                patching.apply(menu_aspect.PATCH, bad, True)
 
 
 if __name__ == "__main__":

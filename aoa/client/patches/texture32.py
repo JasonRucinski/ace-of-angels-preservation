@@ -15,13 +15,9 @@ Rewritten in place (no code cave):
             tail:   mov [edi+4],ecx; mov [edi+8],eax; nop
 Result: 16 -> (16, 0); 24 -> (32, 0); 32 -> (32, 8). edx stays 0.
 """
-import argparse
-import json
-from pathlib import Path
-
+from aoa.client.patches.base import Patch, Region
 
 NAME = "texture-argb8888-v1"
-BASE = 0x400000
 SITES = (
     (0x562AB8, bytes.fromhex("7435"), bytes.fromhex("7432")),
     (0x562ABD, bytes.fromhex("7430"), bytes.fromhex("7424")),
@@ -30,46 +26,7 @@ SITES = (
 )
 
 
-def regions():
-    return tuple((va - BASE, old, new) for va, old, new in SITES)
-
-
-def state(data):
-    found = [data[off:off + len(old)] == new for off, old, new in regions()]
-    if all(found):
-        return True
-    if any(found) or any(data[off:off + len(old)] not in (old, new) for off, old, new in regions()):
-        raise ValueError("unexpected texture-loader bytes or partial texture32 patch")
-    return False
-
-
-def configure(data, enabled=True):
-    state(data)
-    for off, old, new in regions():
-        data = data[:off] + (new if enabled else old) + data[off + len(old):]
-    return data
-
-
-def install(exe, undo=False):
-    """Turn this option on, or off with undo, through prepare_client.prepare().
-
-    Every other option keeps its installed state; prepare's own backup and
-    record (_client_setup.json) cover undo.
-    """
-    from aoa.client import prepare
-    return prepare.prepare(exe, experimental_texture32=not undo)
-
-
-def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("client", type=Path)
-    parser.add_argument("--undo", action="store_true", help="turn this option off")
-    args = parser.parse_args()
-    try:
-        print(json.dumps(install(args.client, args.undo), indent=2))
-    except (ValueError, RuntimeError, OSError) as error:
-        parser.exit(1, f"Texture32 setup failed: {error}\n")
-
-
-if __name__ == "__main__":
-    main()
+PATCH = Patch(
+    id=NAME, since=None, policy="option", option="experimental_texture32",
+    label="32-bit textures — richer color and alpha", group="experimental",
+    regions=tuple(Region(va, old, new) for va, old, new in SITES))

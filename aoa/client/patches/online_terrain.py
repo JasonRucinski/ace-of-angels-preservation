@@ -21,15 +21,17 @@ holds, so repeating the walk is harmless.
 """
 import struct
 
-from aoa.client.base import Asm, jmp_patch
+from aoa.client import layout
+from aoa.client.asm import Asm, jmp_patch
+from aoa.client.patches.base import Patch, Region
 from aoa.maps.registry import MAP_PREFIX, MAPS, MARKER
 
 NAME = "online-terrain-v3"
 V2_NAME = "online-terrain-v2"
 LEGACY_NAME = "online-arena1a-v1"
-SITE, SITE_OFFSET = 0x4306AF, 0x306AF
-CAVE, CAVE_OFFSET = 0x58B800, 0x18B800
-REGION = 0x200  # up to the asteroid-render cave at 0x58BA00
+SITE = 0x4306AF
+CAVE = layout.cave(NAME).start
+REGION = layout.cave(NAME).size
 TABLE = CAVE + 0xC0  # v2 kept it at +0xA0
 V2_TABLE = CAVE + 0xA0
 SLOT = 16  # name (NUL-padded, at most 14 characters) + kind byte at +15
@@ -149,31 +151,12 @@ def legacy_code():
     return (a.resolve().ljust(0x100, b"\0") + b"Arena1a\0").ljust(REGION, b"\0")
 
 
-def state(data):
-    current = (data[SITE_OFFSET:SITE_OFFSET + len(DISPLACED)], data[CAVE_OFFSET:CAVE_OFFSET + REGION])
-    if current == (DISPLACED, bytes(REGION)):
-        return False
-    jump = jmp_patch(SITE, CAVE, len(DISPLACED))
-    if current in ((jump, cave_code()), (jump, v2_code()), (jump, legacy_code())):
-        return True
-    raise ValueError("unexpected online terrain code or cave")
+def _regions(cave):
+    return (Region(SITE, DISPLACED, jmp_patch(SITE, CAVE, len(DISPLACED))),
+            Region(CAVE, bytes(REGION), cave, "cave"))
 
 
-def is_current(data):
-    return state(data) and data[CAVE_OFFSET:CAVE_OFFSET + REGION] == cave_code()
-
-
-def installed_name(data):
-    """Name of the installed hook version, or None."""
-    if not state(data):
-        return None
-    cave = data[CAVE_OFFSET:CAVE_OFFSET + REGION]
-    return NAME if cave == cave_code() else V2_NAME if cave == v2_code() else LEGACY_NAME
-
-
-def configure(data, enabled=True):
-    state(data)
-    out = bytearray(data)
-    out[SITE_OFFSET:SITE_OFFSET + len(DISPLACED)] = jmp_patch(SITE, CAVE, len(DISPLACED)) if enabled else DISPLACED
-    out[CAVE_OFFSET:CAVE_OFFSET + REGION] = cave_code() if enabled else bytes(REGION)
-    return bytes(out)
+# Version 1 (online-arena1a-v1) arrived in patch version 6, v2 in 11, v3 in 18.
+PATCH = Patch(
+    id=NAME, since=18, policy="always", regions=_regions(cave_code()),
+    legacy=((V2_NAME, _regions(v2_code())), (LEGACY_NAME, _regions(legacy_code()))))

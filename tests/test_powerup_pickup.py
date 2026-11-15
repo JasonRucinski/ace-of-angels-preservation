@@ -15,6 +15,7 @@ from unicorn.x86_const import (UC_X86_REG_EAX, UC_X86_REG_EBX, UC_X86_REG_ECX, U
 from aoa.client.patches import powerup_pickup
 from aoa.client import prepare
 from aoa.paths import ROOT
+from aoa.client.patches import base as patching
 
 ORIGINAL = ROOT / "game/2.9.2/AOACLIENT.EXE.orig"
 SPAWN, COUNTDOWN, SHOW = 0x431D30, 0x49ABD0, 0x49CD70
@@ -25,6 +26,7 @@ RETURN, STACK = 0x7F0F00, 0x7F8000
 STUBS = {0x4A5960: ("AllocNewObject", 12), 0x4E0660: ("script detach", 4), 0x4A7F90: ("LoadModel", 12),
          0x49C750: ("SetName", 8), 0x4BE970: ("SetPosition", 12), 0x526D00: ("log", 0)}
 SAVED = {UC_X86_REG_EBX: 0x1111, UC_X86_REG_EBP: 0x4444, UC_X86_REG_EDI: 0x3333}
+from tests.support_patches import needs_game
 
 
 def machine(image):
@@ -92,11 +94,12 @@ def tick(image, countdown, elapsed, hidden=True):
     return obj[0x2F7], gfx[0x150], struct.unpack_from("<i", obj, 0x338)[0]
 
 
+@needs_game
 class PowerupPickupTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.prepared = prepare.configure(ORIGINAL.read_bytes())
-        cls.unpatched = powerup_pickup.configure(cls.prepared, False)
+        cls.unpatched = patching.apply(powerup_pickup.PATCH, cls.prepared, False)
 
     def test_spawn_is_collidable_only_with_the_patch(self):
         for image, collidable in ((self.unpatched, 0), (self.prepared, 1)):
@@ -132,12 +135,12 @@ class PowerupPickupTests(unittest.TestCase):
         self.assertNotIn(powerup_pickup.NAME, prepare.inspect(self.unpatched)["patches"])
         self.assertEqual(prepare.configure(ORIGINAL.read_bytes(), powerup_pickups=False), self.unpatched)
         self.assertEqual(prepare.configure(self.unpatched), self.prepared)
-        self.assertEqual(powerup_pickup.configure(self.prepared), self.prepared)
+        self.assertEqual(patching.apply(powerup_pickup.PATCH, self.prepared, True), self.prepared)
         for va in (powerup_pickup.SPAWN_SITE, powerup_pickup.CAVE, powerup_pickup.EXPIRY_SITE + 6):
             bad = bytearray(self.prepared)
             bad[va - 0x400000] ^= 0xFF
             with self.assertRaises(ValueError):
-                powerup_pickup.configure(bytes(bad))
+                patching.apply(powerup_pickup.PATCH, bytes(bad), True)
             with self.assertRaises(ValueError):
                 prepare.inspect(bytes(bad))
 

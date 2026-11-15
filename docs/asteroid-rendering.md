@@ -1,13 +1,15 @@
 # Arena1a asteroid rendering investigation
 
-> **Since 13 November 2026** each per-tool command below
-> (`asteroid_render.py`, `solid_world_render.py`, `station_detail.py`,
-> `world_detail.py`, `object_persistence.py`) is one `prepare_client.py
-> prepare` that names only its own option; every other option keeps its
-> installed state. `--undo` turns that option off. The tools no longer write
-> `.EXE.before-*` backups or `_*.json` records, and the options can be turned
-> off in any order. The launcher checkboxes do the same. The dated text below
-> is kept as it was written except where it gave instructions.
+> **Since 15 November 2026** each rendering mode below is a `prepare_client.py
+> prepare` option (`--experimental-asteroids`, `--experimental-solids`,
+> `--experimental-station-detail`, `--experimental-world-detail`,
+> `--distant-objects`, each with a `--no-` form); every option not named keeps
+> its installed state. The per-tool commands (`tools/run.py
+> aoa.client.patches.<name>`, with `--undo`) and their `.EXE.before-*` backups
+> and `_*.json` records are gone; `prepare`'s one backup and record cover undo,
+> and the options can be turned off in any order. The launcher checkboxes do
+> the same. The dated text below is kept as it was written except where it
+> gave instructions, and where it claimed the patches do not interact.
 
 The user reports asteroid silhouettes changing size while approaching, then
 stabilizing close up. Forcing the wrapper's minimum depth buffer to 24 bits
@@ -101,9 +103,9 @@ the existing 900,000-unit horizon and other visibility gates still apply.
 With the client closed:
 
 ```powershell
-.venv\Scripts\python.exe -I tools/run.py aoa.client.patches.solid_world_render game/2.9.2/AOACLIENT.EXE
+.venv\Scripts\python.exe -I tools/prepare_client.py prepare game/2.9.2/AOACLIENT.EXE --experimental-solids
 # Turn it off (asteroid-only mode does not come back):
-.venv\Scripts\python.exe -I tools/run.py aoa.client.patches.solid_world_render game/2.9.2/AOACLIENT.EXE --undo
+.venv\Scripts\python.exe -I tools/prepare_client.py prepare game/2.9.2/AOACLIENT.EXE --no-experimental-solids
 .venv\Scripts\python.exe -I tools/test.py test_solid_world_render
 ```
 
@@ -137,8 +139,8 @@ than the station's lower-resolution rock textures.
 
 ```powershell
 # Close the client first:
-.venv\Scripts\python.exe -I tools/run.py aoa.client.patches.station_detail game/2.9.2/AOACLIENT.EXE
-.venv\Scripts\python.exe -I tools/run.py aoa.client.patches.station_detail game/2.9.2/AOACLIENT.EXE --undo
+.venv\Scripts\python.exe -I tools/prepare_client.py prepare game/2.9.2/AOACLIENT.EXE --experimental-station-detail
+.venv\Scripts\python.exe -I tools/prepare_client.py prepare game/2.9.2/AOACLIENT.EXE --no-experimental-station-detail
 .venv\Scripts\python.exe -I tools/test.py test_station_detail
 ```
 
@@ -186,8 +188,8 @@ or mip-filter override.
 
 ```powershell
 # Close the client first:
-.venv\Scripts\python.exe -I tools/run.py aoa.client.patches.world_detail game/2.9.2/AOACLIENT.EXE
-.venv\Scripts\python.exe -I tools/run.py aoa.client.patches.world_detail game/2.9.2/AOACLIENT.EXE --undo
+.venv\Scripts\python.exe -I tools/prepare_client.py prepare game/2.9.2/AOACLIENT.EXE --experimental-world-detail
+.venv\Scripts\python.exe -I tools/prepare_client.py prepare game/2.9.2/AOACLIENT.EXE --no-experimental-world-detail
 .venv\Scripts\python.exe -I tools/test.py test_world_detail
 ```
 
@@ -222,8 +224,14 @@ remain in use; this patch does not force the most detailed meshes at distance.
 
 The hook sites are `0x546BB3` (root range) and `0x546BEA` (child selection),
 with 128 bytes of padding at `0x58BB80..0x58BBFF`. This is separate from the
-station-detail and third-person caves. The distance constants have one code
-reference each in the original image: `0x543222` and `0x4ED36A`. The size
+station-detail and third-person caves. In the original image the distance
+constants have one code reference each, `0x543222` and `0x4ED36A`, but they
+are shared with two optional patches: the asteroid-only cave reads both, and
+the solid-world comparison reads the 900,000 one. With distant objects on,
+the asteroid-only and solid-world horizons are therefore 4,500,000 too, not
+the 61,000/900,000 described above. The registry declares this (the
+patches' `reads` and this patch's `const` regions) and
+`tests/test_patch_layout.py` states the combined effect. The size
 comparison at `0x54326A` uses the existing 0.5 constant; the shared 5.0 constant
 is unchanged. No changes are made to the server, physics, authored transforms
 or intentional sprites/particles.
@@ -231,14 +239,14 @@ or intentional sprites/particles.
 Close the client first, then run from the repository root:
 
 ```powershell
-.venv\Scripts\python.exe -I tools/run.py aoa.client.patches.object_persistence game/2.9.2/AOACLIENT.EXE
+.venv\Scripts\python.exe -I tools/prepare_client.py prepare game/2.9.2/AOACLIENT.EXE --distant-objects
 # Turn it off:
-.venv\Scripts\python.exe -I tools/run.py aoa.client.patches.object_persistence game/2.9.2/AOACLIENT.EXE --undo
+.venv\Scripts\python.exe -I tools/prepare_client.py prepare game/2.9.2/AOACLIENT.EXE --no-distant-objects
 .venv\Scripts\python.exe -I tools/test.py test_object_persistence
 ```
 
-On a client never prepared before, the command first applies the default
-preparation. The new mode composes with the older asteroid-only, solid-world, station-detail and
+On a client never prepared before, `prepare` also applies the default
+options. The new mode composes with the older asteroid-only, solid-world, station-detail and
 world-detail modes. Normal preparation preserves it. Patch version 22 also
 accepts `prepare --distant-objects` and `prepare --no-distant-objects`; it
 remains off for fresh preparations unless explicitly selected.

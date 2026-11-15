@@ -68,7 +68,9 @@ Library use only (prepare_client.py composes it); no file is written here.
 import math
 import struct
 
-from aoa.client.base import Asm, jmp_patch  # noqa: E402
+from aoa.client import layout
+from aoa.client.asm import Asm, jmp_patch
+from aoa.client.patches.base import Patch, Region
 
 NAME = "third-person-camera-v3"
 VK_TOGGLE = 0x71                 # F2: chase; bound by default only to Toggle Mentor
@@ -96,13 +98,12 @@ SITE_R = 0x43B367                # mov eax,[esp+38] ; push ecx ; fld [eax+8]
 ORIGINAL_R = bytes.fromhex("8b44243851d94008")
 RESUME_R = 0x43B36F              # fmul [0x5900BC] (up * 100)
 
-CAVE = 0x58BC00                  # free .text padding after station detail
-CAVE_END = 0x58BE00              # own_ship_model.py follows
-FAKE = 0x60D300                  # .data tail (patch_client extended it to 0x60E000)
+CAVE = layout.cave(NAME).start
+FAKE = layout.data(NAME, "camera copy FAKE, NODE, TICK").start   # .data tail
 FAKE_SIZE = 0xE0                 # camera fields read: +0x4C..+0x8C, +0xD0..+0xDC
 NODE = FAKE + FAKE_SIZE
 TICK = NODE + 4
-ORBIT = TICK + 0xC               # after own_ship_menu's RESTRICT (TICK + 8)
+ORBIT = layout.data(NAME, "ORBIT, START, ARMED").start   # after own_ship_menu's RESTRICT
 START = ORBIT + 4                # game tick when F4 last changed
 ARMED = START + 4                # set by cave A on an orbit frame, used up by cave R
 
@@ -229,58 +230,23 @@ def code(variant="v3"):
     return bytes(body), a.labels
 
 
-def regions(variant="v3"):
-    """(file offset, original bytes, patched bytes); image base 0x400000."""
+def _regions(variant="v3"):
     legacy = variant == "v1"
     body, labels = code(variant)
-    assert CAVE + len(body) <= CAVE_END
-    out = [(CAVE - 0x400000, bytes(len(body)), body),
-           (SITE_A - 0x400000, ORIGINAL_A, jmp_patch(SITE_A, labels["cave_a"], len(ORIGINAL_A))),
-           (SITE_B - 0x400000, ORIGINAL_B, jmp_patch(SITE_B, labels["cave_b"], len(ORIGINAL_B)))]
+    out = [Region(CAVE, bytes(len(body)), body, "cave"),
+           Region(SITE_A, ORIGINAL_A, jmp_patch(SITE_A, labels["cave_a"], len(ORIGINAL_A))),
+           Region(SITE_B, ORIGINAL_B, jmp_patch(SITE_B, labels["cave_b"], len(ORIGINAL_B)))]
     if not legacy:
-        out.append((SITE_R - 0x400000, ORIGINAL_R, jmp_patch(SITE_R, labels["cave_r"], len(ORIGINAL_R))))
-    return out
+        out.append(Region(SITE_R, ORIGINAL_R, jmp_patch(SITE_R, labels["cave_r"], len(ORIGINAL_R))))
+    return tuple(out)
 
 
-def matches(data, variant):
-    """True/False if every region is patched/original for this variant, else None."""
-    found = set()
-    for offset, old, new in regions(variant):
-        actual = data[offset:offset + len(old)]
-        if actual == old:
-            found.add(False)
-        elif actual == new:
-            found.add(True)
-        else:
-            return None
-    return found.pop() if len(found) == 1 else None
-
-
-def state(data):
-    """True if any variant is applied, False if absent; raises otherwise."""
-    for variant in VARIANTS:
-        found = matches(data, variant)
-        if found is not None:
-            return found
-    raise ValueError("unexpected or partial third-person camera patch")
-
-
-def installed_name(data):
-    """Name of the installed variant (an older one only until prepare upgrades it), or None."""
-    for variant, name in zip(VARIANTS, NAMES):
-        found = matches(data, variant)
-        if found is not None:
-            return name if found else None
-    raise ValueError("unexpected or partial third-person camera patch")
-
-
-def configure(data, enabled=True):
-    state(data)
-    out = bytearray(data)
-    for variant in VARIANTS[1:]:               # remove an older cave before applying
-        if matches(data, variant):
-            for offset, old, new in regions(variant):
-                out[offset:offset + len(old)] = old
-    for offset, old, new in regions():
-        out[offset:offset + len(old)] = new if enabled else old
-    return bytes(out)
+assert TICK + 4 <= layout.data(NAME, "camera copy FAKE, NODE, TICK").end
+assert ARMED < layout.data(NAME, "ORBIT, START, ARMED").end
+PATCH = Patch(
+    id=NAME, since=21, policy="option", option="chase_camera",
+    label="Chase camera, orbit view and visible player ship (F2/F4)", group="visual", default=True,
+    reads=(CHASE_BACK, CHASE_UP),
+    data=tuple((r.start, r.size) for r in layout.DATA if r.owner == NAME),
+    regions=_regions("v3"),
+    legacy=tuple((name, _regions(v)) for v, name in zip(VARIANTS[1:], NAMES[1:])))

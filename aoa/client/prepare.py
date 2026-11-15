@@ -2,6 +2,12 @@
 
 No installer, game binary, wrapper or asset is downloaded or redistributed.
 All executable changes are built and verified in memory before replacement.
+
+Every patch is a descriptor in the registry (aoa/client/patches/__init__.py);
+this module is the one engine over it: inspect() reports and removes them,
+configure() resolves the options and applies them, and prepare() and undo()
+are the one transaction on the game folder, with one exact-undo backup
+(AOACLIENT.EXE.setup-original) and one record (_client_setup.json).
 """
 import argparse
 import hashlib
@@ -12,46 +18,31 @@ import subprocess
 import tempfile
 from pathlib import Path
 
-from aoa.client.patches import archive_terminator
-from aoa.client.patches import cursor_warp
-from aoa.client.patches import explicit_protection
-from aoa.client.patches import frame_clock
-from aoa.client.patches import visibility_fix
-from aoa.client import base
-from aoa.client.patches import physics_timestep
-from aoa.client.patches import menu_aspect
-from aoa.client.patches import online_terrain
-from aoa.client.patches import asteroid_render
-from aoa.client.patches import solid_world_render
-from aoa.client.patches import station_detail
-from aoa.client.patches import texture32
-from aoa.client.patches import third_person
-from aoa.client.patches import own_ship_model
-from aoa.client.patches import own_ship_menu
-from aoa.client.patches import powerup_pickup
-from aoa.client.patches import world_detail
-from aoa.client.patches import object_persistence
-from aoa.client.patches.station_host import OFFSET, ORIGINAL, STABLE_SHA256
+from aoa.client.patches import CONFLICTS, OPTIONS, PATCH_LEVEL, REGISTRY, VARIANT_OF
+from aoa.client.patches import base as patching
+from aoa.client.patches import logger
+from aoa.client.patches.station_host import OFFSET, ORIGINAL
 from aoa.paths import ROOT
 
-PATCH_VERSION = 22
-# Wakeup-timer callback 0x446E70: `jne` at 0x446EAF skips the frame while the
-# window is inactive if the graphics layer reports exclusive mode (+0x24C5).
-# The client always requests exclusive mode, so an inactive flying client
-# stopped reading UDP. NOPs let the 66 ms timer run the frame. Verified only
-# with the dgVoodoo windowed wrapper (findings 9.24).
-BACKGROUND_OFFSET, BACKGROUND_JNE, BACKGROUND_NOP = 0x46EAF, b"\x75\x34", b"\x90\x90"
+PATCH_VERSION = PATCH_LEVEL
 ASSET_MANIFEST = ROOT / "config/client-2.9.2.json"
 WRAPPERS = {
     "DDraw.dll": "612a24408a090a3c6f3886557fa18034ee742e94ad0a40ebdf854d2816176c2e",
     "D3DImm.dll": "93c534f2d17419ea78f15551f7e0aac78b3c503733a840914fa063708a5afe8e",
 }
 LOOPBACK = ("localhost", "127.0.0.1")
-# A client with only these has never been prepared, so it has no options yet.
-UNPREPARED = {"logger-size-v1", "logger-lock-v1", "zero-time-physics-v1"}
+# Needs a loopback Station; prepare refuses it with any other.
+LOOPBACK_ONLY = "explicit-protection-v1"
+BASE = tuple(p.id for p in REGISTRY if p.policy == "base")
+# A client with only these has never been prepared, so it has no options yet:
+# the logger fixes, and the physics guard the old standalone tool added.
+UNPREPARED = {*BASE, "zero-time-physics-v1"}
+# What `check` requires: every patch applied whatever the options.
+REQUIRED = {p.id for p in REGISTRY if p.policy in ("base", "always")}
 # Older variants inspect() still recognizes; prepare upgrades them in place.
-OUTDATED = {*third_person.NAMES[1:], own_ship_menu.LEGACY_NAME, online_terrain.V2_NAME,
-            online_terrain.LEGACY_NAME}
+OUTDATED = {variant for p in REGISTRY for variant, _ in p.legacy}
+# Exact-undo backups of the standalone patch tools removed in phase 2a.
+OLD_BACKUPS = ".before-*"
 
 
 def sha(data):
@@ -71,52 +62,40 @@ def host_field(host):
     return host.encode("ascii").ljust(12, b"\0")
 
 
-def background_site(data, enabled):
-    site = data[BACKGROUND_OFFSET:BACKGROUND_OFFSET + 2]
-    if site not in (BACKGROUND_JNE, BACKGROUND_NOP):
-        raise ValueError("unexpected background-network code")
-    return data[:BACKGROUND_OFFSET] + (BACKGROUND_NOP if enabled else BACKGROUND_JNE) + data[BACKGROUND_OFFSET + 2:]
+def strip(data):
+    """({patch ID: installed variant}, the image with every non-base patch removed).
+
+    Raises ValueError on unknown bytes at any patch site. Two patches that
+    share a site (a declared conflict) cannot both be installed; the one that
+    is not reads as unknown until the other is removed, so it is retried.
+    """
+    installed, pending = {}, [p for p in reversed(REGISTRY) if p.policy != "base"]
+    while pending:
+        retry, error = [], None
+        for patch in pending:
+            try:
+                variant = patching.state(patch, data)
+            except ValueError as failure:
+                if not patch.conflicts:
+                    raise
+                retry.append(patch)
+                error = failure
+                continue
+            if variant:
+                installed[patch.id] = variant
+                data = patching.apply(patch, data, False)
+        if len(retry) == len(pending):
+            raise error
+        pending = retry
+    return installed, data
 
 
-def inspect(data):
-    if sha(data) == base.PRISTINE_292:
-        return {"source": "original-2.9.2", "host": "aoahost.com", "patches": []}
-    distant = object_persistence.state(data)
-    data = object_persistence.configure(data, False)
-    pickup = powerup_pickup.state(data)
-    data = powerup_pickup.configure(data, False)
-    chase = third_person.installed_name(data)
-    data = third_person.configure(data, False)
-    model = own_ship_model.state(data)
-    data = own_ship_model.configure(data, False)
-    menu_model = own_ship_menu.installed_name(data)
-    data = own_ship_menu.configure(data, False)
-    clock = frame_clock.state(data)
-    data = frame_clock.configure(data, False)
-    visibility = visibility_fix.state(data)
-    data = visibility_fix.configure(data, False)
-    tex32 = texture32.state(data)
-    data = texture32.configure(data, False)
-    world_lod = world_detail.state(data)
-    data = world_detail.configure(data, False)
-    detail = station_detail.state(data)
-    data = station_detail.configure(data, False)
-    solids = solid_world_render.state(data)
-    data = solid_world_render.configure(data, False)
-    asteroids = asteroid_render.state(data)
-    data = asteroid_render.configure(data, False)
-    terrain = online_terrain.state(data)
-    terrain_name = online_terrain.installed_name(data)
-    data = online_terrain.configure(data, False)
-    menu = menu_aspect.state(data)
-    data = menu_aspect.configure(data, False)
-    cursor = cursor_warp.state(data)
-    data = cursor_warp.configure(data, False)
-    background = data[BACKGROUND_OFFSET:BACKGROUND_OFFSET + 2] == BACKGROUND_NOP
-    terminated = archive_terminator.state(data)
-    protection = explicit_protection.state(data)
-    data = explicit_protection.configure(data, False)
-    data = archive_terminator.configure(background_site(data, False), False)
+def _inspect(data):
+    """(inspect()'s result, the image with every non-base patch and the Station removed)."""
+    if sha(data) == logger.PRISTINE_292:
+        return {"source": "original-2.9.2", "host": "aoahost.com", "patches": []}, data
+    patching.check_mapping(data, REGISTRY)
+    installed, data = strip(data)
     field = data[OFFSET:OFFSET + 12]
     try:
         host = field.split(b"\0", 1)[0].decode("ascii")
@@ -125,111 +104,76 @@ def inspect(data):
     if field != host_field(host):
         raise ValueError("unrecognized Station hostname padding")
     normalized = data[:OFFSET] + ORIGINAL + data[OFFSET + 12:]
-    stable = physics_timestep.configure(normalized, undo=True)
-    if sha(stable) != STABLE_SHA256:
+    if sha(normalized) != logger.STABLE_SHA256:
         raise ValueError("unsupported client or conflicting patches")
-    guarded = normalized != stable
-    return {"source": "supported-2.9.2", "host": host,
-            "patches": ["logger-size-v1", "logger-lock-v1"] + (["zero-time-physics-v1"] if guarded else [])
-            + (["background-network-v1"] if background else [])
-            + (["archive-terminator-v1"] if terminated else [])
-            + ([menu_aspect.NAME] if menu else [])
-            + ([cursor_warp.NAME] if cursor else [])
-            + ([terrain_name] if terrain else [])
-            + ([asteroid_render.NAME] if asteroids else [])
-            + ([solid_world_render.NAME] if solids else [])
-            + ([station_detail.NAME] if detail else [])
-            + ([world_detail.NAME] if world_lod else [])
-            + ([object_persistence.NAME] if distant else [])
-            + ([texture32.NAME] if tex32 else [])
-            + ([frame_clock.NAME] if clock else [])
-            + ([visibility_fix.NAME] if visibility else [])
-            + ([chase] if chase else [])
-            + ([own_ship_model.NAME] if model else [])
-            + ([menu_model] if menu_model else [])
-            + ([powerup_pickup.NAME] if pickup else [])
-            + ([explicit_protection.NAME] if protection else [])}
+    patches = [*BASE, *(installed[p.id] for p in REGISTRY if p.id in installed)]
+    return {"source": "supported-2.9.2", "host": host, "patches": patches}, normalized
 
 
-def choose(state, requested, names, default):
-    """An explicit True/False wins; None keeps the installed state.
+def inspect(data):
+    """Station and installed patch variants, in registry order; raises on anything unknown."""
+    return _inspect(data)[0]
 
-    names is the patch ID, or a tuple of the IDs of every recognized variant.
-    The default applies only to an unprepared client (pristine, or carrying
-    only the legacy stability fixes), which has no options installed yet.
+
+def resolve(state, options):
+    """{patch ID: on} for every non-base patch, from the installed state and the options.
+
+    An option set to True or False wins; one not named (or None) keeps its
+    installed state, and on a client never prepared takes the patch default.
+    Requesting both sides of a conflict is an error; an explicit request
+    replaces the installed other side. A patch with no option of its own
+    follows the patches it requires.
     """
-    if requested is not None:
-        return requested
-    if set(state["patches"]) <= UNPREPARED:
-        return default
-    return bool(({names} if isinstance(names, str) else set(names)) & set(state["patches"]))
-
-
-def exclusive(state, first, first_name, second, second_name):
-    """Resolve a pair that shares one code site: requesting both is an error,
-    and an explicit request replaces the installed other one."""
-    if first and second:
-        raise ValueError(f"{first_name} and {second_name} cannot both be on; select one")
-    a, b = choose(state, first, first_name, False), choose(state, second, second_name, False)
-    if a and b:
-        a, b = (a, False) if first else (False, b)
-    return a, b
-
-
-def configure(data, host=None, experimental_protection=None, experimental_asteroids=None, experimental_solids=None, experimental_station_detail=None, experimental_world_detail=None, experimental_texture32=None, smooth_frame_clock=None, bounded_visibility=None, chase_camera=None, powerup_pickups=None, distant_objects=None, menu_framing=None):
-    """Every option left as None keeps its installed state (see choose())."""
-    state = inspect(data)
+    unknown = sorted(set(options) - set(OPTIONS))
+    if unknown:
+        raise ValueError(f"unknown option: {', '.join(unknown)}")
     fresh = set(state["patches"]) <= UNPREPARED
-    host = host if host is not None else "localhost" if fresh else state["host"]
+    installed = {VARIANT_OF[v].id for v in state["patches"]}
+    requested = {p.id: options.get(p.option) for p in OPTIONS.values()}
+    for a, b in CONFLICTS:
+        if requested[a.id] and requested[b.id]:
+            raise ValueError(f"{a.id} and {b.id} cannot both be on; select one")
+    chosen = {}
+    for p in REGISTRY:
+        if p.policy == "always":
+            chosen[p.id] = True
+        elif p.option:
+            wanted = requested[p.id]
+            chosen[p.id] = wanted if wanted is not None else p.default if fresh else p.id in installed
+    for a, b in CONFLICTS:
+        if chosen[a.id] and chosen[b.id]:
+            chosen[b.id if requested[a.id] else a.id] = False
+    for p in REGISTRY:
+        if p.policy == "option" and not p.option:
+            chosen[p.id] = all(chosen[r] for r in p.requires)
+        elif chosen.get(p.id) and not all(chosen[r] for r in p.requires):
+            raise ValueError(f"{p.id} requires {', '.join(p.requires)}")
+    return chosen
+
+
+def configure(data, station=None, options=None, **named):
+    """The prepared image, in memory.
+
+    `options` (and keyword arguments) map option names to True, False or None
+    (see resolve()). The Station is kept when not given, and is localhost on
+    a client never prepared.
+    """
+    options = {**(options or {}), **named}
+    state, stable = _inspect(data)
+    fresh = set(state["patches"]) <= UNPREPARED
+    host = station if station is not None else "localhost" if fresh else state["host"]
     field = host_field(host)
-    distant = choose(state, distant_objects, object_persistence.NAME, False)
-    chase = choose(state, chase_camera, third_person.NAMES, True)
-    pickups = choose(state, powerup_pickups, powerup_pickup.NAME, True)
-    clock = choose(state, smooth_frame_clock, frame_clock.NAME, True)
-    visibility = choose(state, bounded_visibility, visibility_fix.NAME, True)
-    framing = choose(state, menu_framing, menu_aspect.NAME, True)
-    tex32 = choose(state, experimental_texture32, texture32.NAME, False)
-    station_lod, world_lod = exclusive(state, experimental_station_detail, station_detail.NAME,
-                                       experimental_world_detail, world_detail.NAME)
-    asteroids, solids = exclusive(state, experimental_asteroids, asteroid_render.NAME,
-                                  experimental_solids, solid_world_render.NAME)
-    data = object_persistence.configure(data, False)
-    data = own_ship_menu.configure(own_ship_model.configure(third_person.configure(data, False), False), False)
-    data = powerup_pickup.configure(data, False)
-    data = visibility_fix.configure(frame_clock.configure(data, False), False)
-    data = texture32.configure(data, False)
-    data = world_detail.configure(data, False)
-    data = station_detail.configure(data, False)
-    data = solid_world_render.configure(data, False)
-    data = asteroid_render.configure(data, False)
-    data = online_terrain.configure(data, False)
-    data = menu_aspect.configure(data, False)
-    data = cursor_warp.configure(data, False)
-    protection = choose(state, experimental_protection, explicit_protection.NAME, False)
-    if protection and host not in LOOPBACK:
+    chosen = resolve(state, options)
+    if chosen[LOOPBACK_ONLY] and host not in LOOPBACK:
         raise ValueError("experimental protection requires a loopback Station")
-    data = explicit_protection.configure(data, False)
-    stable = (base.configure(data)[0] if not state["patches"]
-              else archive_terminator.configure(background_site(data, False), False))
-    normalized = stable[:OFFSET] + ORIGINAL + stable[OFFSET + 12:]
-    guarded = physics_timestep.configure(normalized)
-    result = archive_terminator.configure(background_site(guarded[:OFFSET] + field + guarded[OFFSET + 12:], True))
-    result = explicit_protection.configure(result, protection)
-    result = menu_aspect.configure(result, framing)
-    result = cursor_warp.configure(result)
-    result = online_terrain.configure(result)
-    result = asteroid_render.configure(result, asteroids)
-    result = solid_world_render.configure(result, solids)
-    result = station_detail.configure(result, station_lod)
-    result = world_detail.configure(result, world_lod)
-    result = texture32.configure(result, tex32)
-    result = frame_clock.configure(result, clock)
-    result = visibility_fix.configure(result, visibility)
-    result = third_person.configure(result, chase)
-    result = own_ship_model.configure(result, chase)
-    result = own_ship_menu.configure(result, chase)
-    result = powerup_pickup.configure(result, pickups)
-    result = object_persistence.configure(result, distant)
+    if not state["patches"]:
+        stable = logger.stabilize(data)
+        if sha(stable) != logger.STABLE_SHA256:
+            raise ValueError("unsupported client: the stability patches did not give the known image")
+    result = stable[:OFFSET] + field + stable[OFFSET + 12:]
+    for p in REGISTRY:
+        if chosen.get(p.id):
+            result = patching.apply(p, result, True)
     inspect(result)
     return result
 
@@ -299,8 +243,10 @@ def load_record(record_path, backup, current):
     return record
 
 
-def prepare(exe, host=None, undo=False, experimental_protection=None, experimental_asteroids=None, experimental_solids=None, experimental_station_detail=None, experimental_world_detail=None, experimental_texture32=None, smooth_frame_clock=None, bounded_visibility=None, chase_camera=None, powerup_pickups=None, distant_objects=None, menu_framing=None):
-    """Options left as None keep their installed state, as in configure()."""
+def _transaction(exe, result_of=None):
+    """Write the executable and its record: pending, then ready, or restored
+    when result_of is None (undo)."""
+    undo = result_of is None
     exe, backup, record_path = paths(exe)
     current = exe.read_bytes()
     inspect(current)
@@ -312,14 +258,7 @@ def prepare(exe, host=None, undo=False, experimental_protection=None, experiment
         result = backup.read_bytes()
         inspect(result)
     else:
-        result = configure(current, host=host, experimental_protection=experimental_protection,
-                           experimental_asteroids=experimental_asteroids, experimental_solids=experimental_solids,
-                           experimental_station_detail=experimental_station_detail,
-                           experimental_world_detail=experimental_world_detail,
-                           experimental_texture32=experimental_texture32, smooth_frame_clock=smooth_frame_clock,
-                           bounded_visibility=bounded_visibility, chase_camera=chase_camera,
-                           powerup_pickups=powerup_pickups, distant_objects=distant_objects,
-                           menu_framing=menu_framing)
+        result = result_of(current)
         if old is None:
             # Exclusive creation: never replace an unrelated backup. A prior
             # interruption before recording is recoverable only if bytes match.
@@ -344,6 +283,17 @@ def prepare(exe, host=None, undo=False, experimental_protection=None, experiment
     return record
 
 
+def prepare(exe, options=None, station=None):
+    """Prepare the executable in place. An option not named keeps its installed
+    state, and so does the Station when not given (see configure())."""
+    return _transaction(exe, lambda current: configure(current, station, options))
+
+
+def undo(exe):
+    """Restore the exact executable from before the first prepare."""
+    return _transaction(exe)
+
+
 def check(exe, require_assets=True):
     exe, backup, record_path = paths(exe)
     data = exe.read_bytes()
@@ -352,63 +302,67 @@ def check(exe, require_assets=True):
     old = sorted(OUTDATED & set(state["patches"]))
     if old:
         raise ValueError(f"outdated client patches ({', '.join(old)}); re-run prepare")
-    if (record is None or record["status"] != "ready"
-            or not {"zero-time-physics-v1", "background-network-v1",
-                    "archive-terminator-v1", cursor_warp.NAME, online_terrain.NAME} <= set(state["patches"])):
+    if record is None or record["status"] != "ready" or not REQUIRED <= set(state["patches"]):
         raise ValueError("run prepare before launching; setup must be recorded and complete")
     wrapper = wrapper_state(exe.parent)
     if require_assets:
         check_assets(exe.parent)
-    return {"sha256": sha(data), "status": "ready", "wrapper": wrapper,
-            "mutable_assets_not_hash_verified": ["SOUNDS.AOA"] if require_assets else [], **state}
+    result = {"sha256": sha(data), "status": "ready", "wrapper": wrapper,
+              "mutable_assets_not_hash_verified": ["SOUNDS.AOA"] if require_assets else [], **state}
+    # Left by the standalone patch tools that phase 2a removed; prepare and
+    # undo never use them, and the player may delete them.
+    stale = sorted(p.name for p in exe.parent.glob(exe.name + OLD_BACKUPS))
+    if stale:
+        result["unused_old_backups"] = stale
+    return result
 
 
-PREPARE_ONLY = ("station", "experimental_protection", "frame_clock", "visibility_math", "third_person",
-                "powerup_pickup", "distant_objects", "menu_framing")
+# Command-line flags of earlier releases, kept as aliases of the generated ones.
+FLAG_ALIASES = {"smooth_frame_clock": "--frame-clock", "bounded_visibility": "--visibility-math",
+                "chase_camera": "--third-person", "powerup_pickups": "--powerup-pickup"}
+
+
+def flag(option):
+    return "--" + option.replace("_", "-")
+
+
+def parser():
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    actions = ap.add_subparsers(dest="action", required=True, metavar="ACTION")
+    prep = actions.add_parser("prepare", help="patch the executable; options not named keep their installed state",
+                              epilog="An option that is not named keeps its installed state. The defaults apply "
+                                     "only to a client never prepared before.")
+    prep.add_argument("exe", type=Path)
+    prep.add_argument("--station", help="Station hostname/IP, max 11 ASCII characters "
+                      "(default: keep the installed one; localhost on a fresh client)")
+    for option, patch in OPTIONS.items():
+        names = [flag(option), *([FLAG_ALIASES[option]] if option in FLAG_ALIASES else [])]
+        ids = [patch.id, *(p.id for p in REGISTRY if patch.id in p.requires and not p.option)]
+        prep.add_argument(*names, dest=option, action=argparse.BooleanOptionalAction,
+                          help=f"{patch.label or patch.id} ({', '.join(ids)}; "
+                               f"default {'on' if patch.default else 'off'})")
+    for name, text in (("check", "verify the prepared executable, its record, wrapper and assets"),
+                       ("undo", "restore the executable from before the first prepare"),
+                       ("launch", "check, then start the client")):
+        actions.add_parser(name, help=text).add_argument("exe", type=Path)
+    return ap
 
 
 def main(argv=None):
-    parser = argparse.ArgumentParser(description=__doc__, epilog="An option that is not named keeps its "
-                                     "installed state. The defaults apply only to a client never prepared before.")
-    parser.add_argument("action", choices=("prepare", "check", "undo", "launch"))
-    parser.add_argument("exe", type=Path)
-    parser.add_argument("--station", help="Station hostname/IP, max 11 ASCII characters "
-                        "(default: keep the installed one; localhost on a fresh client); prepare only")
-    parser.add_argument("--experimental-protection", action=argparse.BooleanOptionalAction,
-                        help="opt-in localhost explicit protection setter (default off); prepare only")
-    parser.add_argument("--frame-clock", action=argparse.BooleanOptionalAction,
-                        help="millisecond QPC game clock and timer-frame gate (frame-clock-v1; default on); prepare only")
-    parser.add_argument("--visibility-math", action=argparse.BooleanOptionalAction,
-                        help="bounded acos/asin inputs in object visibility (visibility-math-v1; default on); prepare only")
-    parser.add_argument("--third-person", action=argparse.BooleanOptionalAction,
-                        help="F2 toggles a chase camera behind your ship, F4 one that orbits it (third-person-camera-v3, own-ship-model-v1, own-ship-menu-model-v1; default on); prepare only")
-    parser.add_argument("--powerup-pickup", action=argparse.BooleanOptionalAction,
-                        help="server-placed power-ups can be picked up and reappear (powerup-pickup-v1; default on); prepare only")
-    parser.add_argument("--distant-objects", action=argparse.BooleanOptionalAction,
-                        help="extend world-object visibility to 4,500,000 units and 0.5 projected size (default off); prepare only")
-    parser.add_argument("--menu-framing", action=argparse.BooleanOptionalAction,
-                        help="widescreen ship-selection framing (default on); prepare only")
-    args = parser.parse_args(argv)
-    if args.action != "prepare":
-        named = [f"--{key.replace('_', '-')}" for key in PREPARE_ONLY if getattr(args, key) is not None]
-        if named:
-            parser.error(f"{', '.join(named)} applies only to prepare")
+    ap = parser()
+    args = ap.parse_args(argv)
     try:
-        if args.action in ("prepare", "undo"):
-            result = prepare(args.exe, host=args.station, undo=args.action == "undo",
-                             experimental_protection=args.experimental_protection,
-                             smooth_frame_clock=args.frame_clock,
-                             bounded_visibility=args.visibility_math,
-                             chase_camera=args.third_person,
-                             powerup_pickups=args.powerup_pickup,
-                             distant_objects=args.distant_objects, menu_framing=args.menu_framing)
+        if args.action == "prepare":
+            result = prepare(args.exe, {option: getattr(args, option) for option in OPTIONS}, args.station)
+        elif args.action == "undo":
+            result = undo(args.exe)
         else:
             result = check(args.exe)
             if args.action == "launch":
                 subprocess.Popen([str(args.exe.resolve())], cwd=args.exe.resolve().parent)
         print(json.dumps(result, indent=2))
     except (ValueError, RuntimeError, OSError, KeyError, json.JSONDecodeError) as error:
-        parser.exit(1, f"Client setup failed: {error}\n")
+        ap.exit(1, f"Client setup failed: {error}\n")
 
 
 if __name__ == "__main__":

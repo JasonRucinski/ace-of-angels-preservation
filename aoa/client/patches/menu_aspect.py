@@ -5,10 +5,12 @@ effective focal length min(width/2, height*2/3) for layout and rendering.
 Flight projection is untouched. Requires the existing mapped .text padding.
 """
 
-from aoa.client.base import Asm, jmp_patch
+from aoa.client import layout
+from aoa.client.asm import Asm, jmp_patch
+from aoa.client.patches.base import Patch, Region
 
 NAME = "ship-menu-aspect-v1"
-CAVE = 0x58B500
+CAVE = layout.cave(NAME).start
 SITES = ((0x463D06, bytes.fromhex("8b4058d1f8"), "layout"),
          (0x4652A1, bytes.fromhex("68db0fc93f"), "render"))
 
@@ -35,28 +37,12 @@ def code():
     return a.resolve(), a.labels
 
 
-def regions():
+def _regions():
     cave, labels = code()
-    return [(CAVE - 0x400000, bytes(len(cave)), cave)] + [
-                (va - 0x400000, old, jmp_patch(va, labels[label], len(old)))
-                for va, old, label in SITES]
+    return (Region(CAVE, bytes(len(cave)), cave, "cave"),
+            *(Region(va, old, jmp_patch(va, labels[label], len(old))) for va, old, label in SITES))
 
 
-def state(data):
-    states = []
-    for off, old, new in regions():
-        actual = data[off:off + len(old)]
-        if actual not in (old, new):
-            raise ValueError("unexpected ship-menu code or cave")
-        states.append(actual == new)
-    if len(set(states)) != 1:
-        raise ValueError("partial ship-menu patch")
-    return states[0]
-
-
-def configure(data, enabled=True):
-    state(data)
-    out = bytearray(data)
-    for off, old, new in regions():
-        out[off:off + len(old)] = new if enabled else old
-    return bytes(out)
+PATCH = Patch(
+    id=NAME, since=None, policy="option", option="menu_framing", label="Widescreen ship-selection framing",
+    group="fixes", default=True, regions=_regions())

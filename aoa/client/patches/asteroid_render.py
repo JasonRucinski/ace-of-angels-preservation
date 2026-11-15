@@ -4,14 +4,15 @@ Only the surface-distance gate for model names Astr-* / Astr_* changes.
 Texture LOD, geometry, transforms, and all other models retain original code.
 Visual acceptance and performance require a real flight test.
 """
-import argparse
-import json
-from pathlib import Path
-
-from aoa.client.base import Asm, jmp_patch
+from aoa.client import layout
+from aoa.client.asm import Asm, jmp_patch
+from aoa.client.patches.base import Patch, Region
 
 NAME = "asteroid-mesh-distance-v1"
-SITE, CAVE = 0x543222, 0x58BA00
+SITE = 0x543222
+CAVE = layout.cave(NAME).start
+MESH_HORIZON = 0x5B0C30       # 61000.0, the world mesh gate
+BILLBOARD_HORIZON = 0x59D9C0  # 900000.0, the cached billboard horizon
 ORIGINAL = bytes.fromhex("d81d300c5b00")  # fcomp [61000.0]
 
 
@@ -40,52 +41,11 @@ def code():
     return a.resolve()
 
 
-def regions():
-    body = code()
-    return ((SITE - 0x400000, ORIGINAL, jmp_patch(SITE, CAVE, len(ORIGINAL))),
-            (CAVE - 0x400000, bytes(len(body)), body))
-
-
-def state(data):
-    states = []
-    for offset, old, new in regions():
-        actual = data[offset:offset + len(old)]
-        if actual not in (old, new):
-            raise ValueError("unexpected asteroid render code or occupied cave")
-        states.append(actual == new)
-    if len(set(states)) != 1:
-        raise ValueError("partial asteroid render patch")
-    return states[0]
-
-
-def configure(data, enabled=True):
-    state(data)
-    result = bytearray(data)
-    for offset, old, new in regions():
-        result[offset:offset + len(old)] = new if enabled else old
-    return bytes(result)
-
-
-def install(exe, undo=False):
-    """Turn this option on, or off with undo, through prepare_client.prepare().
-
-    Every other option keeps its installed state; prepare's own backup and
-    record (_client_setup.json) cover undo.
-    """
-    from aoa.client import prepare
-    return prepare.prepare(exe, experimental_asteroids=not undo)
-
-
-def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("client", type=Path)
-    parser.add_argument("--undo", action="store_true", help="turn this option off")
-    args = parser.parse_args()
-    try:
-        print(json.dumps(install(args.client, args.undo), indent=2))
-    except (ValueError, RuntimeError, OSError) as error:
-        parser.exit(1, f"Asteroid render setup failed: {error}\n")
-
-
-if __name__ == "__main__":
-    main()
+# Reads both horizon constants, which distant-world-objects-v1 rewrites to
+# 4,500,000 (declared in its `reads`; see tests/test_patch_layout.py).
+PATCH = Patch(
+    id=NAME, since=None, policy="option", option="experimental_asteroids",
+    label="Asteroid models only — reduce shape popping", group="experimental",
+    conflicts=("solid-world-mesh-distance-v1",), reads=(MESH_HORIZON, BILLBOARD_HORIZON),
+    regions=(Region(SITE, ORIGINAL, jmp_patch(SITE, CAVE, len(ORIGINAL))),
+             Region(CAVE, bytes(len(code())), code(), "cave")))

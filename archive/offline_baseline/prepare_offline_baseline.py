@@ -10,9 +10,10 @@ import sys
 from pathlib import Path
 
 from aoa.client.patches import archive_terminator
+from aoa.client.patches import base as patching
 from aoa.client import install_wrapper
 from aoa.client.patches import menu_aspect
-from aoa.client import base
+from aoa.client.patches import logger
 from aoa.client.patches import physics_timestep
 from aoa.client import prepare
 from aoa.client.patches.station_host import OFFSET
@@ -40,12 +41,12 @@ def main(argv=None):
                     str(installer), str(destination)], check=True)
     exe = destination / "AOACLIENT.EXE"
     original = exe.read_bytes()
-    stable, _ = base.configure(original)
-    baseline = archive_terminator.configure(physics_timestep.configure(stable))
+    stable = logger.stabilize(original)
+    baseline = patching.apply(archive_terminator.PATCH, patching.apply(physics_timestep.PATCH, stable, True), True)
     # Avoid historical-host discovery even when opening the offline login UI.
     baseline = baseline[:OFFSET] + prepare.host_field("localhost") + baseline[OFFSET + 12:]
     if args.menu_fix:
-        baseline = menu_aspect.configure(baseline)
+        baseline = patching.apply(menu_aspect.PATCH, baseline, True)
     state = prepare.inspect(baseline)
     expected = {
         "logger-size-v1", "logger-lock-v1", "zero-time-physics-v1", "archive-terminator-v1"}

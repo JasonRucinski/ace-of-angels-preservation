@@ -1,26 +1,33 @@
-"""visibility-math-v1: original visibility code run with the patch in Unicorn."""
+"""visibility-math-v1: original visibility code run with the patch in Unicorn.
+
+CodeTests is game-free; VisibilityFixTests runs the original client code and
+skips without the user's original client.
+"""
 import unittest
 
-from aoa.emulation.render_pipeline import run  # noqa: E402
-from aoa.client import prepare  # noqa: E402
-from aoa.client.experiments import render_culling_experiment  # noqa: E402
-from aoa.client.patches import visibility_fix  # noqa: E402
-from aoa.paths import ROOT
-
-ORIGINAL = ROOT / "game/2.9.2/AOACLIENT.EXE.orig"
+from aoa.client import prepare
+from aoa.client.experiments import render_culling_experiment
+from aoa.client.patches import base as patching
+from aoa.client.patches import visibility_fix
+from tests.support_patches import ORIGINAL, needs_game, regions_view, triples
 
 
-class VisibilityFixTests(unittest.TestCase):
-    @classmethod
-    def setUpClass(cls):
-        cls.before = run(ORIGINAL)
-        cls.after = run(ORIGINAL, corrected=True, patch=visibility_fix)
-
+class CodeTests(unittest.TestCase):
     def test_same_machine_code_as_verified_experiment(self):
         # Built where the offline experiment put it, the angle cave is identical.
         relocated = visibility_fix.code(render_culling_experiment.ANGLE)
         offset = render_culling_experiment.ANGLE - render_culling_experiment.CAVE
         self.assertEqual(render_culling_experiment.code()[offset:offset + len(relocated)], relocated)
+
+
+@needs_game
+class VisibilityFixTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        from aoa.emulation.render_pipeline import run
+        cls.run = staticmethod(run)
+        cls.before = run(ORIGINAL)
+        cls.after = run(ORIGINAL, corrected=True, patch=regions_view(visibility_fix))
 
     def test_trig_inputs_bounded_while_moving_and_turning(self):
         self.assertTrue(self.before["angular_domain_cases"])
@@ -46,7 +53,7 @@ class VisibilityFixTests(unittest.TestCase):
 
     def test_other_fpu_precisions(self):
         for control in (0x27F, 0x37F):
-            result = run(ORIGINAL, corrected=True, fpcw=control, patch=visibility_fix)
+            result = self.run(ORIGINAL, corrected=True, fpcw=control, patch=regions_view(visibility_fix))
             self.assertEqual(result["angular_domain_cases"], [])
             self.assertEqual(result["visibility_mismatches_with_nan_math_stub"], [])
             self.assertEqual(result["inside_sphere_cases"], 48)
@@ -57,19 +64,19 @@ class VisibilityFixTests(unittest.TestCase):
         off = prepare.configure(raw, bounded_visibility=False)
         self.assertIn(visibility_fix.NAME, prepare.inspect(on)["patches"])
         self.assertNotIn(visibility_fix.NAME, prepare.inspect(off)["patches"])
-        self.assertEqual(visibility_fix.configure(on, False), off)
+        self.assertEqual(patching.apply(visibility_fix.PATCH, on, False), off)
         self.assertEqual(prepare.configure(on), on)
-        allowed = {i for o, old, new in visibility_fix.regions() for i in range(o, o + len(old))}
+        allowed = {i for o, old, new in triples(visibility_fix.PATCH) for i in range(o, o + len(old))}
         self.assertTrue(all(i in allowed for i, (a, b) in enumerate(zip(on, off)) if a != b))
-        for o, old, new in visibility_fix.regions():
+        for o, old, new in triples(visibility_fix.PATCH):
             bad = bytearray(on)
             bad[o] ^= 0xFF
             with self.assertRaises(ValueError):
-                visibility_fix.state(bytes(bad))
+                patching.state(visibility_fix.PATCH, bytes(bad))
             partial = bytearray(on)
             partial[o:o + len(old)] = old
             with self.assertRaises(ValueError):
-                visibility_fix.state(bytes(partial))
+                patching.state(visibility_fix.PATCH, bytes(partial))
         # Coexists with the asteroid/solid-world hook in the same routine.
         both = prepare.configure(raw, experimental_asteroids=True)
         self.assertTrue({visibility_fix.NAME, "asteroid-mesh-distance-v1"} <= set(prepare.inspect(both)["patches"]))

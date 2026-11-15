@@ -12,7 +12,7 @@ import sys
 from pathlib import Path
 
 from aoa import cli
-from aoa.client.experiments import render_clock_experiment
+from archive.offline_baseline import render_clock_experiment
 from aoa.paths import ROOT
 
 

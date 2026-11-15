@@ -54,7 +54,7 @@ the extra detail away. This client fix stops that. The easiest way is the
 then **Apply**). Or, with the game closed:
 
 ```powershell
-.venv\Scripts\python.exe -I tools\run.py aoa.client.patches.texture32 game\2.9.2\AOACLIENT.EXE
+.venv\Scripts\python.exe -I tools\prepare_client.py prepare game\2.9.2\AOACLIENT.EXE --experimental-texture32
 ```
 
 It's worth having even without the new skins: it removes colour banding from
@@ -109,7 +109,7 @@ Or, with the game closed:
 
 ```powershell
 .venv\Scripts\python.exe -I tools\texture_pack.py game\2.9.2 --undo
-.venv\Scripts\python.exe -I tools\run.py aoa.client.patches.texture32 game\2.9.2\AOACLIENT.EXE --undo
+.venv\Scripts\python.exe -I tools\prepare_client.py prepare game\2.9.2\AOACLIENT.EXE --no-experimental-texture32
 ```
 
 The first command puts back the original archives exactly. The second turns

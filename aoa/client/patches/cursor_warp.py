@@ -10,10 +10,12 @@ origin with ScreenToClient (already imported) on the main window handle
 (0x5E6DE8). If that fails, the original cached-origin arithmetic is kept.
 """
 
-from aoa.client.base import Asm, jmp_patch
+from aoa.client import layout
+from aoa.client.asm import Asm, jmp_patch
+from aoa.client.patches.base import Patch, Region
 
 NAME = "cursor-warp-origin-v1"
-CAVE = 0x58B300  # free .text padding between logger lock and physics guard
+CAVE = layout.cave(NAME).start  # free .text padding between logger lock and physics guard
 SITE = 0x4EAD16
 RESUME = 0x4EAD28  # pop esi; ret 8
 # mov esi,[ecx+2c]; mov ecx,[ecx+28]; add esi,edx; add ecx,eax;
@@ -42,28 +44,7 @@ def code():
     return a.resolve()
 
 
-def regions():
-    cave = code()
-    assert CAVE + len(cave) <= 0x58B400
-    return [(CAVE - 0x400000, bytes(len(cave)), cave),
-            (SITE - 0x400000, DISPLACED, jmp_patch(SITE, CAVE, len(DISPLACED)))]
-
-
-def state(data):
-    states = []
-    for off, old, new in regions():
-        actual = data[off:off + len(old)]
-        if actual not in (old, new):
-            raise ValueError("unexpected cursor-warp code or cave")
-        states.append(actual == new)
-    if len(set(states)) != 1:
-        raise ValueError("partial cursor-warp patch")
-    return states[0]
-
-
-def configure(data, enabled=True):
-    state(data)
-    out = bytearray(data)
-    for off, old, new in regions():
-        out[off:off + len(old)] = new if enabled else old
-    return bytes(out)
+PATCH = Patch(
+    id=NAME, since=12, policy="always",
+    regions=(Region(CAVE, bytes(len(code())), code(), "cave"),
+             Region(SITE, DISPLACED, jmp_patch(SITE, CAVE, len(DISPLACED)))))
