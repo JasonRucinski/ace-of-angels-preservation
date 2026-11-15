@@ -3,13 +3,13 @@
 Flying Rock's sites.
 
     # 1. every saved URL (site map) + the downloadable candidates
-    python3 -I wayback_builds.py --out wb/
+    python3 -I tools/wayback_builds.py --out wb/
 
     # 2. same, then fetch the original bytes of each candidate
-    python3 -I wayback_builds.py --out wb/ --download
+    python3 -I tools/wayback_builds.py --out wb/ --download
 
     # offline: parse a CDX dump you saved yourself (output=json)
-    python3 -I wayback_builds.py --out wb/ --cdx-file dump.json
+    python3 -I tools/wayback_builds.py --out wb/ --cdx-file dump.json
 
 Writes wb/all_urls.tsv (one row per unique URL+content) and wb/builds.tsv
 (the installers/archives). Downloads go to wb/files/<timestamp>_<name> and get
@@ -17,6 +17,10 @@ an md5/sha256 line in wb/files/hashes.txt. Files are only saved, never run.
 
 The `id_` form of a Wayback URL returns the archived bytes without the
 Wayback toolbar or link rewriting -- that is what gets downloaded.
+
+`cdx_query` and `cdx_rows` are the one CDX helper of the research tools;
+`tools/restore_web_archive.py cdx` uses them to write the index files it
+imports.
 
 Requests go through aoa/research/http.py: at least --pause seconds apart,
 with backoff on HTTP 429/5xx.
@@ -40,17 +44,28 @@ BUILD_MIME = re.compile(r"application/(x-)?(msdownload|msdos-program|dosexec|zip
 HTTP = http.Polite(min_interval=4.0)
 
 
-def get(url):
-    with HTTP.open(url, timeout=180) as r:
+def get(url, http=None):
+    with (http or HTTP).open(url, timeout=180) as r:
         return r.read(), r.headers.get_content_type()
 
 
-def cdx_rows(domain):
-    q = urllib.parse.urlencode({"url": domain, "matchType": "domain",
-                                "output": "json", "fl": FIELDS})
-    body, _ = get(f"{CDX}?{q}")
-    rows = json.loads(body or b"[]")
+def without_header(rows):
+    """CDX JSON rows without the leading field-name row, if it has one."""
     return rows[1:] if rows and rows[0][:2] == ["timestamp", "original"] else rows
+
+
+def cdx_query(url, match_type="domain", fields=FIELDS, filters=(), collapse=None, http=None):
+    """The raw CDX JSON answer for url (field-name row first), through aoa/research/http.py."""
+    params = [("url", url), ("matchType", match_type), ("output", "json"), ("fl", fields)]
+    params += [("filter", f) for f in filters]
+    if collapse:
+        params.append(("collapse", collapse))
+    body, _ = get(f"{CDX}?{urllib.parse.urlencode(params)}", http)
+    return json.loads(body or b"[]")
+
+
+def cdx_rows(domain, http=None):
+    return without_header(cdx_query(domain, http=http))
 
 
 def is_build(row):
@@ -73,8 +88,7 @@ def main(argv=None):
 
     rows = []
     if a.cdx_file:
-        data = json.load(open(a.cdx_file))
-        rows = data[1:] if data and data[0][:2] == ["timestamp", "original"] else data
+        rows = without_header(json.load(open(a.cdx_file)))
     else:
         for dom in a.domains:
             print(f"querying CDX for {dom} ...", file=sys.stderr)

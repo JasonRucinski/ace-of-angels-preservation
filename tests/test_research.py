@@ -12,6 +12,7 @@ import hashlib
 import io
 import json
 import socket
+import sys
 import struct
 import tempfile
 import unittest
@@ -22,7 +23,8 @@ from aoa import builds
 from aoa.paths import ROOT
 from aoa.research import fetch
 from aoa.research import http as research_http
-from aoa.research import version
+from aoa.research import disc_image, ia_disc_find, ia_fulltext, version, wayback
+from aoa.research import restore_web_archive as rwa
 
 
 class Response(io.BytesIO):
@@ -232,6 +234,160 @@ class Version(unittest.TestCase):
     def test_out_needs_detail(self):
         with self.assertRaises(SystemExit), contextlib.redirect_stderr(io.StringIO()):
             version.main([str(self.client), "--out", "x.json"])
+
+FIELDS_ROW = ["timestamp", "original", "mimetype", "statuscode", "digest", "length"]
+CAPTURE_ROW = ["20010127072200", "http://www.aceofangels.com/", "text/html", "200", "ABC", "1234"]
+
+
+class Cdx(unittest.TestCase):
+    def test_query_url_and_header(self):
+        answers = {}
+        http, opener = polite(answers)
+        builds_url = ("https://web.archive.org/cdx/search/cdx?url=aceofangels.com&matchType=domain"
+                      "&output=json&fl=timestamp%2Coriginal%2Cmimetype%2Cstatuscode%2Cdigest%2Clength")
+        answers[builds_url] = json.dumps([FIELDS_ROW, CAPTURE_ROW]).encode()
+        # wayback_builds' query is unchanged by the move to the shared helper.
+        self.assertEqual(wayback.cdx_rows("aceofangels.com", http=http), [CAPTURE_ROW])
+        self.assertEqual(wayback.without_header([CAPTURE_ROW]), [CAPTURE_ROW])
+
+    def test_restore_web_archive_cdx_writes_the_indexes_it_imports(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp)
+            answers = {}
+            for name, (domain, collapse) in rwa.CDX_INDEXES.items():
+                url = ("https://web.archive.org/cdx/search/cdx?url=" + domain + "&matchType=domain"
+                       "&output=json&fl=timestamp%2Coriginal%2Cmimetype%2Cstatuscode%2Cdigest%2Clength"
+                       "&filter=statuscode%3A200&collapse=" + collapse)
+                answers[url] = json.dumps([FIELDS_ROW, CAPTURE_ROW]).encode()
+            http, opener = polite(answers)
+            (out / "wayback-forum-index.json").write_text("kept", encoding="utf-8")
+            rwa.write_cdx_indexes(out, list(rwa.CDX_INDEXES), http, say=lambda m: None)
+            self.assertEqual(len(opener.requests), 2)
+            self.assertEqual((out / "wayback-forum-index.json").read_text(encoding="utf-8"), "kept")
+            # The same [1:] slice import_indexes applies.
+            site = json.loads((out / "wayback-site-index.json").read_text(encoding="utf-8"))
+            self.assertEqual(site[1:], [CAPTURE_ROW])
+
+    def test_cdx_subcommand_parses_and_old_flags_still_do(self):
+        seen = []
+        with mock.patch.object(rwa, "write_cdx_indexes", lambda out, names, http: seen.append((out, names))):
+            rwa.main(["cdx", "--only", "wayback-site-index.json", "--out", "x"])
+        self.assertEqual(seen, [(Path("x"), ["wayback-site-index.json"])])
+        with mock.patch.object(rwa, "Mirror") as mirror:
+            rwa.main(["--import-indexes", "--recover", "--limit", "5"])
+        mirror.return_value.recover.assert_called_once_with(5)
+
+
+class DiscSearch(unittest.TestCase):
+    def listing(self, *names):
+        return "".join(f'<a href="//archive.org/download/x/{n}">{n}</a>' for n in names).encode()
+
+    def search(self, item, pages):
+        answers = {"https://archive.org/metadata/" + item: json.dumps(
+            {"metadata": {"title": "Cover CD"}, "files": [{"name": n} for n in pages]}).encode()}
+        for name, body in pages.items():
+            answers[f"https://archive.org/download/{item}/{name}/"] = body
+        http, _ = polite(answers)
+        with contextlib.redirect_stdout(io.StringIO()):
+            return ia_disc_find.search(item, ia_disc_find.re.compile(ia_disc_find.DEFAULT), get=http.get)
+
+    def test_rows(self):
+        files = [f"DEMOS/GAME{i}/SETUP.EXE" for i in range(8)]
+        none = self.search("cd1", {"cd1.iso": self.listing(*files)})
+        self.assertEqual(ia_disc_find.log_row(none, "2026-11-15"),
+                         "cd1\tCover CD\tsearched\tnone (cd1.iso: 8 entries listed) [ia_disc_find, 2026-11-15]")
+        hit = self.search("cd2", {"cd2.iso": self.listing(*files, "Ace of Angels/aoa-current.exe")})
+        self.assertEqual(ia_disc_find.log_row(hit, "d").split("\t")[2], "listing hit")
+        wrapped = self.search("cd3", {"cd3.rar": self.listing("CD3.img")})
+        self.assertEqual(ia_disc_find.log_row(wrapped, "d").split("\t")[2], "NOT searched")
+        self.assertIn("1 entries listed", ia_disc_find.log_row(wrapped, "d"))
+
+    def test_append_keeps_existing_rows(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            table = Path(tmp) / "disc_search.tsv"
+            table.write_bytes(b"archive.org item\ttitle\tstatus\tresult\nold\tt\tsearched\tnone")
+            ia_disc_find.append_log(table, "new\tt\tsearched\tnone (x)")
+            self.assertEqual(table.read_bytes(), b"archive.org item\ttitle\tstatus\tresult\nold\tt\tsearched\tnone"
+                                                 b"\nnew\tt\tsearched\tnone (x)\n")
+
+    def test_log_must_exist(self):
+        with self.assertRaises(SystemExit) as caught:
+            ia_disc_find.main(["x", "--log", "no-such-table.tsv"])
+        self.assertIn("not found", str(caught.exception.code))
+
+    def test_committed_table_has_four_columns(self):
+        for line in (ROOT / "data/disc_search.tsv").read_text(encoding="utf-8").splitlines():
+            self.assertEqual(len(line.split("\t")), 4, line)
+
+
+class FullText(unittest.TestCase):
+    def test_search_writes_hits(self):
+        page = {"response": {"body": {"hits": {"total": 1, "hits": [
+            {"fields": {"identifier": "pcgamer", "filename": "p_hocr_searchtext.txt.gz", "title": "PC Gamer"}}]}}}}
+        with tempfile.TemporaryDirectory() as tmp, \
+                mock.patch.object(ia_fulltext, "polite_get", lambda url, timeout: json.dumps(page).encode()), \
+                contextlib.redirect_stdout(io.StringIO()):
+            ia_fulltext.main(["search", tmp])
+            [hit] = json.loads((Path(tmp) / ia_fulltext.HITS).read_text())
+        self.assertEqual(hit["identifier"], "pcgamer")
+        self.assertEqual(len(hit["queries"]), len(ia_fulltext.QUERIES))
+
+    def test_context_reads_cached_text(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            d = Path(tmp)
+            (d / ia_fulltext.HITS).write_text(json.dumps([{"identifier": "mag", "filename": "a.txt", "title": "Mag"}]))
+            (d / "txt").mkdir()
+            (d / "txt" / "mag__a.txt").write_text("Intro. Ace of Angels is a space sim from Flying Rock. The end.")
+            with mock.patch.object(ia_fulltext, "get", lambda u: self.fail("fetched a cached file")), \
+                    contextlib.redirect_stdout(io.StringIO()):
+                ia_fulltext.main(["context", tmp])
+            passages = (d / ia_fulltext.PASSAGES).read_text(encoding="utf-8")
+        self.assertIn(">> Ace of Angels is a space sim from Flying Rock.", passages)
+
+    def test_old_names_insert_the_subcommand(self):
+        from aoa.research import ia_fulltext_context, ia_fulltext_search
+        seen = []
+        with mock.patch.object(ia_fulltext, "main", seen.append):
+            ia_fulltext_search.main(["data/"])
+            ia_fulltext_context.main(["--trim", "x.txt"])
+        self.assertEqual(seen, [["search", "data/"], ["context", "--trim", "x.txt"]])
+
+
+def tiny_iso(name=b"AOA.TXT;1", body=b"hello"):
+    """Sectors 0-15 empty, a primary descriptor, a terminator, the root directory, one file."""
+    def record(extent, size, flags, ident):
+        length = 33 + len(ident) + (len(ident) + 1) % 2
+        r = bytearray(length)
+        r[0] = length
+        struct.pack_into("<I", r, 2, extent)
+        struct.pack_into("<I", r, 10, size)
+        r[25], r[32] = flags, len(ident)
+        r[33:33 + len(ident)] = ident
+        return bytes(r)
+    pvd = bytearray(2048)
+    pvd[0:6] = b"\x01CD001"
+    pvd[156:190] = record(18, 2048, 2, b"\0")
+    end = bytearray(2048)
+    end[0:6] = b"\xffCD001"
+    root = (record(18, 2048, 2, b"\0") + record(18, 2048, 2, b"\1") + record(19, len(body), 0, name)).ljust(2048, b"\0")
+    return bytes(16 * 2048) + bytes(pvd) + bytes(end) + root + body.ljust(2048, b"\0")
+
+
+class DiscImage(unittest.TestCase):
+    def test_iso_stream_extract(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            stdin = io.TextIOWrapper(io.BytesIO(tiny_iso()))
+            with mock.patch.object(sys, "stdin", stdin), contextlib.redirect_stdout(io.StringIO()):
+                disc_image.main(["iso", "(?i)aoa", tmp])
+            self.assertEqual((Path(tmp) / "AOA.TXT").read_bytes(), b"hello")
+
+    def test_old_names_insert_the_subcommand(self):
+        from aoa.research import iso_stream_extract, rar_img2iso
+        seen = []
+        with mock.patch.object(disc_image, "main", seen.append):
+            iso_stream_extract.main(["re", "out"])
+            rar_img2iso.main(["a.rar", "a.img", "a.iso"])
+        self.assertEqual(seen, [["iso", "re", "out"], ["rar", "a.rar", "a.img", "a.iso"]])
 
 
 def _no_network(*args, **kwargs):
