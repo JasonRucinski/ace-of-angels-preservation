@@ -20,8 +20,10 @@ from aoa.paths import ROOT
 from aoa.client.patches import base as patching
 
 SOURCE = ROOT / "game/2.9.2/AOACLIENT.EXE.orig"
+from tests.support_patches import needs_game
 
 
+@needs_game
 class TerrainTests(unittest.TestCase):
     def probe(self, marker=registry.MARKER, existing=False, asset=True, world=True, controller=True,
               expect_name=None, code=None, zones=(), handler=True, view=True, boxes=None):

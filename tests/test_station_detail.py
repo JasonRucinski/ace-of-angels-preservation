@@ -7,9 +7,11 @@ from aoa.client.patches import station_detail as patch
 from aoa.client import prepare
 from tests.support_emulation import SOURCE, StationLod
 from aoa.client.patches import base as patching
-from tests.support_patches import triples
+from tests.support_patches import needs_export, needs_game, triples
 
 
+@needs_game
+@needs_export
 class StationDetailTests(StationLod, unittest.TestCase):
     def test_finest_mesh_set_across_all_station_boundaries(self):
         self.check_finest_mesh_set_across_all_station_boundaries()

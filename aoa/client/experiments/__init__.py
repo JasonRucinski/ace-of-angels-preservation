@@ -1,1 +1,1 @@
-"""Superseded offline patch experiments, kept until phase 2 archives them."""
+"""Bytes of the archived culling experiment, kept for aoa.emulation.render_pipeline."""

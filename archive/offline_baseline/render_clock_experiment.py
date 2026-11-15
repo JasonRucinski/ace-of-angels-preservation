@@ -1,4 +1,6 @@
-"""Offline-only QPC clock experiment. Not part of supported client preparation.
+"""Offline-only QPC clock experiment (archived). Not part of supported client preparation.
+
+Its clock cave is byte-identical to frame-clock-v1's (tests/test_frame_clock.py).
 
 Changes the two game-clock sources together, retaining unsigned millisecond
 timestamps. QPC has its own epoch: apply before launch, never to a live process.
@@ -8,7 +10,7 @@ import struct
 import argparse
 import json
 
-from aoa.client.base import Asm
+from aoa.client.asm import Asm
 from aoa.client import prepare
 from aoa.paths import ROOT
 

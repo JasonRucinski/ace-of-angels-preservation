@@ -14,11 +14,12 @@ from unicorn.x86_const import (UC_X86_REG_EAX, UC_X86_REG_ECX, UC_X86_REG_EDX, U
 
 from aoa.paths import ROOT
 from aoa.client.patches import base as patching
-from tests.support_patches import triples
+from tests.support_patches import needs_game, triples
 SOURCE = ROOT / 'game/2.9.2/AOACLIENT.EXE.orig'
 DONE, INVALID = 0x562AF9, 0x562AC4
 
 
+@needs_game
 class Texture32Tests(unittest.TestCase):
     def setUp(self):
         self.emu = Emu(PE(SOURCE))

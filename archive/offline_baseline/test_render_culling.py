@@ -2,15 +2,17 @@
 import unittest
 
 from aoa.emulation.render_pipeline import run
-from aoa.client.experiments import render_culling_experiment as patch
-from aoa.client.experiments import render_clock_experiment as clock
+from archive.offline_baseline import render_culling_experiment as patch
+from archive.offline_baseline import render_clock_experiment as clock
 from aoa.client import prepare
 from aoa.client.patches import online_terrain
 
 from aoa.paths import ROOT
+from tests.support_patches import needs_game
 from aoa.client.patches import base as patching
 
 
+@needs_game
 class CullingTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):

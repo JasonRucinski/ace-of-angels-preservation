@@ -13,10 +13,12 @@ from aoa.emulation.emu import SCRATCH, STACK
 from aoa.paths import ROOT
 from aoa.maps.lod import audit
 from aoa.client.patches import base as patching
-from tests.support_patches import triples
+from tests.support_patches import needs_export, needs_game, triples
 from unicorn.x86_const import UC_X86_REG_ECX, UC_X86_REG_ESP
 
 
+@needs_game
+@needs_export
 class WorldDetailTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):

@@ -10,6 +10,7 @@ from aoa.client.patches import menu_aspect
 from aoa.client import prepare
 from aoa.paths import ROOT
 from aoa.client.patches import base as patching
+from tests.support_patches import needs_game
 
 
 class MenuAspectTests(unittest.TestCase):
@@ -42,6 +43,7 @@ class MenuAspectTests(unittest.TestCase):
                         fov = struct.unpack("<f", u.mem_read(0x70FFFC, 4))[0]
                         self.assertAlmostEqual(fov, 2 * math.atan((width // 2) / focal), places=6)
 
+    @needs_game
     def test_reversible_and_rejects_corruption(self):
         path = ROOT / "game/2.9.2/AOACLIENT.EXE.orig"
         source = prepare.configure(path.read_bytes())

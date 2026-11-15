@@ -1,28 +1,33 @@
-"""visibility-math-v1: original visibility code run with the patch in Unicorn."""
+"""visibility-math-v1: original visibility code run with the patch in Unicorn.
+
+CodeTests is game-free; VisibilityFixTests runs the original client code and
+skips without the user's original client.
+"""
 import unittest
 
-from aoa.emulation.render_pipeline import run  # noqa: E402
-from aoa.client import prepare  # noqa: E402
-from aoa.client.experiments import render_culling_experiment  # noqa: E402
-from aoa.client.patches import visibility_fix  # noqa: E402
-from aoa.paths import ROOT
+from aoa.client import prepare
+from aoa.client.experiments import render_culling_experiment
 from aoa.client.patches import base as patching
-from tests.support_patches import regions_view, triples
+from aoa.client.patches import visibility_fix
+from tests.support_patches import ORIGINAL, needs_game, regions_view, triples
 
-ORIGINAL = ROOT / "game/2.9.2/AOACLIENT.EXE.orig"
 
-
-class VisibilityFixTests(unittest.TestCase):
-    @classmethod
-    def setUpClass(cls):
-        cls.before = run(ORIGINAL)
-        cls.after = run(ORIGINAL, corrected=True, patch=regions_view(visibility_fix))
-
+class CodeTests(unittest.TestCase):
     def test_same_machine_code_as_verified_experiment(self):
         # Built where the offline experiment put it, the angle cave is identical.
         relocated = visibility_fix.code(render_culling_experiment.ANGLE)
         offset = render_culling_experiment.ANGLE - render_culling_experiment.CAVE
         self.assertEqual(render_culling_experiment.code()[offset:offset + len(relocated)], relocated)
+
+
+@needs_game
+class VisibilityFixTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        from aoa.emulation.render_pipeline import run
+        cls.run = staticmethod(run)
+        cls.before = run(ORIGINAL)
+        cls.after = run(ORIGINAL, corrected=True, patch=regions_view(visibility_fix))
 
     def test_trig_inputs_bounded_while_moving_and_turning(self):
         self.assertTrue(self.before["angular_domain_cases"])
@@ -48,7 +53,7 @@ class VisibilityFixTests(unittest.TestCase):
 
     def test_other_fpu_precisions(self):
         for control in (0x27F, 0x37F):
-            result = run(ORIGINAL, corrected=True, fpcw=control, patch=regions_view(visibility_fix))
+            result = self.run(ORIGINAL, corrected=True, fpcw=control, patch=regions_view(visibility_fix))
             self.assertEqual(result["angular_domain_cases"], [])
             self.assertEqual(result["visibility_mismatches_with_nan_math_stub"], [])
             self.assertEqual(result["inside_sphere_cases"], 48)

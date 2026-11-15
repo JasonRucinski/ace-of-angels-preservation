@@ -20,9 +20,11 @@ from unicorn.x86_const import (UC_X86_REG_ECX, UC_X86_REG_ESP,
 from aoa.paths import ROOT
 from tests.support_emulation import GroupProbe, SOURCE
 from aoa.client.patches import base as patching
-from tests.support_patches import triples
+from tests.support_patches import needs_export, needs_game, triples
 
 
+@needs_game
+@needs_export
 class ObjectPersistenceTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):

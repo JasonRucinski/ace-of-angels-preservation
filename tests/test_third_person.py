@@ -15,7 +15,7 @@ from aoa.client import prepare  # noqa: E402
 from aoa.client.patches import third_person as tp  # noqa: E402
 from aoa.paths import ROOT
 from aoa.client.patches import base as patching
-from tests.support_patches import triples
+from tests.support_patches import needs_game, triples
 
 ORIGINAL = ROOT / "game/2.9.2/AOACLIENT.EXE.orig"
 NODE, RECORD, GRAPHICS, STACK = 0x700000, 0x701000, 0x702000, 0x720000
@@ -152,6 +152,7 @@ def turned(right, forward, dt):
             [c * f + s * r for r, f in zip(right, forward)])
 
 
+@needs_game
 class ThirdPersonTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -383,6 +384,7 @@ class ThirdPersonTests(unittest.TestCase):
         self.assertFalse(any(p in image for p in packed))
 
 
+@needs_game
 class OwnShipModelTests(unittest.TestCase):
     """0x44C0A0(object, is_self) run in Unicorn; 0x43DF70 (attach meshes) stubbed."""
     ATTACH = 0x43DF70
@@ -470,6 +472,7 @@ class OwnShipModelTests(unittest.TestCase):
                 self.assertEqual(u.reg_read(UC_X86_REG_ESP), STACK - 0x100)
 
 
+@needs_game
 class OwnShipMenuTests(unittest.TestCase):
     """The main mesh pass (0x56ECC0) after the fighter menu cleared a part's +0x244."""
 

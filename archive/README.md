@@ -45,5 +45,7 @@ and [docs/render-pipeline-audit.md](../docs/render-pipeline-audit.md).
 |---|---|
 | `compare_render_clocks.py` | `evidence/2.9.2/render_clock_comparison.json` |
 | `prepare_offline_baseline.py` | none: prepares a local offline client copy |
+| `render_clock_experiment.py` | none: the QPC clock experiment; its cave is byte-identical to `frame-clock-v1` |
+| `render_culling_experiment.py` | none: the culling experiment, superseded by `visibility-math-v1`; its bytes stay in `aoa/client/experiments/` because `aoa.emulation.render_pipeline` emulates them by default |
 | `seed_offline_velocity.py` | none: live fixture for a running offline client |
-| `test_render_clock_experiment.py`, `test_render_motion.py` | none: suites, run with `python -I tools/test.py --tier all` (need the game) |
+| `test_render_clock_experiment.py`, `test_render_culling.py`, `test_render_motion.py` | none: suites, run with `python -I tools/test.py --tier all` (need the game) |

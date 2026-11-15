@@ -7,9 +7,10 @@ from aoa.client.patches import asteroid_render as patch
 from aoa.client import prepare
 from tests.support_emulation import AsteroidGate, SOURCE
 from aoa.client.patches import base as patching
-from tests.support_patches import triples
+from tests.support_patches import needs_game, triples
 
 
+@needs_game
 class AsteroidRenderTests(AsteroidGate, unittest.TestCase):
     def test_original_handoff_and_extended_asteroid_mesh_range(self):
         for control in (0x7F, 0x27F, 0x37F):

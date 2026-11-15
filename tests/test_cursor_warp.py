@@ -11,6 +11,7 @@ from aoa.client.patches import base as patching
 from aoa.client.patches import cursor_warp
 from aoa.client import prepare
 from aoa.paths import ROOT
+from tests.support_patches import needs_game
 
 ORIGINAL = ROOT / "game/2.9.2/AOACLIENT.EXE.orig"
 WARP, MOUSE, HWND, RETURN, STACK = 0x4EACE0, 0x700000, 0x1234, 0x6F0F00, 0x710000
@@ -60,6 +61,7 @@ def warp(image, x, y, cached, window, s2c_ok=True):
     return calls
 
 
+@needs_game
 class CursorWarpTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):

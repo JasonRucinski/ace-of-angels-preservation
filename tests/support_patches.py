@@ -17,7 +17,6 @@ from unittest import mock
 
 from aoa.client import patches as registry
 from aoa.client import prepare
-from aoa.client.experiments import render_clock_experiment
 from aoa.client.experiments import render_culling_experiment
 from aoa.client.patches import base as patching
 from aoa.client.patches import logger
@@ -25,12 +24,17 @@ from aoa.client.patches import own_ship_menu
 from aoa.client.patches import station_host
 from aoa.client.patches import third_person
 from aoa.paths import ROOT
+from archive.offline_baseline import render_clock_experiment
 
 PE_FACTS = ROOT / "evidence/2.9.2/pe_facts.json"
 # The user's original client, which the needs-game halves of the client suites run on.
 ORIGINAL = ROOT / "game/2.9.2/AOACLIENT.EXE.orig"
 needs_game = unittest.skipUnless(ORIGINAL.is_file(), "needs the user's original 2.9.2 client "
                                                      "(game/2.9.2/AOACLIENT.EXE.orig)")
+# Its exported objects (tools/export_assets.py), which some LOD checks also read.
+EXPORT = ROOT / "work/2.9.2/export"
+needs_export = unittest.skipUnless((EXPORT / "AOAOBJECTS").is_dir(), "needs the exported client objects "
+                                                                     "(work/2.9.2/export/AOAOBJECTS)")
 BASE = patching.IMAGE_BASE
 # Where each patch lived when the snapshot was taken, if it has moved since.
 SNAPSHOT_MODULE = {"logger-size-v1": "patch_client", "logger-lock-v1": "patch_client",

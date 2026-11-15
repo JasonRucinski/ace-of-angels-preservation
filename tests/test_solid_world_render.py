@@ -9,8 +9,10 @@ from aoa.client import prepare
 from tests import support_emulation as support
 from aoa.analysis.pe_util import Disasm, PE
 from aoa.client.patches import base as patching
+from tests.support_patches import needs_game
 
 
+@needs_game
 class SolidWorldRenderTests(unittest.TestCase):
     def test_world_model_cutoff_and_integer_state(self):
         probe = support.probe(support.AsteroidGate, patch)

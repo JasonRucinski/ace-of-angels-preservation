@@ -26,6 +26,7 @@ RETURN, STACK = 0x7F0F00, 0x7F8000
 STUBS = {0x4A5960: ("AllocNewObject", 12), 0x4E0660: ("script detach", 4), 0x4A7F90: ("LoadModel", 12),
          0x49C750: ("SetName", 8), 0x4BE970: ("SetPosition", 12), 0x526D00: ("log", 0)}
 SAVED = {UC_X86_REG_EBX: 0x1111, UC_X86_REG_EBP: 0x4444, UC_X86_REG_EDI: 0x3333}
+from tests.support_patches import needs_game
 
 
 def machine(image):
@@ -93,6 +94,7 @@ def tick(image, countdown, elapsed, hidden=True):
     return obj[0x2F7], gfx[0x150], struct.unpack_from("<i", obj, 0x338)[0]
 
 
+@needs_game
 class PowerupPickupTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
