@@ -27,8 +27,10 @@ Library use only (prepare_client.py composes it); no file is written here.
 """
 import struct
 
-from aoa.client.base import Asm, jmp_patch  # noqa: E402
-from aoa.client.patches.third_person import CHASE_FLAG, TICK  # noqa: E402
+from aoa.client import layout
+from aoa.client.asm import Asm, jmp_patch
+from aoa.client.patches.base import Patch, Region
+from aoa.client.patches.third_person import CHASE_FLAG
 
 NAME = "own-ship-menu-model-v1"
 LEGACY_NAME = "own-ship-menu-model-legacy"   # the first cave, without the +0x245 restore
@@ -40,9 +42,8 @@ INSTANCE_ORIGINAL = bytes.fromhex("e88a3cfdff")
 DRAWABLE = 0x542990
 WORLD = 0x5E7728
 PLAYER_NODE = 0xD3448                     # world + this = the player's top render node
-CAVE = 0x58BF00                           # after own_ship_model's cave
-CAVE_END = 0x58C000
-RESTRICT = TICK + 8                       # .data tail byte after third_person's state
+CAVE = layout.cave(NAME).start
+RESTRICT = layout.data(NAME, "RESTRICT").start   # .data tail, between third_person's blocks
 
 
 def d32(value):
@@ -88,54 +89,16 @@ def code(legacy=False):
     return a.resolve(), a.labels
 
 
-def regions(legacy=False):
-    """(file offset, original bytes, patched bytes); image base 0x400000."""
+def _regions(legacy=False):
     body, labels = code(legacy)
-    assert CAVE + len(body) <= CAVE_END
     call = b"\xe8" + struct.pack("<i", labels["instance"] - (INSTANCE_SITE + 5))
-    return [(CAVE - 0x400000, bytes(len(body)), body),
-            (PART_SITE - 0x400000, PART_ORIGINAL, jmp_patch(PART_SITE, labels["part"], len(PART_ORIGINAL))),
-            (INSTANCE_SITE - 0x400000, INSTANCE_ORIGINAL, call)]
+    return (Region(CAVE, bytes(len(body)), body, "cave"),
+            Region(PART_SITE, PART_ORIGINAL, jmp_patch(PART_SITE, labels["part"], len(PART_ORIGINAL))),
+            Region(INSTANCE_SITE, INSTANCE_ORIGINAL, call))
 
 
-def matches(data, legacy):
-    """True/False if every region is patched/original for this variant, else None."""
-    found = set()
-    for offset, old, new in regions(legacy):
-        actual = data[offset:offset + len(old)]
-        if actual == old:
-            found.add(False)
-        elif actual == new:
-            found.add(True)
-        else:
-            return None
-    return found.pop() if len(found) == 1 else None
-
-
-def state(data):
-    """True if applied (current or the first cave), False if absent; raises otherwise."""
-    for legacy in (False, True):
-        found = matches(data, legacy)
-        if found is not None:
-            return found
-    raise ValueError("unexpected or partial own-ship menu-model patch")
-
-
-def installed_name(data):
-    """Name of the installed variant (the legacy one only until prepare upgrades it), or None."""
-    for legacy, name in ((False, NAME), (True, LEGACY_NAME)):
-        found = matches(data, legacy)
-        if found is not None:
-            return name if found else None
-    raise ValueError("unexpected or partial own-ship menu-model patch")
-
-
-def configure(data, enabled=True):
-    state(data)
-    out = bytearray(data)
-    if matches(data, True):                    # remove the first cave before applying
-        for offset, old, new in regions(True):
-            out[offset:offset + len(old)] = old
-    for offset, old, new in regions():
-        out[offset:offset + len(old)] = new if enabled else old
-    return bytes(out)
+# Part of the chase-camera option: on and off with third-person-camera-v3.
+PATCH = Patch(
+    id=NAME, since=17, policy="option", requires=("third-person-camera-v3",),
+    data=((RESTRICT, layout.data(NAME, "RESTRICT").size),),
+    regions=_regions(), legacy=((LEGACY_NAME, _regions(True)),))

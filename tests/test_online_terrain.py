@@ -10,13 +10,14 @@ from unicorn.x86_const import (UC_X86_REG_EAX, UC_X86_REG_EBX, UC_X86_REG_ECX,
                                UC_X86_REG_EBP, UC_X86_REG_ESP, UC_X86_REG_EIP)
 from aoa.emulation.emu import Emu, SCRATCH, STACK
 from aoa.analysis.pe_util import PE
-from aoa.client.base import jmp_patch
+from aoa.client.asm import jmp_patch
 from aoa.client.patches import online_terrain as terrain
 from aoa.maps import registry
 from aoa.client import prepare
 from aoa.host.server import flight_bootstrap
 from aoa.host.runtime import parse_args
 from aoa.paths import ROOT
+from aoa.client.patches import base as patching
 
 SOURCE = ROOT / "game/2.9.2/AOACLIENT.EXE.orig"
 
@@ -126,41 +127,40 @@ class TerrainTests(unittest.TestCase):
     def test_v2_still_matches_and_upgrades(self):
         self.assertEqual(self.probe(code=terrain.v2_code(), zones=(0x1111,)), [terrain.LOOKUP, terrain.LOAD])
         original = SOURCE.read_bytes()
-        v2 = bytearray(terrain.configure(original))
-        v2[terrain.CAVE_OFFSET:terrain.CAVE_OFFSET + terrain.REGION] = terrain.v2_code()
+        v2 = bytearray(patching.apply(terrain.PATCH, original, True))
+        v2[(terrain.CAVE - 0x400000):(terrain.CAVE - 0x400000) + terrain.REGION] = terrain.v2_code()
         v2 = bytes(v2)
-        self.assertTrue(terrain.state(v2))
-        self.assertFalse(terrain.is_current(v2))
-        self.assertEqual(terrain.installed_name(v2), terrain.V2_NAME)
-        self.assertEqual(terrain.installed_name(terrain.configure(original)), terrain.NAME)
-        self.assertIsNone(terrain.installed_name(original))
-        self.assertEqual(terrain.configure(v2), terrain.configure(original))
+        self.assertTrue(patching.state(terrain.PATCH, v2))
+        self.assertEqual(patching.state(terrain.PATCH, v2), terrain.V2_NAME)
+        self.assertEqual(patching.state(terrain.PATCH, patching.apply(terrain.PATCH, original, True)), terrain.NAME)
+        self.assertIsNone(patching.state(terrain.PATCH, original))
+        self.assertEqual(patching.apply(terrain.PATCH, v2, True), patching.apply(terrain.PATCH, original, True))
         prepared = bytearray(prepare.configure(original))
-        prepared[terrain.CAVE_OFFSET:terrain.CAVE_OFFSET + terrain.REGION] = terrain.v2_code()
+        prepared[(terrain.CAVE - 0x400000):(terrain.CAVE - 0x400000) + terrain.REGION] = terrain.v2_code()
         self.assertIn(terrain.V2_NAME, prepare.inspect(bytes(prepared))['patches'])
         self.assertEqual(prepare.configure(bytes(prepared)), prepare.configure(original))
 
     def test_legacy_v1_still_matches_and_upgrades(self):
         self.assertEqual(self.probe(code=terrain.legacy_code()), [terrain.LOOKUP, terrain.LOAD])
         original = SOURCE.read_bytes()
-        legacy = bytearray(terrain.configure(original))
-        legacy[terrain.CAVE_OFFSET:terrain.CAVE_OFFSET + terrain.REGION] = terrain.legacy_code()
+        legacy = bytearray(patching.apply(terrain.PATCH, original, True))
+        legacy[(terrain.CAVE - 0x400000):(terrain.CAVE - 0x400000) + terrain.REGION] = terrain.legacy_code()
         legacy = bytes(legacy)
-        self.assertTrue(terrain.state(legacy))
-        self.assertFalse(terrain.is_current(legacy))
-        self.assertEqual(terrain.configure(legacy), terrain.configure(original))
+        self.assertTrue(patching.state(terrain.PATCH, legacy))
+        self.assertEqual(patching.state(terrain.PATCH, legacy), terrain.LEGACY_NAME)
+        self.assertEqual(patching.apply(terrain.PATCH, legacy, True), patching.apply(terrain.PATCH, original, True))
 
     def test_byte_validation_and_normalization(self):
         original = SOURCE.read_bytes()
-        patched = terrain.configure(original)
-        self.assertEqual(terrain.configure(patched, False), original)
-        self.assertEqual(terrain.configure(patched), patched)
-        for offset in (terrain.SITE_OFFSET, terrain.CAVE_OFFSET, terrain.CAVE_OFFSET + 0xA0,
-                       terrain.CAVE_OFFSET + terrain.REGION - 1):
+        patched = patching.apply(terrain.PATCH, original, True)
+        self.assertEqual(patching.apply(terrain.PATCH, patched, False), original)
+        self.assertEqual(patching.apply(terrain.PATCH, patched, True), patched)
+        for offset in ((terrain.SITE - 0x400000), (terrain.CAVE - 0x400000), (terrain.CAVE - 0x400000) + 0xA0,
+                       (terrain.CAVE - 0x400000) + terrain.REGION - 1):
             bad = bytearray(patched)
             bad[offset] ^= 1
             with self.assertRaises(ValueError):
-                terrain.configure(bad)
+                patching.apply(terrain.PATCH, bad, True)
         prepared = prepare.configure(original)
         self.assertIn(terrain.NAME, prepare.inspect(prepared)['patches'])
         self.assertEqual(prepare.configure(prepared), prepared)

@@ -329,41 +329,41 @@ class ThirdPersonTests(unittest.TestCase):
         off = prepare.configure(self.raw, chase_camera=False)
         self.assertIn(tp.NAME, prepare.inspect(on)["patches"])
         self.assertNotIn(tp.NAME, prepare.inspect(off)["patches"])
-        self.assertEqual(own_ship_menu.configure(patching.apply(own_ship_model.PATCH, tp.configure(on, False), False), False), off)
+        self.assertEqual(patching.apply(own_ship_menu.PATCH, patching.apply(own_ship_model.PATCH, patching.apply(tp.PATCH, on, False), False), False), off)
         self.assertEqual(prepare.configure(on), on)
         self.assertEqual(prepare.configure(off, chase_camera=True), on)
-        allowed = {i for o, old, new in tp.regions() + triples(own_ship_model.PATCH) + own_ship_menu.regions() for i in range(o, o + len(old))}
+        allowed = {i for o, old, new in triples(tp.PATCH) + triples(own_ship_model.PATCH) + triples(own_ship_menu.PATCH) for i in range(o, o + len(old))}
         self.assertTrue(all(i in allowed for i, (a, b) in enumerate(zip(on, off)) if a != b))
-        for o, old, new in tp.regions():
+        for o, old, new in triples(tp.PATCH):
             bad = bytearray(on)
             bad[o] ^= 0xFF
             with self.assertRaises(ValueError):
-                tp.state(bytes(bad))
+                patching.state(tp.PATCH, bytes(bad))
             partial = bytearray(on)
             partial[o:o + len(old)] = old
             with self.assertRaises(ValueError):
-                tp.state(bytes(partial))
+                patching.state(tp.PATCH, bytes(partial))
         # A client prepared with the v1 cave (chase only, patch versions 15-19) upgrades in place.
-        v1 = bytearray(tp.configure(on, False))
-        for o, old, new in tp.regions("v1"):
+        v1 = bytearray(patching.apply(tp.PATCH, on, False))
+        for o, old, new in triples(tp.PATCH, dict(tp.PATCH.legacy)["third-person-camera-v1"]):
             v1[o:o + len(old)] = new
         v1 = bytes(v1)
-        self.assertIs(tp.state(v1), True)
-        self.assertEqual(tp.installed_name(v1), "third-person-camera-v1")
+        self.assertEqual(patching.state(tp.PATCH, v1), "third-person-camera-v1")
+        self.assertEqual(patching.state(tp.PATCH, v1), "third-person-camera-v1")
         self.assertIn("third-person-camera-v1", prepare.inspect(v1)["patches"])
         self.assertNotIn(tp.NAME, prepare.inspect(v1)["patches"])
         self.assertEqual(prepare.configure(v1), on)
-        self.assertEqual(tp.configure(v1, False), tp.configure(on, False))
+        self.assertEqual(patching.apply(tp.PATCH, v1, False), patching.apply(tp.PATCH, on, False))
         # So does v2 (patch version 20: orbit, same-tick cull check).
-        v2 = bytearray(tp.configure(on, False))
-        for o, old, new in tp.regions("v2"):
+        v2 = bytearray(patching.apply(tp.PATCH, on, False))
+        for o, old, new in triples(tp.PATCH, dict(tp.PATCH.legacy)["third-person-camera-v2"]):
             v2[o:o + len(old)] = new
         v2 = bytes(v2)
         self.assertNotEqual(v2, on)
-        self.assertIs(tp.state(v2), True)
+        self.assertEqual(patching.state(tp.PATCH, v2), "third-person-camera-v2")
         self.assertIn("third-person-camera-v2", prepare.inspect(v2)["patches"])
         self.assertEqual(prepare.configure(v2), on)
-        self.assertEqual(tp.configure(v2, False), tp.configure(on, False))
+        self.assertEqual(patching.apply(tp.PATCH, v2, False), patching.apply(tp.PATCH, on, False))
         self.assertEqual(on[tp.SITE_R - 0x400000:][:len(tp.ORIGINAL_R)][:1], b"\xe9")
         self.assertEqual(v1[tp.SITE_R - 0x400000:][:len(tp.ORIGINAL_R)], tp.ORIGINAL_R)
         # Coexists with every optional rendering patch.
@@ -435,9 +435,9 @@ class OwnShipModelTests(unittest.TestCase):
         off = prepare.configure(self.raw, chase_camera=False)
         self.assertIn(own_ship_model.NAME, prepare.inspect(self.prepared)["patches"])
         self.assertNotIn(own_ship_model.NAME, prepare.inspect(off)["patches"])
-        self.assertEqual(own_ship_menu.configure(patching.apply(own_ship_model.PATCH, tp.configure(self.prepared, False), False), False), off)
+        self.assertEqual(patching.apply(own_ship_menu.PATCH, patching.apply(own_ship_model.PATCH, patching.apply(tp.PATCH, self.prepared, False), False), False), off)
         # A client prepared at patch version 15 (camera, no model) upgrades in place.
-        v15 = own_ship_menu.configure(patching.apply(own_ship_model.PATCH, self.prepared, False), False)
+        v15 = patching.apply(own_ship_menu.PATCH, patching.apply(own_ship_model.PATCH, self.prepared, False), False)
         self.assertEqual(prepare.configure(v15), self.prepared)
         for o, old, new in triples(own_ship_model.PATCH):
             bad = bytearray(self.prepared)
@@ -515,7 +515,7 @@ class OwnShipMenuTests(unittest.TestCase):
         return walked and bool(u.reg_read(UC_X86_REG_EAX) & 0xFF)
 
     def test_original_skips_parts_the_menu_cleared(self):
-        off = own_ship_menu.configure(self.prepared, False)
+        off = patching.apply(own_ship_menu.PATCH, self.prepared, False)
         self.assertFalse(self.part_walked(off, 0, 1)[0])
         self.assertTrue(self.part_walked(off, 1, 0)[0])
 
@@ -537,22 +537,22 @@ class OwnShipMenuTests(unittest.TestCase):
 
     def test_prepare_applies_upgrades_and_rejects_partial(self):
         self.assertIn(own_ship_menu.NAME, prepare.inspect(self.prepared)["patches"])
-        v16 = own_ship_menu.configure(self.prepared, False)
+        v16 = patching.apply(own_ship_menu.PATCH, self.prepared, False)
         self.assertEqual(prepare.configure(v16), self.prepared)
         # A client prepared with the first cave (no +0x245 restore) upgrades in place.
         first = bytearray(v16)
-        for o, old, new in own_ship_menu.regions(legacy=True):
+        for o, old, new in triples(own_ship_menu.PATCH, dict(own_ship_menu.PATCH.legacy)[own_ship_menu.LEGACY_NAME]):
             first[o:o + len(old)] = new
-        self.assertIs(own_ship_menu.state(bytes(first)), True)
+        self.assertEqual(patching.state(own_ship_menu.PATCH, bytes(first)), own_ship_menu.LEGACY_NAME)
         self.assertIn(own_ship_menu.LEGACY_NAME, prepare.inspect(bytes(first))["patches"])
         self.assertNotIn(own_ship_menu.NAME, prepare.inspect(bytes(first))["patches"])
         self.assertEqual(prepare.configure(bytes(first)), self.prepared)
-        self.assertEqual(own_ship_menu.configure(bytes(first), False), v16)
-        for o, old, new in own_ship_menu.regions():
+        self.assertEqual(patching.apply(own_ship_menu.PATCH, bytes(first), False), v16)
+        for o, old, new in triples(own_ship_menu.PATCH):
             partial = bytearray(self.prepared)
             partial[o:o + len(old)] = old
             with self.assertRaises(ValueError):
-                own_ship_menu.state(bytes(partial))
+                patching.state(own_ship_menu.PATCH, bytes(partial))
 
 
 if __name__ == "__main__":

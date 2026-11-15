@@ -24,7 +24,7 @@ class Reservation:
     start: int
     size: int
     owner: str      # patch ID
-    what: str = ""  # which of the owner's reservations, when it has several
+    what: str = ""  # what it holds; names it when the owner has several
 
     @property
     def end(self):
@@ -59,19 +59,19 @@ DATA = (
 
 
 def _find(table, owner, what):
-    found = [r for r in table if r.owner == owner and r.what == what]
+    found = [r for r in table if r.owner == owner and what in (None, r.what)]
     if len(found) != 1:
-        raise KeyError(f"no single reservation for {owner} {what!r}")
+        raise KeyError(f"no single reservation for {owner}" + (f" {what!r}" if what else ""))
     return found[0]
 
 
-def cave(owner, what=""):
-    """The .text reservation of a patch (by patch ID and, if it has several, by name)."""
+def cave(owner, what=None):
+    """The .text reservation of a patch (by patch ID and, if it has several, by `what`)."""
     return _find(CAVES, owner, what)
 
 
-def data(owner, what=""):
-    """A runtime .data reservation of a patch."""
+def data(owner, what=None):
+    """A runtime .data reservation of a patch (by patch ID and, if it has several, by `what`)."""
     return _find(DATA, owner, what)
 
 

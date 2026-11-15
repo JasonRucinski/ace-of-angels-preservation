@@ -265,14 +265,13 @@ class SyntheticClientTests(unittest.TestCase):
         on = self.exe.read_bytes()
         setup.prepare(self.exe, chase_camera=False)
         off = self.exe.read_bytes()
-        for module, variant, name in ((third_person, "v1", "third-person-camera-v1"),
-                                      (third_person, "v2", "third-person-camera-v2"),
-                                      (own_ship_menu, True, "own-ship-menu-model-legacy")):
+        for module, name in ((third_person, "third-person-camera-v1"), (third_person, "third-person-camera-v2"),
+                             (own_ship_menu, "own-ship-menu-model-legacy")):
             with self.subTest(variant=name):
                 # third_person's own cave is off here; own_ship_menu needs the camera on.
-                old = bytearray(off if module is third_person else own_ship_menu.configure(on, False))
-                for offset, original, new in module.regions(variant):
-                    old[offset:offset + len(original)] = new
+                old = bytearray(off if module is third_person else patching.apply(own_ship_menu.PATCH, on, False))
+                for r in dict(module.PATCH.legacy)[name]:
+                    old[r.va - 0x400000:r.end - 0x400000] = r.new
                 old = bytes(old)
                 self.assertIn(name, setup.inspect(old)["patches"])
                 self.assertNotIn(module.NAME, setup.inspect(old)["patches"])

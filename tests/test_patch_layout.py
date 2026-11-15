@@ -176,7 +176,8 @@ class PatchLayoutTests(unittest.TestCase):
             current = apply(self.pristine, self.patches[name]["variants"]["current"])
             for label, regions in self.patches[name]["variants"].items():
                 with self.subTest(patch=name, variant=label):
-                    self.assertEqual(module.configure(apply(self.pristine, regions), True), current)
+                    self.assertEqual(patching.apply(module.PATCH, apply(self.pristine, regions), True), current)
+                    self.assertEqual(patching.apply(module.PATCH, apply(self.pristine, regions), False), self.pristine)
 
     def test_prepare_client_composition_writes_only_these_regions(self):
         pristine_sha = hashlib.sha256(self.pristine).hexdigest()

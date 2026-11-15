@@ -117,6 +117,12 @@ def triples(patch, regions=None):
     return [(r.va - BASE, r.old, r.new) for r in (patch.regions if regions is None else regions)]
 
 
+def variants(patch, labels=None):
+    """{snapshot label: [(file offset, old, new)]} of every variant; the current one is "current"."""
+    labels = {patch.id: "current", **(labels or {})}
+    return {labels.get(name, name): triples(patch, regions) for name, regions in patch.variants}
+
+
 def regions_view(module):
     """The module as aoa.emulation.render_pipeline.run(patch=...) reads one:
     regions() as (file offset, old, new), and CENTER_VISIBLE if it has it."""
@@ -171,20 +177,16 @@ def collect():
         (prepare.BACKGROUND_OFFSET, prepare.BACKGROUND_JNE, prepare.BACKGROUND_NOP)]})
     for m in (archive_terminator, explicit_protection):
         add(m.PATCH.id, m.__name__.rpartition(".")[2], {"current": triples(m.PATCH)})
-    m = online_terrain
-    jump = (m.SITE_OFFSET, m.DISPLACED, base.jmp_patch(m.SITE, m.CAVE, len(m.DISPLACED)))
-    add(m.NAME, "online_terrain", {
-        label: [jump, (m.CAVE_OFFSET, bytes(m.REGION), cave)]
-        for label, cave in (("current", m.cave_code()), (m.V2_NAME, m.v2_code()), (m.LEGACY_NAME, m.legacy_code()))})
+    add(online_terrain.NAME, "online_terrain", variants(online_terrain.PATCH))
     for m in (menu_aspect, cursor_warp, frame_clock, visibility_fix, own_ship_model, powerup_pickup,
               asteroid_render, solid_world_render, station_detail, world_detail, texture32, object_persistence):
         add(m.NAME, m.__name__.rpartition(".")[2],
             {"current": triples(m.PATCH) if hasattr(m, "PATCH") else m.regions()})
-    add(third_person.NAME, "third_person", {"current" if v == "v3" else v: third_person.regions(v)
-                                            for v in third_person.VARIANTS},
+    add(third_person.NAME, "third_person",
+        variants(third_person.PATCH, {"third-person-camera-v2": "v2", "third-person-camera-v1": "v1"}),
         runtime_data=[runtime(third_person.FAKE, third_person.ARMED + 1 - third_person.FAKE,
                               "FAKE..ARMED block (own_ship_menu RESTRICT inside, C5)")])
-    add(own_ship_menu.NAME, "own_ship_menu", {"current": own_ship_menu.regions(), "legacy": own_ship_menu.regions(True)},
+    add(own_ship_menu.NAME, "own_ship_menu", variants(own_ship_menu.PATCH, {own_ship_menu.LEGACY_NAME: "legacy"}),
         runtime_data=[runtime(own_ship_menu.RESTRICT, 1, "RESTRICT")])
     add("experiment-render-clock", "render_clock_experiment", {"current": render_clock_experiment.regions()})
     add("experiment-render-culling", "render_culling_experiment", {"current": render_culling_experiment.regions()})

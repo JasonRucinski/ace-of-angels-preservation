@@ -8,6 +8,7 @@ from aoa.client import prepare
 from aoa.client.patches import online_terrain
 
 from aoa.paths import ROOT
+from aoa.client.patches import base as patching
 
 
 class CullingTests(unittest.TestCase):
@@ -50,7 +51,7 @@ class CullingTests(unittest.TestCase):
     def test_exact_undo_bounds_and_rejection(self):
         # The offline experiment predates online terrain (cave 0x58B800) and the
         # promoted patches it shares sites with; test it on that older layout.
-        prepared = online_terrain.configure(prepare.configure(
+        prepared = patching.apply(online_terrain.PATCH, prepare.configure(
             self.source.read_bytes(), smooth_frame_clock=False, bounded_visibility=False), False)
         for source in (prepared,clock.configure(prepared)):
             result = patch.configure(source)
