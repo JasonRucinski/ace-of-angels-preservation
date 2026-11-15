@@ -41,7 +41,7 @@ def main(argv=None):
     parser.add_argument('pid', type=int)
     parser.add_argument('source', type=Path)
     parser.add_argument('output', type=Path)
-    parser.add_argument('--map', default='Arena1a', choices=navigation.online_terrain.MAP_NAMES)
+    parser.add_argument('--map', default='Arena1a', choices=navigation.registry.MAP_NAMES)
     parser.add_argument('--trn', type=Path)
     args = parser.parse_args(argv)
     nodes = (navigation.placements(args.source) if args.source.is_file() and args.map == 'Arena1a' else

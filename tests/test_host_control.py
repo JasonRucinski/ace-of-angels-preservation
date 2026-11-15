@@ -313,7 +313,7 @@ class HostProcessTests(unittest.TestCase):
                     self.assertEqual(self.host.stop(), 0)
 
     def test_server_args_cover_every_map_and_mode(self):
-        for name in host_control.online_terrain.MAP_NAMES:
+        for name in host_control.registry.MAP_NAMES:
             args = host_control.server_args(settings(map=name))
             self.assertEqual(args[args.index("--map") + 1], name)
             self.assertIn("--experimental-terrain", args)

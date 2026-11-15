@@ -49,7 +49,8 @@ executable accept only known, hash-checked builds and record an exact undo.
 (`.aoa` archives and compression), `station_runtime.py` (configuration, logs,
 TCP list), `relay_motion.py` (movement relay), `reliable_window.py` (ordered
 reliable delivery), `host_ops.py` (status file and console), `net_impair.py`
-(lag and loss testing), `decode_trn.py` and `online_terrain.py` (maps).
+(lag and loss testing), `decode_trn.py` and the map registry
+`aoa/maps/registry.py` (maps).
 
 Arena1a trials, each opt-in on the server: `navigation_buoys.py`
 (navigation buoys on every map), `turret_groups.py` and `turret_trial.py`

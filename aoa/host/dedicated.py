@@ -15,7 +15,7 @@ import time
 from pathlib import Path
 
 from aoa.host import ops
-from aoa.client.patches import online_terrain
+from aoa.maps import registry
 from aoa.host.runtime import HOST_DEFAULTS, ConfigError, parse_args as server_config
 from aoa import paths as aoa_paths
 
@@ -46,8 +46,8 @@ def load_config(path):
         raise ValueError("comment must be text")
     settings = {**DEFAULTS, **data}
     maps = settings["maps"]
-    if (not isinstance(maps, list) or not 1 <= len(maps) <= len(online_terrain.MAP_NAMES)
-            or any(not isinstance(name, str) or name not in online_terrain.MAP_NAMES for name in maps)
+    if (not isinstance(maps, list) or not 1 <= len(maps) <= len(registry.MAP_NAMES)
+            or any(not isinstance(name, str) or name not in registry.MAP_NAMES for name in maps)
             or len(set(maps)) != len(maps)):
         raise ValueError("maps must be a nonempty list of unique supported map names")
     bounds = {"kill_limit": (0, 1000, True), "time_limit_seconds": (0, 86400, False),

@@ -37,13 +37,6 @@ MAY_IMPORT = {
 
 # (importer, imported): why it is allowed for now. Remove an entry when phase 2 fixes it.
 KNOWN = {
-    # online_terrain holds both the client patch and the server's map registry (H12).
-    ("aoa.host.dedicated", "aoa.client.patches.online_terrain"): "H12: map registry in a client patch",
-    ("aoa.host.runtime", "aoa.client.patches.online_terrain"): "H12: map registry in a client patch",
-    ("aoa.host.server", "aoa.client.patches.online_terrain"): "H12: map registry in a client patch",
-    ("aoa.maps.make_map", "aoa.client.patches.online_terrain"): "H12: map registry in a client patch",
-    ("aoa.maps.map_viewer", "aoa.client.patches.online_terrain"): "H12: map registry in a client patch",
-    ("aoa.maps.navigation", "aoa.client.patches.online_terrain"): "H12: map registry in a client patch",
     # Audit scripts kept as libraries: the emulator for their CLIs, and the
     # server cycle through warp_routes (R4, H12).
     ("aoa.maps.arena1a_audit", "aoa.analysis.pe_util"): "R4: audit CLI in a library module",

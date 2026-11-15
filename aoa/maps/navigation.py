@@ -12,7 +12,7 @@ from pathlib import Path
 
 from aoa.formats import scene
 from aoa.formats import trn as formats_trn
-from aoa.client.patches import online_terrain
+from aoa.maps import registry
 from aoa.formats import aoapack
 
 ARENA1A_SHA256 = '5d652eaca4972d958eb1dc54b8ef277fdb8ea475be4912f01a5fd8d02afa7886'
@@ -27,7 +27,7 @@ def map_placements(source, name, trn=None):
     Validate the archive's Gobs and recorded order before prefix resolution.
     Maps with no navigation records intentionally produce no objects.
     """
-    if name not in online_terrain.MAP_NAMES:
+    if name not in registry.MAP_NAMES:
         raise ValueError('unsupported navigation map')
     if name == 'JRMAP':
         if trn is None or hashlib.sha256(trn.read_bytes()).hexdigest() != JRMAP_SHA256:

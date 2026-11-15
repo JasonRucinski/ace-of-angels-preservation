@@ -47,12 +47,12 @@ import sys
 from pathlib import Path
 
 from aoa.formats import trn as formats_trn  # noqa: E402
-from aoa.client.patches import online_terrain  # noqa: E402
+from aoa.maps import registry  # noqa: E402
 
 from aoa.paths import ROOT
 from aoa import paths
 SLOT_MAP = "JRMAP"
-SLOT_FILE = online_terrain.MAPS[online_terrain.MAP_NAMES.index(SLOT_MAP)][2]
+SLOT_FILE = registry.MAPS[registry.MAP_NAMES.index(SLOT_MAP)][2]
 KIND_MODEL, KIND_SAFE, KIND_NAV, KIND_POWERUP = 0, 2, 3, formats_trn.KIND_POWERUP_ZONE
 NAME_MAX = 23  # 24-byte field with its NUL
 NAV_MAX = 10  # navigation_buoys.py slots 90..99

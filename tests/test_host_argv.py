@@ -31,7 +31,7 @@ from aoa.host import dedicated  # noqa: E402
 from aoa.launchers import host_control  # noqa: E402
 from aoa.host import ops  # noqa: E402
 from aoa.maps import map_viewer  # noqa: E402
-from aoa.client.patches import online_terrain  # noqa: E402
+from aoa.maps import registry  # noqa: E402
 from aoa.host import runtime  # noqa: E402
 from aoa.host.runtime import parse_args  # noqa: E402
 
@@ -245,7 +245,7 @@ class HostArgvTests(unittest.TestCase):
             root = make_root(Path(temp).resolve())
             with mock.patch.object(host_control, "ROOT", root), mock.patch.object(host_control, "WORK", root / "work/host"):
                 for mode, terrain, name, buoys, turret, warp, ships in itertools.product(
-                        host_control.MODES, (True, False), online_terrain.MAP_NAMES,
+                        host_control.MODES, (True, False), registry.MAP_NAMES,
                         (True, False), (True, False), (True, False), (0, 4, 20)):
                     settings = {**host_control.DEFAULTS, "mode": mode, "address": ADDRESSES[mode],
                                 "terrain": terrain, "map": name, "navigation_buoys": buoys,

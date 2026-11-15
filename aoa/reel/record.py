@@ -31,7 +31,7 @@ from pathlib import Path
 from aoa.paths import ROOT
 from aoa.reel import bot  # noqa: E402
 from aoa.reel import client_mem  # noqa: E402
-from aoa.client.patches import online_terrain  # noqa: E402
+from aoa.maps import registry  # noqa: E402
 from aoa.reel import window  # noqa: E402
 from aoa import paths
 
@@ -63,8 +63,8 @@ def start_host(shot, log):
                "--start-vessel", shot.get("start_vessel", "Ym Khtat")]
     if shot.get("spawn_at"):
         command += ["--spawn-at", *map(str, shot["spawn_at"])]
-    _, kind, target, _ = online_terrain.MAPS[online_terrain.MAP_NAMES.index(shot["map"])]
-    if kind == online_terrain.TRN and shot.get("powerups", True):
+    _, kind, target, _ = registry.MAPS[registry.MAP_NAMES.index(shot["map"])]
+    if kind == registry.TRN and shot.get("powerups", True):
         command += ["--powerup-zones", str(GAME / target)]
     host = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
     ready = time.monotonic() + 15

@@ -32,7 +32,7 @@ import traceback
 from pathlib import Path
 
 from aoa.host import ops  # noqa: E402
-from aoa.client.patches import online_terrain  # noqa: E402
+from aoa.maps import registry  # noqa: E402
 from aoa.host.runtime import HOST_DEFAULTS  # noqa: E402
 
 from aoa.paths import ROOT
@@ -99,8 +99,8 @@ def server_args(settings, extra=()):
             args += ['--' + key.replace('_', '-'), str(source)]
         if enabled or profile == LOCAL:
             args.append('--sustained-delivery')
-        _, kind, target, _ = online_terrain.MAPS[online_terrain.MAP_NAMES.index(settings["map"])]
-        if kind == online_terrain.TRN:
+        _, kind, target, _ = registry.MAPS[registry.MAP_NAMES.index(settings["map"])]
+        if kind == registry.TRN:
             # The map's own power-up zones (findings 9.44); layouts have none.
             args += ["--powerup-zones", str(game / target)]
     elif profile == LOCAL:
@@ -207,7 +207,7 @@ def valid_setting(key, value):
     """Whether a saved value can be used for this setting (the window's own ranges)."""
     if key in ("terrain", *NODE_LABELS):
         return type(value) is bool
-    choices = {"mode": MODES, "map": online_terrain.MAP_NAMES, "backdrop": BACKDROPS}
+    choices = {"mode": MODES, "map": registry.MAP_NAMES, "backdrop": BACKDROPS}
     if key in choices:
         return isinstance(value, str) and value in choices[key]
     if key in ("address", "game"):
@@ -310,7 +310,7 @@ def gui(autostart=False, run=True):
     address.grid(row=row, column=3, columnspan=3, sticky="w", padx=4)
     row += 1
     ttk.Label(box, text="Map").grid(row=row, column=0, sticky="w", pady=(6, 0))
-    ttk.Combobox(box, textvariable=v["map"], values=list(online_terrain.MAP_NAMES), state="readonly",
+    ttk.Combobox(box, textvariable=v["map"], values=list(registry.MAP_NAMES), state="readonly",
                  width=16).grid(row=row, column=1, sticky="w", padx=4, pady=(6, 0))
     ttk.Checkbutton(box, text="Build map terrain (clients need patch v11)", variable=v["terrain"]).grid(
         row=row, column=2, columnspan=2, sticky="w", padx=(12, 0), pady=(6, 0))

@@ -12,6 +12,7 @@ from aoa.emulation.emu import Emu, SCRATCH, STACK
 from aoa.analysis.pe_util import PE
 from aoa.client.base import jmp_patch
 from aoa.client.patches import online_terrain as terrain
+from aoa.maps import registry
 from aoa.client import prepare
 from aoa.host.server import flight_bootstrap
 from aoa.host.runtime import parse_args
@@ -21,7 +22,7 @@ SOURCE = ROOT / "game/2.9.2/AOACLIENT.EXE.orig"
 
 
 class TerrainTests(unittest.TestCase):
-    def probe(self, marker=terrain.MARKER, existing=False, asset=True, world=True, controller=True,
+    def probe(self, marker=registry.MARKER, existing=False, asset=True, world=True, controller=True,
               expect_name=None, code=None, zones=(), handler=True, view=True, boxes=None):
         emu = Emu(PE(SOURCE))
         uc = emu.uc
@@ -94,24 +95,24 @@ class TerrainTests(unittest.TestCase):
         self.assertEqual(self.probe(), [terrain.LOOKUP, terrain.LOAD])
 
     def test_every_layout_and_file_map(self):
-        for name, kind, target, _ in terrain.MAPS:
+        for name, kind, target, _ in registry.MAPS:
             with self.subTest(name):
-                calls = self.probe(marker=terrain.marker(name), expect_name=target)
-                self.assertEqual(calls, [terrain.READ_TRN] if kind == terrain.TRN else [terrain.LOOKUP, terrain.LOAD])
+                calls = self.probe(marker=registry.marker(name), expect_name=target)
+                self.assertEqual(calls, [terrain.READ_TRN] if kind == registry.TRN else [terrain.LOOKUP, terrain.LOAD])
 
     def test_old_server_and_missing_state(self):
         for args in ({'marker': bytes(4)}, {'existing': True}, {'world': False}, {'controller': False},
-                     {'marker': b'MAP' + bytes([len(terrain.MAPS)])}, {'marker': b'MAP\xff'},
+                     {'marker': b'MAP' + bytes([len(registry.MAPS)])}, {'marker': b'MAP\xff'},
                      {'marker': b'MAQ\x01'}, {'marker': b'AR1B'}):
             self.assertEqual(self.probe(**args), [])
         self.assertEqual(self.probe(asset=False), [terrain.LOOKUP, terrain.LOOKUP])
 
     def test_safe_zone_visuals_after_load(self):
         zone = terrain.ADD_SAFE_ZONE_VISUAL
-        for name, kind, target, _ in terrain.MAPS:
+        for name, kind, target, _ in registry.MAPS:
             with self.subTest(name):
                 boxes = []
-                calls = self.probe(marker=terrain.marker(name), expect_name=target,
+                calls = self.probe(marker=registry.marker(name), expect_name=target,
                                    zones=(0x1111, 0x2222, 0x3333), boxes=boxes)
                 self.assertEqual(calls[-3:], [zone] * 3)
                 # The second pass finds terrain already loaded and walks nothing.
@@ -166,8 +167,8 @@ class TerrainTests(unittest.TestCase):
 
     def test_server_marker_and_scope(self):
         self.assertEqual(flight_bootstrap()[1], (0x2C, bytes(4)))
-        self.assertEqual(flight_bootstrap(terrain=terrain.marker('Arena1a'))[1], (0x2C, terrain.MARKER))
-        self.assertEqual(flight_bootstrap(terrain=terrain.marker('JRMAP'))[1], (0x2C, b'MAP\x13'))
+        self.assertEqual(flight_bootstrap(terrain=registry.marker('Arena1a'))[1], (0x2C, registry.MARKER))
+        self.assertEqual(flight_bootstrap(terrain=registry.marker('JRMAP'))[1], (0x2C, b'MAP\x13'))
         with self.assertRaises(ValueError):
             flight_bootstrap(terrain=b'MAP')
         args = ['key', 'log', '--profile', 'local-relay', '--map', 'Arena1a', '--experimental-terrain']

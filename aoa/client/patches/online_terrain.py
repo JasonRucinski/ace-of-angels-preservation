@@ -6,7 +6,8 @@ the hook reuses the offline CreateTerrainFromGfxInfo call sequence
 reader ReadInTerrain (0x4967E0) for a converted .TRN map.
 
 Markers: `AR1A` (version 1, kept so v1-prepared clients still get Arena1a)
-selects index 0; `MAP` + one index byte selects any entry of MAPS. Unknown
+selects index 0; `MAP` + one index byte selects any entry of MAPS (the map
+registry, aoa/maps/registry.py, which this cave embeds as its table). Unknown
 markers, indexes and missing state leave the client unchanged. No collision,
 service-zone, turret or warp acceptance is implied.
 
@@ -21,12 +22,11 @@ holds, so repeating the walk is harmless.
 import struct
 
 from aoa.client.base import Asm, jmp_patch
+from aoa.maps.registry import MAP_PREFIX, MAPS, MARKER
 
 NAME = "online-terrain-v3"
 V2_NAME = "online-terrain-v2"
 LEGACY_NAME = "online-arena1a-v1"
-MARKER = b"AR1A"
-MAP_PREFIX = b"MAP"
 SITE, SITE_OFFSET = 0x4306AF, 0x306AF
 CAVE, CAVE_OFFSET = 0x58B800, 0x18B800
 REGION = 0x200  # up to the asteroid-render cave at 0x58BA00
@@ -37,44 +37,6 @@ DISPLACED = bytes.fromhex("a128775e00")  # mov eax,[world]
 LOOKUP, LOAD, READ_TRN = 0x4CDD30, 0x495DF0, 0x4967E0
 ADD_SAFE_ZONE_VISUAL = 0x43E030  # thiscall(box), ret 4
 FLIGHT_MODE = 0x5E6E58  # ecx of SetupFlightMode
-LAYOUT, TRN = 0, 1
-
-# name, loader kind, file or layout name, viewing spawn (None = relay default
-# near the origin). Index 0 must stay Arena1a for the AR1A marker. Spawns sit
-# in front of geometry (ships face +z); they are viewing aids, not original
-# spawn points. The JRMAP file is written by tools/map_viewer.py.
-MAPS = (
-    ("Arena1a", LAYOUT, "Arena1a", None),
-    ("CTF_arena", LAYOUT, "CTF_arena", None),
-    ("CTF_arena_b", LAYOUT, "CTF_arena_b", (45396.0, 4633.0, 80000.0)),
-    ("newterrain", LAYOUT, "newterrain", None),
-    ("outerchange", LAYOUT, "outerchange", None),
-    ("ast_fld_a", LAYOUT, "ast_fld_a", None),
-    ("ast_fld_b", LAYOUT, "ast_fld_b", None),
-    ("ast_fld_c", LAYOUT, "ast_fld_c", None),
-    ("ast_fld_d", LAYOUT, "ast_fld_d", None),
-    ("CTF_base", LAYOUT, "CTF_base", (0.0, 0.0, -12000.0)),
-    ("hu_base_a", LAYOUT, "hu_base_a", None),
-    ("hu_base_b", LAYOUT, "hu_base_b", None),
-    ("hy_base_test", LAYOUT, "hy_base_test", None),
-    ("hy_winga", LAYOUT, "hy_winga", (0.0, 0.0, -6000.0)),
-    ("HyBase2Lay", LAYOUT, "HyBase2Lay", None),
-    ("irrosa01", LAYOUT, "irrosa01", None),
-    ("ze_winga", LAYOUT, "ze_winga", (0.0, 0.0, -3000.0)),
-    ("ze_wingb", LAYOUT, "ze_wingb", (0.0, 0.0, -3000.0)),
-    ("Hittest", LAYOUT, "Hittest", (0.0, 0.0, -4000.0)),
-    ("JRMAP", TRN, "jrmap292.trn", (-6000.0, -6000.0, -112000.0)),
-)
-MAP_NAMES = tuple(m[0] for m in MAPS)
-
-
-def marker(name):
-    index = MAP_NAMES.index(name)
-    return MARKER if index == 0 else MAP_PREFIX + bytes([index])
-
-
-def spawn(name):
-    return MAPS[MAP_NAMES.index(name)][3]
 
 
 def table():

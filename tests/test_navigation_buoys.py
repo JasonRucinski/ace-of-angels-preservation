@@ -25,12 +25,12 @@ SOURCE = ROOT / 'work/2.9.2/export/AOAOBJECTS/Arena1a.Gob'
 @unittest.skipUnless(SOURCE.exists(), 'requires original exported Arena1a')
 class BuoyTests(unittest.TestCase):
     def test_all_maps_and_nested_transforms(self):
-        from aoa.client.patches import online_terrain
+        from aoa.maps import registry
         from aoa.formats import scene
         trn = ROOT / 'game/2.9.2/JRMAP.TRN'
         expected = {'Arena1a': 10, 'newterrain': 10, 'CTF_arena': 1,
                     'outerchange': 6, 'irrosa01': 5, 'hu_base_a': 1, 'hu_base_b': 1, 'JRMAP': 7}
-        for name in online_terrain.MAP_NAMES:
+        for name in registry.MAP_NAMES:
             nodes = buoys.map_placements(SOURCE.parent, name, trn)
             self.assertEqual(len(nodes), expected.get(name, 0), name)
             self.assertEqual(len(buoys.loads(nodes)), len(nodes))

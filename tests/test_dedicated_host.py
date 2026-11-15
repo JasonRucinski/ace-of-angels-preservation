@@ -14,7 +14,7 @@ import unittest
 from pathlib import Path
 
 from aoa.host import dedicated
-from aoa.client.patches import online_terrain
+from aoa.maps import registry
 from aoa.host import server as stub
 from tests.support import SyntheticClient, job_request, read_reply, request
 from aoa import paths
@@ -174,7 +174,7 @@ class DedicatedTests(unittest.TestCase):
         proc = self.launch()
         a, b = self.login(), self.login()
         self.until(lambda: all(c.bodies(0x2C) for c in (a, b)))
-        self.assertEqual(a.bodies(0x2C)[0], online_terrain.marker("CTF_arena"))
+        self.assertEqual(a.bodies(0x2C)[0], registry.marker("CTF_arena"))
         b.send_reliable(self.arena, 0x37, struct.pack("<I", stub.player_tag(a.slot)))
         self.until(lambda: any(b"Next map CTF_arena_b" in body for body in a.bodies(0x21)))
         stranger = SyntheticClient(self.key)

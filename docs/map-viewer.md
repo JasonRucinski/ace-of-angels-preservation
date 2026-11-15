@@ -128,7 +128,8 @@ with CRT string/uppercase calls stubbed. No live-client changes were made.
   flight-entry handler at `0x4306AF`. The server's four-byte 0x2C body
   selects the map: `AR1A` means Arena1a, kept for v1-prepared clients;
   `MAP` plus an index byte selects any entry of the 20-entry table in the
-  cave (`0x58B8C0`; `0x58B8A0` before v3). Layouts go through the native lookup `0x4CDD30` and
+  cave (`0x58B8C0`; `0x58B8A0` before v3), built from the map registry
+  `aoa/maps/registry.py` that the server also reads. Layouts go through the native lookup `0x4CDD30` and
   loader `0x495DF0`. `JRMAP` goes through the native `.TRN` reader
   `ReadInTerrain` (`0x4967E0`). Unknown markers, out-of-range indexes,
   missing world state and an existing terrain list all leave the client

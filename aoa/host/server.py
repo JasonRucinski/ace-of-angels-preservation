@@ -57,7 +57,7 @@ from aoa.host import ops
 from aoa.protocol import motion as protocol_motion
 from aoa.host.net_impair import Impairment, MeteredSocket, TrafficMeter
 from aoa.host.delivery import WindowedReliable
-from aoa.client.patches import online_terrain
+from aoa.maps import registry
 from aoa.formats import trn
 from aoa.host import vessel_combat
 from aoa.maps import navigation
@@ -1583,7 +1583,7 @@ def run(args, key, log, resources, objects=None):
                             arena.sendto(codec.encode(0x1F, protocol_motion.snapshot(
                                 slot, arena_motion[other], stats=player_stats(other)), key), peer)
                 position = arena_motion[peer][0x40] if peer in arena_motion else None
-                for packet in flight_bootstrap(position, online_terrain.marker(args.map)
+                for packet in flight_bootstrap(position, registry.marker(args.map)
                                                if args.experimental_terrain else None,
                                                arena_vessels.get(peer, start_vessel)):
                     deliver(peer, packet, True)

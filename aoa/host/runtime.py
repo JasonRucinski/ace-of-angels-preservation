@@ -13,7 +13,7 @@ import time
 from pathlib import Path
 from collections import Counter, OrderedDict
 
-from aoa.client.patches import online_terrain
+from aoa.maps import registry
 
 DOGFIGHT_PROFILES = ("lan-dogfight", "vpn-dogfight")
 PRIVATE_NETWORKS = ("10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16")
@@ -90,7 +90,7 @@ def parse_args(argv=None, *, raise_errors=False):
                         help="specific local IPv4; LAN profile requires RFC1918, VPN profile also 100.64.0.0/10")
     # Deprecated: it must equal --bind-address, so it changes nothing.
     parser.add_argument("--advertised-address", help=argparse.SUPPRESS)
-    parser.add_argument("--map", choices=online_terrain.MAP_NAMES, default="CTF_arena",
+    parser.add_argument("--map", choices=registry.MAP_NAMES, default="CTF_arena",
                         help="advertised terrain; with --experimental-terrain, the map a patched client loads")
     parser.add_argument("--backdrop", choices=("spacebkgd", "spacebkgd2", "spacebkgd3", "spacebkgd5", "spacebkgd6"),
                         default="spacebkgd3")
@@ -113,7 +113,7 @@ def parse_args(argv=None, *, raise_errors=False):
                         help="relay match length in seconds; 0 disables")
     parser.add_argument("--managed-session", action="store_true",
                         help="dedicated controller: warn, drain and exit 75 after a match or admission limit")
-    parser.add_argument("--next-map", choices=online_terrain.MAP_NAMES,
+    parser.add_argument("--next-map", choices=registry.MAP_NAMES,
                         help="next map announced by the dedicated controller")
     parser.add_argument("--restart-warning", type=float, default=30, help="managed restart countdown in seconds")
     parser.add_argument("--recycle-arena-joins", type=int, default=40)
@@ -236,7 +236,7 @@ def parse_args(argv=None, *, raise_errors=False):
             parser.error("--spawn-at coordinates must be finite and within 1e7")
         args.spawn_origin = tuple(args.spawn_at)
     else:
-        args.spawn_origin = online_terrain.spawn(args.map) if args.experimental_terrain else None
+        args.spawn_origin = registry.spawn(args.map) if args.experimental_terrain else None
     if args.tcp is None and args.profile in ("local-relay", "local-guests") + DOGFIGHT_PROFILES:
         args.tcp = 5034
     if args.advertised_address is not None:
