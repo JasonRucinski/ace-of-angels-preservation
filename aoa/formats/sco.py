@@ -1,7 +1,7 @@
 """Decode AoA .Sco object configs (ships, stations, pods) into JSON + a summary table.
 
 Usage:
-    python -I tools/sco_dump.py <AOAOBJECTS export dir> <out.json> [summary.md]
+    python -I tools/run.py aoa.formats.sco <AOAOBJECTS export dir> <out.json> [summary.md]
 
 Layout recovered from the data (strings use the hWv\\x05 tag, see gob2obj.py):
   header strings  name, class code (e.g. S621), faction, (empty), .Gob model

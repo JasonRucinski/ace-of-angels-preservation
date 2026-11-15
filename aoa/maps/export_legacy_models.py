@@ -1,6 +1,6 @@
 """Export verified 2.0.0/2.7.1 Gob geometry; shader bindings remain unresolved.
 
-python -I tools/export_legacy_models.py <export/AOAOBJECTS> <output-dir>
+python -I tools/run.py aoa.maps.export_legacy_models <export/AOAOBJECTS> <output-dir>
 Early vertices are 32 bytes (xyz, uv, normal), faces are 36 bytes.
 Requires unit normals, valid indices and an exact shader-record boundary.
 """

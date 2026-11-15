@@ -1,6 +1,6 @@
 """Verify original 2.9.2 player-record copy and TCP request field packing.
 
-Usage: python -I tools/emulate_station_request.py CLIENT.EXE OUT.json
+Usage: python -I tools/run.py aoa.emulation.check_station_request CLIENT.EXE OUT.json
 """
 import hashlib
 import json

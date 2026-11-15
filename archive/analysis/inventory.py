@@ -1,7 +1,7 @@
 """Inventory a Wise/ZIP self-extracting installer without executing it.
 
 Usage:
-    python -I tools/inventory.py <installer.exe> <version> [handoff.txt] <out_dir>
+    python -I tools/run.py archive.analysis.inventory <installer.exe> <version> [handoff.txt] <out_dir>
 
 * Lists every ZIP member (name, sizes, CRC, method, DOS timestamp), runs
   ZipFile.testzip(), hashes every member, flags MZ/PE signatures regardless

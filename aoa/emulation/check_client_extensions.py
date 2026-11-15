@@ -1,6 +1,6 @@
 """Prove bounded 2.9.2 extension hooks in isolation, without launching the game.
 
-Usage: python -I tools/emulate_client_extensions.py CLIENT.EXE.orig OUT.json
+Usage: python -I tools/run.py aoa.emulation.check_client_extensions CLIENT.EXE.orig OUT.json
 Passing these probes does not complete the authoritative-client gate.
 """
 import hashlib

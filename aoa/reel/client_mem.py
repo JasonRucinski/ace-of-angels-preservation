@@ -6,7 +6,7 @@
 
 Camera modes patch the running process only (never the file on disk): the
 F2/F4 toggle-bit reads in the third-person camera's cave A (v2 and later), `and al,1`
-(24 01), become `mov al,1` (B0 01). Offsets as in tools/inspect_arena.py.
+(24 01), become `mov al,1` (B0 01). Offsets as in aoa/live/arena.py.
 """
 import argparse
 import ctypes

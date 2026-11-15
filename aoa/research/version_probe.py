@@ -1,6 +1,6 @@
 """Recover the runtime version from the globals passed to "%d.%d.%d" formats.
 
-Usage: python -I tools/version_probe.py <client.exe> <cache.pkl> <out.json>
+Usage: python -I tools/run.py aoa.research.version_probe <client.exe> <cache.pkl> <out.json>
 
 For every ASCII string containing "%d.%d.%d", each code reference is examined:
 the three dword arguments pushed just before the format string are resolved

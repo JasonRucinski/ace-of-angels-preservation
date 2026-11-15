@@ -6,7 +6,7 @@ keeping only the sentences that name the game or Flying Rock (see trim_item),
 and prints a summary with disc/demo/download words found near each mention.
 Both names default to the files committed in data/ (--hits, --out change
 them). OCR files are cached in <dir>/txt/; requests go through
-tools/polite_http.py (paced, backs off on HTTP 429/5xx).
+aoa/research/http.py (paced, backs off on HTTP 429/5xx).
 
     python3 -I ia_fulltext_context.py data/
     python3 -I ia_fulltext_context.py --trim data/ia_fulltext_passages.txt

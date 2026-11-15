@@ -1,6 +1,6 @@
 """Extract the compiled structure-size diagnostics ("SFoo (%d)" log calls).
 
-Usage: python -I tools/packet_sizes.py <client.exe> <cache.pkl> <out.json>
+Usage: python -I tools/run.py aoa.analysis.packet_sizes <client.exe> <cache.pkl> <out.json>
 
 Locates the routine that logs "SPacketServerRegister (%d)" and parses every
     push <imm>        ; the logged value

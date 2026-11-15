@@ -1,6 +1,6 @@
 """Verify the synthetic pilot list with the 2.9.2 client's actual handler.
 
-Usage: python -I tools/emulate_station_aliases.py <client.exe> <out.json>
+Usage: python -I tools/run.py aoa.emulation.check_station_aliases <client.exe> <out.json>
 
 Only 0x45DBE0 runs in Unicorn. Logging and UI imports are intercepted;
 no Windows loader, real UI, network, or other game code runs.

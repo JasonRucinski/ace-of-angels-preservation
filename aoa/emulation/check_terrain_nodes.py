@@ -2,7 +2,7 @@
 
 No rendering, object allocation, online loading or gameplay is exercised.
 
-Usage: python -I tools/emulate_terrain_nodes.py CLIENT.EXE.orig OUT.json
+Usage: python -I tools/run.py aoa.emulation.check_terrain_nodes CLIENT.EXE.orig OUT.json
 """
 import hashlib
 import json

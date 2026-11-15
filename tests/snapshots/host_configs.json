@@ -1,5 +1,5 @@
 {
- "about": "Server command lines and their effective config; regenerate with python -I tools/test_host_argv.py --update only for an intended change.",
+ "about": "Server command lines and their effective config; regenerate with python -I tools/test.py test_host_argv -- --update only for an intended change.",
  "dedicated_host": {
   "aoa-host.service: CTF_arena": {
    "argv": [

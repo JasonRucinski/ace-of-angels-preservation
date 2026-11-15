@@ -1,4 +1,4 @@
-"""Internet-play host checks: python -I tools/test_internet_play.py.
+"""Internet-play host checks: python -I tools/test.py test_internet_play.
 
 Covers the VPN profile, sustained windowed delivery against a model of the
 2.9.2 client's 30-ID duplicate history, the test impairment layer, the host

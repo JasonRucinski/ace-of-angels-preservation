@@ -6,7 +6,7 @@ Usage:
 Defaults to 127.0.0.1; lan-dogfight opts into one private LAN IPv4 address,
 vpn-dogfight into one private or VPN (100.64.0.0/10) address.
 Decodes every datagram
-with tools/aoanet.py (cipher keyed by SCRTY.BIN, CCompress, CRC16). Bounded,
+with aoa/protocol/codec.py (cipher keyed by SCRTY.BIN, CCompress, CRC16). Bounded,
 rotating metadata logs are the default; --raw-capture explicitly includes
 packet data. --profile local-relay enables the documented loopback setup.
 Use --print-config to inspect settings without opening sockets.
@@ -28,7 +28,7 @@ to rejoin. Observers retire if removal delivery fails or its 30-ID duplicate
 history would be exceeded; safe slot reuse still requires protocol work.
 LAN sessions require restarting host and clients for reconnects.
 --sustained-delivery (default for vpn-dogfight) replaces that 30-ID lifetime
-budget with a time window (tools/reliable_window.py): despawns and combat
+budget with a time window (aoa/host/delivery.py): despawns and combat
 events stay ordered and reliable for a whole session, and a rejoining
 client from a silent player's IP replaces the stale ship. Slots are still
 not reused (49 arena joins per host run).

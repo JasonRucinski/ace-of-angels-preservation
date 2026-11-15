@@ -1,6 +1,6 @@
 """Read-only frame pacing probe for a running 2.9.2 client (no breakpoints).
 
-Usage: python -I tools/measure_frame_pacing.py PID OUTPUT.json [--seconds 10]
+Usage: python -I tools/run.py aoa.live.frame_pacing PID OUTPUT.json [--seconds 10]
 
 Polls, as fast as ReadProcessMemory allows, three values the client writes:
   * the frame counter incremented just before each present (app [0x5E6E58]

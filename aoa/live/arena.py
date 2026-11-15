@@ -3,7 +3,7 @@
 Offsets recovered from AllocNewPlayer, LoadPlayer and ReceivePositionUpdate.
 Only use with the 2.9.2 executable (image base 0x400000).
 
-    python -I tools/inspect_arena.py <PID> [--objects]
+    python -I tools/run.py aoa.live.arena <PID> [--objects]
 """
 import ctypes
 import json

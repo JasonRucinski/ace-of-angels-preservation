@@ -2,7 +2,7 @@
 
 No client launch, UI automation or networking. This isolates clock quantization
 and camera math; it does not exercise scene traversal, LOD or GPU presentation.
-Usage: python -I tools/compare_render_clocks.py OUTPUT.json
+Usage: python -I tools/run.py archive.offline_baseline.compare_render_clocks OUTPUT.json
 """
 import ctypes
 import json

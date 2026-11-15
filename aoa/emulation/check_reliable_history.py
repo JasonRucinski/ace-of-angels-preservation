@@ -1,6 +1,6 @@
 """Probe the original 2.9.2 reliable receive path in Unicorn (no game process).
 
-Usage: python -I tools/emulate_reliable_history.py CLIENT.EXE OUT.json
+Usage: python -I tools/run.py aoa.emulation.check_reliable_history CLIENT.EXE OUT.json
 """
 import hashlib
 import json

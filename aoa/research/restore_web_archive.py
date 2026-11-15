@@ -4,7 +4,7 @@
 Raw responses and the resumable ledger stay in ignored wb/site-archive/.
 Only build/ is deployed. No original scripts or form submissions are enabled.
 
-Requests are paced and retried through tools/polite_http.py. A capture the
+Requests are paced and retried through aoa/research/http.py. A capture the
 archive keeps throttling (HTTP 429 or 5xx after the retries) stays pending
 for the next resume; only other HTTP errors mark it missing.
 """

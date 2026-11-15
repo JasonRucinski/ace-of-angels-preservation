@@ -3,7 +3,7 @@
   python -I tools/reel/scout.py MAP [MAP ...] [--out work/reel/scout]
 
 Enters flight on each map like record.py, then writes MAP.json (native
-terrain objects with names and positions, from tools/inspect_arena.py) and
+terrain objects with names and positions, from aoa/live/arena.py) and
 copies the client's F5 capture to MAP.tga. F5 reads the game's own frame,
 so this works with the display off.
 """

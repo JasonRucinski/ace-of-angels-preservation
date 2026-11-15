@@ -1,6 +1,6 @@
 """Verify known packages and compare pristine decoded assets with 2.9.2.
 
-python -I tools/compare_version_assets.py [--evidence DIR]
+python -I tools/run.py aoa.research.compare_version_assets [--evidence DIR]
 Never executes downloaded binaries or writes to the active game directory.
 Paths are resolved from the repository root, whatever the working directory.
 The per-version reports and summary.json go to work/evidence/asset-review/

@@ -8,7 +8,7 @@ section 6 ("Data archives") and docs/assets.md.
   CCompress::Decompress      0x60EDA0   trailer parsing, passes, CRC check
   CCompress::DoDecompress    0x60F1D0   one predictor pass
   CRC16                      0x60FCD0   CRC-16/XMODEM (table at 0x6A024C)
-  cipher                     tools/aoacrypt.py (0x60F5B0 / 0x60F6A0)
+  cipher                     aoa/formats/aoacrypt.py (0x60F5B0 / 0x60F6A0)
 
 Archive layout (all little-endian):
   0x000  256 bytes   archive key, encrypted with the client's built-in key

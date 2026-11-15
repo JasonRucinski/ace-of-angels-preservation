@@ -8,7 +8,7 @@ against `client_bytes` / `client_sha256` instead of the installer fields.
 
 Nothing downloaded is executed. A JSON provenance record is appended to
 evidence/download_log.jsonl (in the repository, whatever the working
-directory). Requests go through tools/polite_http.py (paced, backs off on
+directory). Requests go through aoa/research/http.py (paced, backs off on
 HTTP 429/5xx).
 """
 import datetime

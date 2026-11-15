@@ -1,6 +1,6 @@
 """Build an isolated offline diagnostic client; never launch or register it.
 
-Usage: python -I tools/prepare_offline_baseline.py game/offline-baseline-2.9.2
+Usage: python -I tools/run.py archive.offline_baseline.prepare_offline_baseline game/offline-baseline-2.9.2
 The destination must not exist. Original installer and wrapper stay untouched.
 """
 import argparse

@@ -152,7 +152,7 @@ def parse_args(argv=None, *, raise_errors=False):
                         help="single-client explicit 0x81 probe; requires the opt-in prepared client")
     parser.add_argument("--sustained-delivery", action=argparse.BooleanOptionalAction, default=None,
                         help="windowed ordered delivery of despawns/combat events for a whole session "
-                             "(default on for vpn-dogfight); see tools/reliable_window.py")
+                             "(default on for vpn-dogfight); see aoa/host/delivery.py")
     parser.add_argument("--reorder-margin", type=float, default=3.0,
                         help="seconds a stale datagram may trail later ones (sustained delivery)")
     parser.add_argument("--status-file", type=Path, help="JSON host status, rewritten every two seconds")

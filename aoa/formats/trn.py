@@ -28,7 +28,7 @@ unpacks +0x00/+0x40/+0x80 names, +0x98..+0xAC rotation rows, position at
 +0xC0 and by 28 after +0x194. convert_292 inserts zeros at those two points;
 the links are unchanged. The object-creation call reads nothing else.
 
-Usage: python -I tools/decode_trn.py <file.trn> [out.json]
+Usage: python -I tools/run.py aoa.formats.trn <file.trn> [out.json]
 """
 import hashlib
 import json

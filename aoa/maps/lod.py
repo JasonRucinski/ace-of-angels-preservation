@@ -3,7 +3,7 @@
 Named *LOD meshes are distinguished from unnamed variants. Matching geometry
 does not establish runtime selection thresholds, culling or texture behavior.
 
-    python -I tools/audit_object_lod.py <output.json> [--source DIR]
+    python -I tools/run.py aoa.maps.lod <output.json> [--source DIR]
 
 DIR defaults to work/2.9.2/export/AOAOBJECTS (from export_assets.py).
 """

@@ -1,6 +1,6 @@
 """Interactive-style static exploration CLI for one client.
 
-Usage: python -I tools/explore.py <client.exe> <cache.pkl> <command> [args...]
+Usage: python -I tools/run.py aoa.analysis.explore <client.exe> <cache.pkl> <command> [args...]
 
 Commands
   str <substring>            ASCII strings containing substring: file off, VA, xrefs

@@ -6,7 +6,7 @@
 Each file goes to builds/<version>/aoa-current.exe and is checked against the
 MD5 recorded in CONTEXT.md. Nothing is executed. Already-present files with
 the right hash are skipped. The output folder must be given explicitly; a
-name starting with "-" is refused. Requests go through tools/polite_http.py
+name starting with "-" is refused. Requests go through aoa/research/http.py
 (paced, backs off on HTTP 429/5xx).
 """
 import hashlib

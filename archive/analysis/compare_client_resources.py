@@ -1,6 +1,6 @@
 """Inventory/extract PE resources from the clients verified by compare_version_assets.
 
-python -I tools/compare_client_resources.py [--evidence PATH]
+python -I tools/run.py archive.analysis.compare_client_resources [--evidence PATH]
 Raw resource payloads are retained locally; no executable is run.
 Paths are resolved from the repository root, whatever the working directory.
 The report goes to work/evidence/asset-review/client-resources.json unless

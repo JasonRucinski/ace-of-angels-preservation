@@ -10,7 +10,7 @@ Method: find a version format string, find the `push imm32` of its address,
 take the absolute-address loads (mov reg, [abs]) just before it, and read
 those dwords from the file. No disassembler needed.
 
-    python3 -I aoa_version.py AOACLIENT.EXE
+    python3 -I tools/aoa_version.py AOACLIENT.EXE
 """
 import struct
 import sys

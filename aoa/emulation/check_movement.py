@@ -1,6 +1,6 @@
 """Check filtered movement lengths with the original 2.9.2 decoder.
 
-Usage: python -I tools/emulate_movement.py CLIENT.EXE OUT.json
+Usage: python -I tools/run.py aoa.emulation.check_movement CLIENT.EXE OUT.json
 Runs isolated x86 code in Unicorn; no client process or network.
 """
 import hashlib

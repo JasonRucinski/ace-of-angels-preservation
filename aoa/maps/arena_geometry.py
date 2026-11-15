@@ -1,6 +1,6 @@
 """Static CTF_arena export check; does not establish in-game collision.
 
-Run after scene2obj.py: python -I tools/check_arena_geometry.py
+Run after scene2obj.py: python -I tools/run.py aoa.maps.arena_geometry
 The OBJ uses negated Z relative to the game's coordinates.
 """
 import hashlib

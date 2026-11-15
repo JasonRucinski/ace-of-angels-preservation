@@ -16,7 +16,7 @@ verbs), not from the client's loader, which is not yet traced.
              u32 n_waypoints; each: str action, str target,
                                     i32 x, i32 y, i32 z, u32, u32 radius, u32 flag
 
-Usage: python -I tools/decode_scenario.py <scenario> [out.json]
+Usage: python -I tools/run.py aoa.formats.scenario <scenario> [out.json]
 """
 import hashlib
 import json

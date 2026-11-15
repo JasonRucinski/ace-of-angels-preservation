@@ -1,4 +1,4 @@
-"""Local protocol regression checks: python -I tools/test_station_stub.py.
+"""Local protocol regression checks: python -I tools/test.py test_station_stub.
 
 Uses a synthetic cipher key and ephemeral localhost Station ports. Does not
 launch the game, use its credentials, or contact any historical service.

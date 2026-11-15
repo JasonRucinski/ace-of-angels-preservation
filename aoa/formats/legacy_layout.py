@@ -8,7 +8,7 @@ mesh blocks are skipped rather than misread. Parent/child structure is NOT
 decoded: child positions (e.g. turrets under a flag) are local to their
 parent and must not be read as world coordinates.
 
-Usage: python -I tools/decode_legacy_layout.py <layout.Gob> [out.json]
+Usage: python -I tools/run.py aoa.formats.legacy_layout <layout.Gob> [out.json]
 """
 import hashlib
 import json

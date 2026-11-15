@@ -1,6 +1,6 @@
 """List dialog templates (RT_DIALOG) and their controls from a PE's resources.
 
-Usage: python -I tools/dialogs.py <client.exe> <out.json> [control_id_hex ...]
+Usage: python -I tools/run.py aoa.analysis.dialogs <client.exe> <out.json> [control_id_hex ...]
 
 Parses classic DLGTEMPLATE and DLGTEMPLATEEX. Prints dialogs containing any
 of the requested control IDs (all dialogs if none are given).

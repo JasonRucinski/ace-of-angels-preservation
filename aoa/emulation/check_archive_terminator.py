@@ -1,7 +1,7 @@
 """Run 2.9.2 CCompress::Decompress (0x52A630) before and after the
 archive-terminator patch, in Unicorn (no game process).
 
-Usage: python -I tools/emulate_archive_terminator.py CLIENT.EXE.orig OUT.json
+Usage: python -I tools/run.py aoa.emulation.check_archive_terminator CLIENT.EXE.orig OUT.json
 
 The heap beyond each allocation is pre-filled with 0xAA, as a reused native
 heap block can be. Original code must leave the byte after the data

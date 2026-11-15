@@ -1,6 +1,6 @@
 """Dump the 2.9.2 client's static gun table (no game process).
 
-Usage: python -I tools/gun_table.py CLIENT.EXE OUT.json
+Usage: python -I tools/run.py archive.analysis.gun_table CLIENT.EXE OUT.json
 
 Layout from the reader at 0x4DA990: level i (1..10) has a 36-byte record at
 0x5D62CC + 36*i. Field +6 is per-shot damage: server message 0x41

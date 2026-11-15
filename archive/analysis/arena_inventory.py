@@ -1,6 +1,6 @@
 """Inventory extracted local scene/scenario assets; does not claim hosting support.
 
-Usage: python -I tools/arena_inventory.py <export-dir> <scenes-dir> <output.json>
+Usage: python -I tools/run.py archive.analysis.arena_inventory <export-dir> <scenes-dir> <output.json>
 Scene node JSON comes from scene2obj.py; its object matching is heuristic.
 """
 import hashlib

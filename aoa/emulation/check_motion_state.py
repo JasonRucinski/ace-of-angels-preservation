@@ -1,6 +1,6 @@
 """Cross-check accumulated movement fields/absolute refresh against 2.9.2.
 
-Usage: python -I tools/emulate_motion_state.py CLIENT.EXE.orig OUT.json
+Usage: python -I tools/run.py aoa.emulation.check_motion_state CLIENT.EXE.orig OUT.json
 """
 import hashlib
 import json

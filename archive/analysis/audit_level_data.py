@@ -8,12 +8,12 @@ committed copy is evidence/asset-review/level-data.json).
 
 Checks:
   - every .AOA/.ODB archive: bytes not covered by any directory entry
-  - JRMAP.TRN in each installer: hash, strict decode (tools/decode_trn.py)
-  - SCENARIOS.AOA entries: strict decode (tools/decode_scenario.py)
+  - JRMAP.TRN in each installer: hash, strict decode (aoa/formats/trn.py)
+  - SCENARIOS.AOA entries: strict decode (aoa/formats/scenario.py)
   - SCRIPTS.AOA entries: hashes, changes between versions
   - layout Gobs: hashes per version; 2.0.0 TestScene via decode_legacy_layout
 
-Usage: python -I tools/audit_level_data.py [--evidence PATH]
+Usage: python -I tools/run.py archive.analysis.audit_level_data [--evidence PATH]
 """
 import hashlib
 import json

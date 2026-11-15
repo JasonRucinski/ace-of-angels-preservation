@@ -4,7 +4,7 @@ Trusted session/entity context is injected by the harness. Completion is a
 return value, NOT a transmitted application acknowledgment. The real receive
 loop, authenticated binding, reconnect lifecycle and other handlers remain open.
 
-Usage: python -I tools/emulate_ordered_events.py CLIENT.EXE.orig OUT.json
+Usage: python -I tools/run.py aoa.emulation.check_ordered_events CLIENT.EXE.orig OUT.json
 """
 import hashlib
 import json

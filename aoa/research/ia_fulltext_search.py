@@ -5,7 +5,7 @@ Web search engines do not index this. Runs a fixed list of queries against
 archive.org's full-text backend and writes <out>/ia_fulltext_hits.json (the
 name committed in data/): one row per (item, file) with the queries that
 matched. The output folder must already exist and be given explicitly; a
-name starting with "-" is refused. Requests go through tools/polite_http.py
+name starting with "-" is refused. Requests go through aoa/research/http.py
 (paced, backs off on HTTP 429/5xx).
 
     python3 -I ia_fulltext_search.py data/        # then ia_fulltext_context.py data/

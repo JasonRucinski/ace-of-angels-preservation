@@ -6,7 +6,7 @@ client. The standalone command line was removed because it wrote the
 executable with no setup record, which a prepared client then rejects.
 
 Both bugs were present in 2003 but only became fatal under the modern NT
-heap (found with tools/crashdbg.py --guard-heap):
+heap (found with tools/run.py aoa.live.crashdbg --guard-heap):
 
 1. dxgfx-logger-size: the separately built Dx7Api library (Z:\\src\\Dx7Api)
    allocates the "DxGfx" log object with a stale sizeof of 0x20, but the

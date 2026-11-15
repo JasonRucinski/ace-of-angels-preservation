@@ -1,6 +1,6 @@
 """Dump PE identity facts: timestamp, linker, sections, imports, Rich header.
 
-Usage: python -I tools/pe_facts.py <client.exe> <out.json>
+Usage: python -I tools/run.py archive.analysis.pe_facts <client.exe> <out.json>
 """
 import datetime
 import hashlib

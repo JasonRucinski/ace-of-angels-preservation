@@ -1,6 +1,6 @@
 """Find code paths that read the client's 'offline' flag.
 
-Usage: python -I tools/offline_refs.py <client.exe> <cache.pkl> <flags_va> <out.json>
+Usage: python -I tools/run.py archive.analysis.offline_refs <client.exe> <cache.pkl> <flags_va> <out.json>
 
 LoginToStation (2.7.1: 0x473650) stores (offline & 1) << 8 into the global
 flag word at <flags_va> (2.7.1: 0x6A39B4). A read is counted when

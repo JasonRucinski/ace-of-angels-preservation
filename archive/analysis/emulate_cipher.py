@@ -1,6 +1,6 @@
-"""Cross-check tools/aoacrypt.py against the client's own cipher routines.
+"""Cross-check aoa/formats/aoacrypt.py against the client's own cipher routines.
 
-Usage: python -I tools/emulate_cipher.py <client.exe> <key256.bin> <enc_va> <dec_va> <out.json>
+Usage: python -I tools/run.py archive.analysis.emulate_cipher <client.exe> <key256.bin> <enc_va> <dec_va> <out.json>
 
 Only the bytes of the two leaf routines' section are mapped into a Unicorn
 x86-32 CPU emulator. No imports, OS, loader, or other game code are run:

@@ -3,11 +3,11 @@
 For each of the 22 patch IDs and both offline experiments, and for every
 variant a module still recognizes, this lists each region's file offset,
 original bytes and patched bytes, plus the runtime .data-tail reservations,
-and compares them with tools/snapshots/patch_regions.json. A refactor that
+and compares them with tests/snapshots/patch_regions.json. A refactor that
 moves or changes a single patch byte fails here.
 
-  python -I tools/test_patch_layout.py            compare with the snapshot
-  python -I tools/test_patch_layout.py --update   rewrite the snapshot
+  python -I tools/test.py test_patch_layout               compare with the snapshot
+  python -I tools/test.py test_patch_layout -- --update   rewrite the snapshot
 
 It also checks the layout rules of docs/restructure/audits/client.md
 (finding C5): caves only in the .text padding, runtime data only in the
@@ -70,7 +70,7 @@ DECLARED_OVERLAPS = {
 
 
 def snapshot():
-    return {"about": "Every client patch region; regenerate with python -I tools/test_patch_layout.py --update "
+    return {"about": "Every client patch region; regenerate with python -I tools/test.py test_patch_layout -- --update "
                      "only when a patch is meant to change.",
             "bounds": {"text_padding": [h(v) for v in TEXT_PADDING], "data_tail": [h(v) for v in DATA_TAIL]},
             "patches": collect()}

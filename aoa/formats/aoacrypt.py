@@ -13,7 +13,7 @@ original encrypt's backward loop counter starts at 0 and is decremented
 before its zero test, so it would not terminate; real packets are longer.
 This implementation mirrors the loops for len >= 3 and refuses len == 2.
 
-Self-test: python -I tools/aoacrypt.py <scrty.bin>
+Self-test: python -I tools/run.py aoa.formats.aoacrypt <scrty.bin>
 """
 import os
 import sys

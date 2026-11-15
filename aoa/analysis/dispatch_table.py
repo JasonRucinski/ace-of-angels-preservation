@@ -1,6 +1,6 @@
 """Extract a MSVC two-level switch (byte index table + dword jump table).
 
-Usage: python -I tools/dispatch_table.py <client.exe> <cache.pkl> <switch_insn_va> <out.json>
+Usage: python -I tools/run.py aoa.analysis.dispatch_table <client.exe> <cache.pkl> <switch_insn_va> <out.json>
 
 <switch_insn_va> is the `jmp dword ptr [ecx*4 + JT]` instruction. The code
 before it must be the usual MSVC pattern:

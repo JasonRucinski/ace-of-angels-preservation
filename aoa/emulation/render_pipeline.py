@@ -4,7 +4,7 @@ Only _CIasin/_CIacos are substituted, with Python math. Their input values
 are recorded before substitution; domain findings do not depend on a CRT stub.
 This is not a GPU or complete-frame test.
 
-    python -I tools/audit_render_pipeline.py <output.json> [--source EXE]
+    python -I tools/run.py aoa.emulation.render_pipeline <output.json> [--source EXE]
 
 EXE defaults to game/2.9.2/AOACLIENT.EXE.orig (the pristine 2.9.2 client).
 """

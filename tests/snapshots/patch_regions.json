@@ -1,5 +1,5 @@
 {
- "about": "Every client patch region; regenerate with python -I tools/test_patch_layout.py --update only when a patch is meant to change.",
+ "about": "Every client patch region; regenerate with python -I tools/test.py test_patch_layout -- --update only when a patch is meant to change.",
  "bounds": {
   "data_tail": [
    "0x60d200",

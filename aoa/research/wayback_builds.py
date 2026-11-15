@@ -18,7 +18,7 @@ an md5/sha256 line in wb/files/hashes.txt. Files are only saved, never run.
 The `id_` form of a Wayback URL returns the archived bytes without the
 Wayback toolbar or link rewriting -- that is what gets downloaded.
 
-Requests go through tools/polite_http.py: at least --pause seconds apart,
+Requests go through aoa/research/http.py: at least --pause seconds apart,
 with backoff on HTTP 429/5xx.
 """
 import hashlib

@@ -1,7 +1,7 @@
 """Minimal Win32 debugger for running the 32-bit AoA client and catching crashes.
 
 Usage (from 64-bit Python on Windows):
-    python -I tools/crashdbg.py [options] <game_dir> [exe] [args...]
+    python -I tools/run.py aoa.live.crashdbg [options] <game_dir> [exe] [args...]
 
 Options:
     --trace-physics     log 2.9.2 acceleration time steps (changes timing)

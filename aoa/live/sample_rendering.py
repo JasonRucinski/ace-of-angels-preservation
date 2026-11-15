@@ -1,6 +1,6 @@
 """Read-only bounded sampling of a known 2.9.2 client, without breakpoints.
 
-Usage: python -I tools/sample_rendering.py PID OUTPUT.json --seconds 10
+Usage: python -I tools/run.py aoa.live.sample_rendering PID OUTPUT.json --seconds 10
 Snapshots are non-atomic: a frame can advance between individual reads.
 They diagnose state/renderer differences, not GPU frame times or smoothness.
 """

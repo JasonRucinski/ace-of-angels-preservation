@@ -51,7 +51,7 @@ class VesselCombatTests(unittest.TestCase):
             self.assertEqual(sorted(p.name for p in folder.iterdir()), ["guns.json", "out.py", "sco.json"])
             self.assertEqual(run(inputs[:1])[0], 2)  # missing argument: usage error, no traceback
 
-    @unittest.skipUnless(SCO.is_file(), "needs work/2.9.2/sco.json (tools/sco_dump.py on the game's AoAObjects.odb)")
+    @unittest.skipUnless(SCO.is_file(), "needs work/2.9.2/sco.json (aoa/formats/sco.py on the game's AoAObjects.odb)")
     def test_committed_table_matches_generator(self):
         code, output = run([str(SCO), str(GUN_TABLE), "--check"])
         self.assertEqual(code, 0, output)

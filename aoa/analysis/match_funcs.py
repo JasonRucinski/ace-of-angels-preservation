@@ -1,6 +1,6 @@
 """Locate 2.7.1 functions in another build by masked byte signatures.
 
-Usage: python -I tools/match_funcs.py <ref.exe> <ref_cache.pkl> <other.exe> <other_cache.pkl> <out.json> name=va ...
+Usage: python -I tools/run.py aoa.analysis.match_funcs <ref.exe> <ref_cache.pkl> <other.exe> <other_cache.pkl> <out.json> name=va ...
 
 For each reference function, its bytes up to the next known function start
 are taken with every 4-byte absolute address operand / rel32 call-jump target

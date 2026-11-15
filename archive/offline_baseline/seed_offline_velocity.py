@@ -1,6 +1,6 @@
 """Seed one synthetic coast test in the isolated offline baseline only.
 
-Usage: python -I tools/seed_offline_velocity.py PID
+Usage: python -I tools/run.py archive.offline_baseline.seed_offline_velocity PID
 Writes only player-slot-zero velocity (0, 0, 500), once. Does not emulate keys,
 alter positions, change camera transforms, or maintain velocity afterward.
 Run immediately after entering a fresh offline scene. Restart to reset fixture.

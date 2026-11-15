@@ -13,7 +13,7 @@ no hits is a real negative only when N is the disc's file count. A RAR/7z
 that wraps a raw .img/.bin/.mdf shows just that one file, so it was NOT
 searched -- download it and use rar_img2iso.py / iso_stream_extract.py.
 
-Requests go through tools/polite_http.py (paced, backs off on HTTP 429/5xx).
+Requests go through aoa/research/http.py (paced, backs off on HTTP 429/5xx).
 """
 import html
 import json

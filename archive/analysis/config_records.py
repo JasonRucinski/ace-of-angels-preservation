@@ -1,6 +1,6 @@
 """Dump the client's compiled name/float configuration records.
 
-Usage: python -I tools/config_records.py <client.exe> <cache.pkl> <name_len> <anchor_name> <out.json>
+Usage: python -I tools/run.py archive.analysis.config_records <client.exe> <cache.pkl> <name_len> <anchor_name> <out.json>
 
 Records are <name_len>-byte NUL-padded ASCII names followed by a 4-byte
 IEEE-754 float (2.7.1 and later: 64; 2.0.0 uses 32 per the handoff).

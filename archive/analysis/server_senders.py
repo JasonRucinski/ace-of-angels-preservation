@@ -1,6 +1,6 @@
 """Server-side senders left in the 2.7.1 client (findings 9.43).
 
-Usage: python -I tools/server_senders.py <2.7.1 client> <2.7.1 cache.pkl>
+Usage: python -I tools/run.py archive.analysis.server_senders <2.7.1 client> <2.7.1 cache.pkl>
            <2.7.1 send_sites.json> <2.9.2 client> <out.json>
 
 Lists every `Send<Name>` routine name found in the 2.7.1 executable's

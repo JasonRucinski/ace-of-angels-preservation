@@ -6,10 +6,10 @@ arguments for the deploy/linux/*.example files, map_viewer serve, the
 start_lan_dogfight.ps1 examples (mirrored here, since PowerShell cannot run
 in this test) and every server command line in the docs. Each must parse with
 station_runtime.parse_args; the arguments and the resulting effective config
-are compared with tools/snapshots/host_configs.json.
+are compared with tests/snapshots/host_configs.json.
 
-  python -I tools/test_host_argv.py            compare with the snapshot
-  python -I tools/test_host_argv.py --update   rewrite the snapshot
+  python -I tools/test.py test_host_argv               compare with the snapshot
+  python -I tools/test.py test_host_argv -- --update   rewrite the snapshot
 
 Paths are written relative to a scratch repository root (deploy paths keep
 their /etc and /var/lib form). Nothing is started and no socket is opened.
@@ -213,7 +213,7 @@ def text_cases():
 def snapshot():
     docs, ps1 = text_cases()
     return {"about": "Server command lines and their effective config; regenerate with "
-                     "python -I tools/test_host_argv.py --update only for an intended change.",
+                     "python -I tools/test.py test_host_argv -- --update only for an intended change.",
             "host_control": host_control_cases(), "dedicated_host": deploy_cases(),
             "map_viewer": map_viewer_cases(), "start_lan_dogfight": ps1, "docs": docs}
 

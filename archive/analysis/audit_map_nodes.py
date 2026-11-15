@@ -1,6 +1,6 @@
 """Inventory filled and unfilled nodes in every recovered 2.9.2 layout.
 
-python -I tools/audit_map_nodes.py [--evidence PATH]
+python -I tools/run.py archive.analysis.audit_map_nodes [--evidence PATH]
 Full positions stay in ignored work/; evidence contains only counts and names.
 This audits assets, not gameplay implementation or live-client acceptance.
 

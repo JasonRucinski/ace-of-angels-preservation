@@ -2,7 +2,7 @@
 to [reg + 0x498] and of a length to [reg + 0x494] (CComm packet object
 layout, see CComm::SendPacket 0x60DDB0).
 
-Usage: python -I tools/send_sites.py <client.exe> <cache.pkl> <packet_sizes.json|-> <out.json>
+Usage: python -I tools/run.py aoa.analysis.send_sites <client.exe> <cache.pkl> <packet_sizes.json|-> <out.json>
 
 For each type store, the nearest length store within +-12 instructions in
 the same function is paired with it. Lengths are compared with the compiled

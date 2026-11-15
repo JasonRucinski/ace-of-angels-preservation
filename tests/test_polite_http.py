@@ -1,10 +1,10 @@
-"""tools/polite_http.py: pacing, backoff and giving up, with a fake opener.
+"""aoa/research/http.py: pacing, backoff and giving up, with a fake opener.
 
 No test here touches the network: every request goes to FakeOpener, sleeps
 are recorded instead of taken, and socket connects are made to fail for the
 whole run as a guard.
 
-    python -I tools/test_polite_http.py
+    python -I tools/test.py test_polite_http
 """
 import email.message
 import email.utils
