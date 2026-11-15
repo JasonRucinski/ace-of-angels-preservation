@@ -3,6 +3,8 @@ import math
 import secrets
 import struct
 
+from aoa.host import object_slots as slots
+
 
 class PowerUps:
     """Server-placed power-ups in a map's power-up zones (findings 9.44).
@@ -23,7 +25,7 @@ class PowerUps:
     settings that no build ships.
     """
     NAMES = ("Missile Power Up", "Shield Power +5", "Shield Power +10", "Shield Power +20", "Repair Power Up")
-    FIRST_INDEX, LAST_INDEX = 100, 499  # Between the test object (1) and missiles (500+)
+    FIRST_INDEX, LAST_INDEX = slots.first("powerups"), slots.last("powerups")  # Between targets and missiles
     HIDDEN = 5.0                        # The client's 5000 ms reappearance timer
     LIMIT = 1e7                         # Coordinates the i32 spawn fields carry safely
 
@@ -47,7 +49,7 @@ class PowerUps:
 
     @staticmethod
     def tag(index):
-        return 0x40000000 | index
+        return slots.DYNAMIC_TAG | index
 
     def spawns(self):
         """0x43 for every power-up, sent to a player after flight entry."""

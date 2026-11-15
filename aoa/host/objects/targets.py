@@ -2,7 +2,7 @@
 import math
 import struct
 
-from aoa.host import vessel_combat
+from aoa.host import object_slots as slots, vessel_combat
 
 
 class TargetShips:
@@ -31,7 +31,7 @@ class TargetShips:
     substitute: for an object with +0x1DC = -1 the kill routine (0x4A5440)
     only resets its shields.
     """
-    FIRST_INDEX, LAST_INDEX = 2, 99    # After the test object (1), before power-ups (100+)
+    FIRST_INDEX, LAST_INDEX = slots.TARGETS_FIRST, slots.TARGETS_END - 1  # After the test object, before power-ups
     VESSELS = ("Ym Khtat", "Vermok", "Shrike", "Rhino", "Tholfus", "Eagle")
     # Ahead of the spawn. Arena1a spawns in a 5137-unit safe zone, where the
     # client allows no missile lock or launch (+0x2F8 gates 0x44AFD0 and
@@ -60,7 +60,7 @@ class TargetShips:
 
     @staticmethod
     def tag(index):
-        return 0x40010000 | index
+        return slots.OBJECT_TAG | index
 
     def index(self, tag):
         """The live ship with this tag, or None."""

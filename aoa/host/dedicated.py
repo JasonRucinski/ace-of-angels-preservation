@@ -16,20 +16,15 @@ from pathlib import Path
 
 from aoa.host import ops
 from aoa.maps import registry
-from aoa.host.runtime import HOST_DEFAULTS, ConfigError, parse_args as server_config
+from aoa.host.defaults import LIMITS, MANAGED, PORTS, SESSION_COMPLETE
+from aoa.host.runtime import ConfigError, parse_args as server_config
 from aoa import paths as aoa_paths
 
-SESSION_COMPLETE = 75
 DEFAULTS = {
     "maps": ["CTF_arena", "CTF_arena_b", "ast_fld_a"],
-    "kill_limit": HOST_DEFAULTS["kill_limit"],
-    "time_limit_seconds": HOST_DEFAULTS["time_limit_seconds"],
-    "restart_warning_seconds": 30,
-    "intermission_seconds": 5,
-    "idle_recycle_seconds": 300,
-    "recycle_arena_joins": 40,
-    "recycle_station_admissions": 56,
-    "health_timeout_seconds": 30,
+    "kill_limit": LIMITS["kill_limit"],
+    "time_limit_seconds": LIMITS["time_limit_seconds"],
+    **MANAGED,
     "terrain": True,
 }
 
@@ -172,10 +167,10 @@ def main(argv=None):
     parser.add_argument("--profile", default="vpn-dogfight", choices=("vpn-dogfight", "lan-dogfight", "local-guests"))
     parser.add_argument("--bind-address", help="this host's LAN or VPN IPv4; required except for local-guests, "
                                                "which uses 127.0.0.1")
-    parser.add_argument("--max-players", type=int, default=HOST_DEFAULTS["max_players"])
-    parser.add_argument("--port", type=int, default=5033)
-    parser.add_argument("--arena-port", type=int, default=5031)
-    parser.add_argument("--tcp", type=int, default=5034)
+    parser.add_argument("--max-players", type=int, default=LIMITS["max_players"])
+    parser.add_argument("--port", type=int, default=PORTS["station"])
+    parser.add_argument("--arena-port", type=int, default=PORTS["arena"])
+    parser.add_argument("--tcp", type=int, default=PORTS["tcp"])
     parser.add_argument("--check", action="store_true", help="validate without opening sockets or writing state")
     args = parser.parse_args(argv)
     if args.bind_address is None:

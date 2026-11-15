@@ -2,6 +2,7 @@
 import hashlib
 import secrets
 
+from aoa.host.defaults import STATION_ADMISSIONS
 from aoa.protocol.station import arena_ping
 
 
@@ -11,7 +12,7 @@ class StationSessions:
     UDP owns mutable state. TCP reads a replaced, immutable route snapshot.
     No endpoint/ID reuse during a process: delayed quits cannot hit a rejoin.
     """
-    CAPACITY = 64
+    CAPACITY = STATION_ADMISSIONS
 
     def __init__(self, timeout, pilot="testpilot", guests=False):
         self.timeout = timeout

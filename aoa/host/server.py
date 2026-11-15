@@ -17,6 +17,7 @@ import time
 from aoa.formats import trn
 from aoa.host import console, ops
 from aoa.host.combat import DeathLedger, MissileLedger
+from aoa.host.defaults import ARENA_JOINS, MODE_NAMES, SESSION_COMPLETE
 from aoa.host.delivery import InboundReliable, ReliableRemovals, WindowedReliable
 from aoa.host.match import Match
 from aoa.host.net_impair import Impairment, TrafficMeter
@@ -48,7 +49,6 @@ __all__ = [  # re-exported for the tests and emulation checks; remove as they im
     "StationSessions", "ReliableRemovals", "InboundReliable", "WindowedReliable", "DeathLedger",
     "MissileLedger", "PowerUps", "TargetShips", "Match", "spawn_position", "scenario_test_object",
     "load_objects"]
-SESSION_COMPLETE = 75  # Dedicated controller advances the rotation only on this clean exit.
 
 
 class ArenaServer:
@@ -78,10 +78,7 @@ class ArenaServer:
                                    self.impair_in, self.impair_out)
         self.s, self.arena, self.sockets = self.transport.station, self.transport.arena, self.transport.sockets
         self.mode = "Local Relay" if self.args.experimental_relay else ("Local Flight" if self.args.experimental_flight else "Handshake Test")
-        if self.args.profile == "lan-dogfight":
-            self.mode = "LAN Dogfight"
-        elif self.args.profile == "vpn-dogfight":
-            self.mode = "VPN Dogfight"
+        self.mode = MODE_NAMES.get(self.args.profile, self.mode)
         hosted_port = self.arena.getsockname()[1] if self.args.arena and self.reply else None
         self.job_bodies = {4: TCP_JOB_BODIES[4], 14: TCP_JOB_BODIES[14], 5: server_list_body(0, hosted_port, self.mode,
                                                              advertised_address=self.args.advertised_address,
@@ -240,7 +237,7 @@ class ArenaServer:
     def refresh_server_list(self):
         hosted_port = self.arena.getsockname()[1] if self.args.arena and self.reply else None
         available = (self.restart_due is None and len(self.arena_connections) < self.args.max_players and
-                     len(self.arena_connections) + len(self.retired_endpoints) < 49)
+                     len(self.arena_connections) + len(self.retired_endpoints) < ARENA_JOINS)
         self.job_bodies[5] = server_list_body(len(self.arena_connections), hosted_port, self.mode, available, len(self.station.peers),
                                        self.args.advertised_address, self.args.map, self.args.backdrop)
 
@@ -572,7 +569,7 @@ class ArenaServer:
             receiver.sendto(codec.encode(*ack_connect(payload, kind=0, result=4), self.key), addr)
             return
         if first_join and (addr in self.retired_endpoints or
-                           len(self.arena_connections) + len(self.retired_endpoints) >= 49):
+                           len(self.arena_connections) + len(self.retired_endpoints) >= ARENA_JOINS):
             return
         if not first_join and self.arena_connections[addr] != payload:
             return
@@ -586,7 +583,7 @@ class ArenaServer:
         player_id = 1
         if self.args.experimental_relay:
             if first_join:
-                if self.next_player_slot >= 50:
+                if self.next_player_slot > ARENA_JOINS:
                     return
                 self.arena_players[addr] = self.next_player_slot
                 self.next_player_slot += 1

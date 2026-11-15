@@ -6,11 +6,12 @@ combat is enabled. LoadObject currently initializes orientation to zero.
 """
 import struct
 
+from aoa.host import object_slots as slots
 from aoa.maps import navigation
 from aoa.maps.turret_hierarchy import hierarchy
 from aoa.protocol.turret_groups import status
 
-FIRST_INDEX, COUNT = 80, 5
+FIRST_INDEX, COUNT = slots.first("turrets"), slots.count("turrets")
 GROUP = 'Flag ND1-C'
 
 
@@ -30,7 +31,7 @@ def loads(nodes):
         raise ValueError('trial requires exactly five verified turret placements')
     result = []
     for index, node in enumerate(nodes, FIRST_INDEX):
-        tag = 0x40010000 | index
+        tag = slots.OBJECT_TAG | index
         packet = bytearray(191)
         for offset, text in ((0, 'TurretA'), (32, 'AoAObjects.odb'), (64, node['name'])):
             raw = text.encode('ascii')

@@ -33,7 +33,7 @@ from pathlib import Path
 
 from aoa.host import ops  # noqa: E402
 from aoa.maps import registry  # noqa: E402
-from aoa.host.runtime import HOST_DEFAULTS  # noqa: E402
+from aoa.host.defaults import ALIASES, BACKDROPS, DEFAULT_BACKDROP, LIMITS  # noqa: E402
 
 from aoa.paths import ROOT
 from aoa import paths
@@ -43,11 +43,9 @@ LOG_FILE = ROOT / "work/logs/host.log"
 LOCAL = "local-guests"
 MODES = {LOCAL: "This PC only", "lan-dogfight": "LAN", "vpn-dogfight": "VPN (internet)"}  # profile -> label
 LABELS = {label: profile for profile, label in MODES.items()}  # also reads files saved with labels
-ALIASES = {"lan-dogfight": "aoalan", "vpn-dogfight": "aoavpn"}
-BACKDROPS = ("spacebkgd", "spacebkgd2", "spacebkgd3", "spacebkgd5", "spacebkgd6")
 DEFAULTS = {"mode": LOCAL, "address": "127.0.0.1", "map": "Arena1a", "terrain": True,
-            "backdrop": "spacebkgd3", "max_players": HOST_DEFAULTS["max_players"],
-            "kill_limit": HOST_DEFAULTS["kill_limit"], "time_limit_min": HOST_DEFAULTS["time_limit_seconds"] // 60,
+            "backdrop": DEFAULT_BACKDROP, "max_players": LIMITS["max_players"],
+            "kill_limit": LIMITS["kill_limit"], "time_limit_min": LIMITS["time_limit_seconds"] // 60,
             "target_ships": 4, "game": "game/2.9.2",
             "navigation_buoys": True, "turret_trial": False, "warp_trial": False}
 NODE_LABELS = {"navigation_buoys": "Navigation buoys",

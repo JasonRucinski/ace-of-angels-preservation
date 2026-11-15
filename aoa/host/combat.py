@@ -2,6 +2,7 @@
 import math
 import struct
 
+from aoa.host import object_slots as slots
 from aoa.protocol.arena import player_tag
 from aoa.protocol.messages import NUL
 
@@ -53,7 +54,7 @@ class MissileLedger:
     LAUNCH_SIZE, IMPACT_SIZE = 0x92, 0x15
     MAX_COUNT = 16          # SFireMissile tag slots (0x4B1082 limit)
     MAX_LIVE = 16           # Per shooter; bounds the index ring's reuse
-    FIRST_INDEX, LAST_INDEX = 500, 999
+    FIRST_INDEX, LAST_INDEX = slots.first("missiles"), slots.last("missiles")
     LIFETIME = 60.0
 
     def __init__(self, objects=()):
@@ -73,7 +74,7 @@ class MissileLedger:
             index = self.index
             self.index = self.FIRST_INDEX if index >= self.LAST_INDEX else index + 1
             self.counter = (self.counter + 1) & 0xFF
-            tag = 0x40000000 | self.counter << 16 | index
+            tag = slots.DYNAMIC_TAG | self.counter << 16 | index
             if all(t & 0xFFFF != index for t in self.live):
                 return tag
 

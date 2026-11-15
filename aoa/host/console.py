@@ -8,6 +8,7 @@ import os
 import time
 
 from aoa.host import ops, warp_trial
+from aoa.host.defaults import ARENA_JOINS
 from aoa.protocol import codec
 from aoa.protocol.arena import arena_message
 
@@ -36,7 +37,7 @@ def status(server, now):
     return {"schema": 1, "pid": os.getpid(), "profile": server.args.profile, "mode": server.mode, "map": server.args.map,
             "uptime_s": round(now - server.started),
             "match": server.match.number, "players": players, "max_players": server.args.max_players,
-            "arena_joins_used": server.next_player_slot - 1, "arena_joins_limit": 49,
+            "arena_joins_used": server.next_player_slot - 1, "arena_joins_limit": ARENA_JOINS,
             "station_sessions": len(server.station.peers), "station_admissions_used": server.station.next_id - 1,
             "station_admissions_limit": server.station.CAPACITY, "banned_ips": len(server.banned_ips),
             "sustained_delivery": server.args.sustained_delivery,
