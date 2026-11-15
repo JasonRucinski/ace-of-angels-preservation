@@ -12,6 +12,7 @@ import hashlib
 import io
 import json
 import socket
+import struct
 import tempfile
 import unittest
 from pathlib import Path
@@ -21,6 +22,7 @@ from aoa import builds
 from aoa.paths import ROOT
 from aoa.research import fetch
 from aoa.research import http as research_http
+from aoa.research import version
 
 
 class Response(io.BytesIO):
@@ -168,12 +170,68 @@ class Fetch(unittest.TestCase):
                                 ("2.9.2", "v2.9.2_2004_FamilyGamePack3", "aoa-current.exe")])
 
     def test_real_manifest_entries_agree(self):
-        for version in ("2.0.0", "2.3.1", "2.7.1", "2.8.2", "2.9.2"):
-            entry = fetch.entry_for(version)
+        for runtime in ("2.0.0", "2.3.1", "2.7.1", "2.8.2", "2.9.2"):
+            entry = fetch.entry_for(runtime)
             self.assertEqual(fetch.expected(entry)["sha256"], entry["sha256"])
             self.assertTrue(fetch.urls(entry))
         with self.assertRaises(fetch.FetchError):
             fetch.urls(fetch.entry_for("2.8.0"))
+
+
+def tiny_client(numbers=(2, 9, 2)):
+    """A two-section PE whose code loads three .data globals and pushes a version format."""
+    base, e = 0x400000, 0x80
+    header = bytearray(0x400)
+    header[:2] = b"MZ"
+    struct.pack_into("<I", header, 0x3C, e)
+    header[e:e + 4] = b"PE\0\0"
+    struct.pack_into("<HHIIIHH", header, e + 4, 0x14C, 2, 0, 0, 0, 0xE0, 0x10F)
+    struct.pack_into("<H", header, e + 24, 0x10B)
+    struct.pack_into("<I", header, e + 24 + 28, base)
+    struct.pack_into("<I", header, e + 24 + 56, 0x3000)
+    for k, (name, rva, raw_off, chars) in enumerate(((b".text", 0x1000, 0x400, 0x60000020),
+                                                     (b".data", 0x2000, 0x600, 0xC0000040))):
+        o = e + 24 + 0xE0 + 40 * k
+        header[o:o + 8] = name.ljust(8, b"\0")
+        struct.pack_into("<IIII", header, o + 8, 0x200, rva, 0x200, raw_off)
+        struct.pack_into("<I", header, o + 36, chars)
+    fmt_va, globals_va = base + 0x2010, base + 0x2100
+    code = (b"\xa1" + struct.pack("<I", globals_va) + b"\x8b\x0d" + struct.pack("<I", globals_va + 4)
+            + b"\x8b\x15" + struct.pack("<I", globals_va + 8) + b"\x68" + struct.pack("<I", fmt_va))
+    data = bytearray(0x200)
+    text = version.FORMATS[0]
+    data[0x10:0x10 + len(text)] = text
+    struct.pack_into("<3I", data, 0x100, *numbers)
+    return bytes(header) + code.ljust(0x200, b"\x90") + bytes(data)
+
+
+class Version(unittest.TestCase):
+    def setUp(self):
+        tmp = tempfile.TemporaryDirectory(prefix="aoa-version-")
+        self.addCleanup(tmp.cleanup)
+        self.client = Path(tmp.name) / "AOACLIENT.EXE"
+        self.client.write_bytes(tiny_client())
+
+    def test_compiled_in_version(self):
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            version.main([str(self.client)])
+        self.assertIn("-> v2.9.2", out.getvalue())
+
+    def test_old_probe_form_means_detail(self):
+        seen = []
+        with mock.patch.object(version, "detail", lambda path, cache=None: seen.append((path, cache)) or {
+                "call_sites": [], "global_ref_stats": {}, "distinct_versions": []}), \
+                contextlib.redirect_stdout(io.StringIO()):
+            out = self.client.with_name("probe.json")
+            version.main([str(self.client), "cache.pkl", str(out)])
+            version.main([str(self.client), "--detail"])
+        self.assertEqual(seen, [(str(self.client), "cache.pkl"), (str(self.client), None)])
+        self.assertEqual(json.loads(out.read_text(encoding="utf-8"))["distinct_versions"], [])
+
+    def test_out_needs_detail(self):
+        with self.assertRaises(SystemExit), contextlib.redirect_stderr(io.StringIO()):
+            version.main([str(self.client), "--out", "x.json"])
 
 
 def _no_network(*args, **kwargs):
