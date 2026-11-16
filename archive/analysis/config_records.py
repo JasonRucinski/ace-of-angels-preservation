@@ -1,6 +1,6 @@
 """Dump the client's compiled name/float configuration records.
 
-Usage: python -I tools/run.py archive.analysis.config_records <client.exe> <cache.pkl> <name_len> <anchor_name> <out.json>
+Usage: python -I tools/run.py archive.analysis.config_records <client.exe> <name_len> <anchor_name> <out.json>
 
 Records are <name_len>-byte NUL-padded ASCII names followed by a 4-byte
 IEEE-754 float (2.7.1 and later: 64; 2.0.0 uses 32 per the handoff).
@@ -16,6 +16,7 @@ from pathlib import Path
 
 from aoa import cli  # noqa: E402
 from aoa.analysis.pe_util import PE, Disasm  # noqa: E402
+from aoa.analysis.cache_args import drop_cache_args
 
 NAME = re.compile(rb"^[A-Za-z0-9_]{2,}\0+$")
 
@@ -23,15 +24,14 @@ NAME = re.compile(rb"^[A-Za-z0-9_]{2,}\0+$")
 def main(argv=None):
     ap = cli.parser(__doc__)
     ap.add_argument("client", help="client executable")
-    ap.add_argument("cache", help="disassembly cache (.pkl) for that executable")
     ap.add_argument("name_len", type=int, help="record name length (64 for 2.7.1 and later, 32 for 2.0.0)")
     ap.add_argument("anchor", help="a record name known to be in the table")
     ap.add_argument("out", help="JSON file to write")
-    a = ap.parse_args(argv)
-    path, cache, nlen, anchor, out = a.client, a.cache, a.name_len, a.anchor, a.out
+    a = ap.parse_args(drop_cache_args(argv))
+    path, nlen, anchor, out = a.client, a.name_len, a.anchor, a.out
     stride = nlen + 4
     pe = PE(path)
-    d = Disasm(pe, cache)
+    d = Disasm(pe)
     a = pe.data.find(anchor.encode() + b"\0")
     assert a >= 0, "anchor not found"
 

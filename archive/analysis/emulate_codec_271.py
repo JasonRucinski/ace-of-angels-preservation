@@ -95,7 +95,7 @@ def ccomm_check(path, key_path, out):
     def wsock(uc, addr, size, _):
         esp = uc.reg_read(UC_X86_REG_ESP)
         a = [int.from_bytes(uc.mem_read(esp + 4 * i, 4), "little") for i in range(7)]
-        ret, s, b, n = a[0], a[1], a[2], a[3]
+        ret, b, n = a[0], a[2], a[3]
         if addr == SENDTO:
             captured.append(bytes(uc.mem_read(b, n)))
             uc.reg_write(UC_X86_REG_EAX, n)

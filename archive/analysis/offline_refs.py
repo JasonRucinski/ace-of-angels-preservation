@@ -1,6 +1,6 @@
 """Find code paths that read the client's 'offline' flag.
 
-Usage: python -I tools/run.py archive.analysis.offline_refs <client.exe> <cache.pkl> <flags_va> <out.json>
+Usage: python -I tools/run.py archive.analysis.offline_refs <client.exe> <flags_va> <out.json>
 
 LoginToStation (2.7.1: 0x473650) stores (offline & 1) << 8 into the global
 flag word at <flags_va> (2.7.1: 0x6A39B4). A read is counted when
@@ -17,6 +17,7 @@ from pathlib import Path
 
 from aoa import cli  # noqa: E402
 from aoa.analysis.pe_util import PE, Disasm  # noqa: E402
+from aoa.analysis.cache_args import drop_cache_args
 
 REG8 = {"eax": "al", "ebx": "bl", "ecx": "cl", "edx": "dl"}
 
@@ -24,14 +25,13 @@ REG8 = {"eax": "al", "ebx": "bl", "ecx": "cl", "edx": "dl"}
 def main(argv=None):
     ap = cli.parser(__doc__)
     ap.add_argument("client", help="client executable")
-    ap.add_argument("cache", help="disassembly cache (.pkl) for that executable")
     ap.add_argument("flags_va", help="VA (hex) of the global flag word")
     ap.add_argument("out", help="JSON file to write")
-    a = ap.parse_args(argv)
-    path, cache, flags_s, out = a.client, a.cache, a.flags_va, a.out
+    a = ap.parse_args(drop_cache_args(argv))
+    path, flags_s, out = a.client, a.flags_va, a.out
     flags = int(flags_s, 16)
     pe = PE(path)
-    d = Disasm(pe, cache)
+    d = Disasm(pe)
     hits = []
     for x in d.refs.get(flags, []):
         n = d.index[x]

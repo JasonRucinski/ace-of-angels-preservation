@@ -1,6 +1,6 @@
 """Extract a MSVC two-level switch (byte index table + dword jump table).
 
-Usage: python -I tools/run.py aoa.analysis.dispatch_table <client.exe> <cache.pkl> <switch_insn_va> <out.json>
+Usage: python -I tools/run.py aoa.analysis.dispatch_table <client.exe> <switch_insn_va> <out.json>
 
 <switch_insn_va> is the `jmp dword ptr [ecx*4 + JT]` instruction. The code
 before it must be the usual MSVC pattern:
@@ -15,18 +15,18 @@ from pathlib import Path
 
 from aoa import cli  # noqa: E402
 from aoa.analysis.pe_util import PE, Disasm  # noqa: E402
+from aoa.analysis.cache_args import drop_cache_args
 
 
 def main(argv=None):
     ap = cli.parser(__doc__)
     ap.add_argument("client", help="client executable")
-    ap.add_argument("cache", help="disassembly cache (.pkl) for that executable")
     ap.add_argument("switch_va", help="VA (hex) of the jmp [ecx*4 + JT] instruction")
     ap.add_argument("out", help="JSON file to write")
-    a = ap.parse_args(argv)
-    path, cache, sw_s, out = a.client, a.cache, a.switch_va, a.out
+    a = ap.parse_args(drop_cache_args(argv))
+    path, sw_s, out = a.client, a.switch_va, a.out
     pe = PE(path)
-    d = Disasm(pe, cache)
+    d = Disasm(pe)
     sw = int(sw_s, 16)
     w = d.window(sw, 6, 0)
     base = mx = idx_tab = default = None

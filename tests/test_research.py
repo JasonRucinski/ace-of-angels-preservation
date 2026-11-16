@@ -222,13 +222,15 @@ class Version(unittest.TestCase):
 
     def test_old_probe_form_means_detail(self):
         seen = []
-        with mock.patch.object(version, "detail", lambda path, cache=None: seen.append((path, cache)) or {
+        with mock.patch.object(version, "detail", lambda path: seen.append(path) or {
                 "call_sites": [], "global_ref_stats": {}, "distinct_versions": []}), \
                 contextlib.redirect_stdout(io.StringIO()):
             out = self.client.with_name("probe.json")
-            version.main([str(self.client), "cache.pkl", str(out)])
+            with contextlib.redirect_stderr(io.StringIO()) as note:
+                version.main([str(self.client), "cache.pkl", str(out)])
+            self.assertIn("ignoring cache.pkl", note.getvalue())
             version.main([str(self.client), "--detail"])
-        self.assertEqual(seen, [(str(self.client), "cache.pkl"), (str(self.client), None)])
+        self.assertEqual(seen, [str(self.client)] * 2)
         self.assertEqual(json.loads(out.read_text(encoding="utf-8"))["distinct_versions"], [])
 
     def test_out_needs_detail(self):
@@ -237,6 +239,37 @@ class Version(unittest.TestCase):
 
 FIELDS_ROW = ["timestamp", "original", "mimetype", "statuscode", "digest", "length"]
 CAPTURE_ROW = ["20010127072200", "http://www.aceofangels.com/", "text/html", "200", "ABC", "1234"]
+
+
+class DisassemblyCache(unittest.TestCase):
+    def test_old_cache_arguments_are_dropped(self):
+        from aoa.analysis.cache_args import drop_cache_args
+        with contextlib.redirect_stderr(io.StringIO()) as note:
+            self.assertEqual(drop_cache_args(["a.exe", "work/2.9.2/disasm.pkl", "out.json"]), ["a.exe", "out.json"])
+            self.assertEqual(drop_cache_args(["ref.exe", "r.pkl", "o.exe", "o.pkl", "out.json", "f=0x1"], (1, 3)),
+                             ["ref.exe", "o.exe", "out.json", "f=0x1"])
+        self.assertEqual(note.getvalue().count("ignoring"), 3)
+        # The new forms pass through untouched, options included.
+        self.assertEqual(drop_cache_args(["a.exe", "-", "out.json", "--x"]), ["a.exe", "-", "out.json", "--x"])
+        self.assertEqual(drop_cache_args(["a.exe", "sz.json", "x.pkl"]), ["a.exe", "sz.json", "x.pkl"])
+
+    def test_cache_is_keyed_by_the_executable(self):
+        try:
+            from aoa.analysis import pe_util
+        except ImportError as error:
+            self.skipTest(f"needs {error.name}")
+        a, b = pe_util.cache_file(b"one"), pe_util.cache_file(b"two", "elsewhere")
+        self.assertEqual(a.parent, ROOT / "work" / "cache")
+        self.assertEqual(a.name, hashlib.sha256(b"one").hexdigest() + ".pkl")
+        self.assertEqual(b, Path("elsewhere") / (hashlib.sha256(b"two").hexdigest() + ".pkl"))
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "c.exe"
+            path.write_bytes(tiny_client())
+            pe = pe_util.PE(path)
+            first = pe_util.Disasm(pe, cache_dir=tmp)
+            self.assertTrue(pe_util.cache_file(pe.data, tmp).is_file())
+            self.assertEqual(pe_util.Disasm(pe, cache_dir=tmp).insns, first.insns)
+            self.assertEqual(first.at(first.addrs[0])[2], "mov")
 
 
 class Cdx(unittest.TestCase):

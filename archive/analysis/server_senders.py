@@ -1,6 +1,6 @@
 """Server-side senders left in the 2.7.1 client (findings 9.43).
 
-Usage: python -I tools/run.py archive.analysis.server_senders <2.7.1 client> <2.7.1 cache.pkl>
+Usage: python -I tools/run.py archive.analysis.server_senders <2.7.1 client>
            <2.7.1 send_sites.json> <2.9.2 client> <out.json>
 
 Lists every `Send<Name>` routine name found in the 2.7.1 executable's
@@ -17,6 +17,7 @@ from pathlib import Path
 
 from aoa import cli  # noqa: E402
 from aoa.analysis.pe_util import PE, Disasm  # noqa: E402
+from aoa.analysis.cache_args import drop_cache_args
 
 NAME_RE = re.compile(rb"(?:CAOAComm::|::)?(Send[A-Z][A-Za-z]+)")
 HEX_RE = re.compile(r"0x[0-9a-f]{6,8}")
@@ -41,14 +42,13 @@ def callers(d, target):
 def main(argv=None):
     ap = cli.parser(__doc__)
     ap.add_argument("old_client", help="the 2.7.1 client")
-    ap.add_argument("cache", help="disassembly cache (.pkl) for the 2.7.1 client")
     ap.add_argument("sites", help="2.7.1 send_sites.json (the 2.9.2 one is found by name)")
     ap.add_argument("new_client", help="the 2.9.2 client")
     ap.add_argument("out", help="JSON file to write")
-    a = ap.parse_args(argv)
-    old_path, cache, sites_path, new_path, out = a.old_client, a.cache, a.sites, a.new_client, a.out
+    a = ap.parse_args(drop_cache_args(argv))
+    old_path, sites_path, new_path, out = a.old_client, a.sites, a.new_client, a.out
     pe = PE(old_path)
-    d = Disasm(pe, cache)
+    d = Disasm(pe)
     data = Path(old_path).read_bytes()
     sites = json.loads(Path(sites_path).read_text(encoding="utf-8"))["sites"]
     by_function = {}

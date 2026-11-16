@@ -27,8 +27,6 @@ The older `aoa.research.version_probe CLIENT CACHE OUT` form (tools/run.py)
 still works: it means --detail --out OUT. The disassembly cache is kept in
 work/cache/ by the client's SHA-256, so CACHE is ignored.
 """
-import argparse
-import hashlib
 import json
 import re
 import struct
@@ -37,6 +35,7 @@ from pathlib import Path
 
 from aoa import cli  # noqa: E402
 from aoa.formats.pe import Image
+from aoa.analysis.cache_args import drop_cache_args
 
 FORMATS = [
     b"Entering Ace of Angels runtime client ver(%d.%d.%d)",
@@ -87,13 +86,11 @@ def resolve_pushes(d, xref_va, want=3, window=24):
     return args if len(args) == want and all(args) else None
 
 
-def detail(path, cache=None):
+def detail(path):
     """The --detail report: every "%d.%d.%d" call site, its globals and their references."""
     from aoa.analysis.pe_util import PE, Disasm
     pe = PE(path)
-    if cache is None:
-        cache = cli.WORK / "cache" / f"{hashlib.sha256(pe.data).hexdigest()}.pkl"
-    d = Disasm(pe, cache)
+    d = Disasm(pe)
     results, globals_seen = [], {}
     for m in re.finditer(rb"[\x20-\x7e]*%d\.%d\.%d[\x20-\x7e]*", pe.data):
         sva = pe.off_to_va(m.start())
@@ -135,17 +132,16 @@ def show_detail(summary):
 def main(argv=None):
     ap = cli.parser(__doc__)
     ap.add_argument("client", help="the AOACLIENT.EXE to read")
-    ap.add_argument("legacy", nargs="*", metavar="CACHE OUT",
-                    help="the old version_probe form: a cache path (ignored) and the JSON to write")
+    ap.add_argument("legacy_out", nargs="?", metavar="OUT",
+                    help="the old version_probe form: the same as --detail --out OUT")
     ap.add_argument("--detail", action="store_true",
                     help="also resolve every %%d.%%d.%%d call site with a disassembler (needs capstone)")
     ap.add_argument("--out", help="with --detail: write the call sites as JSON to this file")
-    ap.add_argument("--cache", help=argparse.SUPPRESS)
-    a = ap.parse_args(argv)
-    if a.legacy:
-        if len(a.legacy) != 2 or a.out:
-            ap.error("the old form is CLIENT CACHE OUT; otherwise use --detail --out OUT")
-        a.detail, (a.cache, a.out) = True, a.legacy
+    a = ap.parse_args(drop_cache_args(argv))
+    if a.legacy_out:
+        if a.out:
+            ap.error("give OUT or --out, not both")
+        a.detail, a.out = True, a.legacy_out
     if a.out and not a.detail:
         ap.error("--out needs --detail")
     d = open(a.client, "rb").read()
@@ -183,7 +179,7 @@ def main(argv=None):
     if len(results) > 1:
         print("warning: references disagree:", sorted(results))
     if a.detail:
-        summary = detail(a.client, a.cache)
+        summary = detail(a.client)
         if a.out:
             Path(a.out).write_text(json.dumps(summary, indent=2), encoding="utf-8")
         show_detail(summary)

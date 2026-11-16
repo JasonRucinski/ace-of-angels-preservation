@@ -20,7 +20,7 @@ from aoa.builds import CLIENT_SHA256, require_build
 from aoa.analysis.pe_util import PE
 from aoa.formats import scene
 from unicorn import UC_HOOK_CODE
-from unicorn.x86_const import UC_X86_REG_EAX, UC_X86_REG_EBX, UC_X86_REG_EBP, UC_X86_REG_EDI, UC_X86_REG_EIP, UC_X86_REG_ESP
+from unicorn.x86_const import UC_X86_REG_EAX, UC_X86_REG_EBX, UC_X86_REG_EBP, UC_X86_REG_EIP, UC_X86_REG_ESP
 
 from aoa.paths import ROOT
 EVIDENCE = 'evidence/2.9.2/arena1a_rebuild_20261026.json'
