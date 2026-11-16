@@ -1,9 +1,9 @@
-"""Launch the client with individually selectable visual additions.
+"""The client options behind the player window's Options tab: read, check, apply with rollback.
 
 Selections are read from the installed EXE, wrapper and texture pack. Apply
 uses the existing verified setup/undo path; no game assets are downloaded.
+The window itself is aoa/launchers/play_app.py; main() opens it.
 """
-import argparse
 import configparser
 import csv
 import io
@@ -192,152 +192,11 @@ def launch(folder, options):
     return subprocess.Popen([str(exe)], cwd=exe.parent)
 
 
-def gui(folder=DEFAULT_GAME, run=True):
-    import tkinter as tk
-    from tkinter import filedialog, messagebox, ttk
-
-    root = tk.Tk()
-    root.title("Ace of Angels — Client launcher")
-    root.minsize(760, 690)
-    game = tk.StringVar(value=str(Path(folder).resolve()))
-    station = tk.StringVar()
-    status = tk.StringVar(value="Reading installed settings…")
-    variables = {key: tk.BooleanVar(value=False) for key in (*VISUAL_KEYS, GAMEPLAY)}
-    checks = {}
-    loaded_folder = None
-    protection = False
-    top = ttk.Frame(root, padding=12)
-    top.pack(fill="x")
-    ttk.Label(top, text="Ace of Angels", font=("Segoe UI", 18, "bold")).grid(row=0, column=0, sticky="w")
-    ttk.Label(top, text="Choose your visual additions. Settings take effect on the next launch.").grid(
-        row=1, column=0, columnspan=3, sticky="w", pady=(4, 12))
-    ttk.Entry(top, textvariable=game, state="readonly").grid(row=2, column=0, columnspan=2, sticky="ew")
-    top.columnconfigure(0, weight=1)
-
-    def load():
-        nonlocal loaded_folder, protection
-        loaded_folder = None
-        apply_button.state(["disabled"])
-        launch_button.state(["disabled"])
-        try:
-            selected, available = read_settings(game.get())
-            for key, var in variables.items():
-                var.set(selected[key])
-            station.set(selected["station"])
-            protection = available["protection"]
-            for key, *_ in QUALITY:
-                checks[key].state(["!disabled"] if available["wrapper"] else ["disabled"])
-            checks["texture_pack"].state(["!disabled"] if available["texture_pack"] else ["disabled"])
-            loaded_folder = game.get()
-            apply_button.state(["!disabled"])
-            launch_button.state(["!disabled"])
-            notes = []
-            if not available["texture_pack"]:
-                notes.append("Replacement textures unavailable — install a pack to enable this option.")
-            if not available["wrapper"]:
-                notes.append("Graphics quality options require the dgVoodoo wrapper.")
-            if available["outdated"]:
-                notes.append("Older patch versions installed (" + ", ".join(available["outdated"])
-                             + ") — Apply or Play updates them.")
-            status.set("Loaded installed settings." + ("\n" + "\n".join(notes) if notes else ""))
-        except (OSError, ValueError, KeyError, configparser.Error) as error:
-            status.set(f"Cannot load this game folder: {error}")
-
-    def browse():
-        selected = filedialog.askdirectory(parent=root, initialdir=game.get(), title="Choose the game folder")
-        if selected:
-            game.set(selected)
-            load()
-
-    ttk.Button(top, text="Browse…", command=browse).grid(row=2, column=2, padx=(8, 0))
-
-    def changed(key):
-        if variables[key].get():
-            for a, b in EXCLUSIVE:
-                if key in (a, b):
-                    variables[b if key == a else a].set(False)
-        status.set("Unsaved selections. Choose Apply or Play to save them.")
-
-    columns = ttk.Frame(root)
-    columns.pack(fill="both", expand=True, padx=12)
-    columns.columnconfigure(0, weight=1)
-    columns.columnconfigure(1, weight=1)
-    visuals = ttk.LabelFrame(columns, text="Visual additions", padding=10)
-    visuals.grid(row=0, column=0, sticky="nsew", padx=(0, 6))
-    quality = ttk.LabelFrame(columns, text="Graphics quality", padding=10)
-    quality.grid(row=0, column=1, sticky="nsew", padx=(6, 0))
-    for parent, entries in ((visuals, [(k, label) for k, label, _ in PATCHES]),
-                            (quality, [(k, label) for k, label, *_ in QUALITY]
-                             + [("texture_pack", "Replacement texture pack")])):
-        for key, label in entries:
-            check = ttk.Checkbutton(parent, text=label, variable=variables[key], command=lambda k=key: changed(k))
-            check.pack(anchor="w", pady=5)
-            checks[key] = check
-    ttk.Label(quality, text="Unchecked graphics effects use the original\napplication-controlled settings.\n\nTexture packs can be switched off and back on\nwithout rebuilding the replacement images.",
-              foreground="#555", justify="left").pack(anchor="w", pady=(14, 0))
-
-    def original_visuals():
-        for key in VISUAL_KEYS:
-            variables[key].set(False)
-        status.set("Original visuals selected. Choose Apply or Play to save.")
-
-    presets = ttk.Frame(root, padding=(12, 10))
-    presets.pack(fill="x")
-    ttk.Button(presets, text="Original visuals (all off)", command=original_visuals).pack(side="left")
-    ttk.Button(presets, text="Reload installed settings", command=load).pack(side="left", padx=8)
-    other = ttk.LabelFrame(root, text="Connection and gameplay", padding=10)
-    other.pack(fill="x", padx=12)
-    ttk.Label(other, text="Station host").pack(side="left")
-    ttk.Entry(other, textvariable=station, width=18).pack(side="left", padx=(8, 20))
-    ttk.Checkbutton(other, text=patches.OPTIONS[GAMEPLAY].label, variable=variables[GAMEPLAY],
-                    command=lambda: changed(GAMEPLAY)).pack(side="left")
-    ttk.Label(root, text="Compatibility fixes and host-provided map content remain active.",
-              foreground="#555").pack(anchor="w", padx=12, pady=(10, 0))
-    ttk.Label(root, textvariable=status, wraplength=850, justify="left").pack(fill="x", padx=12, pady=10)
-    bottom = ttk.Frame(root, padding=(12, 0, 12, 12))
-    bottom.pack(fill="x", side="bottom")
-
-    def apply(play=False):
-        nonlocal protection
-        if loaded_folder != game.get():
-            return
-        options = {key: var.get() for key, var in variables.items()}
-        options["station"] = station.get().strip()
-        root.config(cursor="watch")
-        root.update_idletasks()
-        try:
-            if play:
-                launch(game.get(), options)
-            else:
-                apply_settings(game.get(), options)
-            note = ""
-            if protection and options["station"] not in setup.LOOPBACK:
-                protection = False
-                note = "\nExperimental protection was switched off: it works only with a loopback Station."
-            status.set(("Game launched. Close it before changing settings." if play
-                        else "Settings saved and verified. Ready to play.") + note)
-        except (OSError, ValueError, KeyError, RuntimeError, subprocess.SubprocessError, configparser.Error) as error:
-            status.set(f"Could not {'launch' if play else 'apply'}: {error}")
-            messagebox.showerror("Client launcher", str(error), parent=root)
-        finally:
-            root.config(cursor="")
-
-    launch_button = ttk.Button(bottom, text="Play", command=lambda: apply(True))
-    launch_button.pack(side="right", padx=(8, 0))
-    apply_button = ttk.Button(bottom, text="Apply", command=apply)
-    apply_button.pack(side="right")
-    load()
-    if run:
-        root.mainloop()
-    return root, variables, checks
-
-
 def main(argv=None):
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("game", type=Path, nargs="?", default=DEFAULT_GAME)
-    args = parser.parse_args(argv)
-    gui(args.game)
+    """The player window (aoa/launchers/play_app.py); this module keeps the options logic."""
+    from aoa.launchers import play_app
+    return play_app.main(argv)
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

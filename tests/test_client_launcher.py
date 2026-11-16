@@ -191,33 +191,6 @@ class LauncherTests(unittest.TestCase):
         self.assertFalse(available["wrapper"])
         launcher.apply_settings(self.folder, options)
 
-    @unittest.skipUnless(sys.platform == "win32", "Windows GUI smoke test")
-    def test_gui_checkboxes_and_original_visuals_button(self):
-        root, variables, checks = launcher.gui(self.folder, run=False)
-        self.addCleanup(root.destroy)
-        root.update_idletasks()
-        for check in checks.values():
-            self.assertLessEqual(check.winfo_rootx() + check.winfo_width(), root.winfo_rootx() + root.winfo_width())
-            self.assertLessEqual(check.winfo_rooty() + check.winfo_height(), root.winfo_rooty() + root.winfo_height())
-        root.withdraw()
-        expected, _ = launcher.read_settings(self.folder)
-        self.assertEqual({k: v.get() for k, v in variables.items()},
-                         {k: expected[k] for k in variables})
-        self.assertTrue(checks["texture_pack"].instate(["disabled"]))
-        checks["experimental_solids"].invoke()
-        checks["experimental_asteroids"].invoke()
-        self.assertFalse(variables["experimental_solids"].get())
-        self.assertTrue(variables["experimental_asteroids"].get())
-        def widgets(parent):
-            for child in parent.winfo_children():
-                yield child
-                yield from widgets(child)
-        buttons = {w.cget("text"): w for w in widgets(root) if w.winfo_class() == "TButton"}
-        buttons["Original visuals (all off)"].invoke()
-        self.assertFalse(any(variables[k].get() for k in launcher.VISUAL_KEYS))
-        self.assertTrue(variables["powerup_pickups"].get())
-        self.assertFalse(buttons["Play"].instate(["disabled"]))
-
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

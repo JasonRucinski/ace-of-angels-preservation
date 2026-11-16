@@ -19,7 +19,7 @@ from aoa.client import install_wrapper, patches, prepare
 from aoa.host import defaults
 from aoa.host.config import HostConfig
 from aoa.host.config import ConfigError
-from aoa.launchers import catalog, game_folder, hosting, install, join, netinfo, settings
+from aoa.launchers import catalog, game_folder, hosting, install, join, netinfo, settings, tkcommon
 from aoa.maps import registry
 from tests import support_patches
 
@@ -592,6 +592,53 @@ class HostingTests(unittest.TestCase):
         supervisor = hosting.supervisor_for(config, report=lambda text: None, process=mock.Mock())
         self.assertEqual(supervisor.state_path, config.path("state"))
         self.assertEqual(supervisor.watchdog_timeout, defaults.MANAGED["health_timeout_seconds"])
+
+
+class WorkerTests(unittest.TestCase):
+    """The worker runner: the job runs off the calling thread; results come back through pump()."""
+
+    def drive(self, worker, scheduled):
+        import time
+        for _ in range(500):
+            if not scheduled:
+                return
+            scheduled.pop(0)()
+            time.sleep(0.005)
+        self.fail("the worker never finished")
+
+    def test_result_progress_and_error(self):
+        import threading
+        scheduled, seen = [], []
+        worker = tkcommon.Worker(lambda ms, callback: scheduled.append(callback))
+        worker.on_busy = lambda busy: seen.append(("busy", busy))
+        caller = threading.get_ident()
+
+        def job(progress):
+            progress("half way")
+            return threading.get_ident()
+
+        self.assertTrue(worker.submit(job, lambda r: seen.append(("done", r != caller)),
+                                      progress=lambda t: seen.append(("progress", t))))
+        self.assertFalse(worker.submit(job))  # one job at a time
+        self.drive(worker, scheduled)
+        self.assertEqual(seen, [("busy", True), ("progress", "half way"), ("busy", False), ("done", True)])
+        self.assertFalse(worker.busy)
+        failures = []
+        worker.submit(lambda progress: 1 / 0, failed=failures.append)
+        self.drive(worker, scheduled)
+        self.assertIsInstance(failures[0], ZeroDivisionError)
+
+    def test_error_log(self):
+        path = temp_dir(self) / "logs/launcher.log"
+        try:
+            raise install.StepError("The download did not finish.", "HTTP Error 503")
+        except install.StepError as error:
+            tkcommon.log_error(path, "download", error)
+            details = tkcommon.details_of(error)
+        text = path.read_text()
+        self.assertIn("download", text)
+        self.assertIn("StepError: The download did not finish.", text)
+        self.assertTrue(details.startswith("HTTP Error 503"))
 
 
 if __name__ == "__main__":
