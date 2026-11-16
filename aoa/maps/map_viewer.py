@@ -18,15 +18,12 @@ are gated off in the 2.9.2 client and are not expected to appear.
 """
 import argparse
 import hashlib
-import subprocess
-import sys
 from pathlib import Path
 
 from aoa.formats import trn  # noqa: E402
 from aoa.maps import registry  # noqa: E402
 
 from aoa.paths import ROOT
-from aoa import paths
 JRMAP_SHA256 = "e3da8fbbdfb84ac7c830314e62bd8ceb7dfbdf9d90cd5fef614601133f23c5c4"
 
 
@@ -41,7 +38,8 @@ def install(game):
     print(f"wrote {target} ({len(converted)} bytes, sha256 {hashlib.sha256(converted).hexdigest()})")
 
 
-def main():
+def main(argv=None, serve=None):
+    """`serve` runs a map (aoa/launchers/serve.py, which tools/map_viewer.py passes in)."""
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = parser.add_subparsers(dest="action", required=True)
     sub.add_parser("list")
@@ -53,7 +51,7 @@ def main():
     p.add_argument("--backdrop", default="spacebkgd3")
     p.add_argument("--spawn-at", type=float, nargs=3, metavar=("X", "Y", "Z"))
     p.add_argument("--seconds", type=float, default=0)
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
     if args.action == "list":
         for i, (name, kind, target, spawn) in enumerate(registry.MAPS):
             where = "origin" if spawn is None else "(%g, %g, %g)" % spawn
@@ -64,17 +62,9 @@ def main():
         return
     if args.map == "JRMAP" and not (args.game / "jrmap292.trn").exists():
         raise SystemExit(f"run: python -I tools/map_viewer.py install {args.game}")
-    log = ROOT / "work/map-viewer" / f"{args.map}.jsonl"
-    log.parent.mkdir(parents=True, exist_ok=True)
-    command = [sys.executable, "-I", str(paths.entry("station_stub", ROOT)), str(args.game / "SCRTY.BIN"), str(log),
-               "--profile", "local-relay", "--map", args.map, "--backdrop", args.backdrop,
-               "--terrain"]
-    if args.spawn_at:
-        command += ["--spawn-at", *map(str, args.spawn_at)]
-    if args.seconds:
-        command += ["--seconds", str(args.seconds)]
-    print(f"Serving {args.map} on 127.0.0.1; launch the prepared client and Play. Ctrl+C stops.")
-    sys.exit(subprocess.call(command))
+    if serve is None:
+        raise SystemExit("serve runs from the command: python -I tools/map_viewer.py serve MAP")
+    serve(args)
 
 
 if __name__ == "__main__":

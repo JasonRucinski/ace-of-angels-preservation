@@ -87,7 +87,7 @@ class RequirementTests(unittest.TestCase):
         with contextlib.redirect_stdout(help_text), self.assertRaises(SystemExit):
             parse_args(["--help"])
         self.assertIn("terrain needs client patch level 11", " ".join(help_text.getvalue().split()))
-        for path in ("aoa/host", "aoa/launchers/host_control.py", "aoa/maps/map_viewer.py"):
+        for path in ("aoa/host", "aoa/launchers", "aoa/maps/map_viewer.py"):
             files = [ROOT / path] if path.endswith(".py") else sorted((ROOT / path).rglob("*.py"))
             for file in files:
                 text = file.read_text(encoding="utf-8")

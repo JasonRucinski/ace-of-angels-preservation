@@ -8,6 +8,7 @@ the window talks to, and map objects that cannot run switched off. A
 Supervisor (aoa/host/supervisor.py) runs it, as the headless host does.
 """
 import copy
+import re
 import time
 
 from aoa.host import defaults
@@ -62,7 +63,9 @@ def run_config(s, export_ready=None):
             config.objects[key] = False
     config.objects["powerups"] = bool(config.terrain and config.objects.get("powerups", True))
     placed = any(config.objects[k] for k in ("navigation_buoys", "turret_trial"))
-    if config.sustained_delivery is None and (placed or config.profile == "local-guests"):
+    # Placed objects, this-PC guests and a rotation's managed sessions all need sustained delivery.
+    if config.sustained_delivery is None and (placed or config.profile == "local-guests"
+                                              or config.managed is not None):
         config.sustained_delivery = True
     return config
 
@@ -128,8 +131,8 @@ def firewall_sentence(config):
     if audience(config).kind is None:
         return "Not needed: only this PC can join."
     return (f"Windows must let players reach UDP {config.ports['arena']} and {config.ports['station']} and "
-            f"TCP {config.ports['tcp']} on {config.bind_address}. Run these two lines once, in PowerShell "
-            "opened as administrator:")
+            f"TCP {config.ports['tcp']} on {config.bind_address}. Copy the two commands and run "
+            "them once in PowerShell opened as administrator (right-click Start, then Terminal (Admin)).")
 
 
 # --- running ---------------------------------------------------------------------------
@@ -153,6 +156,20 @@ def change_map(supervisor, new, notice_seconds=2.0, sleep=time.sleep):
     supervisor.change(new)
     supervisor.state["map"] = new.maps[0]
     supervisor.start(new)
+
+
+def stop_reason(lines):
+    """A sentence for a host that stopped, from the server's last output lines, or None."""
+    for line in reversed(list(lines)):
+        if "Host I/O failed" in line:
+            found = re.search(r"Check that (\S+) belongs", line)
+            address = found[1] if found else "the chosen address"
+            return (f"The host could not open its connection on {address}. Check that {address} is still this "
+                    "PC's address (choose Refresh), and that no other host is already running.")
+    for line in reversed(list(lines)):
+        if "failed" in line.lower() or "error" in line.lower():
+            return f"The host stopped: {line.strip()}"
+    return None
 
 
 def clock(seconds):

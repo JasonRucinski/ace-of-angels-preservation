@@ -1,8 +1,8 @@
 """Golden snapshot of every server command line the launchers and docs build; game-free.
 
 Builds the station_stub.py arguments that each front end produces today:
-host_control.server_args over a settings matrix, dedicated_host's child
-arguments for the deploy/linux/*.example files, map_viewer serve, the
+the host window (aoa/launchers/hosting.run_config) over a settings matrix, dedicated_host's child
+arguments for the deploy/linux/*.example files, map_viewer and make_map serve, the
 start_lan_dogfight.ps1 examples (mirrored here, since PowerShell cannot run
 in this test) and every server command line in the docs. Each must parse with
 station_runtime.parse_args; the arguments and the resulting effective config
@@ -30,9 +30,9 @@ from unittest import mock
 from aoa.host import dedicated  # noqa: E402
 from aoa.host import headless  # noqa: E402
 from aoa.host.config import HostConfig  # noqa: E402
-from aoa.launchers import host_control  # noqa: E402
+from aoa.launchers import hosting, serve, settings as launcher_settings  # noqa: E402
 from aoa.host import ops  # noqa: E402
-from aoa.maps import map_viewer  # noqa: E402
+from aoa.maps import make_map, map_viewer  # noqa: E402
 from aoa.maps import registry  # noqa: E402
 from aoa.host import runtime  # noqa: E402
 from aoa.host.runtime import parse_args  # noqa: E402
@@ -40,22 +40,25 @@ from aoa.host.runtime import parse_args  # noqa: E402
 from aoa.paths import ROOT
 SNAPSHOT = Path(__file__).resolve().parent / "snapshots/host_configs.json"
 DEPLOY = ROOT / "deploy/linux"
-ADDRESSES = {"local-guests": "127.0.0.1", "lan-dogfight": "192.168.1.5", "vpn-dogfight": "100.101.102.103"}
-NODES_ON = dict.fromkeys(host_control.NODE_LABELS, True)
-NODES_OFF = dict.fromkeys(host_control.NODE_LABELS, False)
-# One row per mode: name, assets exported, settings changes.
-HOST_CONTROL_CASES = (
-    ("defaults", True, {}),
-    ("defaults, no exported assets", False, {}),
-    ("terrain off", True, {"terrain": False}),
-    ("Arena1a, all nodes", True, NODES_ON),
-    ("CTF_arena, all nodes", True, {"map": "CTF_arena", **NODES_ON}),
-    ("JRMAP, no nodes", True, {"map": "JRMAP", **NODES_OFF}),
-    ("limits and backdrop", True, {"max_players": 2, "kill_limit": 10, "time_limit_min": 15, "target_ships": 0,
-                                   "backdrop": "spacebkgd", "map": "ast_fld_a"}),
+ADDRESSES = {"this-pc": "127.0.0.1", "home": "192.168.1.5", "vpn": "100.101.102.103"}
+OBJECT_KEYS = ("navigation_buoys", "turret_trial", "warp_trial")
+NODES_ON = {"objects": dict.fromkeys(OBJECT_KEYS, True)}
+NODES_OFF = {"objects": dict.fromkeys(OBJECT_KEYS, False)}
+# One row per audience: name, assets exported, maps, HostConfig changes on the window's defaults.
+HOST_WINDOW_CASES = (
+    ("defaults", True, ["CTF_arena"], {}),
+    ("defaults, no exported assets", False, ["CTF_arena"], {}),
+    ("terrain off", True, ["CTF_arena"], {"terrain": False}),
+    ("Arena1a, all nodes", True, ["Arena1a"], NODES_ON),
+    ("CTF_arena, all nodes", True, ["CTF_arena"], NODES_ON),
+    ("JRMAP, no nodes", True, ["JRMAP"], NODES_OFF),
+    ("limits and backdrop", True, ["ast_fld_a"], {"max_players": 2, "kill_limit": 10, "time_limit_seconds": 900,
+                                                 "target_ships": 4, "backdrop": "spacebkgd"}),
+    ("rotation", True, ["CTF_arena", "CTF_arena_b", "ast_fld_a"], {}),
 )
 MAP_VIEWER_CASES = (["serve", "Arena1a"], ["serve", "CTF_arena", "--backdrop", "spacebkgd5"],
                     ["serve", "JRMAP", "--spawn-at", "1", "2", "3", "--seconds", "5"])
+CUSTOM_MAP = ROOT / "config/maps/crucible.json"
 # start_lan_dogfight.ps1 parameters: its two .EXAMPLE lines and the -Terrain and test-impairment switches.
 PS1_CASES = ({"HostAddress": "192.168.1.55"},
              {"Vpn": True, "HostAddress": "100.101.102.103", "MaxPlayers": 4},
@@ -107,18 +110,37 @@ def case(argv, prefixes, **extra):
             "config": {k: normalize(v, prefixes) for k, v in sorted(effective(argv).items())}}
 
 
-def host_control_cases():
+def window_config(root, audience, maps, changes, assets):
+    """The HostConfig the host window starts for these choices (hosting.run_config on its settings)."""
+    s = launcher_settings.Settings()
+    s.host.root = root
+    hosting.set_audience(s.host, audience, ADDRESSES[audience])
+    hosting.set_maps(s.host, maps)
+    for key, value in changes.items():
+        if key == "objects":
+            s.host.objects.update(value)
+        else:
+            setattr(s.host, key, value)
+    s.host.objects["powerups"] = s.host.terrain
+    return hosting.run_config(s, export_ready=assets)
+
+
+def host_window_cases():
     out = {}
-    for mode, (label, assets, changes) in itertools.product(host_control.MODES, HOST_CONTROL_CASES):
+    for audience, (label, assets, maps, changes) in itertools.product(ADDRESSES, HOST_WINDOW_CASES):
         with tempfile.TemporaryDirectory() as temp:
             root = make_root(Path(temp).resolve(), assets)
-            settings = {**host_control.DEFAULTS, "mode": mode, "address": ADDRESSES[mode], **changes}
-            with mock.patch.object(host_control, "ROOT", root), mock.patch.object(host_control, "WORK", root / "work/host"):
-                argv = host_control.server_args(settings)
-            out[f"{host_control.MODES[mode]}: {label}"] = case(
-                argv[1:], [(root, "")], assets_exported=assets, settings=settings,
-                script=normalize(argv[0], [(root, "")]))
+            config = window_config(root, audience, maps, changes, assets)
+            for name in config.maps:
+                key = f"{catalog_label(audience)}: {label}" + (f" ({name})" if len(config.maps) > 1 else "")
+                out[key] = case(config.to_argv(name), [(root, "")], assets_exported=assets, maps=maps,
+                                changes=changes)
     return out
+
+
+def catalog_label(audience):
+    from aoa.launchers import catalog
+    return catalog.AUDIENCE[audience].label
 
 
 def deploy_cases():
@@ -182,14 +204,30 @@ def map_viewer_cases():
         with tempfile.TemporaryDirectory() as temp:
             root = make_root(Path(temp).resolve())
             calls = []
-            with mock.patch.object(map_viewer, "ROOT", root), \
-                    mock.patch.object(sys, "argv", ["map_viewer.py", *extra]), \
-                    mock.patch.object(map_viewer.subprocess, "call", side_effect=lambda c: calls.append(c) or 0), \
+            with mock.patch.object(map_viewer, "ROOT", root), mock.patch.object(serve, "ROOT", root), \
                     contextlib.redirect_stdout(io.StringIO()), contextlib.suppress(SystemExit):
-                map_viewer.main()
+                map_viewer.main(extra, serve=lambda args: serve.map_viewer(args, call=lambda c: calls.append(c) or 0))
             command = calls[0]
             out[" ".join(extra)] = case(command[3:], [(root, "")], script=normalize(command[2], [(root, "")]))
     return out
+
+
+def custom_map_cases():
+    """make_map.py serve on the crucible example, installed into a scratch client folder."""
+    with tempfile.TemporaryDirectory() as temp:
+        root = make_root(Path(temp).resolve())
+        client = root / "work/custom-map/client"
+        client.mkdir(parents=True)
+        spec = make_map.load_spec(CUSTOM_MAP)
+        (client / make_map.SLOT_FILE).write_bytes(make_map.build(spec))
+        calls = []
+        with mock.patch.object(serve, "ROOT", root), contextlib.redirect_stdout(io.StringIO()), \
+                contextlib.suppress(SystemExit):
+            make_map.main(["serve", str(CUSTOM_MAP), str(client)],
+                          serve=lambda *a: serve.custom_map(*a, call=lambda c: calls.append(c) or 0))
+        command = calls[0]
+        return {"serve config/maps/crucible.json": case(command[3:], [(root, "")],
+                                                        script=normalize(command[2], [(root, "")]))}
 
 
 def ps1_args(root, HostAddress, Vpn=False, MaxPlayers=2, Map="CTF_arena", Backdrop="spacebkgd3", Terrain=False,
@@ -247,8 +285,9 @@ def snapshot():
     docs, ps1 = text_cases()
     return {"about": "Server command lines and their effective config; regenerate with "
                      "python -I tools/test.py test_host_argv -- --update only for an intended change.",
-            "host_control": host_control_cases(), "dedicated_host": deploy_cases(),
-            "map_viewer": map_viewer_cases(), "start_lan_dogfight": ps1, "docs": docs}
+            "host_window": host_window_cases(), "dedicated_host": deploy_cases(),
+            "map_viewer": map_viewer_cases(), "make_map": custom_map_cases(), "start_lan_dogfight": ps1,
+            "docs": docs}
 
 
 def render(data):
@@ -272,21 +311,21 @@ class HostArgvTests(unittest.TestCase):
         # Guards the extraction pattern: the docs show a dozen direct server launches today.
         self.assertGreaterEqual(len(doc_commands()), 10)
 
-    def test_every_host_control_combination_parses(self):
-        # Every mode, map, terrain, node and target-ship choice the window offers.
+    def test_every_host_window_combination_parses(self):
+        # Every audience, playable map, terrain, object and target-ship choice the window offers.
+        from aoa.launchers import catalog
         with tempfile.TemporaryDirectory() as temp:
             root = make_root(Path(temp).resolve())
-            with mock.patch.object(host_control, "ROOT", root), mock.patch.object(host_control, "WORK", root / "work/host"):
-                for mode, terrain, name, buoys, turret, warp, ships in itertools.product(
-                        host_control.MODES, (True, False), registry.MAP_NAMES,
-                        (True, False), (True, False), (True, False), (0, 4, 20)):
-                    settings = {**host_control.DEFAULTS, "mode": mode, "address": ADDRESSES[mode],
-                                "terrain": terrain, "map": name, "navigation_buoys": buoys,
-                                "turret_trial": turret, "warp_trial": warp, "target_ships": ships, "max_players": 8}
-                    try:
-                        effective(host_control.server_args(settings)[1:])
-                    except ValueError as error:
-                        self.fail(f"{settings}: {error}")
+            for audience, terrain, entry, buoys, turret, warp, ships in itertools.product(
+                    ADDRESSES, (True, False), catalog.PLAYABLE_MAPS, (True, False), (True, False), (True, False),
+                    (0, 4, 20)):
+                changes = {"terrain": terrain, "target_ships": ships,
+                           "objects": {"navigation_buoys": buoys, "turret_trial": turret, "warp_trial": warp}}
+                config = window_config(root, audience, [entry.name], changes, True)
+                try:
+                    effective(config.to_argv())
+                except ValueError as error:
+                    self.fail(f"{audience} {entry.name} {changes}: {error}")
 
 
 class LauncherDefaultsTests(unittest.TestCase):
@@ -295,8 +334,8 @@ class LauncherDefaultsTests(unittest.TestCase):
         table = runtime.HOST_DEFAULTS
         self.assertEqual((server["kill_limit"], server["time_limit"], server["max_players"]),
                          (table["kill_limit"], table["time_limit_seconds"], table["max_players"]))
-        self.assertEqual((host_control.DEFAULTS["kill_limit"], host_control.DEFAULTS["time_limit_min"] * 60,
-                          host_control.DEFAULTS["max_players"]),
+        window = launcher_settings.default_host()
+        self.assertEqual((window.kill_limit, window.time_limit_seconds, window.max_players),
                          (table["kill_limit"], table["time_limit_seconds"], table["max_players"]))
         self.assertEqual((dedicated.DEFAULTS["kill_limit"], dedicated.DEFAULTS["time_limit_seconds"]),
                          (table["kill_limit"], table["time_limit_seconds"]))

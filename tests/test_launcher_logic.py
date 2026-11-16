@@ -584,6 +584,20 @@ class HostingTests(unittest.TestCase):
         self.assertEqual([r[0] for r in hosting.player_rows(status)], [2, 1])
         self.assertIn("This PC only", hosting.describe(config))
 
+    def test_stop_reason_in_plain_words(self):
+        lines = ["starting", "Host I/O failed: [Errno 99] Cannot assign requested address. Check that 192.168.0.99 "
+                             "belongs to this PC and the ports are free.", "[host exited with code 1]"]
+        self.assertIn("could not open its connection on 192.168.0.99", hosting.stop_reason(lines))
+        self.assertEqual(hosting.stop_reason(["x", "Arena error: bad thing"]), "The host stopped: Arena error: bad thing")
+        self.assertIsNone(hosting.stop_reason(["all fine"]))
+
+    def test_rotation_runs_with_sustained_delivery(self):
+        hosting.set_audience(self.settings.host, "home", "192.168.0.61")
+        hosting.set_maps(self.settings.host, ["CTF_arena", "Arena1a"])
+        run = hosting.run_config(self.settings, export_ready=False)
+        self.assertTrue(run.sustained_delivery)
+        hosting.check(run)
+
     def test_supervisor_is_the_headless_one(self):
         config = hosting.run_config(self.settings, export_ready=False)
         supervisor = hosting.supervisor_for(config, report=lambda text: None, process=mock.Mock())

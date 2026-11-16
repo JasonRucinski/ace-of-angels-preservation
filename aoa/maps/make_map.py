@@ -42,15 +42,12 @@ import math
 import re
 import shutil
 import struct
-import subprocess
-import sys
 from pathlib import Path
 
 from aoa.formats import trn as formats_trn  # noqa: E402
 from aoa.maps import registry  # noqa: E402
 
 from aoa.paths import ROOT
-from aoa import paths
 SLOT_MAP = "JRMAP"
 SLOT_FILE = registry.MAPS[registry.MAP_NAMES.index(SLOT_MAP)][2]
 KIND_MODEL, KIND_SAFE, KIND_NAV, KIND_POWERUP = 0, 2, 3, formats_trn.KIND_POWERUP_ZONE
@@ -226,23 +223,11 @@ def install(spec, client, copy_from=None):
           f"sha256 {hashlib.sha256(data).hexdigest()})")
 
 
-def serve(spec, client, seconds=0):
+def check_installed(spec, client):
+    """Before serving: the client folder holds this spec's terrain file (make_map.py install)."""
     trn = client / SLOT_FILE
     if not trn.is_file() or trn.read_bytes() != build(spec):
         raise SystemExit(f"{trn} is not this spec; run install first")
-    log = ROOT / "work/custom-map" / f"{spec['name']}.jsonl"
-    log.parent.mkdir(parents=True, exist_ok=True)
-    command = [sys.executable, "-I", str(paths.entry("station_stub", ROOT)), str(client / "SCRTY.BIN"), str(log),
-               "--profile", "local-relay", "--map", SLOT_MAP, "--backdrop", spec.get("backdrop", "spacebkgd3"),
-               "--terrain", "--spawn-at", *map(str, spec["spawn"])]
-    if any(e.get("zone") == "powerup" for e in spec["objects"]):
-        command += ["--powerup-zones", str(trn)]
-    if any("nav" in e for e in spec["objects"]):
-        command += ["--map-waypoints", str(trn), "--sustained-delivery"]
-    if seconds:
-        command += ["--seconds", str(seconds)]
-    print(f"Serving {spec['name']} on 127.0.0.1; launch the client in {client} and Play. Ctrl+C stops.")
-    sys.exit(subprocess.call(command))
 
 
 def export_obj(spec, src, out_dir, tex_dir=None):
@@ -292,7 +277,8 @@ def clearance(spec, placed):
                for p in placed if p["drawn"])
 
 
-def main(argv=None):
+def main(argv=None, serve=None):
+    """`serve` runs the map (aoa/launchers/serve.py, which tools/make_map.py passes in)."""
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = parser.add_subparsers(dest="action", required=True)
     p = sub.add_parser("build")
@@ -321,6 +307,9 @@ def main(argv=None):
     elif args.action == "install":
         install(spec, args.client, args.copy_from)
     elif args.action == "serve":
+        check_installed(spec, args.client)
+        if serve is None:
+            raise SystemExit("serve runs from the command: python -I tools/make_map.py serve SPEC CLIENT")
         serve(spec, args.client, args.seconds)
     else:
         placed = export_obj(spec, args.src, args.out_dir, args.tex_dir)

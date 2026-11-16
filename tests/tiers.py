@@ -17,6 +17,7 @@ CI = (
     "test_cli_help", "test_polite_http", "test_install_wrapper", "test_make_vessel_combat",
     "test_imports", "test_layering", "test_builds", "test_pe", "test_map_registry", "test_host_data",
     "test_host_config", "test_supervisor", "test_arena_server", "test_launcher_logic",
+    "test_launcher_windows",
     # Client suites with game-free halves: cave emulation and code checks (unicorn).
     "test_frame_clock", "test_menu_aspect", "test_visibility_fix",
 )
