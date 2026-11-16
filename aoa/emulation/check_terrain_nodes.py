@@ -4,8 +4,6 @@ No rendering, object allocation, online loading or gameplay is exercised.
 
 Usage: python -I tools/run.py aoa.emulation.check_terrain_nodes CLIENT.EXE.orig OUT.json
 """
-import hashlib
-import json
 import math
 import struct
 import sys
@@ -13,29 +11,16 @@ from pathlib import Path
 
 from aoa import cli
 from aoa.maps.arena1a_audit import EXPECTED_DISPATCH
-from aoa.emulation.emu import Emu, HEAP, STACK, STOP
+from aoa.emulation.emu import Emu, check_main, HEAP, STACK, STOP
 from aoa.builds import CLIENT_SHA256
-from aoa.analysis.pe_util import PE
-from unicorn import UC_HOOK_CODE
 from unicorn.x86_const import UC_X86_REG_EAX, UC_X86_REG_EDX, UC_X86_REG_EIP, UC_X86_REG_ESP
 
 
-def main(argv=None):
-    ap = cli.parser(__doc__)
-    ap.add_argument("source", type=Path, help="pristine 2.9.2 client (AOACLIENT.EXE.orig)")
-    ap.add_argument("output", type=Path, help="JSON report to write")
-    a = ap.parse_args(argv)
-    source, output = a.source, a.output
-    if hashlib.sha256(source.read_bytes()).hexdigest() != CLIENT_SHA256["2.9.2"]:
-        raise ValueError("requires original 2.9.2")
-    emu = Emu(PE(source))
-    stops = set(EXPECTED_DISPATCH)
-
-    def hook(uc, address, size, _):
-        if address in stops:
-            uc.emu_stop()
-
-    emu.uc.hook_add(UC_HOOK_CODE, hook)
+def run(source):
+    """The report for the client at `source` (the original 2.9.2 executable)."""
+    source = Path(source)
+    emu = Emu.for_build(source, "2.9.2")
+    stops = emu.stop_at(EXPECTED_DISPATCH)
     categories = {}
     for category in range(12):
         emu.uc.reg_write(UC_X86_REG_EAX, category)
@@ -71,9 +56,11 @@ def main(argv=None):
               "parent_position_cases": 32, "parent_transform_matches_row_vector_math": True,
               "scope": "isolated original category switch and nested position arithmetic; no allocation, rendering, online loading, collision or gameplay",
               "all_arena1a_nodes_working": False}
-    output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
-    print(json.dumps(report, indent=2))
+    return report
+
+
+def main(argv=None):
+    return check_main(__doc__, run, argv)
 
 
 if __name__ == "__main__":

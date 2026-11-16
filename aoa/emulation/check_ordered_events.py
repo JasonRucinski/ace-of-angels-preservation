@@ -7,15 +7,14 @@ loop, authenticated binding, reconnect lifecycle and other handlers remain open.
 Usage: python -I tools/run.py aoa.emulation.check_ordered_events CLIENT.EXE.orig OUT.json
 """
 import hashlib
-import json
 import struct
 import sys
 from pathlib import Path
 
 from aoa import cli
 from aoa.client.patches import explicit_protection as protection
-from aoa.emulation.emu import Emu, HEAP, SCRATCH, STACK, STUBS, STOP
-from aoa.builds import CLIENT_SHA256
+from aoa.emulation.emu import Emu, check_main, HEAP, SCRATCH, STACK, STUBS, STOP
+from aoa.builds import require_build
 from aoa.client.base import Asm, d32, jmp_patch
 from aoa.analysis.pe_util import PE
 from unicorn import UC_HOOK_CODE
@@ -200,19 +199,16 @@ def probe(path):
             "authoritative_client_gate_passed": False}
 
 
-def main(argv=None):
-    ap = cli.parser(__doc__)
-    ap.add_argument("source", type=Path, help="pristine 2.9.2 client (AOACLIENT.EXE.orig)")
-    ap.add_argument("output", type=Path, help="JSON report to write")
-    a = ap.parse_args(argv)
-    path, output = a.source, a.output
-    source_hash = hashlib.sha256(path.read_bytes()).hexdigest()
-    if source_hash != CLIENT_SHA256["2.9.2"]:
-        raise ValueError("requires pinned pristine 2.9.2 executable")
+def run(path):
+    """The report for the client at `path` (the original 2.9.2 executable)."""
+    path = Path(path)
+    source_hash = hashlib.sha256(require_build(path.read_bytes(), "2.9.2")).hexdigest()
     result = {"source_sha256": source_hash, **probe(path)}
-    output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
-    print(json.dumps(result, indent=2))
+    return result
+
+
+def main(argv=None):
+    return check_main(__doc__, run, argv)
 
 
 if __name__ == "__main__":

@@ -4,7 +4,6 @@ Usage: python -I tools/run.py aoa.emulation.check_client_extensions CLIENT.EXE.o
 Passing these probes does not complete the authoritative-client gate.
 """
 import hashlib
-import json
 import random
 import struct
 import sys
@@ -14,8 +13,8 @@ from pathlib import Path
 from aoa import cli
 from aoa.client.patches import explicit_protection as protection
 from aoa.client import prepare
-from aoa.emulation.emu import Emu, HEAP, SCRATCH, STACK, STOP
-from aoa.builds import CLIENT_SHA256
+from aoa.emulation.emu import Emu, check_main, HEAP, SCRATCH, STACK, STOP
+from aoa.builds import CLIENT_SHA256, require_build
 from aoa.analysis.pe_util import PE
 from unicorn import UC_HOOK_CODE
 from unicorn.x86_const import (UC_X86_REG_EIP, UC_X86_REG_ESP, UC_X86_REG_ESI,
@@ -162,13 +161,7 @@ def ammunition_probe(path):
 def protection_consumers_probe(path):
     """Verify the actual damage/munition branch, not just the toggle name."""
     emu = Emu(PE(path))
-    stops = {0x49BD58, 0x49BF8D, 0x4B145E, 0x4B148C}
-
-    def hook(uc, address, size, _):
-        if address in stops:
-            uc.emu_stop()
-
-    emu.uc.hook_add(UC_HOOK_CODE, hook)
+    emu.stop_at({0x49BD58, 0x49BF8D, 0x4B145E, 0x4B148C})
     for enabled in (0, 1):
         emu.write(HEAP + 0x240, bytes([enabled]))
         emu.uc.reg_write(UC_X86_REG_EDI, HEAP)
@@ -231,15 +224,11 @@ def health_reset_probe(path):
             "remaining": "local death callback, arbitrary health correction and server-owned respawn state"}
 
 
-def main(argv=None):
-    ap = cli.parser(__doc__)
-    ap.add_argument("source", type=Path, help="pristine 2.9.2 client (AOACLIENT.EXE.orig)")
-    ap.add_argument("output", type=Path, help="JSON report to write")
-    a = ap.parse_args(argv)
-    source, output = a.source, a.output
+def run(source):
+    """The report for the client at `source` (the original 2.9.2 executable)."""
+    source = Path(source)
     original = source.read_bytes()
-    if hashlib.sha256(original).hexdigest() != CLIENT_SHA256["2.9.2"]:
-        raise ValueError("requires hash-pinned original 2.9.2 client")
+    require_build(original, "2.9.2")
     prepared = prepare.configure(original, experimental_protection=True)
     with tempfile.TemporaryDirectory(prefix="aoa-extension-probe-") as tmp:
         patched = Path(tmp) / "patched.exe"
@@ -259,9 +248,11 @@ def main(argv=None):
                                 "orientation and prediction correction", "health and ammunition setters",
                                 "hold-dead and respawn release", "world readiness",
                                 "session/entity generations before dispatch", "ordered application acknowledgments"]}
-    output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
-    print(json.dumps(result, indent=2))
+    return result
+
+
+def main(argv=None):
+    return check_main(__doc__, run, argv)
 
 
 if __name__ == "__main__":

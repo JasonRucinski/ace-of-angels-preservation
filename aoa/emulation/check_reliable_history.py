@@ -3,14 +3,13 @@
 Usage: python -I tools/run.py aoa.emulation.check_reliable_history CLIENT.EXE OUT.json
 """
 import hashlib
-import json
 import struct
 import sys
 from pathlib import Path
 
 from aoa import cli
-from aoa.builds import CLIENT_SHA256
-from aoa.emulation.emu import Emu, SCRATCH, STACK, STOP
+from aoa.builds import require_build
+from aoa.emulation.emu import Emu, check_main, SCRATCH, STACK, STOP
 from aoa.analysis.pe_util import PE
 from aoa.host.server import ReliableRemovals
 from unicorn import UC_HOOK_CODE
@@ -124,16 +123,11 @@ def receive_probe(pe, combat=False):
             "scope": "admitted-peer wrapper path and removal case; no wire decode, sender lookup, world destruction or rendering"}
 
 
-def main(argv=None):
-    ap = cli.parser(__doc__)
-    ap.add_argument("source", help="pristine 2.9.2 client (AOACLIENT.EXE.orig)")
-    ap.add_argument("output", help="JSON report to write")
-    a = ap.parse_args(argv)
-    source, output = a.source, a.output
+def run(source):
+    """The report for the client at `source` (the original 2.9.2 executable)."""
+    source = Path(source)
     pe = PE(source)
-    digest = hashlib.sha256(pe.data).hexdigest()
-    if digest != CLIENT_SHA256["2.9.2"]:
-        raise ValueError("requires original 2.9.2 client")
+    digest = hashlib.sha256(require_build(pe.data, "2.9.2")).hexdigest()
     emu = Emu(pe)
     emu.thiscall(0x4C26D0, SCRATCH, 30)
 
@@ -156,8 +150,11 @@ def main(argv=None):
               "receive_probe": receive_probe(pe),
               "combat_wrapper_probe": receive_probe(pe, combat=True),
               "scope": "isolated original duplicate filter and admitted-peer reliable receive path; not full network dispatch or renderer"}
-    Path(output).write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
-    print(json.dumps(result, indent=2))
+    return result
+
+
+def main(argv=None):
+    return check_main(__doc__, run, argv)
 
 
 if __name__ == "__main__":
