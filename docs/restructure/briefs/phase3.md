@@ -20,6 +20,18 @@ quick start. You may add small, tested functions to `aoa/client/` and
 `aoa/host/` when a launcher needs a fact they own, but not change their
 behaviour.
 
+Left over from phase 2 for you to finish:
+
+- `map_viewer serve` and `make_map serve` still build their own server
+  command line, because `aoa/maps` may not import `aoa/host`. Move the
+  serving part to `aoa/launchers/` (or make it a `tools/aoa_host.py`
+  subcommand) on `HostConfig`, keep the documented commands working, and
+  update `tests/test_host_argv.py` for the cases that change (list each).
+- `README.md` still points at `rotation.json`; the Linux host's one file is
+  now `deploy/linux/host.json.example`.
+- `aoa/host/server.py` re-exports old names through `__all__` for tests and
+  the reel. Do not add new uses of them.
+
 ## Structure
 
 ```

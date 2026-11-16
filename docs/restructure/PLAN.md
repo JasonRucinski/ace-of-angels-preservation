@@ -182,11 +182,11 @@ the layering test has no exceptions.
 
 ### Phase 2. Rebuild inside the packages
 
-- [ ] **2a Client**: patch descriptor, registry and engine (rule 4);
+- [x] **2a Client**: patch descriptor, registry and engine (rule 4);
   per-tool installers and their backups removed; `layout.py` owns cave and
   data reservations; the two hidden interactions declared and tested;
   experiments archived.
-- [ ] **2b Host**: `run()` becomes an `ArenaServer` class, then splits;
+- [x] **2b Host**: `run()` becomes an `ArenaServer` class, then splits;
   data modules for maps, vessels, object slots, ports and defaults;
   `HostConfig`, `HostProcess`, restart budget and supervisor (rule 5);
   server no longer imports `client` or audit code; one delivery engine for
@@ -196,6 +196,15 @@ the layering test has no exceptions.
   `aoa/builds.py`; emulator library split from its 2.7.1 command line;
   disassembly cache keyed by executable hash; evidence index with generator
   commands.
+
+Done 15 Nov: 2a (patch snapshot unchanged; prepared output pinned for 25
+option sets) and 2b (server command lines changed only by the flag renames
+and removals listed in its commits). Open from 2b: `map_viewer serve` and
+`make_map serve` still build their own command line, because `aoa/maps` may
+not import `aoa/host`; phase 3 moves them. The 30-event delivery engine
+still carries despawns for hosts without sustained delivery; making the
+windowed engine the only path would change the wire and is a separate
+decision.
 
 Gate: snapshots byte-identical for patches; server command lines identical
 or changed only as listed in the commit; layering test has no expected
