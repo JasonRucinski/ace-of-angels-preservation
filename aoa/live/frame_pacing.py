@@ -18,46 +18,17 @@ and camera motion each issued frame carries. It does not observe the GPU or
 the compositor; the screen can still differ (wrapper queueing, DWM).
 """
 import argparse
-import ctypes
 import json
 import math
 import statistics
 import struct
 import time
-from ctypes import wintypes
 from pathlib import Path
 
-APP_POINTER, FRAME_COUNTER = 0x5E6E58, 0x38
-GAME_CLOCK = 0x5E8E5C
-GRAPHICS_POINTER, MAIN_CAMERA = 0x60C828, 0x2510
-APP_ACTIVE = 0x5E6E28   # main loop renders only while set (0x408061); else the wakeup timer does
+from aoa.live.addresses_292 import APP_ACTIVE, APP_POINTER, FRAME_COUNTER, GAME_CLOCK, GRAPHICS_POINTER, MAIN_CAMERA
+from aoa.live.procmem import Process  # read-only (PROCESS_VM_READ), checked to be 2.9.2
+
 HALF = 5                # frames each side for the local camera speed
-
-
-class Process:
-    def __init__(self, pid):
-        self.k = k = ctypes.WinDLL("kernel32", use_last_error=True)
-        k.OpenProcess.argtypes = [wintypes.DWORD, wintypes.BOOL, wintypes.DWORD]
-        k.OpenProcess.restype = wintypes.HANDLE
-        k.ReadProcessMemory.argtypes = [wintypes.HANDLE, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_size_t,
-                                        ctypes.POINTER(ctypes.c_size_t)]
-        self.handle = k.OpenProcess(0x10, False, pid)  # PROCESS_VM_READ only
-        if not self.handle:
-            raise ctypes.WinError(ctypes.get_last_error())
-        self.buf = ctypes.create_string_buffer(64)
-        self.got = ctypes.c_size_t()
-
-    def read(self, address, size):
-        if not self.k.ReadProcessMemory(self.handle, address, self.buf, size, ctypes.byref(self.got)) \
-                or self.got.value != size:
-            raise ctypes.WinError(ctypes.get_last_error())
-        return self.buf.raw[:size]
-
-    def u32(self, address):
-        return struct.unpack("<I", self.read(address, 4))[0]
-
-    def close(self):
-        self.k.CloseHandle(self.handle)
 
 
 def percentile(values, q):
