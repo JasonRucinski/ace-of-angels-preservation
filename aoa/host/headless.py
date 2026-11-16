@@ -6,7 +6,8 @@
 
 CONFIG is a HostConfig JSON file (aoa/host/config.py): the Linux
 deploy/linux/host.json.example, or work/host/host.json, which the host window
-writes for each run. The older Linux pair is still read: a rotation.json
+writes for each run, or the launchers' work/settings.json (its "host"
+object, with its game folder). The older Linux pair is still read: a rotation.json
 without "schema" (deploy/linux/rotation.json.example) takes AOA_BIND_ADDRESS
 and AOA_MAX_PLAYERS from the environment or a host.env beside it, and the
 paths of the original aoa-host.service. Without CONFIG the defaults apply:
@@ -90,6 +91,15 @@ def load(path=None, environ=None):
         raise ConfigError(f"{path} is not JSON: {error}") from None
     if isinstance(data, dict) and "schema" not in data and "maps" in data:
         return legacy_config(path, environ)
+    if isinstance(data, dict) and {"host", "client", "game_folder"} & set(data):
+        # The launchers' work/settings.json: its "host" object, with the shared game folder.
+        host = data.get("host", {"schema": data.get("schema")})
+        if not isinstance(host, dict):
+            raise ConfigError(f"{path}: \"host\" must be a JSON object")
+        host = dict(host)
+        if isinstance(data.get("game_folder"), str) and not (host.get("paths") or {}).get("game"):
+            host["paths"] = {**(host.get("paths") or {}), "game": data["game_folder"]}
+        return HostConfig.from_json(host)
     return HostConfig.from_json(data)
 
 
