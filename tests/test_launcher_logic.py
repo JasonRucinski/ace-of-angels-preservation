@@ -18,7 +18,8 @@ from unittest import mock
 from aoa.client import install_wrapper, patches, prepare
 from aoa.host import defaults
 from aoa.host.config import HostConfig
-from aoa.launchers import catalog, game_folder, install, join, netinfo, settings
+from aoa.host.config import ConfigError
+from aoa.launchers import catalog, game_folder, hosting, install, join, netinfo, settings
 from aoa.maps import registry
 from tests import support_patches
 
@@ -467,6 +468,130 @@ class NetinfoTests(unittest.TestCase):
 
     def test_real_lookup_sends_nothing_and_returns_a_list(self):
         self.assertIsInstance(netinfo.addresses(), list)
+
+
+class FakeSupervisor:
+    def __init__(self):
+        self.calls, self.state = [], {"map": "CTF_arena"}
+        self.process = mock.Mock(command=lambda line: self.calls.append(("say", line)))
+
+    def stop(self):
+        self.calls.append(("stop",))
+
+    def change(self, config):
+        self.calls.append(("change", config.maps))
+
+    def start(self, config):
+        self.calls.append(("start", config.maps, self.state["map"]))
+
+
+class HostingTests(unittest.TestCase):
+    def setUp(self):
+        self.root = temp_dir(self)
+        game = self.root / "game/2.9.2"
+        game.mkdir(parents=True)
+        (game / "SCRTY.BIN").write_bytes(bytes(256))
+        self.settings = settings.Settings()
+        self.settings.host.root = self.root
+
+    def test_audience_maps_and_run_config(self):
+        config = self.settings.host
+        hosting.set_audience(config, "home", " 192.168.0.61 ")
+        self.assertEqual((config.profile, config.bind_address), ("lan-dogfight", "192.168.0.61"))
+        hosting.set_audience(config, "this-pc", "192.168.0.61")
+        self.assertEqual(config.bind_address, "127.0.0.1")
+        found = [("192.168.0.61", "home"), ("100.101.102.103", "vpn")]
+        hosting.set_audience(config, "vpn")
+        self.assertEqual(hosting.address_choices(config, found), ["100.101.102.103"])
+        hosting.set_maps(config, ["Arena1a", "CTF_arena", "Arena1a"])
+        self.assertEqual((config.maps, config.managed, config.terrain), (["Arena1a", "CTF_arena"], {}, True))
+        hosting.set_maps(config, ["Arena1a"])
+        self.assertIsNone(config.managed)
+        with self.assertRaises(ConfigError):
+            hosting.set_maps(config, [])
+        config.objects.update(navigation_buoys=True, turret_trial=True, warp_trial=True)
+        run = hosting.run_config(self.settings, export_ready=False)
+        self.assertFalse(any(run.objects[k] for k in ("navigation_buoys", "turret_trial", "warp_trial")))
+        self.assertTrue(run.console and run.objects["powerups"])
+        self.assertTrue(config.objects["navigation_buoys"])  # the saved settings keep the choice
+        run = hosting.run_config(self.settings, export_ready=True)
+        self.assertEqual([run.objects[k] for k in ("navigation_buoys", "turret_trial", "warp_trial")],
+                         [True, True, False])  # warp gates: this PC only
+        self.assertTrue(run.sustained_delivery)
+        self.assertEqual(run.path("game"), self.root / "game/2.9.2")
+
+    def test_check_before_start(self):
+        config = hosting.run_config(self.settings, export_ready=False)
+        hosting.check(config)
+        hosting.set_audience(config, "home", "")
+        with self.assertRaisesRegex(ConfigError, "home-network address"):
+            hosting.check(config)
+        hosting.set_audience(config, "home", "8.8.8.8")
+        with self.assertRaisesRegex(ConfigError, "Choose an address from the list"):
+            hosting.check(config)
+        hosting.set_audience(config, "this-pc")
+        hosting.set_maps(config, ["JRMAP"])
+        with self.assertRaisesRegex(ConfigError, "Install JRMAP terrain"):
+            hosting.check(config)
+        self.settings.game_folder = str(self.root / "nowhere")
+        with self.assertRaisesRegex(ConfigError, "No game found"):
+            hosting.check(hosting.run_config(self.settings, export_ready=False))
+
+    def test_share_line_reaches_the_join_tab(self):
+        config = self.settings.host
+        self.assertIn("This PC", hosting.share_text(config))
+        self.assertEqual(hosting.firewall_commands(config), [])
+        for key, address, server in (("home", "192.168.0.61", "aoalan"), ("vpn", "100.101.102.103", "aoavpn"),
+                                     ("home", "10.0.0.5", "10.0.0.5")):
+            hosting.set_audience(config, key, address)
+            target = join.parse(hosting.share_text(config))
+            self.assertEqual((target.address, join.plan(target).server), (address, server))
+
+    def test_firewall_commands_are_the_documented_ones(self):
+        config = self.settings.host
+        for key, address, doc in (("home", "192.168.0.61", "lan-dogfight.md"),
+                                  ("vpn", "100.101.102.103", "vpn-dogfight.md")):
+            hosting.set_audience(config, key, address)
+            text = (settings.ROOT / "docs" / doc).read_text(encoding="utf-8")
+            for line in hosting.firewall_commands(config):
+                self.assertIn(line.replace("5031,5033", "5031,5033"), text)
+
+    def test_change_map_checks_first(self):
+        supervisor = FakeSupervisor()
+        bad = hosting.run_config(self.settings, export_ready=False)
+        hosting.set_maps(bad, ["JRMAP"])
+        with self.assertRaises(ConfigError):
+            hosting.change_map(supervisor, bad, sleep=lambda s: None)
+        self.assertEqual(supervisor.calls, [])  # nothing said, nothing stopped
+        good = hosting.run_config(self.settings, export_ready=False)
+        hosting.set_maps(good, ["Arena1a"])
+        hosting.change_map(supervisor, good, sleep=lambda s: None)
+        self.assertEqual([c[0] for c in supervisor.calls], ["say", "stop", "change", "start"])
+        self.assertIn("Arena1a", supervisor.calls[0][1])
+        self.assertEqual(supervisor.calls[-1], ("start", ["Arena1a"], "Arena1a"))
+
+    def test_status_text_and_rows(self):
+        config = self.settings.host
+        self.assertEqual(hosting.status_lines(None, config), ("Starting…", ""))
+        status = {"map": "CTF_arena", "match": 2, "uptime_s": 3725, "max_players": 8, "arena_joins_used": 3,
+                  "arena_joins_limit": 49, "banned_ips": 0,
+                  "players": [{"slot": 1, "pilot": "a", "kills": 1, "deaths": 0},
+                              {"slot": 2, "pilot": "b", "kills": 4, "deaths": 2, "ping_ms": 31, "loaded": True}]}
+        headline, detail = hosting.status_lines(status, config, age=20)
+        self.assertIn("1:02:05", headline)
+        self.assertIn("not responding", headline)
+        self.assertIn("2 of 8 players", detail)
+        self.assertEqual([r[0] for r in hosting.player_rows(status)], [2, 1])
+        self.assertIn("This PC only", hosting.describe(config))
+
+    def test_supervisor_is_the_headless_one(self):
+        config = hosting.run_config(self.settings, export_ready=False)
+        supervisor = hosting.supervisor_for(config, report=lambda text: None, process=mock.Mock())
+        self.assertIsNone(supervisor.state_path)
+        hosting.set_maps(config, ["Arena1a", "CTF_arena"])
+        supervisor = hosting.supervisor_for(config, report=lambda text: None, process=mock.Mock())
+        self.assertEqual(supervisor.state_path, config.path("state"))
+        self.assertEqual(supervisor.watchdog_timeout, defaults.MANAGED["health_timeout_seconds"])
 
 
 if __name__ == "__main__":
