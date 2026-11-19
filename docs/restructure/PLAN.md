@@ -192,7 +192,7 @@ the layering test has no exceptions.
   server no longer imports `client` or audit code; one delivery engine for
   play; `--advertised-address` and `--arena1a-buoys` removed; flags renamed
   by role with the old names kept as aliases for one release.
-- [ ] **2c Research and analysis**: one HTTP helper; manifest-driven fetch;
+- [x] **2c Research and analysis**: one HTTP helper; manifest-driven fetch;
   `aoa/builds.py`; emulator library split from its 2.7.1 command line;
   disassembly cache keyed by executable hash; evidence index with generator
   commands.
@@ -212,24 +212,30 @@ failures left; all suites at baseline or better.
 
 ### Phase 3. Launchers
 
-- [ ] One settings file and one catalog (maps with notes and a playable flag,
+- [x] One settings file and one catalog (maps with notes and a playable flag,
   backdrops, ports, defaults, feature to minimum patch level).
-- [ ] **Player launcher** (`Play.cmd`): first-run checklist (find or download
+- [x] **Player launcher** (`Play.cmd`): first-run checklist (find or download
   the game, verify, apply fixes, register the login skin, install the
   wrapper), then Play, Join a friend (paste the host's address; checks it
   resolves and that the host answers), and Options grouped as fixes, visual
   extras, graphics quality and experimental. Shows the installed patch level.
-- [ ] **Host launcher** (`Host.cmd`): who can join, address, maps (one or a
+- [x] **Host launcher** (`Host.cmd`): who can join, address, maps (one or a
   rotation, playable maps only, with notes), rules, Start; then a share box
   with the address to give players, the player table, and change-map that
   validates before it restarts.
-- [ ] **Headless host** reads the same settings file through the same
+- [x] **Headless host** reads the same settings file through the same
   supervisor; `start_lan_dogfight.ps1` becomes a two-line wrapper;
   `setup_game.ps1` stays as a fallback.
-- [ ] Errors show a dialog with the cause and are written to
+- [x] Errors show a dialog with the cause and are written to
   `work/logs/launcher.log`. Long work runs off the window thread.
-- [ ] Player install needs no research packages: requirements split into
+- [x] Player install needs no research packages: requirements split into
   player (none), texture pack and research.
+
+Done 19 Nov: 2c (one fetcher, evidence index, requirements split, generated
+tools index; the CI tier passes strictly on Python 3.12 with the research
+packages, 47 of 47) and phase 3 (both windows rebuilt on the engines;
+screenshots in [screens/](screens/), captured on Linux under a virtual
+screen; never run on Windows).
 
 Gate: launcher logic covered by game-free tests (settings validation,
 profile to command line, supervisor with a fake child process, join address

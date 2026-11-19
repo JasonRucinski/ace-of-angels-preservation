@@ -16,6 +16,20 @@ records of the audit) and `docs/images/`; `README.md`, `CONTEXT.md`,
 the handoff move in item 5; code only where a docstring, usage line, error
 message or test names a doc path that moves; new tests under `tests/`.
 
+Notes from phases 2c and 3 for this phase:
+
+- `tools/README.md` is generated (`tools/run.py aoa.tools_index`, checked by
+  `tests/test_tools_index.py`); item 4's tools index builds on it.
+- Docs still name the shim module names that 2c kept for compatibility
+  (`CONTEXT.md` tool table, `data/magazine-mentions.md`, `findings.md`
+  around the `inventory` and full-text tools): switch them to the current
+  commands. `docs/private-web-archive.md` should describe the new `cdx`
+  subcommand; `CLAUDE.md` the `--log` option of `ia_disc_find`.
+- 2.8.2 is now fetched from discmaster first with archive.org as the mirror:
+  `play/README.md` and `reference/tools.md` should say so where they name
+  the source.
+- `docs/restructure/file-map.tsv` is a record of phase 1; do not update it.
+
 ## Target tree
 
 ```
