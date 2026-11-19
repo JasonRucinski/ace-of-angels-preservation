@@ -558,7 +558,7 @@ class HostWindow:
             if row[0] == chosen:
                 self.table.selection_set(iid)
 
-    def players(self):
+    def player_count(self):
         status = self.supervisor.process.status()[0] if self.supervisor else None
         return len((status or {}).get("players") or [])
 
@@ -587,7 +587,7 @@ class HostWindow:
         if self.supervisor is None:
             return
         name = self.next_map.get().split(":")[0]
-        n = self.players()
+        n = self.player_count()
         if n and not tkcommon.ask(self.root, "Change map", f"{n} player(s) will be disconnected. They quit the "
                                                           f"game and rejoin to fly on {name}.", "Change map"):
             return
@@ -609,7 +609,7 @@ class HostWindow:
     def stop(self, then=None):
         if self.supervisor is None:
             return
-        n = self.players()
+        n = self.player_count()
         if n and not tkcommon.ask(self.root, "Stop host", f"{n} player(s) will be disconnected.", "Stop host"):
             return
         supervisor = self.supervisor

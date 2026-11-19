@@ -302,6 +302,7 @@ class InstallStepTests(SyntheticGame, unittest.TestCase):
         self.assertFalse((folder / "WISE0001.DLL").exists())
         self.assertEqual((folder / "AOACLIENT.EXE.orig").read_bytes(), self.pristine)
         self.assertFalse(install.complete(install.checklist(context)))
+        self.assertFalse(install.complete([]))
         install.Fixes(context).run(lambda text: None)
         context.refresh()
         rows = install.checklist(context)

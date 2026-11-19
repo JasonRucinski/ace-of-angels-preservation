@@ -307,8 +307,9 @@ def checklist(context):
 
 def complete(rows):
     """Whether the checklist can be left: every step done, skipped, optional or unavailable."""
-    return all(status.state in ("done", "skipped", "unavailable", "optional") for _, status in rows) and \
-        rows[2][1].state == "done"
+    states = {step.key: status.state for step, status in rows}
+    return bool(rows) and states.get("fixes") == "done" and \
+        all(state in ("done", "skipped", "unavailable", "optional") for state in states.values())
 
 
 def open_page(url, opener=None):

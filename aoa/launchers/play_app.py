@@ -129,7 +129,8 @@ class PlayWindow:
 
         def done(result):
             self.show(*result)
-            self.status.set("")
+            if self.status.get() == "Looking at your game…":
+                self.status.set("")
 
         self.worker.submit(job, done, lambda error: self.fail("Your game folder could not be read.", error),
                            self.status.set)
