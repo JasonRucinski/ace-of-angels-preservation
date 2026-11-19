@@ -67,7 +67,7 @@ wrapper). Hover over an option to see what it does. Options that change the
 same code explain why only one can be on. **Recommended** and **Original
 visuals** set them all at once; **Apply** saves and checks them. **Restore the
 original game** undoes every fix, and **Install JRMAP terrain** makes the file
-JRMAP needs. Details: [client-setup.md](../reference/client-patches.md#client-launcher-and-visual-options).
+JRMAP needs. Details: [client-setup.md](launcher.md#client-launcher-and-visual-options).
 
 Optional: [texture-pack.md](texture-pack.md) makes sharper, 32-bit ship and
 station skins from your own copy.

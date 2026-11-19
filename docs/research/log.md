@@ -22,7 +22,7 @@ pack. Original visuals clears all visual additions; power-up pickups have a
 separate control. Ship-menu framing is now optional (`--no-menu-framing`).
 Temporary-copy tests cover toggles, checked launch, texture caching/restoration,
 rollback and GUI wiring; no in-flight rendering claim. See
-[launcher options](../reference/client-patches.md#client-launcher-and-visual-options).
+[launcher options](../play/launcher.md#client-launcher-and-visual-options).
 
 First new map (27 Oct 2026): `tools/make_map.py` writes a JSON spec as a
 native 2.9.2 `.TRN`, in the record layout of JRMAP's editor records.
