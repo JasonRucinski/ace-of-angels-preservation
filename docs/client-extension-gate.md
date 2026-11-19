@@ -2,7 +2,7 @@
 
 Implementation checkpoint, 21 October 2026. This gate is **not passed**.
 It applies to the deferred authoritative-server project. The subsequently
-approved [private LAN relay milestone](lan-dogfight.md) does not depend on these
+approved [private LAN relay milestone](host/lan.md) does not depend on these
 extensions and does not install the protection or ordered-event experiments.
 All work here is localhost-only and keeps the original 2.9.2 client.
 No active game executable is modified by the automated probes.

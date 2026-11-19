@@ -49,7 +49,7 @@ def prepare_esrgan():
     if all((ESRGAN_DIR / m).is_file() for m in ESRGAN_MEMBERS):
         return exe
     if not ESRGAN_ZIP.is_file():
-        raise SystemExit(f"missing {ESRGAN_ZIP.relative_to(ROOT)}; see docs/texture-pack.md")
+        raise SystemExit(f"missing {ESRGAN_ZIP.relative_to(ROOT)}; see docs/play/texture-pack.md")
     if hashlib.sha256(ESRGAN_ZIP.read_bytes()).hexdigest() != ESRGAN_SHA256:
         raise SystemExit(f"{ESRGAN_ZIP.name} does not match the expected SHA-256; download it again")
     with zipfile.ZipFile(ESRGAN_ZIP) as z:

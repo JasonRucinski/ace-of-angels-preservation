@@ -3,7 +3,7 @@
   Build a playable Ace of Angels 2.9.2 folder for Windows 10/11 from the original installer.
 
 .DESCRIPTION
-  Needs the project Python environment .venv (see docs\play.md).
+  Needs the project Python environment .venv (see docs\play\README.md).
 
   1. tools\make_install.py      - extract the game payload (installer is never run);
                                   the untouched client is kept as AOACLIENT.EXE.orig
@@ -31,7 +31,7 @@ $ErrorActionPreference = "Stop"
 Set-Location (Split-Path $PSScriptRoot)
 $python = ".venv\Scripts\python.exe"
 if (-not (Test-Path $python)) {
-    throw "Missing project Python environment: $python. Create it first: py -3.12 -m venv .venv; then $python -m pip install -r requirements.txt (see docs\play.md)"
+    throw "Missing project Python environment: $python. Create it first: py -3.12 -m venv .venv; then $python -m pip install -r requirements.txt (see docs\play\README.md)"
 }
 if ($Wrapper -and $PSBoundParameters.ContainsKey("Wrapper") -and -not (Test-Path $Wrapper)) {
     throw "Wrapper zip not found: $Wrapper. Fix the path, or pass -Wrapper `"`" for native DirectX 7."
@@ -42,7 +42,7 @@ if (-not (Test-Path $Installer) -and -not $PSBoundParameters.ContainsKey("Instal
     $Installer = $fetched
 }
 if (-not (Test-Path $Installer)) {
-    throw "Installer not found: $Installer. Run: $python -I tools\fetch_known_builds.py builds\  (see docs\play.md)"
+    throw "Installer not found: $Installer. Run: $python -I tools\fetch_known_builds.py builds\  (see docs\play\README.md)"
 }
 
 function Invoke-Step([string]$What, [scriptblock]$Cmd) {

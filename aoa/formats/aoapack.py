@@ -1,7 +1,7 @@
 """Reader for AoA CDataHandler archives (*.aoa) and the CCompress codec.
 
-Derived from the 2.7.1 client (SHA-256 b179c3c2...); see docs/findings.md
-section 6 ("Data archives") and docs/assets.md.
+Derived from the 2.7.1 client (SHA-256 b179c3c2...); see docs/research/findings.md
+section 6 ("Data archives") and docs/reference/asset-formats.md.
 
   CDataHandler::ReadHeader   0x60CAB0   archive header / directory
   CDataHandler entry read    0x60CE00   seek, read, decrypt, decompress

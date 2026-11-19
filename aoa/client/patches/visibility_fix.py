@@ -1,4 +1,4 @@
-"""Bounded trigonometry in the 2.9.2 visibility routine (render-pipeline-audit.md).
+"""Bounded trigonometry in the 2.9.2 visibility routine (docs/research/rendering/pipeline-audit.md).
 
 0x543000 computes a node's camera-relative direction, dots it with the camera
 forward vector (+0x174) and, for larger projected sizes, at 0x5431A1 calls

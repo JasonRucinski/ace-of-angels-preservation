@@ -38,8 +38,8 @@ executables, `work/` exports), which this repository does not contain.
 ## offline_baseline/
 
 The offline rendering experiment, described in
-[docs/offline-rendering-baseline.md](../docs/offline-rendering-baseline.md)
-and [docs/render-pipeline-audit.md](../docs/render-pipeline-audit.md).
+[docs/research/rendering/offline-baseline.md](../docs/research/rendering/offline-baseline.md)
+and [docs/research/rendering/pipeline-audit.md](../docs/research/rendering/pipeline-audit.md).
 
 | Script | Frozen output |
 |---|---|

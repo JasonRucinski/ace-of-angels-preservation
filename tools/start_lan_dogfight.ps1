@@ -2,9 +2,9 @@
 .SYNOPSIS
 Start the private LAN or VPN dogfight relay. Does not change firewall or client files.
 .DESCRIPTION
-A wrapper around tools/aoa_host.py run (the headless host; see docs/lan-dogfight.md).
+A wrapper around tools/aoa_host.py run (the headless host; see docs/host/lan.md).
 -Vpn selects the vpn-dogfight profile for players who reach this PC through a
-private VPN such as Tailscale, ZeroTier or WireGuard (see docs/vpn-dogfight.md).
+private VPN such as Tailscale, ZeroTier or WireGuard (see docs/host/vpn.md).
 The host reads console commands (status, kick <slot>, ban <slot>, end,
 say <text>, quit, help) and rewrites work/host/<profile>-status.json every
 two seconds, the file the host window uses. A crashed host restarts up to 3

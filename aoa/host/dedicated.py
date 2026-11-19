@@ -7,7 +7,7 @@ Players must quit/relaunch between sessions; this adds no client reconnect hook.
 This is the original command line of deployed Linux hosts (a rotation.json
 plus host.env arguments); it is kept working as it is. It builds a HostConfig
 and runs the shared Supervisor with no restarts of its own. New hosts use
-tools/aoa_host.py with one host.json (docs/linux-host.md).
+tools/aoa_host.py with one host.json (docs/host/linux.md).
 """
 import argparse
 import json

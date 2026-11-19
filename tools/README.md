@@ -36,7 +36,7 @@ Playing and hosting need no packages. Analysis and emulation need
 | `dedicated_host.py` | *shim* for `aoa.host.dedicated`: Supervise fresh game sessions, persistent map rotation and a status watchdog. |
 | `export_assets.py` | *shim* for `aoa.maps.export_assets`: Turn extracted AoA archive entries into a browsable asset tree. |
 | `fetch.py` | *shim* for `aoa.research.fetch`: Download a recovered build listed in manifest/downloads.json and verify it. |
-| `fetch_known_builds.py` | *shim* for `aoa.research.fetch.known_builds`: Download the verified 2.8.2 and 2.9.2 installers into the folders docs/play.md names. |
+| `fetch_known_builds.py` | *shim* for `aoa.research.fetch.known_builds`: Download the verified 2.8.2 and 2.9.2 installers into the folders docs/play/README.md names. |
 | `gob2obj.py` | *shim* for `aoa.formats.gob`: Convert AoA .Gob models (from AoAObjects.odb) to Wavefront OBJ + MTL. |
 | `host_control.cmd` | Windows shortcut: Kept so existing shortcuts work: the launcher is now Host.cmd in the repository root. |
 | `host_control.py` | *shim* for `aoa.launchers.host_app`: The host window, "Ace of Angels Host" (Host.cmd): set up, start, share, watch, change map. |
@@ -136,7 +136,7 @@ The registry: every client patch, in the order prepare applies and reports them.
 | `aoa.client.patches.station_host` |  | The startup Station hostname field of the 2.9.2 client. |
 | `aoa.client.patches.texture32` |  | Load 24/32-bit TGA textures as ARGB8888 instead of RGB565/ARGB4444. |
 | `aoa.client.patches.third_person` |  | Third-person cameras for the 2.9.2 client: F2 chase, F4 orbit. |
-| `aoa.client.patches.visibility_fix` |  | Bounded trigonometry in the 2.9.2 visibility routine (render-pipeline-audit.md). |
+| `aoa.client.patches.visibility_fix` |  | Bounded trigonometry in the 2.9.2 visibility routine (docs/research/rendering/pipeline-audit.md). |
 | `aoa.client.patches.world_detail` |  | Select closest authored mesh/texture variants for solid world model groups. |
 
 ## aoa.emulation
@@ -190,7 +190,7 @@ Host: the arena server, its configuration, delivery, operations and headless run
 | `aoa.host.defaults` |  | The one table of host facts and defaults: profiles, networks, ports, aliases, backdrops, match limits and the managed-session settings. |
 | `aoa.host.delivery` |  | Sustained ordered 0x1B delivery within the 2.9.2 client's 30-ID history. |
 | `aoa.host.diagnostics` |  | Diagnostic delivery: the bounded 30-event reliable engine. |
-| `aoa.host.flagdoc` | yes | The server flag table of docs/local-server.md, generated from the server's argparse. |
+| `aoa.host.flagdoc` | yes | The server flag table of docs/host/server-reference.md, generated from the server's argparse. |
 | `aoa.host.headless` | yes | Run, check or inspect a host from one settings file: the headless host. |
 | `aoa.host.make_vessel_combat` | yes | Generate aoa/host/vessel_combat.py: per-vessel simple HP and gun damage (findings 9.46). |
 | `aoa.host.match` |  | Match limits and results of the relay's dogfight. |
@@ -320,7 +320,7 @@ Archive.org and Wayback research tools behind one polite HTTP helper.
 | `aoa.research.rar_img2iso` | yes | *shim*: The old name of `aoa.research.disc_image rar`; CONTEXT.md still names it. |
 | `aoa.research.restore_web_archive` | yes | Recover a private, read-only mirror from the documented Wayback captures. |
 | `aoa.research.version` | yes | Read the compiled-in version of an Ace of Angels client (AOACLIENT.EXE). |
-| `aoa.research.version_probe` | yes | *shim*: The old name of `tools/aoa_version.py CLIENT --detail`; docs/findings.md still names it. |
+| `aoa.research.version_probe` | yes | *shim*: The old name of `tools/aoa_version.py CLIENT --detail`; docs/research/findings.md still names it. |
 | `aoa.research.wayback` | yes | List, and optionally download, every build the Wayback Machine saved from Flying Rock's sites. |
 
 ## archive.analysis

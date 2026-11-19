@@ -47,7 +47,7 @@ def sends(p):
 
 def main(argv=None):
     ap = cli.parser(__doc__)
-    ap.add_argument("out", help="Markdown file to write (docs/message-types.md is the committed copy)")
+    ap.add_argument("out", help="Markdown file to write (docs/reference/message-types.md is the committed copy)")
     a = ap.parse_args(argv)
     out = a.out
     r271 = handlers(EVIDENCE / "2.7.1/dispatch_4d1830.json", EVIDENCE / "2.7.1/dispatch_45b430.json")

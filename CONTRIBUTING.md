@@ -31,7 +31,7 @@ didn't work. The client log in `game\2.9.2\Logs\` helps with crashes.
 
 ## Code and reverse engineering
 
-Setup is in [docs/play.md](docs/play.md); the tool map is in
+Setup is in [docs/play/README.md](docs/play/README.md); the tool map is in
 [tools/README.md](tools/README.md); the notes are indexed in
 [docs/README.md](docs/README.md).
 

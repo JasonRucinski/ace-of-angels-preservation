@@ -135,7 +135,7 @@ class PatchLayoutTests(unittest.TestCase):
                     self.assertEqual(len(vas), len(set(vas)))
 
     def test_patch_level_table_in_the_docs_matches_the_registry(self):
-        text = (ROOT / "docs/client-setup.md").read_text(encoding="utf-8")
+        text = (ROOT / "docs/reference/client-patches.md").read_text(encoding="utf-8")
         table = text[text.index("### Patch levels"):].split("\n\n")[2]
         documented = {}
         for row in table.splitlines()[2:]:

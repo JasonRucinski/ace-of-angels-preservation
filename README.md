@@ -19,9 +19,9 @@
 </p>
 
 <p align="center">
-  <a href="docs/play.md"><b>Play it</b></a> ·
-  <a href="docs/play.md#play-with-friends"><b>Host a game</b></a> ·
-  <a href="docs/linux-host.md"><b>Linux server</b></a> ·
+  <a href="docs/play/README.md"><b>Play it</b></a> ·
+  <a href="docs/play/README.md#play-with-friends"><b>Host a game</b></a> ·
+  <a href="docs/host/linux.md"><b>Linux server</b></a> ·
   <a href="CONTEXT.md"><b>Research record</b></a> ·
   <a href="docs/README.md"><b>Docs</b></a> ·
   <a href="CONTRIBUTING.md"><b>Contribute</b></a>
@@ -83,7 +83,7 @@ Its servers went dark, and the company was dissolved in 2011.
 | 📦 **Builds** | Six client versions recovered, hashed and versioned: full installers 2.0.0, 2.7.1, 2.8.0, 2.8.2 and 2.9.2, plus a 2.3.1 replacement client. Sources and hashes: [`manifest/downloads.json`](manifest/downloads.json). |
 | 🎮 **Playable today** | The 2.9.2 client runs on Windows 10/11 with crash, timing and display fixes. The offline training mission plays. |
 | 🌐 **Multiplayer** | A new stand-in server, written from reverse engineering, lets friends dogfight over a LAN or a private VPN: guns, missiles, kills, scoreboard, ship changes, power-ups and a host control window. The client can load all 20 recovered map layouts; 11 of them have real content ([which maps](docs/STATUS.md#maps)). |
-| 🐧 **Dedicated Linux host** | An unattended systemd service with automatic map rotation, kill/time limits, admission recycling, a stalled-process watchdog and rotation state that survives reboot. [Setup and operation](docs/linux-host.md). |
+| 🐧 **Dedicated Linux host** | An unattended systemd service with automatic map rotation, kill/time limits, admission recycling, a stalled-process watchdog and rotation state that survives reboot. [Setup and operation](docs/host/linux.md). |
 | 📜 **History** | Magazine coverage, company records, trademarks, the old website and forums (restored from the Wayback Machine), and the state of revival attempts. |
 
 No game files are in this repository. The tools download the original
@@ -109,13 +109,13 @@ See [NOTICE.md](NOTICE.md).
 
 | I want to… | Go to |
 |---|---|
-| Play it on Windows 10/11 | [docs/play.md](docs/play.md) |
+| Play it on Windows 10/11 | [docs/play/README.md](docs/play/README.md) |
 | See what works and what is untested | [docs/STATUS.md](docs/STATUS.md) |
-| Host a game for friends | [docs/play.md#play-with-friends](docs/play.md#play-with-friends) |
-| Get sharper ship and station skins | [docs/texture-pack.md](docs/texture-pack.md) |
-| Run an unattended Linux server | [docs/linux-host.md](docs/linux-host.md) |
+| Host a game for friends | [docs/play/README.md#play-with-friends](docs/play/README.md#play-with-friends) |
+| Get sharper ship and station skins | [docs/play/texture-pack.md](docs/play/texture-pack.md) |
+| Run an unattended Linux server | [docs/host/linux.md](docs/host/linux.md) |
 | Read the history and what was found | [CONTEXT.md](CONTEXT.md), then [docs/](docs/README.md) |
-| Help reverse-engineer the client or server protocol | [docs/README.md](docs/README.md#how-the-game-works) and [docs/findings.md](docs/findings.md) |
+| Help reverse-engineer the client or server protocol | [docs/README.md](docs/README.md#how-the-game-works) and [docs/research/findings.md](docs/research/findings.md) |
 | Help find missing builds or old material | [CONTRIBUTING.md](CONTRIBUTING.md#leads-and-old-material) |
 
 ## 🐧 Dedicated Linux host
@@ -138,7 +138,7 @@ and rejoin after each map change**, using the prepared client with native
 terrain support. Map position and completed-session count persist; pilots,
 scores and bans reset with each new game process.
 
-Follow the [Linux setup and operating guide](docs/linux-host.md). Match limits
+Follow the [Linux setup and operating guide](docs/host/linux.md). Match limits
 and maps are configured in `/etc/ace-of-angels/host.json`, the same settings
 format as the Windows host window; the repository includes an
 [example configuration](deploy/linux/host.json.example) and a
@@ -156,7 +156,7 @@ On Windows 10/11:
    applies the fixes and helps you add the graphics wrapper.
 
 To host, double-click `Host.cmd`. Details and the command-line fallback:
-[docs/play.md](docs/play.md). The windows were rebuilt on 16 November 2026
+[docs/play/README.md](docs/play/README.md). The windows were rebuilt on 16 November 2026
 and have not yet been run on Windows ([status](docs/STATUS.md)).
 
 ## 🗂️ Repository layout

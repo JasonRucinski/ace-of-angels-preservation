@@ -361,7 +361,7 @@
     "warp_trial": null
    },
    "sources": [
-    "docs/arena1a.md"
+    "docs/research/arena1a.md"
    ]
   },
   "game/2.9.2/SCRTY.BIN work/buoy-host.jsonl --profile local-relay --map Arena1a --terrain --sustained-delivery --navigation-buoys work/2.9.2/export/AOAOBJECTS": {
@@ -436,7 +436,7 @@
     "warp_trial": null
    },
    "sources": [
-    "docs/arena1a-rebuild.md"
+    "docs/research/arena1a-trials.md"
    ]
   },
   "game/2.9.2/SCRTY.BIN work/flight.jsonl --ack --arena --tcp 5034 --experimental-flight --seconds 120": {
@@ -510,7 +510,7 @@
     "warp_trial": null
    },
    "sources": [
-    "docs/local-server.md"
+    "docs/host/server-reference.md"
    ]
   },
   "game/2.9.2/SCRTY.BIN work/lan-dogfight.jsonl --profile lan-dogfight --bind-address 192.168.0.61 --max-players 2": {
@@ -583,7 +583,7 @@
     "warp_trial": null
    },
    "sources": [
-    "docs/lan-dogfight.md"
+    "docs/host/lan.md"
    ]
   },
   "game/2.9.2/SCRTY.BIN work/local-guests.jsonl --profile local-guests": {
@@ -652,7 +652,7 @@
     "warp_trial": null
    },
    "sources": [
-    "docs/local-server.md"
+    "docs/host/server-reference.md"
    ]
   },
   "game/2.9.2/SCRTY.BIN work/local-relay.jsonl --profile local-relay": {
@@ -721,7 +721,7 @@
     "warp_trial": null
    },
    "sources": [
-    "docs/local-server.md"
+    "docs/host/server-reference.md"
    ]
   },
   "game/2.9.2/SCRTY.BIN work/local-relay.jsonl --profile local-relay --print-config": {
@@ -791,7 +791,7 @@
     "warp_trial": null
    },
    "sources": [
-    "docs/local-server.md"
+    "docs/host/server-reference.md"
    ]
   },
   "game/2.9.2/SCRTY.BIN work/observe.jsonl --seconds 60": {
@@ -860,7 +860,7 @@
     "warp_trial": null
    },
    "sources": [
-    "docs/local-server.md"
+    "docs/host/server-reference.md"
    ]
   },
   "game/2.9.2/SCRTY.BIN work/protection-probe.jsonl --ack --arena --tcp 5034 --experimental-flight --max-players 1 --experimental-protection-probe --seconds 180": {
@@ -1010,7 +1010,7 @@
     "warp_trial": null
    },
    "sources": [
-    "docs/findings.md"
+    "docs/research/findings.md"
    ]
   },
   "game/2.9.2/SCRTY.BIN work/turret-host.jsonl --profile local-relay --bind-address 127.0.0.2 --map Arena1a --terrain --sustained-delivery --navigation-buoys work/2.9.2/export/AOAOBJECTS --turret-trial work/2.9.2/export/AOAOBJECTS --target-ships 0 --spawn-at 145041 -29123 100278 --seconds 1800": {
@@ -1105,7 +1105,7 @@
     "warp_trial": null
    },
    "sources": [
-    "docs/arena1a-rebuild.md"
+    "docs/research/arena1a-trials.md"
    ]
   },
   "game/2.9.2/SCRTY.BIN work/warp-research/host.jsonl --profile local-relay --bind-address 127.0.0.2 --map Arena1a --terrain --sustained-delivery --navigation-buoys work/2.9.2/export/AOAOBJECTS --warp-trial work/2.9.2/export/AOAOBJECTS --target-ships 0 --spawn-at 19018.6543 0 -3742.1543 --status-file work/warp-research/status.json --seconds 1800": {
@@ -1202,7 +1202,7 @@
     "warp_trial": "work/2.9.2/export/AOAOBJECTS"
    },
    "sources": [
-    "docs/arena1a-rebuild.md"
+    "docs/research/arena1a-trials.md"
    ]
   }
  },

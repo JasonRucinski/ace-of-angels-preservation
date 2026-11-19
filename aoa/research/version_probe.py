@@ -1,4 +1,4 @@
-"""The old name of `tools/aoa_version.py CLIENT --detail`; docs/findings.md still names it.
+"""The old name of `tools/aoa_version.py CLIENT --detail`; docs/research/findings.md still names it.
 
 Usage: python -I tools/run.py aoa.research.version_probe <client.exe> [<cache.pkl>] <out.json>
 

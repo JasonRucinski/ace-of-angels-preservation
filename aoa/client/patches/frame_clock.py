@@ -3,7 +3,7 @@
 The 2.9.2 game clock (0x5E8E5C) comes from GetTickCount at 0x5296C4 and
 0x529700, which advances in ~15.6 ms steps. Frames are issued every 16 ms
 (main loop 0x407F50), so each frame's game-time step is 15, 16 or 31 ms and
-moving scenery judders (offline-rendering-baseline.md). The clock cave returns
+moving scenery judders (docs/research/rendering/offline-baseline.md). The clock cave returns
 round(QPC * 1000 / frequency) as an unsigned millisecond count, computed with
 the x87 control word temporarily at extended precision (Direct3D leaves it at
 single precision). It falls back to GetTickCount if QPC fails. Only the game

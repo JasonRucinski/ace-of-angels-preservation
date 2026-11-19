@@ -493,7 +493,7 @@ class PlayWindow:
         for key, label, help_text, *_ in catalog.QUALITY:
             self.add_check(quality, key, label, help_text)
         self.add_check(quality, "texture_pack", "Replacement texture pack",
-                       "Sharper ship and station skins you built from your own copy (docs/texture-pack.md).")
+                       "Sharper ship and station skins you built from your own copy (docs/play/texture-pack.md).")
         self.option_note = tk.StringVar()
         ttk.Label(tab, textvariable=self.option_note, foreground=tkcommon.COLOR["todo"], wraplength=700).grid(
             row=2, column=0, columnspan=2, sticky="w", pady=(4, 0))
@@ -553,7 +553,7 @@ class PlayWindow:
         if self.state is not None:
             extras.append("JRMAP terrain: " + ("installed" if self.state.jrmap_terrain else "not installed"))
         extras.append("Texture pack: " + ("on" if self.options.get("texture_pack") else
-                                          "built, off" if pack else "not built (see docs/texture-pack.md)"))
+                                          "built, off" if pack else "not built (see docs/play/texture-pack.md)"))
         if not wrapper:
             extras.append("Graphics quality needs the wrapper (Setup, step 5).")
         self.extras.set(" · ".join(extras))

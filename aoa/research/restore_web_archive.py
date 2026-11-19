@@ -15,7 +15,7 @@ for the next resume; only other HTTP errors mark it missing.
 `cdx` writes the CDX inventories that --import-indexes and
 --import-forum-versions read, to work/ (--out DIR elsewhere), through the
 CDX helper in aoa/research/wayback.py. An existing file is not replaced.
-The site and forum queries are the ones docs/private-web-archive.md records
+The site and forum queries are the ones docs/archive/web-archive.md records
 (output=json, filter=statuscode:200, collapse=urlkey, the six fields); the
 query behind wayback-forum-versions.json was not recorded, so its entry here
 (every distinct 200 capture, collapse=digest) is a reconstruction, untested

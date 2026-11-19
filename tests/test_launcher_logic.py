@@ -550,8 +550,8 @@ class HostingTests(unittest.TestCase):
 
     def test_firewall_commands_are_the_documented_ones(self):
         config = self.settings.host
-        for key, address, doc in (("home", "192.168.0.61", "lan-dogfight.md"),
-                                  ("vpn", "100.101.102.103", "vpn-dogfight.md")):
+        for key, address, doc in (("home", "192.168.0.61", "host/lan.md"),
+                                  ("vpn", "100.101.102.103", "host/vpn.md")):
             hosting.set_audience(config, key, address)
             text = (settings.ROOT / "docs" / doc).read_text(encoding="utf-8")
             for line in hosting.firewall_commands(config):

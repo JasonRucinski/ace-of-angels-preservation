@@ -23,7 +23,7 @@ pack. Original visuals clears all visual additions; power-up pickups have a
 separate control. Ship-menu framing is now optional (`--no-menu-framing`).
 Temporary-copy tests cover toggles, checked launch, texture caching/restoration,
 rollback and GUI wiring; no in-flight rendering claim. See
-[launcher options](docs/client-setup.md#client-launcher-and-visual-options).
+[launcher options](docs/reference/client-patches.md#client-launcher-and-visual-options).
 
 First new map (27 Oct 2026): `tools/make_map.py` writes a JSON spec as a
 native 2.9.2 `.TRN`, in the record layout of JRMAP's editor records.
@@ -48,8 +48,8 @@ It is scaled to 120 km and appended to the play copy's object database
 settlement and a second waypoint. Live: no crash, 103 terrain objects, and
 Bennu drawn, textured and lit. 19 tests pass. Power-up pickup, collision,
 Bennu's frame-rate cost, the full flights out and a second player are
-untested. See [custom objects](docs/custom-objects.md) and the
-[Bennu evidence](evidence/2.9.2/custom_object_bennu_20261027.json). See [custom maps](docs/custom-maps.md)
+untested. See [custom objects](docs/create/custom-objects.md) and the
+[Bennu evidence](evidence/2.9.2/custom_object_bennu_20261027.json). See [custom maps](docs/create/custom-maps.md)
 and the [evidence](evidence/2.9.2/custom_map_crucible_20261027.json).
 
 Distant object visibility (27 Oct 2026): optional `distant-world-objects-v1`
@@ -65,7 +65,7 @@ mode. Installed in the normal client and active Arena1a trial copy; both
 pass asset/setup and exact layer-backup checks. All nine focused suites pass
 (58 tests); [verification record](evidence/2.9.2/object_persistence_20261027.json).
 Visual acceptance and GPU performance remain pending. See
-[rendering notes](docs/asteroid-rendering.md#distant-object-persistence-27-october-2026).
+[rendering notes](docs/research/rendering/asteroids.md#distant-object-persistence-27-october-2026).
 
 Highlight reel (27 Oct 2026): a 48.9 s video from scripted recordings of the
 real 2.9.2 client, nine shots on six maps (irrosa01, ast_fld_a/b,
@@ -75,7 +75,7 @@ option `--start-vessel`, Windows Graphics Capture through ffmpeg. The first cut
 showed orbit-view flicker (fixed in patch version 21) and untextured Tholfus
 wingmen (original data; replaced). Re-cut the same day with six re-filmed
 shots on version 21 and short punchy title cards (48.95 s). Output stays
-in ignored `work/reel/`. See [hype-reel.md](docs/hype-reel.md).
+in ignored `work/reel/`. See [hype-reel.md](docs/create/hype-reel.md).
 
 Nine-gate expansion (27 Oct 2026): `--warp-trial` and the host checkbox now
 restore all nine Arena1a warp gates, adding eight placements. Slots 71–79
@@ -85,7 +85,7 @@ headless checks cover coexistence, duplicate loads, 54 transit vectors and
 486 exit/gate overlap checks using fixture bounds. Actual UDP checks cover
 all nine routes with lost-update recovery, late join and reconnect. Still
 loopback-only and opt-in; orientation/real collision geometry/live acceptance
-remain unverified. See [warp trial](docs/arena1a-rebuild.md#arena1a-warp-gate-trial).
+remain unverified. See [warp trial](docs/research/arena1a-trials.md#arena1a-warp-gate-trial).
 
 Headless warp validation (26 Oct 2026): user deferred manual playtesting.
 Three additional tests pass: complete original LoadObject receiver with explicit
@@ -95,7 +95,7 @@ retrigger at the remote exit. Actual UDP host with four synthetic connections
 passes native-transit -> relay -> original movement decoder, lost-update
 recovery without a second upload, late join and observer reconnect. No UI
 needed. Real model bounds, orientation and full game-loop acceptance remain
-deferred. See [headless checks](docs/arena1a-rebuild.md#headless-warp-validation).
+deferred. See [headless checks](docs/research/arena1a-trials.md#headless-warp-validation).
 
 Single warp trial (26 Oct 2026): opt-in `--warp-trial EXPORT_DIR` loads
 HyBase1_Rail / WarpTgt01 in slot 85, using native kind 7 and WarpGate/WarpA.
@@ -105,7 +105,7 @@ with buoys/turrets, gate ACK loss/retransmission and verifier rejection cases.
 Isolated host prepared at 127.0.0.2; live entry remains pending because both
 UI interfaces fail on the pilot dialog. Editor orientation is not restored;
 transit is handled by the original local client, not authorized by the host.
-See [warp trial](docs/arena1a-rebuild.md#arena1a-warp-gate-trial).
+See [warp trial](docs/research/arena1a-trials.md#arena1a-warp-gate-trial).
 
 Warp investigation (26 Oct 2026): user deferred flags/control points. Recovered
 all nine Arena1a gate-to-child destination links, including four `Dummy` nodes.
@@ -113,7 +113,7 @@ Original-code probes verify world destinations, kind-7 network fields and local
 collision transit. Native model is WarpGate / WarpA. Transit preserves velocity
 and uses destination + velocity/max(speed,100)*1000. Existing relay codecs accept
 all nine destination jumps; gate authorization and live synchronization remain
-unverified. No gates enabled. See [warp recovery](docs/arena1a-rebuild.md#warp-gate-recovery--26-october-2026).
+unverified. No gates enabled. See [warp recovery](docs/research/arena1a-trials.md#warp-gate-recovery--26-october-2026).
 
 Turret placement trial (26 Oct 2026): opt-in `--turret-trial` loads the five
 Flag ND1-C children with neutral relations and immediately disables each.
@@ -121,7 +121,7 @@ TurretA is a provisional model choice; rotations remain zero. Original-code
 checks confirm the disabled AI firing gate, and synthetic first/late joins
 pass with buoys and ACK loss. Separate 127.0.0.2 loopback host prepared;
 live acceptance still awaits flight entry. No automatic host-control enable
-or Linux deployment. See [trial](docs/arena1a-rebuild.md#inactive-five-turret-placement-trial).
+or Linux deployment. See [trial](docs/research/arena1a-trials.md#inactive-five-turret-placement-trial).
 
 Turret hierarchy recovery (26 Oct 2026): all 80 Arena1a turret markers link
 to 18 flag parents (eight groups of five, ten of four). Their saved transforms
@@ -131,7 +131,7 @@ turrets use the same script/constructor through a separate enumeration path.
 Added a bounded turret-group status codec and original-client disable tests
 (0/1/5/50 objects). No turrets spawned; model selection, ownership, orientation,
 firing/damage and live acceptance remain unresolved. See
-[turret recovery](docs/arena1a-rebuild.md#turret-group-recovery--26-october-2026).
+[turret recovery](docs/research/arena1a-trials.md#turret-group-recovery--26-october-2026).
 
 Navigation restoration (26 Oct 2026): server opt-in `--navigation-buoys` reads
 original exported assets for the selected map, expanding nested placements;
@@ -139,7 +139,7 @@ JRMAP uses original TRN kind-3 Buoy/Cube objects. All 20 selections handled,
 41 placements across eight maps. Local host-control enables this when the
 export tree exists. Reliable first/late joins and lost-ACK delivery tested;
 live visual acceptance and editor rotations remain pending. See
-[navigation support](docs/arena1a-rebuild.md#all-map-navigation-support).
+[navigation support](docs/research/arena1a-trials.md#all-map-navigation-support).
 
 Arena1a in-game rebuild investigation (26 Oct 2026): user entered the local
 map; live inventory reconciles all 394 expanded records: 235 static placements,
@@ -147,7 +147,7 @@ map; live inventory reconciles all 394 expanded records: 235 static placements,
 nested-layout reference. Missing gameplay markers comprise 80 turrets, 18 flags,
 10 navigation markers, 9 warps and 19 service markers. Twenty-one original-code
 gate probes passed. At the time of this baseline capture, no restoration patch had been applied. See
-[rebuild investigation](docs/arena1a-rebuild.md) and
+[rebuild investigation](docs/research/arena1a-trials.md) and
 `evidence/2.9.2/arena1a_rebuild_20261026.json`.
 
 Map-node investigation (26 Oct 2026): corrected nested-layout resolution to
@@ -156,7 +156,7 @@ Recovered 60 geometry instances in outerchange and 10 in irrosa01 in expanded
 exports. Their resolved object counts plus safe zones match prior live counts
 (616 / 457). Audited all 17 node-layout Gobs; gameplay markers remain separate
 from asset availability. Six tests pass, including original comparison-code
-emulation. See [map-node findings](docs/map-viewer.md#unfilled-node-investigation-26-october-2026)
+emulation. See [map-node findings](docs/play/map-viewer.md#unfilled-node-investigation-26-october-2026)
 and `evidence/2.9.2/map_nodes_20261026.json`. No client/server deployment changed.
 
 Unattended Linux host (26 Oct 2026): deployed `tools/dedicated_host.py` under
@@ -177,7 +177,7 @@ recovery and guest reboot preserving CTF_arena_b / one completed session.
 The timer path was tested with an accelerated limit; production is set to 900 s.
 Real-client terrain/rejoin acceptance and internet access remain separate.
 See [rotation verification](evidence/2.9.2/linux_rotation_20261026.json) and
-[operation/configuration](docs/linux-host.md#5-unattended-rotation-and-recovery).
+[operation/configuration](docs/host/linux.md#5-unattended-rotation-and-recovery).
 
 Minimal Linux host deployed (26 Oct 2026): a separate Ubuntu Server 24.04.4
 VM on the existing network Proxmox host, with 1 vCPU, 2 GiB RAM and a 12 GiB
@@ -193,7 +193,7 @@ reset test's Windows-only `SO_LINGER` layout for Linux. CI now includes Ubuntu
 The original 2.9.2 installer was downloaded and hash-verified again; its
 256-byte `SCRTY.BIN` matches the pinned client configuration and is installed
 privately in the guest. No game files are committed.
-See the [Linux runbook](docs/linux-host.md) and
+See the [Linux runbook](docs/host/linux.md) and
 [verification record](evidence/2.9.2/linux_host_20261026.json); local connection
 details are in ignored `work/proxmox/README.md`. Reserve the DHCP address before
 depending on indefinite unattended operation. Later on 26 Oct, the user
@@ -210,16 +210,16 @@ independently observed. VPN installation and internet acceptance remain pending.
 Admission limits and temporary pilots/scores still apply.
 
 Internet play (22 Oct 2026): friends on other connections play through a private
-VPN with the `vpn-dogfight` profile ([runbook](docs/vpn-dogfight.md)). Sustained
+VPN with the `vpn-dogfight` profile ([runbook](docs/host/vpn.md)). Sustained
 reliable delivery replaces the 30-message lifetime cap without a client patch,
 crashed players can rejoin, and the host has status/kick/ban, crash restarts and
-a lag/loss test mode ([findings 9.33](docs/findings.md#933-sustained-reliable-delivery-without-a-client-patch-22-october-2026)).
+a lag/loss test mode ([findings 9.33](docs/research/findings.md#933-sustained-reliable-delivery-without-a-client-patch-22-october-2026)).
 Internet impairment/delivery tests use loopback; LAN acceptance is recorded
 above. Separate-internet-connection acceptance is pending.
 
 Implementation roadmaps (21 Oct 2026):
-[Internet server, maps and performance](docs/internet-server-todo.md) and
-[client/game modernization](docs/modernization-todo.md). These distinguish
+[Internet server, maps and performance](docs/roadmap/internet-server.md) and
+[client/game modernization](docs/roadmap/modernization.md). These distinguish
 verified progress from proposed work and define initial release gates.
 
 Arena lifecycle continuation (21 Oct 2026): handshake retries are idempotent;
@@ -229,15 +229,15 @@ holds only 30 IDs. Observers retire on delivery failure or history exhaustion.
 Verified with synthetic localhost sockets, not a real-client despawn test.
 Retired slots/endpoints remain reserved until restart (49 lifetime admissions);
 safe reuse/reconnect needs a compatibility decision. See
-[findings 9.13](docs/findings.md#913-reliable-removal-and-the-slot-reuse-limit-21-october-2026).
+[findings 9.13](docs/research/findings.md#913-reliable-removal-and-the-slot-reuse-limit-21-october-2026).
 Original-client receive-path emulation now verifies five reliable removal
 packets yield five ACKs and only two removal calls (correct slots, duplicates
 suppressed). Real-client launch was blocked by the Windows automation helper's
-access error; visible despawn remains unverified. See [findings 9.14](docs/findings.md#914-original-client-reliable-receive-path-verification-21-october-2026).
+access error; visible despawn remains unverified. See [findings 9.14](docs/research/findings.md#914-original-client-reliable-receive-path-verification-21-october-2026).
 Local runtime work now provides a validated `--profile local-relay`, bounded
 rotating metadata logs with opt-in raw capture, an independent bounded TCP
 list worker, and live arena population/availability. Six runtime tests and
-the 14 existing protocol tests pass. See [local server runbook](docs/local-server.md).
+the 14 existing protocol tests pass. See [local server runbook](docs/host/server-reference.md).
 Station now tracks per-client sessions and routes TCP list/file-state requests
 by a recovered player-record ID plus source IP. Original-client emulation
 verifies ID transfer and the separate u8 job/flag fields. Three session tests
@@ -245,7 +245,7 @@ cover same-IP clients, alias isolation, stale TCP, quit/expiry and bounded
 admissions. Station login counts are live. IDs/endpoints are not reused within
 a run (64 Station admissions); this adds no authentication, pilot ownership
 or arena authorization. Real-client Station transitions remain unverified.
-See [findings 9.16](docs/findings.md#916-per-client-station-sessions-and-tcp-correlation-21-october-2026).
+See [findings 9.16](docs/research/findings.md#916-per-client-station-sessions-and-tcp-correlation-21-october-2026).
 
 Larger continuation (21 Oct 2026): UDP decoding now enforces the original
 512-byte wire/output bounds with bounded per-pass expansion, fuzz tests and
@@ -258,17 +258,17 @@ snapshots; 300 original-code state cases and 200 recovery cases pass. Upstream
 ordering and authoritative simulation remain open. `local-guests` adds unique
 pilot names and Station-ticket/arena binding with revocation, while retaining
 explicit legacy diagnostic profiles. These are local limits, not public auth.
-See [client setup](docs/client-setup.md), [local protocol](docs/local-protocol.md),
-[release specification](docs/first-playable-release.md), and findings 9.17–9.20.
+See [client setup](docs/reference/client-patches.md), [local protocol](docs/reference/protocol.md),
+[release specification](docs/roadmap/authoritative-server.md), and findings 9.17–9.20.
 Inbound reliable envelopes are now deduplicated per channel/endpoint (last 64
 IDs); duplicates are still ACKed, and only handshakes are re-answered. 46 tests
-pass; see [findings 9.21](docs/findings.md#921-inbound-reliable-duplicate-suppression-21-october-2026).
+pass; see [findings 9.21](docs/research/findings.md#921-inbound-reliable-duplicate-suppression-21-october-2026).
 Static analysis: server `0x3E` is a silent "hang up" that suppresses the
 client's `Server Not Responding` timer, so it is unsuitable for shutdown. The
 client's server-silence grace is `CLIENTGRACE` 16000 (likely ms), overridable
 by an unshipped `params.aoa`; no server-driven return-to-Station message
-is known yet ([findings 9.22](docs/findings.md#922-server-hang-up-0x3e-client-grace-timers-and-shutdown-21-october-2026)).
-Real-client check (21 Oct 2026, [findings 9.23](docs/findings.md#923-real-client-check-21-october-2026)):
+is known yet ([findings 9.22](docs/research/findings.md#922-server-hang-up-0x3e-client-grace-timers-and-shutdown-21-october-2026)).
+Real-client check (21 Oct 2026, [findings 9.23](docs/research/findings.md#923-real-client-check-21-october-2026)):
 closing each TCP connection after its reply hung the real client's UI thread
 (stuck queue mutex in `ShutdownTCPBySocket`). Fixed: connections stay open
 while their Station session lives. Other fixes: Station heartbeats ignore the
@@ -280,17 +280,17 @@ despawn from its player table. The client relaunches itself
 inactive-window timer skips frames in (believed) exclusive mode. The new
 client patch `background-network-v1` (prepare patch version 2, `0x446EAF`)
 fixes this under dgVoodoo windowed output
-([findings 9.24](docs/findings.md#924-background-client-network-stall-and-fix-21-october-2026)).
-Combat groundwork ([findings 9.25](docs/findings.md#925-combat-protocol-survey-and-gun-table-21-october-2026)):
+([findings 9.24](docs/research/findings.md#924-background-client-network-stall-and-fix-21-october-2026)).
+Combat groundwork ([findings 9.25](docs/research/findings.md#925-combat-protocol-survey-and-gun-table-21-october-2026)):
 gun damage per level (7–130, ids 250–850) decoded from the client
 (`archive/analysis/gun_table.py`, `evidence/2.9.2/gun_table.json`). Gunfire is `0x1F`
-status bits plus a per-gun fire-state block. Live test ([findings 9.26](docs/findings.md#926-victim-side-damage-gun-state-relay-and-death-report-21-october-2026)):
+status bits plus a per-gun fire-state block. Live test ([findings 9.26](docs/research/findings.md#926-victim-side-damage-gun-state-relay-and-death-report-21-october-2026)):
 the **victim's client computes damage** from relayed fire state and reports
 death with `0x37` (killer tag). The relay now forwards the bounded gun block,
 so real clients damage and kill each other. Next: server-side scoring, death
 broadcast and respawn. Done since (9.27): death notices, kill counts, respawn
 position and targeted collision forwarding. The intermittent arena-join crash is
-**fixed** ([findings 9.29](docs/findings.md#929-arena-join-crash-unterminated-archive-text-21-october-2026)):
+**fixed** ([findings 9.29](docs/research/findings.md#929-arena-join-crash-unterminated-archive-text-21-october-2026)):
 the decompressor returned `tgtwin2.cfg` without a NUL terminator. Client patch
 `archive-terminator-v1` (prepare patch version 3) fixes it; 25/25 joins were clean.
 Match loop (9.30): scoreboard (kills/deaths) and kill/time match limits work with real
@@ -317,7 +317,7 @@ movement works in the patched client during the held-input retry. Earlier
 automated key taps did not establish that result. Two real clients now hold
 each other's player-input movement state; inactive-client drift and accurate
 continuous synchronization remain unresolved. Inactive
-windows pause processing until reactivated. See `docs/findings.md`
+windows pause processing until reactivated. See `docs/research/findings.md`
 sections 9.3–9.11. The relay now includes explicit consistent local spawn
 positions and cached position/velocity seeds for late joiners (socket and
 original-decoder tested). Live testing found EnterFlight resets coordinates;
@@ -331,9 +331,9 @@ using recovered type 0x25; object state and visible rendering were verified
 in the real client. AI/combat/scenario rules are not implemented.
 The 2.9.2 assets
 include 17 exported layouts, five backdrops, and one binary scenario (`Curt3`);
-inventory and hosting limits are in `docs/hosting-assets.md`.
+inventory and hosting limits are in `docs/reference/maps.md`.
 
-Level-data audit (22 Oct 2026, [docs/level-data.md](docs/level-data.md)):
+Level-data audit (22 Oct 2026, [docs/research/level-data.md](docs/research/level-data.md)):
 all clients were searched for missed maps and missions. **New:** `JRMAP.TRN`,
 a loose file in every installer, is a world map saved by the in-game editor:
 74 placed objects (3 flag stations, 13 turrets linked to flags, a segmented
@@ -345,46 +345,46 @@ names are unknown. `Curt3` now parses completely (2 teams, 5 AI groups, orders,
 orphaned bytes in any of 41 archives, no installer slack, no extra scenarios.
 Other missions were server-side and are in no client.
 
-Map viewer (23 Oct 2026, [docs/map-viewer.md](docs/map-viewer.md)): client patch
+Map viewer (23 Oct 2026, [docs/play/map-viewer.md](docs/play/map-viewer.md)): client patch
 version 11 (`online-terrain-v2`) lets the loopback server load any of 20 maps
 as native terrain: the 19 original 2.9.2 layouts, plus `JRMAP` converted to
 2.9.2's 540-byte `.TRN` records. Run `tools/map_viewer.py serve <map>`. In a
 real client, JRMAP loaded 18 objects (station segments, docked capital ships).
 This is for viewing only: no collision, turrets, warps or flags.
 
-Host control window (23 Oct 2026, [docs/host-control.md](docs/host-control.md)):
+Host control window (23 Oct 2026, [docs/host/host-window.md](docs/host/host-window.md)):
 `Host.cmd` opens one window that starts the host (this PC, LAN or
 VPN), shows players with kills/deaths/ping, sends messages, kicks/bans, ends
 matches, switches maps (clean restart) and stops the host. The server console
 gained `say` and `quit`. Tested live with a real client on this PC (map switch
 CTF_arena → JRMAP); LAN/VPN players on other machines are untested.
 
-Panel drag fix (23 Oct 2026, [findings 9.34](docs/findings.md#934-dragged-panels-stick-to-the-lower-right-corner-23-october-2026)):
+Panel drag fix (23 Oct 2026, [findings 9.34](docs/research/findings.md#934-dragged-panels-stick-to-the-lower-right-corner-23-october-2026)):
 dragged in-game panels jumped to the lower-right corner because the client
 caches its window origin from `WM_MOVE` as unsigned words (65535,65535 live)
 and adds it in every `SetCursorPos` warp. Client patch version 12
 (`cursor-warp-origin-v1`) asks Windows for the live origin instead. Tested in
 emulation; a real drag test is still pending.
 
-Frame pacing fix (23 Oct 2026, [findings 9.35](docs/findings.md)): the game clock
+Frame pacing fix (23 Oct 2026, [findings 9.35](docs/research/findings.md)): the game clock
 was `GetTickCount` (~15.6 ms), so at 60 Hz about one frame in ten jumped 31 ms.
 Patch version 13 (`frame-clock-v1`, default on) uses a millisecond QPC clock
 and gates the background wakeup timer so it cannot draw extra frames beside the
 main loop. Measured live: even 16/17 ms steps, RMS vs 60 Hz 4.7 → 1.5–2.0 ms.
 Patch version 14 adds `visibility-math-v1` (Codex's culling fix, promoted
 without its exact-centre change, which would have drawn the player's own ship
-at the camera; [findings 9.36](docs/findings.md)).
+at the camera; [findings 9.36](docs/research/findings.md)).
 Patch version 15 adds `third-person-camera-v1`: F2 in flight toggles a chase
 camera that the renderer already had (`0x43B1D0`, gated on the never-written
 byte `0x5E6879`), plus culling from that eye so your own ship is drawn.
 Patch version 16 adds `own-ship-model-v1`: the client never gave your own
 ship a model, and reset its LOD children to hidden every frame. Draw-call
-traces now show your hull drawn with F2 on ([findings 9.37](docs/findings.md),
-[9.39](docs/findings.md)). Patch version 17 adds `own-ship-menu-model-v1`:
+traces now show your hull drawn with F2 on ([findings 9.37](docs/research/findings.md),
+[9.39](docs/research/findings.md)). Patch version 17 adds `own-ship-menu-model-v1`:
 the fighter menu's preview hid the parts of the model it showed, so a hull
 picked in flight was not drawn; now confirmed on screen by the user
-([9.41](docs/findings.md)).
-Patch version 18 (`online-terrain-v3`, 25 Oct 2026, [findings 9.42](docs/findings.md)):
+([9.41](docs/research/findings.md)).
+Patch version 18 (`online-terrain-v3`, 25 Oct 2026, [findings 9.42](docs/research/findings.md)):
 safe zones now draw as the original translucent blue wave cubes. The client
 builds them in `SetupFlightMode`, which ran before our hook loaded the map,
 so none were ever made; the hook now registers them after loading. Seven
@@ -392,24 +392,24 @@ maps have safe zones (Arena1a and newterrain 4, JRMAP 5, outerchange,
 irrosa01, hy_base_test and CTF_arena_b 1); JRMAP's needed a converter fix
 (re-run `map_viewer.py install`). Checked in memory on all of them, on
 screen by Claude and confirmed by the user; zone rules (no damage etc.) are untested.
-Targeting (23 Oct 2026, [findings 9.38](docs/findings.md)): T/G/J only
+Targeting (23 Oct 2026, [findings 9.38](docs/research/findings.md)): T/G/J only
 scan players and world objects. Map terrain (stations, ships, asteroids) is a
 separate list that no target scan walks, and the server spawns no world
-objects, so only players can be cycled. Update (25 Oct, [findings 9.45](docs/findings.md)):
+objects, so only players can be cycled. Update (25 Oct, [findings 9.45](docs/research/findings.md)):
 `--target-ships N` (host window "Target ships", default 4) spawns passive hostile
 ships 12,000 units ahead of the spawn. A real client cycled them with T, picked one
-with J, and fired a missile that hit. Update ([findings 9.46](docs/findings.md)):
+with J, and fired a missile that hit. Update ([findings 9.46](docs/research/findings.md)):
 they are now destroyable through the original server channels, with no client
 patch. The shooter reports its gun hits in its `0x1F` upload (submask 2,
 "perceived damage"); the server subtracts gun-table damage × 0.4 from the ship's
 Shield HP, sends `0x45` RemoveObject (blow up) at 0, and reloads the ship 15 s
 later. Verified live with one client; missile kills and two clients are untested.
-Server code in the client (25 Oct 2026, [findings 9.43](docs/findings.md)):
+Server code in the client (25 Oct 2026, [findings 9.43](docs/research/findings.md)):
 2.7.1 still links the server's `CAOAComm` senders (20 named routines,
 32 packet types that 2.9.2 no longer sends), e.g. `SendLoadPlayer`, `SendGainScore`,
 `SendSetupTFCGame`, `SendMovePowerupTo`; `archive/analysis/server_senders.py` lists them.
 A few still have live callers (turret group status, set-param, load scenario).
-Power-ups (25 Oct 2026, [findings 9.44](docs/findings.md)): spawn `0x43`,
+Power-ups (25 Oct 2026, [findings 9.44](docs/research/findings.md)): spawn `0x43`,
 pickup `0x44` and move `0x53` decoded from those senders and the 2.9.2
 receivers. JRMAP's 11 kind-6 records are **power-up zones**. The relay places
 one per zone (`--powerup-zones`, on automatically for JRMAP in the host
@@ -420,7 +420,7 @@ taken power-up never re-enables its model. Patch version 19
 live with no memory writes: 22 pickups in a row, one every 5 s, and the HUD
 showed "Shield +5". The user confirmed it on JRMAP's own zones with
 `game/2.9.2` at version 19. A second player watching is untested.
-Orbit camera (26 Oct 2026, [findings 9.47](docs/findings.md)): patch version 20
+Orbit camera (26 Oct 2026, [findings 9.47](docs/research/findings.md)): patch version 20
 (`third-person-camera-v2`, replaces v1, upgrades in place) adds **F4**, a
 camera that circles your ship once per 24 s at the chase distance. It turns
 the renderer's own forward and right copies (`0x43B367`) and the culling copy
@@ -428,9 +428,9 @@ together. Seen live through a full lap of F5 captures; the F4 read was
 forced on in memory because the test window had no focus, so a real F4
 press is still unconfirmed. Patch version 21 (`third-person-camera-v3`,
 27 Oct) fixes orbit-view objects blinking: culling used the orbit camera
-only when the millisecond clock had not moved ([findings 9.48](docs/findings.md)).
+only when the millisecond clock had not moved ([findings 9.48](docs/research/findings.md)).
 Plain F2 turned out to be bound by default ("Toggle Mentor"); plain F4 is free.
-Ship changes (24 Oct 2026, [findings 9.40](docs/findings.md)): **fixed in the
+Ship changes (24 Oct 2026, [findings 9.40](docs/research/findings.md)): **fixed in the
 relay.** The in-flight fighter menu needs a config list (TCP job 4, one
 `_all` entry) and an answer to its `0xA0` request. The relay sent neither,
 so Commit said "Fighter Not Available". Now the pilot and observers get `0x27`
@@ -444,8 +444,8 @@ Verified live after both fixes, with no death first. The config list arrives
 
 | Ask | Status |
 |---|---|
-| Builds | **Six recovered client versions, verified locally:** full installers 2.0.0, 2.7.1, 2.8.0, 2.8.2, 2.9.2, plus replacement client 2.3.1 (no complete asset bundle). See `manifest/downloads.json` for sources/hashes and `docs/version-assets.md` for the cross-version inspection. The older source table below is historical and incomplete. |
-| Universe site | **aceofangels.com**; before that, **flyingrockllc.com** (2000–01 magazines). Both are offline. **Restored** from the Wayback Machine on 21 Oct 2026: 2,894 archived pages, including 949 forum pages. Kept private because it copies third-party pages; rebuild it with `tools/restore_web_archive.py` ([docs/private-web-archive.md](docs/private-web-archive.md)). |
+| Builds | **Six recovered client versions, verified locally:** full installers 2.0.0, 2.7.1, 2.8.0, 2.8.2, 2.9.2, plus replacement client 2.3.1 (no complete asset bundle). See `manifest/downloads.json` for sources/hashes and `docs/reference/versions.md` for the cross-version inspection. The older source table below is historical and incomplete. |
+| Universe site | **aceofangels.com**; before that, **flyingrockllc.com** (2000–01 magazines). Both are offline. **Restored** from the Wayback Machine on 21 Oct 2026: 2,894 archived pages, including 949 forum pages. Kept private because it copies third-party pages; rebuild it with `tools/restore_web_archive.py` ([docs/archive/web-archive.md](docs/archive/web-archive.md)). |
 | Revival | **No public sign.** A March 2006 release was scheduled, then nothing. The domains are still renewed (to 2027), registrant hidden. |
 
 ## 3. Builds and media
@@ -454,7 +454,7 @@ Verified live after both fixes, with no death first. The config list arrives
 the original three-build search below. Missing packages were downloaded into
 `builds/asset-review/`; previously retained 2.7.1 and 2.9.2 originals were
 reverified. Static extraction and comparisons live under `work/asset-review/`
-and `evidence/asset-review/`. See `docs/version-assets.md` for useful recovered
+and `evidence/asset-review/`. See `docs/reference/versions.md` for useful recovered
 geometry, older arena markers, limitations, and reproduction commands.
 
 | What | Version | Date | Size | MD5 / SHA-256 | Where (live 2026-10-20) | Status |
@@ -485,7 +485,7 @@ checks their MD5s (tested).
 - The client contains the string "Ace of Angels is not supported on Windows
   NT", though Windows 2000 was supported (likely an NT4 check). Needs DirectX
   7. (20 Oct 2026 note; since then 2.9.2 runs on Windows 10/11 with the
-  project's fixes: [docs/play.md](docs/play.md).)
+  project's fixes: [docs/play/README.md](docs/play/README.md).)
 - The EULA forbids redistribution without Flying Rock's written permission.
   Linking to archive.org copies is fine; re-hosting is a separate decision.
 

@@ -23,7 +23,7 @@ no tracked file; a research download that should be kept is logged with
 through aoa/research/http.py (paced, backs off on HTTP 429/5xx).
 
 tools/fetch_known_builds.py runs `known_builds` below: the 2.8.2 and 2.9.2
-installers under the folder names docs/play.md and tools/setup_game.ps1 use.
+installers under the folder names docs/play/README.md and tools/setup_game.ps1 use.
 """
 import datetime
 import hashlib
@@ -204,7 +204,7 @@ def main(argv=None) -> int:
 
 
 def known_builds(argv=None) -> int:
-    """Download the verified 2.8.2 and 2.9.2 installers into the folders docs/play.md names.
+    """Download the verified 2.8.2 and 2.9.2 installers into the folders docs/play/README.md names.
 
     The command line of tools/fetch_known_builds.py.
     """

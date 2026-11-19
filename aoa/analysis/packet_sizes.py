@@ -8,7 +8,7 @@ Locates the routine that logs "SPacketServerRegister (%d)" and parses every
     push <log obj>
     call <log fn>
 quadruple in it, in program order. The logged values look like sizeof()
-results (see docs/findings.md section 3, "Message layer"); they are NOT
+results (see docs/research/findings.md section 3, "Message layer"); they are NOT
 treated as opcode IDs.
 """
 import json

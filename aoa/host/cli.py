@@ -2,7 +2,7 @@
 
     python -I tools/station_stub.py <SCRTY.BIN> <log.jsonl> [--profile P] [options]
 
-Every flag, its default and its group: docs/local-server.md (generated from
+Every flag, its default and its group: docs/host/server-reference.md (generated from
 this parser by aoa/host/flagdoc.py), or --help. --print-config validates and
 prints the settings without opening sockets or reading the key.
 
