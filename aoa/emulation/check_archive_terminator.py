@@ -9,7 +9,6 @@ non-zero (the missing terminator behind the arena-join crash); the patched
 image must return identical data followed by a NUL.
 """
 import hashlib
-import json
 import struct
 import sys
 import tempfile
@@ -18,13 +17,13 @@ from pathlib import Path
 from aoa.formats import aoapack  # noqa: E402
 from aoa import cli  # noqa: E402
 from aoa.client import prepare  # noqa: E402
-from aoa.emulation.emu import Emu, HEAP, SCRATCH  # noqa: E402
+from aoa.emulation.emu import Emu, check_main, SCRATCH  # noqa: E402
 from aoa.analysis.pe_util import PE  # noqa: E402
 
 CTOR, DECOMPRESS = 0x52A0B0, 0x52A630
 
 
-def run(image_path, packed):
+def decompress(image_path, packed):
     emu = Emu(PE(image_path))
     this = SCRATCH + 0x8000
     emu.thiscall(CTOR, this)
@@ -37,12 +36,9 @@ def run(image_path, packed):
     return emu.read(out, size), emu.read(out + size, 1)[0]
 
 
-def main(argv=None):
-    ap = cli.parser(__doc__)
-    ap.add_argument("source", type=Path, help="pristine 2.9.2 client (AOACLIENT.EXE.orig)")
-    ap.add_argument("output", type=Path, help="JSON report to write")
-    a = ap.parse_args(argv)
-    source, output = a.source, a.output
+def run(source):
+    """The report for the client at `source` (the original 2.9.2 executable)."""
+    source = Path(source)
     original = source.read_bytes()
     body = b"".join(b"DxTgtWin_%d 20 %d 300 400 tgtwin2 icon\r\n" % (i, i * 7) for i in range(17))[:681]
     packed = aoapack.compress(body)
@@ -52,14 +48,17 @@ def main(argv=None):
         for name, image in (("original", original), ("patched", prepare.configure(original))):
             path = Path(tmp) / f"{name}.exe"
             path.write_bytes(image)
-            data, after = run(path, packed)
+            data, after = decompress(path, packed)
             result[name] = {"data_matches": data == body, "byte_after_data": hex(after),
                             "image_sha256": hashlib.sha256(image).hexdigest()}
     assert result["original"]["data_matches"] and result["patched"]["data_matches"]
     assert result["original"]["byte_after_data"] != "0x0", "original unexpectedly terminated"
     assert result["patched"]["byte_after_data"] == "0x0"
-    output.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
-    print(json.dumps(result, indent=2))
+    return result
+
+
+def main(argv=None):
+    return check_main(__doc__, run, argv)
 
 
 if __name__ == "__main__":

@@ -3,14 +3,13 @@
 Usage: python -I tools/run.py aoa.emulation.check_station_request CLIENT.EXE OUT.json
 """
 import hashlib
-import json
 import struct
 import sys
 from pathlib import Path
 
 from aoa import cli
-from aoa.builds import CLIENT_SHA256
-from aoa.emulation.emu import Emu, SCRATCH, STACK, STOP
+from aoa.builds import require_build
+from aoa.emulation.emu import Emu, check_main, SCRATCH, STACK, STOP
 from aoa.analysis.pe_util import PE
 from aoa.host.server import ack_connect
 from unicorn import UC_HOOK_CODE
@@ -73,23 +72,21 @@ def probe(pe, identity):
             "arena_player_block_preserved": True}
 
 
-def main(argv=None):
-    ap = cli.parser(__doc__)
-    ap.add_argument("source", help="pristine 2.9.2 client (AOACLIENT.EXE.orig)")
-    ap.add_argument("output", help="JSON report to write")
-    a = ap.parse_args(argv)
-    source, output = a.source, a.output
+def run(source):
+    """The report for the client at `source` (the original 2.9.2 executable)."""
+    source = Path(source)
     pe = PE(source)
-    digest = hashlib.sha256(pe.data).hexdigest()
-    if digest != CLIENT_SHA256["2.9.2"]:
-        raise ValueError("requires original 2.9.2 client")
+    digest = hashlib.sha256(require_build(pe.data, "2.9.2")).hexdigest()
     result = {"source_sha256": digest, "record_copy": "0x49DB20",
               "request_packing": "0x4302A6..0x43044B",
               "cases": [probe(pe, identity) for identity in (0x01020304, 0xF0E0D0C0)],
               "mocked": ["allocation/free", "name/UI propagation after record copy"],
               "scope": "isolated original record copy, TCP header packing and arena request construction; no full ACK dispatch, OS socket, UI or complete arena transition"}
-    Path(output).write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
-    print(json.dumps(result, indent=2))
+    return result
+
+
+def main(argv=None):
+    return check_main(__doc__, run, argv)
 
 
 if __name__ == "__main__":

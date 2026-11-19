@@ -1,6 +1,6 @@
 """Interactive-style static exploration CLI for one client.
 
-Usage: python -I tools/run.py aoa.analysis.explore <client.exe> <cache.pkl> <command> [args...]
+Usage: python -I tools/run.py aoa.analysis.explore <client.exe> <command> [args...]
 
 Commands
   str <substring>            ASCII strings containing substring: file off, VA, xrefs
@@ -22,6 +22,7 @@ import sys
 
 from aoa import cli  # noqa: E402
 from aoa.analysis.pe_util import PE, Disasm, fmt  # noqa: E402
+from aoa.analysis.cache_args import drop_cache_args
 
 
 def annotate(pe, d, insn):
@@ -57,13 +58,12 @@ def ascii_strings(data, minlen=4):
 def main(argv=None):
     ap = cli.parser(__doc__)
     ap.add_argument("client", help="client executable")
-    ap.add_argument("cache", help="disassembly cache (.pkl) for that executable")
     ap.add_argument("command", help="one of the commands listed above")
     ap.add_argument("args", nargs=argparse.REMAINDER, help="the command's arguments")
-    a = ap.parse_args(argv)
-    path, cache, cmd, args = a.client, a.cache, a.command, a.args
+    a = ap.parse_args(drop_cache_args(argv))
+    path, cmd, args = a.client, a.command, a.args
     pe = PE(path)
-    d = Disasm(pe, cache)
+    d = Disasm(pe)
     if cmd == "str":
         needle = args[0].lower()
         for off, s in ascii_strings(pe.data):

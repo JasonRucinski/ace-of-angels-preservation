@@ -4,7 +4,6 @@ Usage: python -I tools/run.py aoa.emulation.check_movement CLIENT.EXE OUT.json
 Runs isolated x86 code in Unicorn; no client process or network.
 """
 import hashlib
-import json
 import math
 import random
 import struct
@@ -15,8 +14,8 @@ from unicorn import UcError
 from unicorn.x86_const import UC_X86_REG_EIP, UC_X86_REG_ESP, UC_X86_REG_EBP, UC_X86_REG_EAX
 
 from aoa import cli
-from aoa.builds import CLIENT_SHA256
-from aoa.emulation.emu import Emu, HEAP, SCRATCH, STACK, STOP
+from aoa.builds import require_build
+from aoa.emulation.emu import Emu, check_main, HEAP, SCRATCH, STACK, STOP
 from aoa.analysis.pe_util import PE
 from aoa.protocol import motion
 from aoa.protocol.motion import movement_update, reported_motion, motion_snapshot
@@ -27,16 +26,11 @@ from aoa.client.base import jmp_patch
 GUN_COUNTERS = SCRATCH + 0x4000  # Outside the zeroed context and body.
 
 
-def main(argv=None):
-    ap = cli.parser(__doc__)
-    ap.add_argument("source", help="pristine 2.9.2 client (AOACLIENT.EXE.orig)")
-    ap.add_argument("output", help="JSON report to write")
-    a = ap.parse_args(argv)
-    source, output = a.source, a.output
+def run(source):
+    """The report for the client at `source` (the original 2.9.2 executable)."""
+    source = Path(source)
     pe = PE(source)
-    digest = hashlib.sha256(pe.data).hexdigest()
-    if digest != CLIENT_SHA256["2.9.2"]:
-        raise ValueError("requires original 2.9.2 client")
+    digest = hashlib.sha256(require_build(pe.data, "2.9.2")).hexdigest()
     emu = Emu(pe)
 
     def decode(mask, body):
@@ -172,8 +166,11 @@ def main(argv=None):
               "physics_acceleration_cases": acceleration_cases,
               "zero_time_guard_cases_passed": 4,
               "scope": "isolated decoder and physics snippets; not live multiplayer verification"}
-    Path(output).write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
-    print(json.dumps(result, indent=2))
+    return result
+
+
+def main(argv=None):
+    return check_main(__doc__, run, argv)
 
 
 if __name__ == "__main__":

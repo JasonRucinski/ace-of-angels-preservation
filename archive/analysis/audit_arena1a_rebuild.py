@@ -16,26 +16,17 @@ from pathlib import Path
 
 from aoa import cli
 from aoa.emulation.emu import Emu, HEAP, STACK, STOP
-from aoa.builds import CLIENT_SHA256, require_build
-from aoa.analysis.pe_util import PE
+from aoa.builds import CLIENT_SHA256
 from aoa.formats import scene
-from unicorn import UC_HOOK_CODE
-from unicorn.x86_const import UC_X86_REG_EAX, UC_X86_REG_EBX, UC_X86_REG_EBP, UC_X86_REG_EDI, UC_X86_REG_EIP, UC_X86_REG_ESP
+from unicorn.x86_const import UC_X86_REG_EAX, UC_X86_REG_EBX, UC_X86_REG_EBP, UC_X86_REG_EIP, UC_X86_REG_ESP
 
 from aoa.paths import ROOT
 EVIDENCE = 'evidence/2.9.2/arena1a_rebuild_20261026.json'
 
 
 def probe_gates(client):
-    require_build(client, "2.9.2")
-    emu = Emu(PE(client))
-    stops = {0x497861, 0x4A5960, 0x4964F8, 0x496306}
-
-    def stop(uc, address, size, _):
-        if address in stops:
-            uc.emu_stop()
-
-    emu.uc.hook_add(UC_HOOK_CODE, stop)
+    emu = Emu.for_build(client, "2.9.2")
+    emu.stop_at({0x497861, 0x4A5960, 0x4964F8, 0x496306})
     results = []
     for kind, entry in [('turret', 0x497255), ('navigation', 0x49738F),
                         ('warp', 0x497560), ('flag', 0x4975DF)]:

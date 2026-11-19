@@ -1,0 +1,6 @@
+# Analysis, emulation and the local regression gate (tools/verify_local.py).
+capstone==5.0.3
+pefile==2024.8.26
+unicorn==2.1.1
+# Optional, only for `tools/run.py aoa.research.disc_image rar` (raw CD images
+# inside a RAR); install it by hand when needed: pip install libarchive-c

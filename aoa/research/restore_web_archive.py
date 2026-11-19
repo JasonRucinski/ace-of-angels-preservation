@@ -7,6 +7,19 @@ Only build/ is deployed. No original scripts or form submissions are enabled.
 Requests are paced and retried through aoa/research/http.py. A capture the
 archive keeps throttling (HTTP 429 or 5xx after the retries) stays pending
 for the next resume; only other HTTP errors mark it missing.
+
+    python -I tools/restore_web_archive.py cdx [--only NAME ...] [--pause S]
+    python -I tools/restore_web_archive.py --import-indexes --recover --limit 5000
+    python -I tools/restore_web_archive.py
+
+`cdx` writes the CDX inventories that --import-indexes and
+--import-forum-versions read, to work/ (--out DIR elsewhere), through the
+CDX helper in aoa/research/wayback.py. An existing file is not replaced.
+The site and forum queries are the ones docs/private-web-archive.md records
+(output=json, filter=statuscode:200, collapse=urlkey, the six fields); the
+query behind wayback-forum-versions.json was not recorded, so its entry here
+(every distinct 200 capture, collapse=digest) is a reconstruction, untested
+against the live service.
 """
 import hashlib
 import html
@@ -22,6 +35,7 @@ import urllib.parse as U
 
 from aoa import cli  # noqa: E402
 from aoa.research import http as research_http  # noqa: E402
+from aoa.research import wayback  # noqa: E402
 
 from aoa.paths import ROOT
 STORE = ROOT / 'wb/site-archive'
@@ -461,8 +475,44 @@ const original=document.getElementById('original-url');if(original){try{original
 INDEX = '''<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ace of Angels · Private archive</title><link rel="stylesheet" href="/archive-ui.css"><body class="archive-index"><main class="archive-home"><div class="eyebrow">Flying Rock Enterprises · Personal archive</div><h1>Ace of Angels</h1><p>The surviving official website and forums, recovered from the Internet Archive. Browse the original pages, lore, and conversations. Capture dates vary; this collection combines surviving snapshots rather than recreating one complete day.</p><p>COUNTS. Original scripts and submissions are disabled. Missing pages and images are marked unavailable; game installers are excluded.</p><nav aria-label="Archive starting points">FEATURED</nav><div class="controls"><label>Search pages<br><input id="search" type="search" placeholder="Nation, ship, topic, or page title…"></label><label>Collection<br><select id="filter"><option value="all">All pages</option><option value="site">Website and lore</option><option value="forums">Forum pages</option></select></label></div><p id="results" aria-live="polite">Loading archive index…</p><ul id="pages"></ul><noscript>Enable JavaScript to search the local archive index.</noscript></main><script src="/archive-ui.js"></script></body></html>'''
 UNAVAILABLE = '''<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Capture unavailable · Ace of Angels</title><link rel="stylesheet" href="/archive-ui.css"><body class="archive-index"><main class="archive-home"><a href="/">← Archive index</a><h1>Capture unavailable</h1><p>This link could not be recovered, is still awaiting recovery, or points to an external service or excluded download. Its original content has not been recreated.</p><p id="original-url"></p></main><script src="/missing.js"></script></body></html>'''
 
+# work/<name> -> (domain, CDX collapse) for the `cdx` subcommand.
+CDX_INDEXES = {
+    'wayback-site-index.json': ('aceofangels.com', 'urlkey'),
+    'wayback-forum-index.json': ('flyingrockllc.com', 'urlkey'),
+    'wayback-forum-versions.json': ('flyingrockllc.com', 'digest'),
+}
+
+
+def write_cdx_indexes(out, names, http, say=print):
+    """Query each named index and write it to out/<name>; existing files are kept."""
+    out.mkdir(parents=True, exist_ok=True)
+    for name in names:
+        target = out / name
+        if target.exists():
+            say(f'{target} exists; not replacing it')
+            continue
+        domain, collapse = CDX_INDEXES[name]
+        rows = wayback.cdx_query(domain, filters=['statuscode:200'], collapse=collapse, http=http)
+        part = target.with_suffix('.part')
+        part.write_text(json.dumps(rows), 'utf-8')
+        part.replace(target)
+        say(f'{target}: {len(wayback.without_header(rows))} captures of {domain}')
+
+
+def cdx_main(argv):
+    ap = cli.parser(__doc__, prog='restore_web_archive.py cdx')
+    ap.add_argument('--only', nargs='+', choices=sorted(CDX_INDEXES), help='write only these index files')
+    ap.add_argument('--out', type=Path, default=ROOT / 'work', help='folder for the index files (default: work/)')
+    ap.add_argument('--pause', type=float, default=4.0, help='Minimum seconds between archive requests')
+    args = ap.parse_args(argv)
+    write_cdx_indexes(args.out, args.only or list(CDX_INDEXES),
+                      research_http.Polite(min_interval=max(1.0, args.pause)))
+
 
 def main(argv=None):
+    argv = sys.argv[1:] if argv is None else list(argv)
+    if argv[:1] == ['cdx']:
+        return cdx_main(argv[1:])
     ap = cli.parser(__doc__)
     ap.add_argument('--recover', action='store_true')
     ap.add_argument('--limit', type=int, default=2000)

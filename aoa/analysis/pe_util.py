@@ -4,8 +4,10 @@ The address mapping (file offset <-> RVA <-> VA, `read_va`, `u32`, `cstr`)
 lives in aoa.formats.pe, which needs only the standard library; PE adds the
 import table from pefile, and Disasm the capstone sweep.
 """
+import hashlib
 import pickle
 import re
+import sys
 from bisect import bisect_right
 from pathlib import Path
 
@@ -13,8 +15,15 @@ import capstone
 import pefile
 
 from aoa.formats.pe import Image
+from aoa.paths import WORK
 
 HEX = re.compile(r"0x[0-9a-f]+")
+CACHE = WORK / "cache"
+
+
+def cache_file(data, cache_dir=None):
+    """Where the disassembly of these executable bytes is cached."""
+    return Path(cache_dir or CACHE) / f"{hashlib.sha256(data).hexdigest()}.pkl"
 
 
 class PE(Image):
@@ -35,11 +44,18 @@ class Disasm:
     Each instruction is (va, size, mnemonic, op_str). `refs` maps every
     hex constant >= ImageBase that appears in an operand to the instruction
     addresses using it (push imm, mov imm, [disp], call/jmp target).
+
+    The cache is <cache_dir>/<sha256 of the executable>.pkl (cache_dir
+    defaults to work/cache/), so one build's sweep can never be read for
+    another. A `cache_path` from an older caller is ignored with a note.
     """
 
-    def __init__(self, pe: PE, cache_path):
+    def __init__(self, pe: PE, cache_path=None, cache_dir=None):
         self.pe = pe
-        cache = Path(cache_path)
+        if cache_path is not None:
+            print(f"note: ignoring {cache_path}: the disassembly cache is keyed by the executable's SHA-256",
+                  file=sys.stderr)
+        cache = cache_file(pe.data, cache_dir)
         if cache.exists():
             self.insns = pickle.loads(cache.read_bytes())
         else:

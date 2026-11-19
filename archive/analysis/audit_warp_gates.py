@@ -26,26 +26,16 @@ EVIDENCE = 'evidence/2.9.2/warp_gates_20261026.json'
 
 
 def native_checks(client, nodes, links):
-    if hashlib.sha256(client.read_bytes()).hexdigest() != CLIENT_SHA256["2.9.2"]:
-        raise ValueError('requires the original 2.9.2 executable')
-    from aoa.analysis.pe_util import PE
     from aoa.emulation.emu import Emu, HEAP, STACK, SCRATCH, STOP
-    from unicorn import UC_HOOK_CODE
     from unicorn.x86_const import (UC_X86_REG_EBP, UC_X86_REG_EBX,
                                    UC_X86_REG_EDI, UC_X86_REG_EIP, UC_X86_REG_ESP)
-    emu = Emu(PE(client))
+    emu = Emu.for_build(client, "2.9.2")
     addresses = {n['node_id']: HEAP + 0x10000 + i * 0x400 for i, n in enumerate(nodes)}
     for node in nodes:
         address = addresses[node['node_id']]
         emu.write(address + 0x7c, struct.pack('<16f', *node['matrix']))
         emu.write(address + 0x144, struct.pack('<I', addresses.get(node['parent_id'], 0)))
-    stops = {0x4971f0, 0x4964f8, 0x4b5110}
-
-    def stop(uc, address, size, _):
-        if address in stops:
-            uc.emu_stop()
-
-    emu.uc.hook_add(UC_HOOK_CODE, stop)
+    stops = emu.stop_at({0x4971f0, 0x4964f8, 0x4b5110})
     control, table = HEAP + 0x1000, HEAP + 0x2000
     sp = STACK + 0xe0000
     errors = []

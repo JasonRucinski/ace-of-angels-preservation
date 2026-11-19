@@ -1,6 +1,6 @@
 """Extract the compiled structure-size diagnostics ("SFoo (%d)" log calls).
 
-Usage: python -I tools/run.py aoa.analysis.packet_sizes <client.exe> <cache.pkl> <out.json>
+Usage: python -I tools/run.py aoa.analysis.packet_sizes <client.exe> <out.json>
 
 Locates the routine that logs "SPacketServerRegister (%d)" and parses every
     push <imm>        ; the logged value
@@ -18,6 +18,7 @@ from pathlib import Path
 
 from aoa import cli  # noqa: E402
 from aoa.analysis.pe_util import PE, Disasm  # noqa: E402
+from aoa.analysis.cache_args import drop_cache_args
 
 NAME_FMT = re.compile(r"^(S[A-Za-z0-9_]+) \(%d\)$")
 
@@ -32,12 +33,11 @@ def imm(ops):
 def main(argv=None):
     ap = cli.parser(__doc__)
     ap.add_argument("client", help="client executable")
-    ap.add_argument("cache", help="disassembly cache (.pkl) for that executable")
     ap.add_argument("out", help="JSON file to write")
-    a = ap.parse_args(argv)
-    path, cache, out = a.client, a.cache, a.out
+    a = ap.parse_args(drop_cache_args(argv))
+    path, out = a.client, a.out
     pe = PE(path)
-    d = Disasm(pe, cache)
+    d = Disasm(pe)
     anchor_off = pe.data.find(b"SPacketServerRegister (%d)\0")
     if anchor_off < 0:
         res = {"file": Path(path).as_posix(), "count": 0, "rows": [],

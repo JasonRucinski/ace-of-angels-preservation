@@ -27,14 +27,13 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: python -m pip install -r requirements.txt
+      # Playing and hosting need no pip packages (requirements.txt lists none);
+      # the tests do. Windows also installs Pillow for the texture pack builder.
+      - run: python -m pip install -r requirements.txt -r requirements-research.txt -r requirements-texture.txt
         if: runner.os == 'Windows'
-      # The host itself needs no pip packages (standard library only); the tests
-      # do. Linux installs only the pinned capstone, unicorn and pefile from
-      # requirements.txt, not Pillow.
       - name: Install pinned analysis packages
         if: runner.os == 'Linux'
-        run: python -m pip install $(grep -E '^(capstone|unicorn|pefile)==' requirements.txt)
+        run: python -m pip install -r requirements.txt -r requirements-research.txt
       - name: Validate Linux service definition
         if: runner.os == 'Linux'
         run: systemd-analyze verify deploy/linux/aoa-host.service

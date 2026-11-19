@@ -21,6 +21,7 @@ import zipfile
 from pathlib import Path
 
 from aoa import cli  # noqa: E402
+from aoa.formats.installer import members as installer_members
 
 EXTRACT = {
     "AOACLIENT.EXE", "AOADEFAULTS.PRF", "SCRTY.BIN", "SCENARIOS.AOA", "SCRIPTS.AOA",
@@ -57,13 +58,10 @@ def main(argv=None) -> int:
     out = Path(out_dir)
     (out / "members").mkdir(parents=True, exist_ok=True)
     data = Path(installer).read_bytes()
-    zf = zipfile.ZipFile(installer)
-    infos = zf.infolist()
-    bad = zf.testzip()
+    with zipfile.ZipFile(installer) as zf:
+        bad = zf.testzip()
     members = []
-    for i, zi in enumerate(infos):
-        blob = zf.read(zi)
-        base = zi.filename.replace("\\", "/").split("/")[-1]
+    for i, zi, base, blob in installer_members(installer):
         is_mz = blob[:2] == b"MZ"
         is_pe = False
         if is_mz and len(blob) >= 0x40:

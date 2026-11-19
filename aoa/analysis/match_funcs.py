@@ -1,6 +1,6 @@
 """Locate 2.7.1 functions in another build by masked byte signatures.
 
-Usage: python -I tools/run.py aoa.analysis.match_funcs <ref.exe> <ref_cache.pkl> <other.exe> <other_cache.pkl> <out.json> name=va ...
+Usage: python -I tools/run.py aoa.analysis.match_funcs <ref.exe> <other.exe> <out.json> name=va ...
 
 For each reference function, its bytes up to the next known function start
 are taken with every 4-byte absolute address operand / rel32 call-jump target
@@ -18,6 +18,7 @@ import capstone
 
 from aoa import cli  # noqa: E402
 from aoa.analysis.pe_util import PE, Disasm  # noqa: E402
+from aoa.analysis.cache_args import drop_cache_args
 
 
 def masked(pe, d, start, limit=0x600):
@@ -56,16 +57,14 @@ def to_regex(code, mask):
 def main(argv=None):
     ap = cli.parser(__doc__)
     ap.add_argument("ref", help="reference executable (2.7.1)")
-    ap.add_argument("ref_cache", help="disassembly cache (.pkl) for the reference")
     ap.add_argument("other", help="executable to search")
-    ap.add_argument("other_cache", help="disassembly cache (.pkl) for the other build")
     ap.add_argument("out", help="JSON file to write")
     ap.add_argument("pairs", nargs="*", metavar="name=va", help="reference functions (VA in hex)")
-    a = ap.parse_args(argv)
-    ref, refc, oth, othc, out, pairs = a.ref, a.ref_cache, a.other, a.other_cache, a.out, a.pairs
+    a = ap.parse_args(drop_cache_args(argv, (1, 3)))
+    ref, oth, out, pairs = a.ref, a.other, a.out, a.pairs
     pr, po = PE(ref), PE(oth)
-    dr = Disasm(pr, refc)
-    Disasm(po, othc)
+    dr = Disasm(pr)
+    Disasm(po)
     t = po.text()
     text = po.data[t["raw_off"]:t["raw_off"] + t["raw_size"]]
     res = []

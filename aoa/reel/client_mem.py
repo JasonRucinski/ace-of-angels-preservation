@@ -6,63 +6,27 @@
 
 Camera modes patch the running process only (never the file on disk): the
 F2/F4 toggle-bit reads in the third-person camera's cave A (v2 and later), `and al,1`
-(24 01), become `mov al,1` (B0 01). Offsets as in aoa/live/arena.py.
+(24 01), become `mov al,1` (B0 01). Offsets in aoa/live/addresses_292.py;
+process access through aoa/live/procmem.py, which checks the build first.
 """
 import argparse
-import ctypes
 import json
-import math
 import struct
 import sys
 import time
-from ctypes import wintypes
 
+from aoa.live import procmem
+from aoa.live.addresses_292 import PLAYER_STRIDE as STRIDE, PLAYERS, WORLD
 from aoa.reel import window  # noqa: E402
-
-k = window.dll("kernel32")
-k.OpenProcess.argtypes = [wintypes.DWORD, wintypes.BOOL, wintypes.DWORD]
-k.OpenProcess.restype = wintypes.HANDLE
-k.CloseHandle.argtypes = [wintypes.HANDLE]
-for _name in ("ReadProcessMemory", "WriteProcessMemory"):
-    getattr(k, _name).argtypes = [wintypes.HANDLE, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_size_t,
-                                  ctypes.POINTER(ctypes.c_size_t)]
-k.VirtualProtectEx.argtypes = [wintypes.HANDLE, ctypes.c_void_p, ctypes.c_size_t, wintypes.DWORD,
-                               ctypes.POINTER(wintypes.DWORD)]
-k.FlushInstructionCache.argtypes = [wintypes.HANDLE, ctypes.c_void_p, ctypes.c_size_t]
 
 F4_READ, F2_READ = 0x58BC1B, 0x58BC3E   # `and al,1` after GetKeyState(VK_F4 / VK_F2)
 AND_AL_1, MOV_AL_1 = b"\x24\x01", b"\xB0\x01"
-WORLD, PLAYERS, STRIDE = 0x5E7728, 0xD32AC, 0x3B0
+ACCESS = procmem.VM_OPERATION | procmem.VM_READ | procmem.VM_WRITE | procmem.QUERY_INFORMATION
 
 
-class Client:
+class Client(procmem.Process):
     def __init__(self, pid=None):
-        self.pid = pid or window.client_pids()[0]
-        self.h = k.OpenProcess(0x0008 | 0x0010 | 0x0020 | 0x0400, False, self.pid)
-        if not self.h:
-            raise ctypes.WinError(ctypes.get_last_error())
-
-    def close(self):
-        k.CloseHandle(self.h)
-
-    def read(self, addr, size):
-        buf = ctypes.create_string_buffer(size)
-        got = ctypes.c_size_t()
-        if not k.ReadProcessMemory(self.h, addr, buf, size, ctypes.byref(got)) or got.value != size:
-            raise ctypes.WinError(ctypes.get_last_error())
-        return buf.raw
-
-    def write(self, addr, data, code=False):
-        old = wintypes.DWORD()
-        if code and not k.VirtualProtectEx(self.h, addr, len(data), 0x40, ctypes.byref(old)):
-            raise ctypes.WinError(ctypes.get_last_error())
-        got = ctypes.c_size_t()
-        ok = k.WriteProcessMemory(self.h, addr, data, len(data), ctypes.byref(got))
-        if code:
-            k.VirtualProtectEx(self.h, addr, len(data), old.value, ctypes.byref(old))
-            k.FlushInstructionCache(self.h, addr, len(data))
-        if not ok or got.value != len(data):
-            raise ctypes.WinError(ctypes.get_last_error())
+        super().__init__(pid or window.client_pids()[0], access=ACCESS)
 
     def camera(self, mode):
         """cockpit, chase (F2 forced on) or orbit (F4 forced on)."""

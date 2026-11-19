@@ -6,7 +6,6 @@ Only 0x45DBE0 runs in Unicorn. Logging and UI imports are intercepted;
 no Windows loader, real UI, network, or other game code runs.
 """
 import hashlib
-import json
 import sys
 from pathlib import Path
 
@@ -14,8 +13,8 @@ from unicorn import UC_HOOK_CODE
 from unicorn.x86_const import UC_X86_REG_EAX, UC_X86_REG_EIP, UC_X86_REG_ESP
 
 from aoa import cli
-from aoa.builds import CLIENT_SHA256
-from aoa.emulation.emu import Emu, HEAP, SCRATCH, STUBS, STOP
+from aoa.builds import require_build
+from aoa.emulation.emu import Emu, check_main, HEAP, SCRATCH, STUBS, STOP
 from aoa.analysis.pe_util import PE
 from aoa.host.server import pilot_list
 
@@ -64,22 +63,20 @@ def check(pe, name, current):
     return observed
 
 
-def main(argv=None):
-    ap = cli.parser(__doc__)
-    ap.add_argument("source", help="pristine 2.9.2 client (AOACLIENT.EXE.orig)")
-    ap.add_argument("output", help="JSON report to write")
-    a = ap.parse_args(argv)
-    source, output = a.source, a.output
+def run(source):
+    """The report for the client at `source` (the original 2.9.2 executable)."""
+    source = Path(source)
     pe = PE(source)
-    digest = hashlib.sha256(pe.data).hexdigest()
-    if digest != CLIENT_SHA256["2.9.2"]:
-        raise ValueError("requires the original, verified 2.9.2 client")
+    digest = hashlib.sha256(require_build(pe.data, "2.9.2")).hexdigest()
     cases = [check(pe, "testpilot", current) for current in ("", "Offline", "testpilot")]
     cases.append(check(pe, "abcdefghijklmnopqrs", ""))
     result = {"client_sha256": digest, "handler": "0x45dbe0", "cases": cases,
               "passed": len(cases), "scope": "isolated client handler; UI imports mocked; not live gameplay"}
-    Path(output).write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
-    print(json.dumps(result, indent=2))
+    return result
+
+
+def main(argv=None):
+    return check_main(__doc__, run, argv)
 
 
 if __name__ == "__main__":

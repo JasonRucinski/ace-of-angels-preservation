@@ -2,7 +2,7 @@
 to [reg + 0x498] and of a length to [reg + 0x494] (CComm packet object
 layout, see CComm::SendPacket 0x60DDB0).
 
-Usage: python -I tools/run.py aoa.analysis.send_sites <client.exe> <cache.pkl> <packet_sizes.json|-> <out.json>
+Usage: python -I tools/run.py aoa.analysis.send_sites <client.exe> <packet_sizes.json|-> <out.json>
 
 For each type store, the nearest length store within +-12 instructions in
 the same function is paired with it. Lengths are compared with the compiled
@@ -16,6 +16,7 @@ from pathlib import Path
 
 from aoa import cli  # noqa: E402
 from aoa.analysis.pe_util import PE, Disasm  # noqa: E402
+from aoa.analysis.cache_args import drop_cache_args
 
 TYPE_RE = re.compile(r"^byte ptr \[(\w+) \+ 0x498\], (0x[0-9a-f]+|\d+)$")
 LEN_RE = re.compile(r"^dword ptr \[(\w+) \+ 0x494\], (0x[0-9a-f]+|\d+)$")
@@ -24,13 +25,12 @@ LEN_RE = re.compile(r"^dword ptr \[(\w+) \+ 0x494\], (0x[0-9a-f]+|\d+)$")
 def main(argv=None):
     ap = cli.parser(__doc__)
     ap.add_argument("client", help="client executable")
-    ap.add_argument("cache", help="disassembly cache (.pkl) for that executable")
     ap.add_argument("sizes", help="packet_sizes.json for size hints, or - for none")
     ap.add_argument("out", help="JSON file to write")
-    a = ap.parse_args(argv)
-    path, cache, sizes_path, out = a.client, a.cache, a.sizes, a.out
+    a = ap.parse_args(drop_cache_args(argv))
+    path, sizes_path, out = a.client, a.sizes, a.out
     pe = PE(path)
-    d = Disasm(pe, cache)
+    d = Disasm(pe)
     by_size = {}
     if sizes_path != "-":
         for r in json.loads(Path(sizes_path).read_text(encoding="utf-8"))["rows"]:

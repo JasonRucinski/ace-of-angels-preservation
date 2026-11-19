@@ -7,12 +7,13 @@ uses no venv). Each script's docstring gives its usage, and `--help` prints
 it without doing anything else (`test_cli_help.py` checks this for every
 script).
 
-The server, the host tools, `prepare_client.py` and the client launcher need
-only the standard library. Anything that reads the archive key from the
-client (`make_map.py install`, `make_object.py install`, a `texture_pack.py`
-install, `build_texture_pack.py`) also needs `pefile` and `capstone`, and
-`build_texture_pack.py` needs Pillow. The analysis and emulation scripts need
-`requirements.txt` (`pefile`, `capstone`, `unicorn`).
+The server, the host tools, `prepare_client.py`, the client launcher and
+everything that reads the archive key from the client (`make_map.py install`,
+`make_object.py install`, a `texture_pack.py` install) need only the standard
+library, so `requirements.txt` lists no packages. `build_texture_pack.py`
+needs Pillow (`requirements-texture.txt`). The analysis and emulation scripts
+and `verify_local.py` need `requirements-research.txt` (`pefile`, `capstone`,
+`unicorn`; `libarchive-c` optionally, for RAR disc images).
 
 Tools write to the ignored `work\` folder. The audits that have a committed
 copy under `evidence/` write `work\<same path>` by default and replace the

@@ -60,7 +60,8 @@ curl -L -o builds/bennu-nasa/bennu.glb "https://raw.githubusercontent.com/nasa/N
 Then `make_map.py serve` as usual. In flight, press T until the target
 windows show **Bennu**, and follow the marker.
 
-`install` needs `requirements.txt` for the archive key. The first time, it
+`install` reads the archive key from your client with the standard library
+alone (no packages needed). The first time, it
 keeps the database as `AOAOBJECTS.ODB.before-custom-objects`. Later installs
 keep objects added from other specs and replace the spec's own entries, so
 it can be repeated after changing the spec. `undo` puts the backup back,

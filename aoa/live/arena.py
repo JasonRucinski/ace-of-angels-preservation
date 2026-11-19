@@ -1,40 +1,27 @@
 """Read-only 2.9.2 player-slot snapshot for local debugging: <PID>.
 
-Offsets recovered from AllocNewPlayer, LoadPlayer and ReceivePositionUpdate.
-Only use with the 2.9.2 executable (image base 0x400000).
+Offsets recovered from AllocNewPlayer, LoadPlayer and ReceivePositionUpdate
+(aoa/live/addresses_292.py). The process must be the 2.9.2 client: its PE
+timestamp is checked before anything is read (aoa/live/procmem.py).
 
     python -I tools/run.py aoa.live.arena <PID> [--objects]
 """
-import ctypes
 import json
 import struct
 import sys
-from ctypes import wintypes
 
 from aoa import cli  # noqa: E402
+from aoa.live import addresses_292 as at
+from aoa.live.procmem import Process
 
 
 def snapshot(pid, include_objects=False, include_render=False):
-    k = ctypes.WinDLL("kernel32", use_last_error=True)
-    k.OpenProcess.argtypes = [wintypes.DWORD, wintypes.BOOL, wintypes.DWORD]
-    k.OpenProcess.restype = wintypes.HANDLE
-    k.ReadProcessMemory.argtypes = [wintypes.HANDLE, ctypes.c_void_p, ctypes.c_void_p,
-                                   ctypes.c_size_t, ctypes.POINTER(ctypes.c_size_t)]
-    k.CloseHandle.argtypes = [wintypes.HANDLE]
-    handle = k.OpenProcess(0x10, False, pid)
-    if not handle:
-        raise ctypes.WinError(ctypes.get_last_error())
-
-    def read(addr, size):
-        buf = ctypes.create_string_buffer(size)
-        got = ctypes.c_size_t()
-        if not k.ReadProcessMemory(handle, addr, buf, size, ctypes.byref(got)) or got.value != size:
-            raise ctypes.WinError(ctypes.get_last_error())
-        return buf.raw
+    process = Process(pid)
+    read = process.read
 
     try:
-        tick_start = struct.unpack("<I", read(0x5E8E5C, 4))[0] if include_render else None
-        world = struct.unpack("<I", read(0x5E7728, 4))[0]
+        tick_start = struct.unpack("<I", read(at.GAME_CLOCK, 4))[0] if include_render else None
+        world = struct.unpack("<I", read(at.WORLD, 4))[0]
         def render_fields(p):
             pointer = struct.unpack_from("<I", p, 0x19C)[0]
             result = {"control_flags": struct.unpack_from("<I", p, 0xF4)[0]}
@@ -45,7 +32,7 @@ def snapshot(pid, include_objects=False, include_render=False):
             return result
         players = []
         for slot in range(50):
-            p = read(world + 0xD32AC + slot * 0x3B0, 0x3B0)
+            p = read(world + at.PLAYERS + slot * at.PLAYER_STRIDE, at.PLAYER_STRIDE)
             if p[0x243]:
                 players.append({"slot": slot, "tag": hex(struct.unpack_from("<I", p, 0x178)[0]),
                                 "position": list(struct.unpack_from("<3f", p, 0x30)),
@@ -58,15 +45,15 @@ def snapshot(pid, include_objects=False, include_render=False):
                                 **(render_fields(p) if include_render else {})})
         result = {"pid": pid, "active_players": players}
         if include_render:
-            result["app_active"] = read(0x5E6E28, 1)[0]
-            result["frame_tick"] = struct.unpack("<I", read(0x5E8E5C, 4))[0]
-            result["joystick_axes"] = list(struct.unpack("<4i", read(0x60CC14, 16)))
-            graphics = struct.unpack("<I", read(0x60C828, 4))[0]
+            result["app_active"] = read(at.APP_ACTIVE, 1)[0]
+            result["frame_tick"] = struct.unpack("<I", read(at.GAME_CLOCK, 4))[0]
+            result["joystick_axes"] = list(struct.unpack("<4i", read(at.JOYSTICK_AXES, 16)))
+            graphics = struct.unpack("<I", read(at.GRAPHICS_POINTER, 4))[0]
             # SetTransform(D3DTRANSFORMSTATE_VIEW), original 0x43B48E.
             result["view_matrix"] = list(struct.unpack("<16f", read(graphics + 0x25E0, 64)))
             # Main camera input copied by 0x553810. The D3D view above can
             # instead describe a HUD/target subview at the instant of sampling.
-            result["main_camera_matrix"] = list(struct.unpack("<16f", read(graphics + 0x2510, 64)))
+            result["main_camera_matrix"] = list(struct.unpack("<16f", read(graphics + at.MAIN_CAMERA, 64)))
             result["camera_tick_delta"] = struct.unpack("<I", read(graphics + 0x24EC, 4))[0]
         if include_objects:
             objects = []
@@ -118,10 +105,10 @@ def snapshot(pid, include_objects=False, include_render=False):
             result["safe_zone_list_complete"] = zone_node == 0
         if include_render:
             result["frame_tick_start"] = tick_start
-            result["frame_tick_end"] = struct.unpack("<I", read(0x5E8E5C, 4))[0]
+            result["frame_tick_end"] = struct.unpack("<I", read(at.GAME_CLOCK, 4))[0]
         return result
     finally:
-        k.CloseHandle(handle)
+        process.close()
 
 
 def main(argv=None):
