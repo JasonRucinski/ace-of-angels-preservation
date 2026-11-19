@@ -26,7 +26,7 @@ game closed.
 
 ```powershell
 git pull
-.venv\Scripts\python.exe -m pip install -r requirements.txt
+.venv\Scripts\python.exe -m pip install -r requirements-texture.txt
 ```
 
 This adds the Pillow image library that the build step uses.

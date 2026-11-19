@@ -1,6 +1,7 @@
 """Run the supported local regression gate; does not launch a real client.
 
-Requires the user's original 2.9.2 EXE/assets and installed test dependencies.
+Requires the user's original 2.9.2 EXE/assets and the packages in
+requirements-research.txt and requirements-texture.txt.
 Any missing source, failed test, skipped test or failed emulator fails the gate.
 """
 import argparse

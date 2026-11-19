@@ -423,6 +423,24 @@ class DiscImage(unittest.TestCase):
         self.assertEqual(seen, [["iso", "re", "out"], ["rar", "a.rar", "a.img", "a.iso"]])
 
 
+class Requirements(unittest.TestCase):
+    """The split of audit F-10: players need no packages; research and the texture builder do."""
+
+    def packages(self, name):
+        lines = (ROOT / name).read_text(encoding="utf-8").splitlines()
+        return [line.split("==")[0].lower() for line in lines if line.strip() and not line.startswith("#")]
+
+    def test_split(self):
+        self.assertEqual(self.packages("requirements.txt"), [])
+        self.assertEqual(sorted(self.packages("requirements-research.txt")), ["capstone", "pefile", "unicorn"])
+        self.assertEqual(self.packages("requirements-texture.txt"), ["pillow"])
+
+    def test_ci_installs_them(self):
+        workflow = (ROOT / ".github/workflows/tests.yml").read_text(encoding="utf-8")
+        for name in ("requirements-research.txt", "requirements-texture.txt"):
+            self.assertIn("-r " + name, workflow)
+
+
 def _no_network(*args, **kwargs):
     raise AssertionError("test_research must not use the network")
 

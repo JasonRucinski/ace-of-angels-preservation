@@ -19,11 +19,12 @@ CI = (
     "test_research", "test_installer", "test_emulation", "test_procmem", "test_evidence_index",
 )
 # The texture pack builder is a Windows player tool that needs Pillow from
-# requirements.txt, which only the Windows CI job installs.
+# requirements-texture.txt, which only the Windows CI job installs.
 CI_WINDOWS = ("test_build_texture_pack",)
 
 # The local gate (tools/verify_local.py): needs the user's original 2.9.2
-# executable and assets, and the requirements. A skip fails the gate.
+# executable and assets, requirements-research.txt and requirements-texture.txt.
+# A skip fails the gate.
 LOCAL = (
     "test_network_bounds", "test_relay_motion", "test_prepare_client",
     "test_client_launcher",

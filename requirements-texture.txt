@@ -1,0 +1,2 @@
+# Building a texture pack (tools/build_texture_pack.py); installing one needs nothing.
+Pillow==11.0.0

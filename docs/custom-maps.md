@@ -79,9 +79,9 @@ the original `JRMAP.TRN`.
 ]}
 ```
 
-- `object` is any `.Sco` name in `AOAOBJECTS.ODB`. With `requirements.txt`
-  installed, `install` checks the names against your copy; without it, the
-  client skips a missing object. Ships, stations, asteroids and walls all
+- `object` is any `.Sco` name in `AOAOBJECTS.ODB`. `install` checks the
+  names against your copy and refuses a missing one; it reads the archive
+  key with the standard library alone, so no packages are needed. Ships, stations, asteroids and walls all
   load. Names are at most 23 characters.
 - `rot` is yaw, pitch and roll in degrees, using Direct3D's order and signs.
   Positive yaw turns the nose (+z) toward +x. The file has no scale field.

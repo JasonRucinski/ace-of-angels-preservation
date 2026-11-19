@@ -214,6 +214,7 @@ an incompatible version receives result 8 and allocates no session or slot.
 ## Verification
 
 ```powershell
+.venv\Scripts\python.exe -m pip install -r requirements-research.txt -r requirements-texture.txt
 .venv\Scripts\python.exe -I tools/verify_local.py
 ```
 

@@ -1,4 +1,7 @@
-capstone==5.0.3
-pefile==2024.8.26
-unicorn==2.1.1
-Pillow==11.0.0
+# Playing and hosting need no packages: the server, the host tools,
+# tools/prepare_client.py, the launchers, make_map/make_object install and a
+# texture pack install use only the standard library. This file stays so the
+# documented `pip install -r requirements.txt` keeps working.
+#
+# Analysis, emulation and the local gate: requirements-research.txt
+# Building a texture pack (tools/build_texture_pack.py): requirements-texture.txt
