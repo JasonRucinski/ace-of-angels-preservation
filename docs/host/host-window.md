@@ -38,7 +38,7 @@ administrator. The window never runs them itself.
 | Address | This PC's address of that kind (home ranges or the VPN range `100.64.0.0/10`), found without sending anything; **Refresh** looks again |
 | Map | **One map**, or **Rotate through several maps** (players rejoin between maps). Only the 11 maps with real content are offered, each with its object count ([which](../STATUS.md#maps)) |
 | Rules | Kills to win, minutes per match, players (0 turns a limit off). Defaults: 20 kills, 10 minutes, 8 players (the server's own) |
-| Advanced: backdrop, target ships | Backdrop is one of the five the client ships. Target ships are passive enemies ahead of the start point for practice; they come back 15 s after being destroyed ([findings 9.46](../research/findings.md)) |
+| Advanced: backdrop, target ships | Backdrop is one of the five the client ships. Target ships are passive enemies ahead of the start point for practice; they come back 15 s after being destroyed ([findings 9.46](../research/findings.md#s9-46)) |
 | Advanced: map terrain | Sends the map so clients build it on flight entry; clients need patch level 11 or later. A rotation always has it on. With terrain, JRMAP's power-up zones are hosted (clients need patch level 19) |
 | Advanced: map objects | Navigation buoys, turret trial, warp gates trial. Each needs terrain and the map objects exported from the game files (`work/2.9.2/export/AOAOBJECTS`); the trials need Arena1a, and warp gates This PC only. An option that cannot be used is greyed out with the reason |
 | Advanced: ports, game folder | The three ports (UDP 5033 login, UDP 5031 arena, TCP 5034 server list) and the folder holding `SCRTY.BIN`, shared with the player window |

@@ -86,7 +86,7 @@ the original `JRMAP.TRN`.
 - `rot` is yaw, pitch and roll in degrees, using Direct3D's order and signs.
   Positive yaw turns the nose (+z) toward +x. The file has no scale field.
 - `half` is a zone's half-size: zones are cubes. Power-up types are 0
-  missile, 1/2/3 shield +5/+10/+20 and 4 repair ([findings 9.44](../research/findings.md)).
+  missile, 1/2/3 shield +5/+10/+20 and 4 repair ([findings 9.44](../research/findings.md#s9-44)).
 - `nav` makes a navigation waypoint with that name, at most 23 ASCII characters
   (`object` defaults to `Buoy`). There can be at most ten. The client ignores
   waypoints in the file, so the server sends them as objects (LoadObject
@@ -127,7 +127,7 @@ Turrets, warp gates and flags (kinds 1, 7, 8) are not written.
 - picking up power-ups on this map (six appeared as objects in the Far Yards
   run, before the two at Bennu were added)
 - whether a waypoint can be collided with (kind 3 is the one collidable
-  non-terrain kind, [findings 9.45](../research/findings.md); the marker is 66 units across)
+  non-terrain kind, [findings 9.45](../research/findings.md#s9-45); the marker is 66 units across)
 - collision with the new objects
 - a second player
 - pitch and roll on tumbled ships compared with editor data (yaw is checked)

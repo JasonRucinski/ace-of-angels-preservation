@@ -61,11 +61,11 @@ What the map contains:
 - **Markers**: buoys `Dock 1`, `bryan1` and `Valinor` (the last at
   x = 5,000,000), cubes `AoA Safe` and `Flag 2 Safe`, five kind-2 safe
   zones (half-size 2,000–5,000 at `+0x104`) and 11 kind-6 power-up zones
-  (type at `+0x194`; [findings 9.44](findings.md)).
+  (type at `+0x194`; [findings 9.44](findings.md#s9-44)).
 
 Kind values seen: 0 static model, 1 turret, 2 safe zone (from 2.9.2's
-`AddTerrainObject`, [findings 9.42](findings.md)), 6 power-up zone (same
-function, [9.44](findings.md)), 3 cube/buoy, 7 warp gate, 8 flag station;
+`AddTerrainObject`, [findings 9.42](findings.md#s9-42)), 6 power-up zone (same
+function, [9.44](findings.md#s9-44)), 3 cube/buoy, 7 warp gate, 8 flag station;
 labels other than 2 and 6 are inferred.
 The turret records carry a second value of 3, 4 or 5, which may be the
 gun/turn setting in the 2.0.0 log line `Loading turret [%s] gun[%d] turn[%d]`.

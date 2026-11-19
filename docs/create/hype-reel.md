@@ -13,7 +13,7 @@ music. They live in git-ignored `work/reel/` and are **never committed**.
 
 - `game\2.9.2` set up as in [play.md](../play/README.md), at patch version 21 (the
   orbit camera with whole-frame culling; version 20 makes objects blink in
-  the orbit view, [findings 9.48](../research/findings.md)).
+  the orbit view, [findings 9.48](../research/findings.md#s9-48)).
 - ffmpeg 8.0 or later on `PATH`, for its `gfxcapture` (Windows Graphics
   Capture) source. 8.1.1 was used.
 - The PC unlocked, awake and left alone for about 12 minutes. The game takes

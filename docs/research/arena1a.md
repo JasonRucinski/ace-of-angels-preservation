@@ -23,7 +23,7 @@ every record has a top-level world transform.
 | Warp rails | 9 | Native WarpGate path requires an enable flag and linked child; destinations unresolved |
 | Warp targets/dummies | 9 | Link semantics unresolved |
 | Groups | 8 | Hierarchy/helper semantics unresolved |
-| Safe zones | 4 | Created online and drawn as blue wave cubes since patch version 18 ([findings 9.42](findings.md)); zone rules unverified |
+| Safe zones | 4 | Created online and drawn as blue wave cubes since patch version 18 ([findings 9.42](findings.md#s9-42)); zone rules unverified |
 | Nested layout | 1 | HyBase2Lay expands to 11 records: 10 meshes and one unresolved category-8 marker |
 
 The expanded preview has 394 records and 254 placed meshes (previously 244),

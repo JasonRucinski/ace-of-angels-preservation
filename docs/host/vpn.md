@@ -38,7 +38,7 @@ A real internet session between separate connections has
   entry, spawn position, player loads), respawn positions, score records and
   match announcements are sent reliably and in order. They no longer stop after
   30 messages per player. The design is in
-  [findings 9.33](../research/findings.md#933-sustained-reliable-delivery-without-a-client-patch-22-october-2026).
+  [findings 9.33](../research/findings.md#s9-33).
 - **Rejoin after a crash or dropout.** The player restarts the game and logs in
   again. If their old ship has been silent for 5 seconds, a new login from
   the same VPN address removes it at once rather than after the 30-second

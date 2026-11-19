@@ -65,11 +65,11 @@ replies. Existing explicit flags remain available:
 | `--peer-timeout SECONDS` | Positive finite Station/arena inactivity timeout; default 30, with three extra seconds for initial arena flight bootstrap. |
 | `--max-players N` | Simultaneous arena admissions, default 8, range 1–49. Full arenas are omitted from the list; rejected joins consume no slot. Separate lifetime limits still apply. |
 | `--ack`, `--arena`, experimental flags | Boolean flags also support `--no-…` overrides. Flight/relay requires both arena and replies; the passive object requires flight or relay. |
-| `--spawn-axis x\|z`, `--spawn-spacing N` | Diagnostic relay spawn line, default x and 1000. Ships initially face +z, so `z` with a short spacing (e.g. 300) puts later players directly ahead of the first, for firing tests. Missiles need the target at least 5000 units away (Type II), so missile tests use `--spawn-axis z --spawn-spacing 6000` with the shooter joining first ([findings 9.32](../research/findings.md#932-missiles-work-hostile-relations-launch-echo-and-impact-relay-21-october-2026)). |
-| `--experimental-teams` | Relay only, off by default. Free-for-all teams: each player its own team in player loads and `0x50` (with itself as leader). Verified on only two joins ([findings 9.31](../research/findings.md#931-teams-fixed-opt-in-missiles-need-a-loadout-21-october-2026)). Not needed for missiles: every player load already marks other players Hostile ([9.32](../research/findings.md#932-missiles-work-hostile-relations-launch-echo-and-impact-relay-21-october-2026)). |
+| `--spawn-axis x\|z`, `--spawn-spacing N` | Diagnostic relay spawn line, default x and 1000. Ships initially face +z, so `z` with a short spacing (e.g. 300) puts later players directly ahead of the first, for firing tests. Missiles need the target at least 5000 units away (Type II), so missile tests use `--spawn-axis z --spawn-spacing 6000` with the shooter joining first ([findings 9.32](../research/findings.md#s9-32)). |
+| `--experimental-teams` | Relay only, off by default. Free-for-all teams: each player its own team in player loads and `0x50` (with itself as leader). Verified on only two joins ([findings 9.31](../research/findings.md#s9-31)). Not needed for missiles: every player load already marks other players Hostile ([9.32](../research/findings.md#s9-32)). |
 | `--experimental-reliable-combat` | Relay only, off by default. Death notices and missile launches/impacts share ordered reliable delivery with removals. One outstanding event per peer; subsequent events wait for its ACK. **30 total essential events per peer per admission**, including acknowledged events; exceeding the budget retires that peer. Queued events also expire after `--peer-timeout`. This is a bounded experiment, not sustained-match support. |
 | `--experimental-protection-probe` | Single-client flight diagnostic; requires `--experimental-flight --max-players 1`, forbids relay. Sends explicit states `1,1,0,0` three seconds apart after bootstrap, waiting for ACKs. Requires the opt-in patched client; see [client-extension-gate.md](../client-extension-gate.md). This is not timed spawn protection. |
-| `--kill-limit N`, `--time-limit SECONDS` | Relay match limits, default 20 kills and 600 s; 0 disables either. At a limit every player gets the result as arena text, kills/deaths reset and the next match starts. Proposed rules, not recovered ones ([findings 9.30](../research/findings.md#930-scoreboard-match-limits-and-why-missiles-need-teams-21-october-2026)). |
+| `--kill-limit N`, `--time-limit SECONDS` | Relay match limits, default 20 kills and 600 s; 0 disables either. At a limit every player gets the result as arena text, kills/deaths reset and the next match starts. Proposed rules, not recovered ones ([findings 9.30](../research/findings.md#s9-30)). |
 | `--raw-capture` | Explicitly include payloads/addresses in diagnostic files. These may contain dummy credentials and must remain private. |
 | `--log-max-bytes N`, `--log-backups N` | Default 1 MiB per file and three backups; minimum file budget 16 KiB, backups 1–10. |
 
@@ -172,7 +172,7 @@ from its first byte. A connection whose request resolved a Station session
 stays open for further jobs while that session lives, and closes when the
 session ends. The real 2.9.2 client reuses its data connection, and a server
 close leaves its TCP queue mutex stuck, which later hangs its UI thread
-([findings 9.23](../research/findings.md#923-real-client-check-21-october-2026)).
+([findings 9.23](../research/findings.md#s9-23)).
 Connections that resolve no session close after one reply or the deadline.
 Only 142 request bytes are retained. A stalled request does not block another
 client or the UDP loop. Truncated requests get no partial-job reply; unknown
@@ -216,7 +216,7 @@ protection. Joining an arena does not establish Station authorization. However,
 the real client uses one UDP socket for both. When an arena endpoint equals a
 live Station endpoint, the two are bound: Station stops pinging that socket,
 the Station lease follows arena activity, and either side's quit or expiry
-ends both ([findings 9.28](../research/findings.md#928-station-pings-during-arena-entry-21-october-2026)).
+ends both ([findings 9.28](../research/findings.md#s9-28)).
 Other arena endpoints remain independent. The guest profile adds the limited
 ownership described next.
 

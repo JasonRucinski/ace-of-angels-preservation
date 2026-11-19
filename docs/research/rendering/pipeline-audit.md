@@ -67,7 +67,7 @@ not evidence that the cutoff is incorrect.
 | Mesh submission | `0x56DC6B..0x56DE4E` → `0x562210` | Static trace connects world matrix to primitive submission. Twelve mocked-device cases verify indexed/non-indexed arguments and empty-buffer suppression |
 | State/depth settings | `0x566DF0`; depth setup around `0x553DF6..0x553EBC` | Error propagation weakness reproduced. Effective per-pass depth/alpha/cull settings and depth precision remain unverified |
 | Texture allocation/upload | `0x562A30` | Static branches reject missing texture data, unsupported bit sizes, and allocation failure. Texture sampling, mip bias, upload/recovery and binding order remain unverified |
-| Presentation | windowed path `0x556120` → `0x556890`; flip `0x556220` | Frame pacing measured live at 60 Hz and fixed by `frame-clock-v1` ([findings 9.35](../findings.md)). GPU output, surface recovery and >60 Hz displays remain unverified |
+| Presentation | windowed path `0x556120` → `0x556890`; flip `0x556220` | Frame pacing measured live at 60 Hz and fixed by `frame-clock-v1` ([findings 9.35](../findings.md#s9-35)). GPU output, surface recovery and >60 Hz displays remain unverified |
 
 Cached transform reuse is intentional. A fixture that mutates a parent using
 its position setter leaves a previously cached descendant unchanged. This is
@@ -86,7 +86,7 @@ the supported patch `visibility-math-v1` (`aoa/client/patches/visibility_fix.py`
 by default in client preparation. The exact-centre part below was **not**
 promoted. The player's own ship node sits at distance 0 from the camera in
 flight, and the original's "hidden" result there is what keeps your own hull
-out of view ([findings 9.36](../findings.md)). The experiment's caves now overlap
+out of view ([findings 9.36](../findings.md#s9-36)). The experiment's caves now overlap
 online terrain, so the tool below applies only to images without it.
 
 `aoa/client/experiments/render_culling_experiment.py` now corrects the two visibility entry

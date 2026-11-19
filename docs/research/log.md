@@ -210,7 +210,7 @@ Exact client damage values, displayed scoreboard and visible respawns were not
 independently observed. VPN installation and internet acceptance remain pending.
 Admission limits and temporary pilots/scores still apply.
 
-Orbit camera (26 Oct 2026, [findings 9.47](findings.md)): patch version 20
+Orbit camera (26 Oct 2026, [findings 9.47](findings.md#s9-47)): patch version 20
 (`third-person-camera-v2`, replaces v1, upgrades in place) adds **F4**, a
 camera that circles your ship once per 24 s at the chase distance. It turns
 the renderer's own forward and right copies (`0x43B367`) and the culling copy
@@ -218,12 +218,12 @@ together. Seen live through a full lap of F5 captures; the F4 read was
 forced on in memory because the test window had no focus, so a real F4
 press is still unconfirmed. Patch version 21 (`third-person-camera-v3`,
 27 Oct) fixes orbit-view objects blinking: culling used the orbit camera
-only when the millisecond clock had not moved ([findings 9.48](findings.md)).
+only when the millisecond clock had not moved ([findings 9.48](findings.md#s9-48)).
 Plain F2 turned out to be bound by default ("Toggle Mentor"); plain F4 is free.
 
 ## 25 October 2026
 
-Patch version 18 (`online-terrain-v3`, 25 Oct 2026, [findings 9.42](findings.md)):
+Patch version 18 (`online-terrain-v3`, 25 Oct 2026, [findings 9.42](findings.md#s9-42)):
 safe zones now draw as the original translucent blue wave cubes. The client
 builds them in `SetupFlightMode`, which ran before our hook loaded the map,
 so none were ever made; the hook now registers them after loading. Seven
@@ -232,12 +232,12 @@ irrosa01, hy_base_test and CTF_arena_b 1); JRMAP's needed a converter fix
 (re-run `map_viewer.py install`). Checked in memory on all of them, on
 screen by Claude and confirmed by the user; zone rules (no damage etc.) are untested.
 
-Server code in the client (25 Oct 2026, [findings 9.43](findings.md)):
+Server code in the client (25 Oct 2026, [findings 9.43](findings.md#s9-43)):
 2.7.1 still links the server's `CAOAComm` senders (20 named routines,
 32 packet types that 2.9.2 no longer sends), e.g. `SendLoadPlayer`, `SendGainScore`,
 `SendSetupTFCGame`, `SendMovePowerupTo`; `archive/analysis/server_senders.py` lists them.
 A few still have live callers (turret group status, set-param, load scenario).
-Power-ups (25 Oct 2026, [findings 9.44](findings.md)): spawn `0x43`,
+Power-ups (25 Oct 2026, [findings 9.44](findings.md#s9-44)): spawn `0x43`,
 pickup `0x44` and move `0x53` decoded from those senders and the 2.9.2
 receivers. JRMAP's 11 kind-6 records are **power-up zones**. The relay places
 one per zone (`--powerup-zones`, on automatically for JRMAP in the host
@@ -251,7 +251,7 @@ showed "Shield +5". The user confirmed it on JRMAP's own zones with
 
 ## 24 October 2026
 
-Ship changes (24 Oct 2026, [findings 9.40](findings.md)): **fixed in the
+Ship changes (24 Oct 2026, [findings 9.40](findings.md#s9-40)): **fixed in the
 relay.** The in-flight fighter menu needs a config list (TCP job 4, one
 `_all` entry) and an answer to its `0xA0` request. The relay sent neither,
 so Commit said "Fighter Not Available". Now the pilot and observers get `0x27`
@@ -279,39 +279,39 @@ matches, switches maps (clean restart) and stops the host. The server console
 gained `say` and `quit`. Tested live with a real client on this PC (map switch
 CTF_arena → JRMAP); LAN/VPN players on other machines are untested.
 
-Panel drag fix (23 Oct 2026, [findings 9.34](findings.md#934-dragged-panels-stick-to-the-lower-right-corner-23-october-2026)):
+Panel drag fix (23 Oct 2026, [findings 9.34](findings.md#s9-34)):
 dragged in-game panels jumped to the lower-right corner because the client
 caches its window origin from `WM_MOVE` as unsigned words (65535,65535 live)
 and adds it in every `SetCursorPos` warp. Client patch version 12
 (`cursor-warp-origin-v1`) asks Windows for the live origin instead. Tested in
 emulation; a real drag test is still pending.
 
-Frame pacing fix (23 Oct 2026, [findings 9.35](findings.md)): the game clock
+Frame pacing fix (23 Oct 2026, [findings 9.35](findings.md#s9-35)): the game clock
 was `GetTickCount` (~15.6 ms), so at 60 Hz about one frame in ten jumped 31 ms.
 Patch version 13 (`frame-clock-v1`, default on) uses a millisecond QPC clock
 and gates the background wakeup timer so it cannot draw extra frames beside the
 main loop. Measured live: even 16/17 ms steps, RMS vs 60 Hz 4.7 → 1.5–2.0 ms.
 Patch version 14 adds `visibility-math-v1` (Codex's culling fix, promoted
 without its exact-centre change, which would have drawn the player's own ship
-at the camera; [findings 9.36](findings.md)).
+at the camera; [findings 9.36](findings.md#s9-36)).
 Patch version 15 adds `third-person-camera-v1`: F2 in flight toggles a chase
 camera that the renderer already had (`0x43B1D0`, gated on the never-written
 byte `0x5E6879`), plus culling from that eye so your own ship is drawn.
 Patch version 16 adds `own-ship-model-v1`: the client never gave your own
 ship a model, and reset its LOD children to hidden every frame. Draw-call
-traces now show your hull drawn with F2 on ([findings 9.37](findings.md),
-[9.39](findings.md)). Patch version 17 adds `own-ship-menu-model-v1`:
+traces now show your hull drawn with F2 on ([findings 9.37](findings.md#s9-37),
+[9.39](findings.md#s9-39)). Patch version 17 adds `own-ship-menu-model-v1`:
 the fighter menu's preview hid the parts of the model it showed, so a hull
 picked in flight was not drawn; now confirmed on screen by the user
-([9.41](findings.md)).
+([9.41](findings.md#s9-41)).
 
-Targeting (23 Oct 2026, [findings 9.38](findings.md)): T/G/J only
+Targeting (23 Oct 2026, [findings 9.38](findings.md#s9-38)): T/G/J only
 scan players and world objects. Map terrain (stations, ships, asteroids) is a
 separate list that no target scan walks, and the server spawns no world
-objects, so only players can be cycled. Update (25 Oct, [findings 9.45](findings.md)):
+objects, so only players can be cycled. Update (25 Oct, [findings 9.45](findings.md#s9-45)):
 `--target-ships N` (host window "Target ships", default 4) spawns passive hostile
 ships 12,000 units ahead of the spawn. A real client cycled them with T, picked one
-with J, and fired a missile that hit. Update ([findings 9.46](findings.md)):
+with J, and fired a missile that hit. Update ([findings 9.46](findings.md#s9-46)):
 they are now destroyable through the original server channels, with no client
 patch. The shooter reports its gun hits in its `0x1F` upload (submask 2,
 "perceived damage"); the server subtracts gun-table damage × 0.4 from the ship's
@@ -324,7 +324,7 @@ Internet play (22 Oct 2026): friends on other connections play through a private
 VPN with the `vpn-dogfight` profile ([runbook](../host/vpn.md)). Sustained
 reliable delivery replaces the 30-message lifetime cap without a client patch,
 crashed players can rejoin, and the host has status/kick/ban, crash restarts and
-a lag/loss test mode ([findings 9.33](findings.md#933-sustained-reliable-delivery-without-a-client-patch-22-october-2026)).
+a lag/loss test mode ([findings 9.33](findings.md#s9-33)).
 Internet impairment/delivery tests use loopback; LAN acceptance is recorded
 above. Separate-internet-connection acceptance is pending.
 
@@ -354,11 +354,11 @@ holds only 30 IDs. Observers retire on delivery failure or history exhaustion.
 Verified with synthetic localhost sockets, not a real-client despawn test.
 Retired slots/endpoints remain reserved until restart (49 lifetime admissions);
 safe reuse/reconnect needs a compatibility decision. See
-[findings 9.13](findings.md#913-reliable-removal-and-the-slot-reuse-limit-21-october-2026).
+[findings 9.13](findings.md#s9-13).
 Original-client receive-path emulation now verifies five reliable removal
 packets yield five ACKs and only two removal calls (correct slots, duplicates
 suppressed). Real-client launch was blocked by the Windows automation helper's
-access error; visible despawn remains unverified. See [findings 9.14](findings.md#914-original-client-reliable-receive-path-verification-21-october-2026).
+access error; visible despawn remains unverified. See [findings 9.14](findings.md#s9-14).
 Local runtime work now provides a validated `--profile local-relay`, bounded
 rotating metadata logs with opt-in raw capture, an independent bounded TCP
 list worker, and live arena population/availability. Six runtime tests and
@@ -370,7 +370,7 @@ cover same-IP clients, alias isolation, stale TCP, quit/expiry and bounded
 admissions. Station login counts are live. IDs/endpoints are not reused within
 a run (64 Station admissions); this adds no authentication, pilot ownership
 or arena authorization. Real-client Station transitions remain unverified.
-See [findings 9.16](findings.md#916-per-client-station-sessions-and-tcp-correlation-21-october-2026).
+See [findings 9.16](findings.md#s9-16).
 
 Larger continuation (21 Oct 2026): UDP decoding now enforces the original
 512-byte wire/output bounds with bounded per-pass expansion, fuzz tests and
@@ -387,13 +387,13 @@ See [client setup](../reference/client-patches.md), [local protocol](../referenc
 [release specification](../roadmap/authoritative-server.md), and findings 9.17–9.20.
 Inbound reliable envelopes are now deduplicated per channel/endpoint (last 64
 IDs); duplicates are still ACKed, and only handshakes are re-answered. 46 tests
-pass; see [findings 9.21](findings.md#921-inbound-reliable-duplicate-suppression-21-october-2026).
+pass; see [findings 9.21](findings.md#s9-21).
 Static analysis: server `0x3E` is a silent "hang up" that suppresses the
 client's `Server Not Responding` timer, so it is unsuitable for shutdown. The
 client's server-silence grace is `CLIENTGRACE` 16000 (likely ms), overridable
 by an unshipped `params.aoa`; no server-driven return-to-Station message
-is known yet ([findings 9.22](findings.md#922-server-hang-up-0x3e-client-grace-timers-and-shutdown-21-october-2026)).
-Real-client check (21 Oct 2026, [findings 9.23](findings.md#923-real-client-check-21-october-2026)):
+is known yet ([findings 9.22](findings.md#s9-22)).
+Real-client check (21 Oct 2026, [findings 9.23](findings.md#s9-23)):
 closing each TCP connection after its reply hung the real client's UI thread
 (stuck queue mutex in `ShutdownTCPBySocket`). Fixed: connections stay open
 while their Station session lives. Other fixes: Station heartbeats ignore the
@@ -405,17 +405,17 @@ despawn from its player table. The client relaunches itself
 inactive-window timer skips frames in (believed) exclusive mode. The new
 client patch `background-network-v1` (prepare patch version 2, `0x446EAF`)
 fixes this under dgVoodoo windowed output
-([findings 9.24](findings.md#924-background-client-network-stall-and-fix-21-october-2026)).
-Combat groundwork ([findings 9.25](findings.md#925-combat-protocol-survey-and-gun-table-21-october-2026)):
+([findings 9.24](findings.md#s9-24)).
+Combat groundwork ([findings 9.25](findings.md#s9-25)):
 gun damage per level (7–130, ids 250–850) decoded from the client
 (`archive/analysis/gun_table.py`, `evidence/2.9.2/gun_table.json`). Gunfire is `0x1F`
-status bits plus a per-gun fire-state block. Live test ([findings 9.26](findings.md#926-victim-side-damage-gun-state-relay-and-death-report-21-october-2026)):
+status bits plus a per-gun fire-state block. Live test ([findings 9.26](findings.md#s9-26)):
 the **victim's client computes damage** from relayed fire state and reports
 death with `0x37` (killer tag). The relay now forwards the bounded gun block,
 so real clients damage and kill each other. Next: server-side scoring, death
 broadcast and respawn. Done since (9.27): death notices, kill counts, respawn
 position and targeted collision forwarding. The intermittent arena-join crash is
-**fixed** ([findings 9.29](findings.md#929-arena-join-crash-unterminated-archive-text-21-october-2026)):
+**fixed** ([findings 9.29](findings.md#s9-29)):
 the decompressor returned `tgtwin2.cfg` without a NUL terminator. Client patch
 `archive-terminator-v1` (prepare patch version 3) fixes it; 25/25 joins were clean.
 Match loop (9.30): scoreboard (kills/deaths) and kill/time match limits work with real

@@ -113,11 +113,11 @@ recursive logger lock, zero-time physics guard, background-network fix,
 archive terminator, ship-menu aspect fix, cursor-warp fix and Station lookup in memory. The background-network fix (`0x446EAF`, two bytes)
 lets an inactive flying client keep servicing the network. It is verified
 with the dgVoodoo windowed wrapper only, not native exclusive fullscreen
-([findings 9.24](../research/findings.md#924-background-client-network-stall-and-fix-21-october-2026)).
+([findings 9.24](../research/findings.md#s9-24)).
 The archive terminator (`0x52A6E3` plus a 24-byte cave at `0x58B440`) makes
 the decompressor allocate one extra byte and NUL-terminate its output. This
 fixes the intermittent crash on arena entry
-([findings 9.29](../research/findings.md#929-arena-join-crash-unterminated-archive-text-21-october-2026)).
+([findings 9.29](../research/findings.md#s9-29)).
 It verifies the whole image after normalizing only those known patch sites.
 Unrecognized binaries, altered code/caves, and conflicting DirectX wrappers
 fail before the executable changes. Native DirectX is allowed; installed
@@ -146,7 +146,7 @@ plus an index for any other recovered map. Since patch version 11 it is
 prepared again. Patch version 18 makes it `online-terrain-v3`, which also
 draws the map's safe zones as the original translucent blue cubes; they were
 never built because the client sets them up before the hook loads the map
-([findings 9.42](../research/findings.md)). A v2 client likewise fails `check` until
+([findings 9.42](../research/findings.md#s9-42)). A v2 client likewise fails `check` until
 prepared again. Ordinary servers keep the normal flight-entry behavior. See
 [the online probe](../research/arena1a.md#online-terrain-probe-22-october-2026) and
 [viewing every map](../play/map-viewer.md) for verification limits.
@@ -161,7 +161,7 @@ Smoother motion (`frame-clock-v1`, patch version 13, on by default; opt out with
 millisecond QPC clock. It also stops the background wakeup timer from drawing
 extra frames between main-loop frames. At 60 Hz, game-time steps went from 15/16
 ms with periodic 31 ms jumps to an even 16/17 ms, and background windows still
-render from the timer ([findings 9.35](../research/findings.md)). The older offline-only
+render from the timer ([findings 9.35](../research/findings.md#s9-35)). The older offline-only
 QPC experiment tool remains for the isolated baseline.
 
 Bounded visibility math (`visibility-math-v1`, patch version 14, on by default;
@@ -169,20 +169,20 @@ opt out with `--no-visibility-math`) keeps out-of-range values out of the
 `acos`/`asin` calls that decide whether an object is on screen. Objects
 directly behind the camera are no longer counted as visible, and a camera
 inside an object's bounds gets finite values. Your own ship stays hidden as
-before ([findings 9.36](../research/findings.md)).
+before ([findings 9.36](../research/findings.md#s9-36)).
 
 Third-person view (`third-person-camera-v1`, patch version 15, on by default;
 opt out with `--no-third-person`): **press F2 in flight** to switch between
 the cockpit and a chase camera 420 units behind and 100 above your ship.
 Press F2 again to return. This turns on a chase camera that is already in
 the 2.9.2 renderer but never enabled. The patch also culls the scene from
-the chase eye so your own hull is drawn ([findings 9.37](../research/findings.md)).
+the chase eye so your own hull is drawn ([findings 9.37](../research/findings.md#s9-37)).
 Patch version 16 adds `own-ship-model-v1`, which gives your own ship its 3D
 model and keeps it visible with F2 on; without it the camera moved but
-nothing was drawn ([findings 9.39](../research/findings.md)). Patch version 17 adds
+nothing was drawn ([findings 9.39](../research/findings.md#s9-39)). Patch version 17 adds
 `own-ship-menu-model-v1`: after switching ships through the in-flight fighter
 menu, the menu's preview had hidden that model's parts, so the new hull did
-not show ([findings 9.41](../research/findings.md)). Confirmed on screen for the Ym Khtat
+not show ([findings 9.41](../research/findings.md#s9-41)). Confirmed on screen for the Ym Khtat
 and for a Zkole picked from the fighter menu. Plain F2 is also the default
 key for "Toggle Mentor", so that toggles too.
 
@@ -195,17 +195,17 @@ it turns, and **F5** saves a screenshot to `Capture Images\`. Plain F4 has no
 default binding (Shift+F4, the movement cue grid, flips the same toggle).
 Clients prepared at versions 15–19 upgrade in place. Seen on screen
 through a full lap in the training mission, with your ship held in place
-while the scene turns behind it ([findings 9.47](../research/findings.md)).
+while the scene turns behind it ([findings 9.47](../research/findings.md#s9-47)).
 
 Patch version 21 (`third-person-camera-v3`, same option) fixes objects
 blinking in and out in the orbit view: culling now uses the orbit camera
 for the whole frame, not only when the game clock has not moved since the
-camera was set ([findings 9.48](../research/findings.md)). Clients at versions 15–20
+camera was set ([findings 9.48](../research/findings.md#s9-48)). Clients at versions 15–20
 upgrade in place.
 
 Power-up pickups (`powerup-pickup-v1`, patch version 19, on by default; opt
 out with `--no-powerup-pickup`) let you pick up the power-ups a host places
-with `--powerup-zones` (JRMAP's zones; [findings 9.44](../research/findings.md)). 2.9.2
+with `--powerup-zones` (JRMAP's zones; [findings 9.44](../research/findings.md#s9-44)). 2.9.2
 made power-ups non-collidable, and a taken one never turned its model back
 on. The patch marks power-ups from the server's spawn message collidable
 (22-byte cave at `0x58B2C0`). It also makes the 5 s reappear timer show the
@@ -219,7 +219,7 @@ window origin from `WM_MOVE` as unsigned 16-bit values; live clients cached
 corner. The hook at `0x4EAD16` (60-byte cave at `0x58B300`) asks Windows for
 the current origin with `ScreenToClient`, and keeps the old arithmetic only if
 that call fails. The other warps through the same function (for example
-flight-mode mouse centering) use the same origin. See [findings 9.34](../research/findings.md#934-dragged-panels-stick-to-the-lower-right-corner-23-october-2026).
+flight-mode mouse centering) use the same origin. See [findings 9.34](../research/findings.md#s9-34).
 
 An optional `--experimental-protection` preparation flag adds the localhost
 explicit-state prototype. It is off for ordinary inputs and preserved when

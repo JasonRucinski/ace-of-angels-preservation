@@ -87,7 +87,7 @@ left their names empty and the client dropped them, so re-run it).
 irrosa01, hy_base_test, CTF_arena_b and JRMAP have them. They draw as
 translucent blue wave cubes; on all but CTF_arena_b and JRMAP you spawn
 inside one, so the whole view is tinted blue until you fly out. See
-[findings 9.42](../research/findings.md) for the list and sizes.
+[findings 9.42](../research/findings.md#s9-42) for the list and sizes.
 
 **TestScene** (2.0.0) cannot be loaded this way: the 2.9.2 object database
 does not contain it, and its format differs.

@@ -123,7 +123,7 @@ replacement or an engine rewrite before checking compatibility and budgets.
 - [ ] Improve frame pacing, VSync/frame-cap choices and high-refresh support;
   keep simulation and input independent from render frequency.
   Frame pacing implemented by `frame-clock-v1`
-  ([findings 9.35](../research/findings.md#935-frame-pacing-a-millisecond-game-clock-and-the-timer-frame-gate-23-october-2026));
+  ([findings 9.35](../research/findings.md#s9-35));
   VSync, frame caps and high refresh are not addressed.
 - [ ] Add scalable anti-aliasing and anisotropic filtering, verified against
   cockpit text, star fields and thin geometry.

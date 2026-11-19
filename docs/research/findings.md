@@ -9,6 +9,67 @@ Labels: **CONFIRMED** = reproduced from bytes or verified by emulation/CRC.
 **INFERENCE** = suggested by evidence, limits stated. **HYPOTHESIS** = untested.
 All addresses are VAs in the 2.7.1 client (SHA-256 b179c3c2…) unless marked 2.9.2.
 
+## Contents
+
+- [1. Provenance (CONFIRMED)](#s1)
+- [2. Transport and framing (CONFIRMED by emulation)](#s2)
+- [3. Message layer](#s3)
+- [4. Login, servers, ports](#s4)
+- [5. Host mode and offline simulation](#s5)
+- [6. Data archives (CONFIRMED by CRC)](#s6)
+- [7. Missing components for a working multiplayer service](#s7)
+- [8. Reproduce](#s8)
+- [9. Live confirmation against a local Station stub (2.9.2, 20 Oct 2026)](#s9)
+  - [9.1 Reaching the Station screen (CONFIRMED live)](#s9-1)
+  - [9.2 Server list and the Play gate (CONFIRMED live)](#s9-2)
+  - [9.3 Pilot-list reply and initial arena responder](#s9-3)
+  - [9.4 First arena connection accepted; client crashes during initialization](#s9-4)
+  - [9.5 Play failure traced to a nonexistent backdrop](#s9-5)
+  - [9.6 Explicit flight entry and experimental two-client relay](#s9-6)
+  - [9.7 Movement decoder crash and bounded relay (20 Oct 2026)](#s9-7)
+  - [9.8 Arena heartbeat and actual remote motion (20 Oct 2026)](#s9-8)
+  - [9.9 Spawn consistency and late-join motion seeds (20 Oct 2026)](#s9-9)
+  - [9.10 Confirmed zero-time physics failure and reversible guard](#s9-10)
+  - [9.11 Real-player relay and first mission-object spawn (21 Oct 2026)](#s9-11)
+  - [9.12 Arena departure and expiry (21 October 2026)](#s9-12)
+  - [9.13 Reliable removal and the slot-reuse limit (21 October 2026)](#s9-13)
+  - [9.14 Original-client reliable receive-path verification (21 October 2026)](#s9-14)
+  - [9.15 Reproducible local runtime and bounded I/O (21 October 2026)](#s9-15)
+  - [9.16 Per-client Station sessions and TCP correlation (21 October 2026)](#s9-16)
+  - [9.17 Bounded ingress, version rejection and capacity (21 October 2026)](#s9-17)
+  - [9.18 Consolidated client preparation (21 October 2026)](#s9-18)
+  - [9.19 Complete safe-prefix state tracking and downstream recovery (21 October 2026)](#s9-19)
+  - [9.20 Limited local guest ownership and arena binding (21 October 2026)](#s9-20)
+  - [9.21 Inbound reliable duplicate suppression (21 October 2026)](#s9-21)
+  - [9.22 Server hang-up (`0x3E`), client grace timers and shutdown (21 October 2026)](#s9-22)
+  - [9.23 Real-client check (21 October 2026)](#s9-23)
+  - [9.24 Background-client network stall and fix (21 October 2026)](#s9-24)
+  - [9.25 Combat protocol survey and gun table (21 October 2026)](#s9-25)
+  - [9.26 Victim-side damage, gun-state relay and death report (21 October 2026)](#s9-26)
+  - [9.27 Death relay, kill count and respawn position (21 October 2026)](#s9-27)
+  - [9.28 Station pings during arena entry (21 October 2026)](#s9-28)
+  - [9.29 Arena-join crash: unterminated archive text (21 October 2026)](#s9-29)
+  - [9.30 Scoreboard, match limits, and why missiles need teams (21 October 2026)](#s9-30)
+  - [9.31 Teams fixed (opt-in); missiles need a loadout (21 October 2026)](#s9-31)
+  - [9.32 Missiles work: hostile relations, launch echo and impact relay (21 October 2026)](#s9-32)
+  - [9.33 Sustained reliable delivery without a client patch (22 October 2026)](#s9-33)
+  - [9.34 Dragged panels stick to the lower-right corner (23 October 2026)](#s9-34)
+  - [9.35 Frame pacing: a millisecond game clock and the timer-frame gate (23 October 2026)](#s9-35)
+  - [9.36 Visibility math promoted; the player's own ship must stay hidden (23 October 2026)](#s9-36)
+  - [9.37 A dormant chase camera, revived on F2 (23 October 2026)](#s9-37)
+  - [9.38 Why only players can be targeted (23 October 2026)](#s9-38)
+  - [9.39 The own ship had no model; F2 now shows it (23 October 2026)](#s9-39)
+  - [9.40 Changing ships in flight: the relay never answered the fighter menu (24 October 2026)](#s9-40)
+  - [9.41 F2 showed no hull after a fighter-menu switch (25 October 2026)](#s9-41)
+  - [9.42 Safe-zone cubes never drew on server-loaded maps (25 October 2026)](#s9-42)
+  - [9.43 The 2.7.1 client keeps the server's send routines (25 October 2026)](#s9-43)
+  - [9.44 Power-ups: decoded, hosted, and blocked by two 2.9.2 client changes (25 October 2026)](#s9-44)
+  - [9.45 Server-spawned target ships (25 October 2026)](#s9-45)
+  - [9.46 Target ships take damage and blow up: the original server's channels (25 October 2026)](#s9-46)
+  - [9.47 An orbit camera on F4; F2 was never unbound (26–27 October 2026)](#s9-47)
+  - [9.48 Orbit view: objects blinked because culling used the stock camera (27 October 2026)](#s9-48)
+
+<a id="s1"></a>
 ## 1. Provenance (CONFIRMED)
 * Downloaded per Appendix A; size and SHA-256 matched for the 2.7.1 installer
   (c3f041d0…), the 2.9.2 installer (90c4a47e…), and the 2.7.1 direct client (b179c3c2…).
@@ -29,6 +90,7 @@ All addresses are VAs in the 2.7.1 client (SHA-256 b179c3c2…) unless marked 2.
   read through `CParams::GetIndexedLookup` (0x521710). The optional overrides file is
   `aoa.cfg` (0x505AE0); if it is missing, the client only logs this.
 
+<a id="s2"></a>
 ## 2. Transport and framing (CONFIRMED by emulation)
 * Game traffic is UDP: `socket(AF_INET, SOCK_DGRAM)` and `bind(INADDR_ANY, port)` in
   `CComm` (0x60E200). The client binds **port 0** (ephemeral) in `CClientComm::Init`
@@ -54,6 +116,7 @@ All addresses are VAs in the 2.7.1 client (SHA-256 b179c3c2…) unless marked 2.
   byte-identical once address operands are masked (`evidence/2.9.2/function_matches.json`).
   Only `CComm` member offsets moved.
 
+<a id="s3"></a>
 ## 3. Message layer
 * Type IDs are the u8 trailer, **not** the size diagnostics (the handoff caution holds).
 * There are two receive switches. `CAOAComm` handles type−8 (0x4D1830; 24 types),
@@ -88,6 +151,7 @@ All addresses are VAs in the 2.7.1 client (SHA-256 b179c3c2…) unless marked 2.
   (`SLoadPlayer`, `SPacketAddMOTD`, `SPacketLoadScenario`, `SPacketSetParam`).
   These are size hints only.
 
+<a id="s4"></a>
 ## 4. Login, servers, ports
 * Login dialog 127 has an **editable "Station IP:" combo box** (control 0x3F5,
   `CBS_DROPDOWN`; also present in 2.9.2). Play Online calls `LoginToStation(0)`;
@@ -111,6 +175,7 @@ All addresses are VAs in the 2.7.1 client (SHA-256 b179c3c2…) unless marked 2.
 
   It is not the gameplay channel.
 
+<a id="s5"></a>
 ## 5. Host mode and offline simulation
 * No reachable host mode was found. The evidence:
   * `CComm`'s listen/accept wrappers (0x60E0C0 / 0x60E0E0) have no code or data references.
@@ -129,6 +194,7 @@ All addresses are VAs in the 2.7.1 client (SHA-256 b179c3c2…) unless marked 2.
   sessions were server-authoritative online, which matches the developer's 2001
   forum statement.
 
+<a id="s6"></a>
 ## 6. Data archives (CONFIRMED by CRC)
 * Every `.aoa` file and `AOAOBJECTS.ODB` is a `CDataHandler` archive, version 0x0402.
   * header: a 256-byte per-archive key, encrypted with the built-in key at VA 0x6A0128
@@ -140,6 +206,7 @@ All addresses are VAs in the 2.7.1 client (SHA-256 b179c3c2…) unless marked 2.
   (`.scr`, readable), objects (`.gob/.sco/.shs`), TGA/BMP, MP3, SFX, the "Curt3"
   scenario, and `update_interval_*` tables.
 
+<a id="s7"></a>
 ## 7. Missing components for a working multiplayer service
 Recovered: wire framing, codec, cipher, key file, archive format, the message-ID
 inventory, the connect request/ack layouts, and the login flow.
@@ -154,7 +221,7 @@ Still missing:
    scenarios, and missiles, using the client's ~100 incoming and ~80 outgoing types.
    No server program survives, but the 2.7.1 client still contains many of the
    server's send routines (shared `CAOAComm` code) and a few live server-side
-   callers: [9.43](#943-the-271-client-keeps-the-servers-send-routines-25-october-2026).
+   callers: [9.43](#s9-43).
    Behaviour is reconstructed from those senders plus the client handlers.
    This is by far the largest piece of work.
 3. **Name server** (port 5032). Its role and protocol are unknown; the client never
@@ -165,6 +232,7 @@ Still missing:
 6. Unknown: the reliability (0x1B) semantics, sequence and ack rules, the timers in
    `CClientComm::CheckEvents`, and the type names for most IDs.
 
+<a id="s8"></a>
 ## 8. Reproduce
 ```
 py -3.12 -m venv .venv && .venv/Scripts/python -m pip install -r requirements-research.txt
@@ -175,6 +243,7 @@ python -I tools/run.py archive.analysis.emulate_cipher / archive.analysis.emulat
 ```
 All outputs are under `evidence/<ver>/`.
 
+<a id="s9"></a>
 ## 9. Live confirmation against a local Station stub (2.9.2, 20 Oct 2026)
 
 The patched 2.9.2 client was run on Windows 11 and pointed at
@@ -219,6 +288,7 @@ client expects back for 0x1B), the TCP job reply framing (`TCPRead`, 4-byte
 header) for job types 14 and 5, then the station-dialog traffic (server list
 `SPacketGameserverList`, chat, MOTD).
 
+<a id="s9-1"></a>
 ### 9.1 Reaching the Station screen (CONFIRMED live)
 
 With the stub answering three things, the client completes login and opens
@@ -245,6 +315,7 @@ the Station dialog (server list, player list, chat; handle shown as logged in):
 
 Not yet supplied: the game-server list, player list, MOTD/chat traffic.
 
+<a id="s9-2"></a>
 ### 9.2 Server list and the Play gate (CONFIRMED live)
 
 * The game-server list is **TCP job 5**, not a UDP packet: handler
@@ -269,6 +340,7 @@ Not yet supplied: the game-server list, player list, MOTD/chat traffic.
 * Idle Station traffic: type 0x94 (49 bytes) followed by a 1-byte 0x4F,
   repeating.
 
+<a id="s9-3"></a>
 ### 9.3 Pilot-list reply and initial arena responder
 
 **Recovered statically from the verified 2.9.2 executable:**
@@ -326,6 +398,7 @@ Play. UDP records now include `udp_port` to distinguish Station and arena
 traffic. The terrain/background names now use bundled assets (section 9.5);
 world state is not implemented. This is not a playable multiplayer server.
 
+<a id="s9-4"></a>
 ### 9.4 First arena connection accepted; client crashes during initialization
 
 **CONFIRMED live, user-operated run on 20 Oct 2026, 21:11 local time:**
@@ -350,6 +423,7 @@ world state is not implemented. This is not a playable multiplayer server.
 Sanitized evidence (no login-block/password bytes):
 `evidence/2.9.2/station_arena_live.json`.
 
+<a id="s9-5"></a>
 ### 9.5 Play failure traced to a nonexistent backdrop
 
 **Confirmed in locally operated debugger runs on 20 Oct 2026:**
@@ -384,6 +458,7 @@ The five protocol regression checks pass after the asset-name correction.
 All game-server tests used loopback. Raw local logs contain test login data
 and remain under ignored `work/`; sanitized findings are recorded here.
 
+<a id="s9-6"></a>
 ### 9.6 Explicit flight entry and experimental two-client relay
 
 20 Oct 2026, localhost only. `--experimental-flight` sends type `0x27`
@@ -439,6 +514,7 @@ Map/scenario inventory: `docs/reference/maps.md` and
 layouts, five backdrops, and one scenario (`Curt3`) are locally available;
 none is yet verified as a working hosted multiplayer mode.
 
+<a id="s9-7"></a>
 ### 9.7 Movement decoder crash and bounded relay (20 Oct 2026)
 
 The guarded late-join replay reached an invalid write at `0x49598C`, inside
@@ -491,6 +567,7 @@ motion, then verify two actual clients exchanging movement. Terrain object
 population, teams, scoring, weapon/damage behavior and disconnect cleanup
 remain missing. Do not describe the current stub as playable multiplayer.
 
+<a id="s9-8"></a>
 ### 9.8 Arena heartbeat and actual remote motion (20 Oct 2026)
 
 The CAOAComm receive tables at `0x4869B0`/`0x48694C` map type 8 to
@@ -538,6 +615,7 @@ The `code-clues.md` lead was mapped to the 2.9.2 mission-group loader at
 `0x4C0030`, server-role byte `world+0xDEEEC`. No role byte was changed.
 This is the next static entry point for reconstructing scenario spawning.
 
+<a id="s9-9"></a>
 ### 9.9 Spawn consistency and late-join motion seeds (20 Oct 2026)
 
 The client receive table maps type `0x24` to `0x430881`, which passes three
@@ -614,6 +692,7 @@ acceleration at `0x4345F1` even with zero packet trip time; zero multiplied
 by NaN remains NaN. No physics patch or speculative server workaround was
 applied. `inspect_arena.py` now includes acceleration for this investigation.
 
+<a id="s9-10"></a>
 ### 9.10 Confirmed zero-time physics failure and reversible guard
 
 The normal-heap client was launched with `crashdbg.py --trace-physics`.
@@ -669,6 +748,7 @@ uncertainty. It does not establish two-client movement synchronization,
 combat, scoring or scenario hosting. The retry used the localhost stand-in;
 raw capture is ignored `work/held-w-retry.jsonl`.
 
+<a id="s9-11"></a>
 ### 9.11 Real-player relay and first mission-object spawn (21 Oct 2026)
 
 The user-input capture contains 61 valid movement packets from the first
@@ -709,6 +789,7 @@ object pool for repeatable checks.
 This is verified non-player object creation. AI, firing/damage authority,
 teams, score and mission completion are not implemented by the stub.
 
+<a id="s9-12"></a>
 ### 9.12 Arena departure and expiry (21 October 2026)
 
 Static inspection of the original 2.9.2 executable establishes these paths:
@@ -765,6 +846,7 @@ movement relay, late-join seed, object and Station/TCP checks remain included.
 No real game client was launched for this change; visible despawn and
 loss/reordering behavior have not been verified in the renderer.
 
+<a id="s9-13"></a>
 ### 9.13 Reliable removal and the slot-reuse limit (21 October 2026)
 
 This supersedes 9.12's best-effort removal transport. Other bootstrap messages
@@ -833,6 +915,7 @@ Verification result: all 14 tests in `python -I tools/test.py test_station_stub`
 passed in 43.075 seconds, including complete removal-ACK loss. The original
 duplicate-filter emulator also passed; `git diff --check` reported no errors.
 
+<a id="s9-14"></a>
 ### 9.14 Original-client reliable receive-path verification (21 October 2026)
 
 A real-client verification attempt could not launch the game: the Windows
@@ -864,6 +947,7 @@ world destruction and rendering are outside this test. No executable bytes
 on disk or installed game settings were changed. A successful real-client
 test is still required to establish visible despawn and continued play.
 
+<a id="s9-15"></a>
 ### 9.15 Reproducible local runtime and bounded I/O (21 October 2026)
 
 The stand-in now uses validated argument parsing and a named `local-relay`
@@ -903,6 +987,7 @@ emulator also passed after the runtime integration. `git diff --check` passed.
 No real-client UI, internet transport, actual file download or simulation
 performance validation was performed. No public bind option was added.
 
+<a id="s9-16"></a>
 ### 9.16 Per-client Station sessions and TCP correlation (21 October 2026)
 
 The original `SendRequestTCPData` trace corrects the initial TCP-header
@@ -963,6 +1048,7 @@ Station authorization. Alias delivery is best effort. Full original-client
 Station heartbeat and return-to-Station behavior remain unverified. Downloads,
 pilot ownership, secure transport, reconnect and public hosting remain open.
 
+<a id="s9-17"></a>
 ### 9.17 Bounded ingress, version rejection and capacity (21 October 2026)
 
 Original 2.9.2 `CComm::RecvPacket` pushes `0x200` for `recvfrom` at `0x529E8B`
@@ -992,6 +1078,7 @@ bombs, bad CRCs, rate limits, endpoint-table bounds, and a live socket sending
 rejects the version and gives the valid request its first Station ID. Original
 2.7.1 compressor comparison remains 36/36 with zero failures after the changes.
 
+<a id="s9-18"></a>
 ### 9.18 Consolidated client preparation (21 October 2026)
 
 `prepare_client.py` composes the existing three fixes/discovery setting rather
@@ -1027,6 +1114,7 @@ assets were only read. Setup-script syntax and byte-level tests are distinct
 from clean-machine OCX registration, graphics and real UI acceptance, still open.
 Commands and limitations: [client-setup.md](../reference/client-patches.md).
 
+<a id="s9-19"></a>
 ### 9.19 Complete safe-prefix state tracking and downstream recovery (21 October 2026)
 
 `relay_motion.py` decodes all 16 field groups in the safe prefix consumed by
@@ -1059,6 +1147,7 @@ world state remain necessary. Original renderer behavior under the new refresh
 path has not been tested. Evidence: `motion_state_emulation.json`; field table
 and bounds: [local-protocol.md](../reference/protocol.md).
 
+<a id="s9-20"></a>
 ### 9.20 Limited local guest ownership and arena binding (21 October 2026)
 
 The opt-in `local-guests` profile assigns unique pilot names and random nonzero
@@ -1100,6 +1189,7 @@ implementation source hashes. This evidence does not complete the internet
 roadmap: ordered world loading, reuse/reconnect, authoritative combat, collision,
 content delivery, hosting and real-client/external acceptance gates remain open.
 
+<a id="s9-21"></a>
 ### 9.21 Inbound reliable duplicate suppression (21 October 2026)
 
 Before this step, every inbound `0x1B` copy was ACKed **and** its inner
@@ -1117,7 +1207,7 @@ idempotent and must answer again if the first `SAckConnect` was lost. Other
 repeats are dropped and logged as `reliable_duplicate`. The shutdown line
 reports the count. History is kept after departure, because endpoints are
 never reused within a run. The window mirrors the client's own fixed-count
-receive history (30 IDs, [9.14](#914-original-client-reliable-receive-path-verification-21-october-2026)).
+receive history (30 IDs, [9.14](#s9-14)).
 Sequence zero is not pre-filled, because the client's send-side counter
 origin has not been recovered.
 
@@ -1136,6 +1226,7 @@ original client's reliable send path was not exercised, and no real-client
 retry was observed. This does not implement outbound reliable delivery
 beyond removals, or slot reuse/reconnect.
 
+<a id="s9-22"></a>
 ### 9.22 Server hang-up (`0x3E`), client grace timers and shutdown (21 October 2026)
 
 Static analysis of the 2.9.2 client only (`aoa/analysis/explore.py`); nothing here
@@ -1195,6 +1286,7 @@ server-initiated return to Station, or an end-of-match transition, needs
 further client analysis or the maintained protocol change in
 [first-playable-release.md](../roadmap/authoritative-server.md).
 
+<a id="s9-23"></a>
 ### 9.23 Real-client check (21 October 2026)
 
 Real, prepared 2.9.2 clients on one Windows 11 PC were run against the local
@@ -1279,6 +1371,7 @@ gives a 640×480 window. A DPI-unaware query at 125% scaling reports 512×384.
 Gate after these changes: 47 tests and five original-code emulators passed
 (`evidence/2.9.2/local_gate_20261021_realclient.json`).
 
+<a id="s9-24"></a>
 ### 9.24 Background-client network stall and fix (21 October 2026)
 
 This explains the 38–64 s stalls in 9.23. Static analysis of the 2.9.2 client:
@@ -1321,6 +1414,7 @@ long inactivity and native exclusive fullscreen (where surfaces can be lost)
 were not tested. While inactive the client renders at about 15 Hz, which
 costs some CPU/GPU.
 
+<a id="s9-25"></a>
 ### 9.25 Combat protocol survey and gun table (21 October 2026)
 
 Static analysis of the 2.9.2 client, plus one live attempt. This is the
@@ -1393,6 +1487,7 @@ missiles needing a lock. Live aimed fire with real input was not captured.
 3. Name the remaining gun fields and the `.Sco` system parameters.
 4. Capture real aimed fire between two clients to confirm 1–2.
 
+<a id="s9-26"></a>
 ### 9.26 Victim-side damage, gun-state relay and death report (21 October 2026)
 
 Live test: two real prepared clients on one PC, firing triggered by a posted
@@ -1458,6 +1553,7 @@ other clients without a server message was not observed.
 `ntdll+0x4E1EA`) while it was the first player in the arena. That is the
 third such crash today; see 9.23.
 
+<a id="s9-27"></a>
 ### 9.27 Death relay, kill count and respawn position (21 October 2026)
 
 The stub now acts on the combat messages from 9.26 (`--experimental-relay`
@@ -1500,9 +1596,10 @@ Not done: score display to clients (`0x56` ShiftScore, `0x42` player
 record), match end, spawn protection, the five-second respawn delay proposed
 in the release specification, and reliable delivery of `0x38`.
 
+<a id="s9-28"></a>
 ### 9.28 Station pings during arena entry (21 October 2026)
 
-**Status when written: the arena-join crash was not fixed and its cause was unknown. Resolved in [9.29](#929-arena-join-crash-unterminated-archive-text-21-october-2026).**
+**Status when written: the arena-join crash was not fixed and its cause was unknown. Resolved in [9.29](#s9-29).**
 About one join in five crashed today with an access violation inside `ntdll`
 heap code, a fraction of a second after `On3dGfxInitialized`, before any
 server flight message. The fault offsets were `0x4FC65`, `0x5019E`, `0x4E1EA`
@@ -1541,6 +1638,7 @@ operation that fails. Alternatively enable WER LocalDumps on a scratch copy;
 that is a machine setting the user must approve. Then trace the corrupting
 write from that allocation.
 
+<a id="s9-29"></a>
 ### 9.29 Arena-join crash: unterminated archive text (21 October 2026)
 
 This resolves the intermittent arena-join crash left open in 9.28. The bug is
@@ -1597,6 +1695,7 @@ terminated buffers now. Uncompressed archive entries go through a different
 path and were not changed. The Station/arena socket binding from 9.28
 remains, as ordinary behaviour.
 
+<a id="s9-30"></a>
 ### 9.30 Scoreboard, match limits, and why missiles need teams (21 October 2026)
 
 Static analysis of the 2.9.2 client plus live tests with two real patched
@@ -1671,6 +1770,7 @@ Teams evidently need definitions from scenario or game-rule setup
 Missile relay (`0x2A` launch 146 bytes, `0x30` impact 21 bytes) is not
 implemented.
 
+<a id="s9-31"></a>
 ### 9.31 Teams fixed (opt-in); missiles need a loadout (21 October 2026)
 
 **Team crash explained and fixed.** A joining client running under
@@ -1715,6 +1815,7 @@ nothing else in the player load.
 **Superseded by 9.32:** the racks were full; the launch was refused because
 the stub marked every player Friendly.
 
+<a id="s9-32"></a>
 ### 9.32 Missiles work: hostile relations, launch echo and impact relay (21 October 2026)
 
 **9.31's loadout conclusion was wrong.** Rack HP is 0 in the ship file
@@ -1814,6 +1915,7 @@ non-player objects are dropped by the impact check. Rearming (powerups, base
 docking at player `+0x332`) is not served. The default 1000-unit spawn
 spacing is inside the 5000-unit minimum, so players must fly apart first.
 
+<a id="s9-33"></a>
 ### 9.33 Sustained reliable delivery without a client patch (22 October 2026)
 
 **Problem.** 9.13 limited every player to 30 reliable server messages per
@@ -1875,6 +1977,7 @@ Station logins per host run.
 Throughput is one reliable message per round trip per player: about 6/s at
 150 ms. A real internet session has not been run.
 
+<a id="s9-34"></a>
 ### 9.34 Dragged panels stick to the lower-right corner (23 October 2026)
 
 **Symptom (user report).** Clicking a movable in-game panel to drag it threw
@@ -1917,6 +2020,7 @@ pass. `game/2.9.2` and `work/map-viewer-client` were re-prepared (`check`
 ready, SHA-256 `6d0c3fc3…7e71`). **Not yet confirmed by
 dragging a panel in the real client.**
 
+<a id="s9-35"></a>
 ### 9.35 Frame pacing: a millisecond game clock and the timer-frame gate (23 October 2026)
 
 Measured live with `aoa/live/frame_pacing.py`, a read-only probe that
@@ -1996,6 +2100,7 @@ times smoother. In the background it still renders at 78 ms from the timer
 - Raw runs are in `work/render-pacing/`; the summary is in
   `evidence/2.9.2/frame_pacing_20261023.json`.
 
+<a id="s9-36"></a>
 ### 9.36 Visibility math promoted; the player's own ship must stay hidden (23 October 2026)
 
 Codex's offline culling correction (`render-pipeline-audit.md`) is now a
@@ -2053,6 +2158,7 @@ The battery was at 90% and discharging, the system otherwise idle, and the
 display reported 1024 px wide instead of 1920. It is a machine/display
 state, not a patch effect, and is not yet investigated.
 
+<a id="s9-37"></a>
 ### 9.37 A dormant chase camera, revived on F2 (23 October 2026)
 
 The 2.9.2 renderer already contains a third-person camera that nothing turns
@@ -2087,7 +2193,7 @@ default; `--no-third-person` opts out):
   same game tick (`0x5E8E5C`), so spectate frames and other camera objects
   are unaffected.
 - F2 is unbound in the default key map (wrong: plain F2 is "Toggle Mentor"; see
-  [9.47](#947-an-orbit-camera-on-f4-f2-was-never-unbound-2627-october-2026)). The toggle bit flips on every press,
+  [9.47](#s9-47)). The toggle bit flips on every press,
   so no state is kept beyond the key state itself.
 
 **Verification:**
@@ -2119,6 +2225,7 @@ A first attempt moved the main camera itself and enabled the node only for
 culling. Live reads showed `0x43B1D0` disabling the node again before
 drawing (visible 1, enabled 0), which led to the dormant branch.
 
+<a id="s9-38"></a>
 ### 9.38 Why only players can be targeted (23 October 2026)
 
 User report: in flight, the cycle key only reaches other players. Static
@@ -2176,6 +2283,7 @@ turrets and flags would have been server-spawned world objects.
 Y (`0x452547` → `0x43D150` → `0x4A1210`) picks a ship system under the
 reticle and was not traced further.
 
+<a id="s9-39"></a>
 ### 9.39 The own ship had no model; F2 now shows it (23 October 2026)
 
 User report: F2 gave no third-person view. A read-only watcher showed the
@@ -2226,6 +2334,7 @@ with the third-person camera; `--no-third-person` removes both):
 `game/2.9.2` was re-prepared to patch version 16 (`c07daec9…d22d`, the
 build tested live).
 
+<a id="s9-40"></a>
 ### 9.40 Changing ships in flight: the relay never answered the fighter menu (24 October 2026)
 
 User report: Esc → fighter select in flight did not change the ship. The
@@ -2341,6 +2450,7 @@ same session).
   draws 1920×1080 into a window Windows reports as 1536×864 at 125 %.
   `PrintWindow` without `SetProcessDPIAware` crops to the top left.
 
+<a id="s9-41"></a>
 ### 9.41 F2 showed no hull after a fighter-menu switch (25 October 2026)
 
 User report: the chase camera showed the Ym Khtat, but after switching
@@ -2403,6 +2513,7 @@ flight (command `0xB4`, "Screen capture to file", registered at `0x44F552`)
 writes `Capture Images\AoAImgN.tga` in the game folder. In the user's own
 client F5 saved nothing; their keymap may bind it differently.
 
+<a id="s9-42"></a>
 ### 9.42 Safe-zone cubes never drew on server-loaded maps (25 October 2026)
 
 User report: spawning inside a safe zone should show a translucent blue
@@ -2482,6 +2593,7 @@ so they were dropped. `decode_trn.convert_292` now names them
 launch restrictions) are client/server behaviour that was not tested.
 CTF_arena_b and JRMAP do not spawn inside their zones.
 
+<a id="s9-43"></a>
 ### 9.43 The 2.7.1 client keeps the server's send routines (25 October 2026)
 
 Static analysis only; nothing was patched or run. Reproduce with
@@ -2545,6 +2657,7 @@ table are confirmed by strings; the size-hint names of unnamed senders are
 not. Whether a dead sender's arguments were real server values still needs
 its server-side caller, which no surviving build has.
 
+<a id="s9-44"></a>
 ### 9.44 Power-ups: decoded, hosted, and blocked by two 2.9.2 client changes (25 October 2026)
 
 Power-ups are the first server feature rebuilt from the 2.7.1 senders (9.43).
@@ -2674,6 +2787,7 @@ the server, such as whether a picker had to be near the power-up, are
 unknown. The relay trusts the client's report, as the client trusts itself
 for the effect.
 
+<a id="s9-45"></a>
 ### 9.45 Server-spawned target ships (25 October 2026)
 
 This follows up 9.38. The user chose server-spawned world objects over a
@@ -2747,6 +2861,7 @@ Arena1a, and the user's own copy of the client.
 **Superseded by 9.46:** the messages were found, and the ships are now
 destroyed by the server.
 
+<a id="s9-46"></a>
 ### 9.46 Target ships take damage and blow up: the original server's channels (25 October 2026)
 
 Static analysis of the 2.9.2 client and three live runs ([evidence](../../evidence/2.9.2/target_ships_damage_live_20261025.json)).
@@ -2838,6 +2953,7 @@ A second client simulates the shooter's gunshots from the relayed fire state
 and so damages its own copy too. That copy is never destroyed either, and it
 is removed and reloaded with everyone else's.
 
+<a id="s9-47"></a>
 ### 9.47 An orbit camera on F4; F2 was never unbound (26–27 October 2026)
 
 User request: an orbiting or chase camera to show off the visuals. F2's
@@ -2946,6 +3062,7 @@ committed):
   and sky pass after the view, which takes the stock forward and right
   (`0x43B4D0`); and the F7 spectate view.
 
+<a id="s9-48"></a>
 ### 9.48 Orbit view: objects blinked because culling used the stock camera (27 October 2026)
 
 Found in the highlight reel ([hype-reel.md](../create/hype-reel.md)): in the F4 orbit

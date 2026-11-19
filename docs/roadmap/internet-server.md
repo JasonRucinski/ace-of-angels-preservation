@@ -11,7 +11,7 @@ acceptance evidence is recorded. Modernization has a separate checklist in
 **Current priority (22 October 2026):** internet play with friends through a
 private VPN: the `vpn-dogfight` profile and [VPN runbook](../host/vpn.md). It
 adds sustained reliable delivery without a client patch
-([findings 9.33](../research/findings.md#933-sustained-reliable-delivery-without-a-client-patch-22-october-2026)),
+([findings 9.33](../research/findings.md#s9-33)),
 rejoin after dropouts, host status/kick/ban, crash restarts and a built-in
 lag/loss test mode. Verified on loopback only (`test_internet_play.py`, 8 tests,
 including a 60 ms / 3% loss session). Separate-connection play is the next
@@ -66,7 +66,7 @@ The [static map check](../../evidence/2.9.2/ctf_geometry_20261021.json) leaves
 six unresolved nodes, including both bases; collision/spawn validation is open.
 
 Previous local verification: **56 tests and six original-code emulators
-passed** after the missile relay in [findings 9.32](../research/findings.md#932-missiles-work-hostile-relations-launch-echo-and-impact-relay-21-october-2026)
+passed** after the missile relay in [findings 9.32](../research/findings.md#s9-32)
 ([gate](../../evidence/2.9.2/local_gate_20261021_missiles.json); live run:
 [missile_live_20261021.json](../../evidence/2.9.2/missile_live_20261021.json)). Real-client
 evidence is in [real_client_check_20261021.json](../../evidence/2.9.2/real_client_check_20261021.json).
@@ -87,7 +87,7 @@ and all release exit gates remain incomplete.
 
 These are bounded localhost results. They do not establish combat, accurate
 continuous synchronization, complete maps, capacity or internet safety.
-See [findings 9.11](../research/findings.md), [hosting assets](../reference/maps.md), and
+See [findings 9.11](../research/findings.md#s9-11), [hosting assets](../reference/maps.md), and
 [version comparison](../reference/versions.md). The present server deliberately
 binds loopback; changing that address alone is not a release.
 
@@ -113,7 +113,7 @@ binds loopback; changing that address alone is not a release.
   damage and win conditions. Mark reconstructed behavior versus new design.
   Recovered so far: per-shot damage for gun levels 1–10 (7–130) from the
   client's static table (`archive/analysis/gun_table.py`), plus per-system hit points
-  from `.Sco` configs. Other gun fields remain unnamed. See [findings 9.25](../research/findings.md#925-combat-protocol-survey-and-gun-table-21-october-2026).
+  from `.Sco` configs. Other gun fields remain unnamed. See [findings 9.25](../research/findings.md#s9-25).
 - [x] Set a compatibility decision point: use a maintained, versioned client/
   protocol change before claiming safe slot reuse, ordered input or essential
   delivery beyond the legacy duplicate history. Required capabilities and the
@@ -139,7 +139,7 @@ scene, including the busiest combat situation expected in that release.
   consumed replies cannot extend expiry twice. Synthetic socket tests cover
   loading cancellation, duplicate quit, invalid/replayed heartbeat traffic,
   stale movement, surviving peers and late-join absence of departed players.
-  See [findings 9.12](../research/findings.md#912-arena-departure-and-expiry-21-october-2026).
+  See [findings 9.12](../research/findings.md#s9-12).
   Slots and departed endpoints remain reserved until restart (49 admissions
   per run), because reliable removal, replay-safe reconnect and slot reuse
   are not yet implemented. Station sessions and file jobs are unchanged.
@@ -148,18 +148,18 @@ scene, including the busiest combat situation expected in that release.
   An observer retires on failure or before exceeding 30 distinct removals.
   Original-client emulation verifies that the duplicate cache holds only 30
   IDs and accepts an evicted replay. Slot/endpoint reuse therefore remains
-  disabled. See [findings 9.13](../research/findings.md#913-reliable-removal-and-the-slot-reuse-limit-21-october-2026)
+  disabled. See [findings 9.13](../research/findings.md#s9-13)
   for evidence, loss tests and the compatibility decision needed for reuse.
   Real clients (21 October 2026): an observer ACKed a quit-triggered removal
   in 39 ms and dropped the slot from its player table. Retries now back off
-  until the peer timeout. Visible rendering was not captured ([9.23](../research/findings.md#923-real-client-check-21-october-2026)).
+  until the peer timeout. Visible rendering was not captured ([9.23](../research/findings.md#s9-23)).
 - [x] Fourth bounded step (21 October 2026): original 2.9.2 receive-code
   emulation confirms actual server removal envelopes are unwrapped and
   acknowledged; five received packets produce exactly two `RemovePlayer`
   calls for slots 2 and 3. Retry and reordered duplicates are suppressed.
   The resulting ACK clears the server's pending retry. This excludes world
   destruction/rendering; real-client launch was blocked by a Windows helper
-  access error. See [findings 9.14](../research/findings.md#914-original-client-reliable-receive-path-verification-21-october-2026).
+  access error. See [findings 9.14](../research/findings.md#s9-14).
 - [x] Turn the experimental flags into a documented, reproducible local
   configuration. `--profile local-relay`, validated overrides and
   `--print-config` are implemented; the default diagnostic mode remains.
@@ -176,7 +176,7 @@ scene, including the busiest combat situation expected in that release.
   a stated 3 s reorder-margin assumption. It delivers despawns, combat, join
   sequence, respawn, score and match text in order for a whole session.
   7,200 modelled events and a live impaired loopback session pass
-  ([findings 9.33](../research/findings.md#933-sustained-reliable-delivery-without-a-client-patch-22-october-2026)).
+  ([findings 9.33](../research/findings.md#s9-33)).
   Open: real-client confirmation of the wrapped join messages; inventory/team
   events; a sound proof without the margin assumption.
   Bounded continuation: `--experimental-reliable-combat` adds ordered death
@@ -193,7 +193,7 @@ scene, including the busiest combat situation expected in that release.
   after departure, 512 endpoints. Unit and live Station socket tests pass.
   Older replays beyond the window are accepted, so handlers stay idempotent;
   no award/combat handlers exist yet, and the client's send-side sequence
-  origin is unverified. See [findings 9.21](../research/findings.md#921-inbound-reliable-duplicate-suppression-21-october-2026).
+  origin is unverified. See [findings 9.21](../research/findings.md#s9-21).
 - [x] Track Station sessions per client. The implemented list/file-state jobs
   require a per-session correlation ID and matching source IP; alias delivery
   targets that session and rechecks it after TCP completion. Retries, quit,
@@ -201,7 +201,7 @@ scene, including the busiest combat situation expected in that release.
   loopback diagnostic correlation, not authentication or pilot ownership;
   actual file downloads remain unimplemented. Station IDs/endpoints are not
   reused within a run (64 lifetime admissions). See
-  [findings 9.16](../research/findings.md#916-per-client-station-sessions-and-tcp-correlation-21-october-2026).
+  [findings 9.16](../research/findings.md#s9-16).
 - [x] Implement explicitly limited local guests: `--profile local-guests`
   assigns unique synthetic handles and random, non-reused 32-bit tickets.
   A bound ticket cannot be taken over by another arena endpoint. Original
@@ -230,8 +230,8 @@ scene, including the busiest combat situation expected in that release.
   and 5.8 s with a `params.aoa` override of 4000 ms. Leaving an arena with
   Alt+Q sends `0x4E` and relaunches the client as `AoAClient.exe autologin`
   back into Station; no server message is involved. Closing the window sends
-  no quit. See [findings 9.22](../research/findings.md#922-server-hang-up-0x3e-client-grace-timers-and-shutdown-21-october-2026)
-  and [9.23](../research/findings.md#923-real-client-check-21-october-2026).
+  no quit. See [findings 9.22](../research/findings.md#s9-22)
+  and [9.23](../research/findings.md#s9-23).
 - [x] Update server-list population, mode, map and availability from actual
   arena state; remove the permanently zero arena player count. The row reports
   the configured local mode/map/backdrop and bound port; it is omitted when
@@ -284,7 +284,7 @@ cannot leak slots, create ghost ships or corrupt another player's session.
   fullscreen. Client patch `background-network-v1` (prepare patch
   version 2) cut a 15 s simulated deactivation's heartbeat gap from 16.1 s
   to 1.3 s. A real focus change, minimizing and native fullscreen are still
-  untested. See [findings 9.23–9.24](../research/findings.md#924-background-client-network-stall-and-fix-21-october-2026).
+  untested. See [findings 9.23–9.24](../research/findings.md#s9-24).
 - [ ] Implement ship selection and equipment definitions, energy, shields,
   hull, ammunition, cooldowns and firing validation.
 - [ ] Implement authoritative projectiles/hitscan, collision, damage, kills,
@@ -295,7 +295,7 @@ cannot leak slots, create ghost ships or corrupt another player's session.
   clients damage and kill each other. The server still needs scoring, death
   broadcast, respawn policy, forwarding of `0x48` (only to its target, or that
   client exits), and missiles. Victim authority is a fairness limit to weigh
-  against the authoritative goal. See [findings 9.25–9.26](../research/findings.md#926-victim-side-damage-gun-state-relay-and-death-report-21-october-2026).
+  against the authoritative goal. See [findings 9.25–9.26](../research/findings.md#s9-26).
   Server side (9.27): `0x37` deaths now produce `0x38` death notices for other
   players, kill and death counts, and a respawn at the assigned spawn (`0x24`).
   `0x48` is forwarded only to its validated target. Open: score display,
@@ -310,7 +310,7 @@ cannot leak slots, create ghost ships or corrupt another player's session.
 - [ ] Choose and test lag compensation per weapon type. Apply consistent
   limits so latency compensation cannot create unfair unlimited rewinds.
 - [ ] Implement team ownership, friendly-fire policy, scores and match end.
-  Scores and match end are implemented for the relay ([findings 9.30](../research/findings.md#930-scoreboard-match-limits-and-why-missiles-need-teams-21-october-2026)).
+  Scores and match end are implemented for the relay ([findings 9.30](../research/findings.md#s9-30)).
   Teams are next: `0x50`/`0x26` team records reach `CGameRuleHdlr::AddToTeam`, but
   need definitions from scenario/game-rule setup; missile lock depends on them.
   Update (9.31): the team crash was a null team leader in `0x50`; free-for-all
@@ -319,7 +319,7 @@ cannot leak slots, create ghost ships or corrupt another player's session.
   Update (9.32): wrong diagnosis. The racks were full; every player was Friendly
   (`0x26` +0x44/+0x45 = 0). Player loads now say Hostile, and missiles work:
   server-assigned tags, `0x2A` echo to all, first `0x30` impact relayed. See
-  [findings 9.32](../research/findings.md#932-missiles-work-hostile-relations-launch-echo-and-impact-relay-21-october-2026).
+  [findings 9.32](../research/findings.md#s9-32).
 - [ ] Replicate visible effects/sounds separately from authoritative results;
   a missed visual packet must not change damage or scoring.
 - [ ] Add interest/range filtering after correctness is established; clients
@@ -514,7 +514,7 @@ the measured bottleneck; do not rewrite Python or the renderer by assumption.
 - [ ] Test the timestep guard across frame caps, high-refresh displays,
   long pauses and alt-tab; resolve remaining crashes with reproducible traces.
   Arena-join crash (about 1 in 6 joins) traced and fixed by client patch
-  `archive-terminator-v1`: 25/25 patched joins clean ([findings 9.29](../research/findings.md#929-arena-join-crash-unterminated-archive-text-21-october-2026)).
+  `archive-terminator-v1`: 25/25 patched joins clean ([findings 9.29](../research/findings.md#s9-29)).
 - [ ] Use realistic bots plus real-client tests. Packet generators alone
   cannot validate rendering, input feel or complete gameplay.
 - [ ] Hold external playtests and record handling, target readability,

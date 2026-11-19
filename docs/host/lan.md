@@ -161,7 +161,7 @@ available through `prepare_client.py undo`; do not delete unrelated hosts entrie
   or the arena becomes inconsistent. Do not repeatedly retry an exhausted session.
   The Python option `--sustained-delivery` (default in `vpn-dogfight`) removes the
   30-message delivery limit and supports rejoining; see
-  [findings 9.33](../research/findings.md#933-sustained-reliable-delivery-without-a-client-patch-22-october-2026).
+  [findings 9.33](../research/findings.md#s9-33).
 - No custom respawn delay, spawn protection, rearming rule, account database,
   server physics, verified additional playable maps, CTF or AI is added.
 
