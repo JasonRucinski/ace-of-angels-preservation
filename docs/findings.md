@@ -12,7 +12,7 @@ All addresses are VAs in the 2.7.1 client (SHA-256 b179c3c2…) unless marked 2.
 ## 1. Provenance (CONFIRMED)
 * Downloaded per Appendix A; size and SHA-256 matched for the 2.7.1 installer
   (c3f041d0…), the 2.9.2 installer (90c4a47e…), and the 2.7.1 direct client (b179c3c2…).
-  Log: `evidence/download_log.jsonl`. Originals are kept read-only in `originals/` (git-ignored).
+  Log: `evidence/download_log.jsonl` (`tools/fetch.py` appends there only with `--evidence evidence/download_log.jsonl`; by default it logs to `work/download_log.jsonl`). Originals are kept read-only in `originals/` (git-ignored).
 * Both installers open as ZIP. Member lists match Appendix C exactly (38/41).
   `testzip` is clean. The only PE members are the nine listed in the handoff.
   The 2.7.1 client inside the installer is byte-identical to the Discmaster direct copy.

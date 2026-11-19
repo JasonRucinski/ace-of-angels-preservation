@@ -17,7 +17,9 @@ file already in place is checked, never overwritten. When the manifest's URL
 fails or gives other bytes, the archive.org mirrors in MIRRORS are tried.
 
 Nothing downloaded is executed. Every download appends a JSON provenance
-record to evidence/download_log.jsonl (--log names another file). Requests go
+record to the ignored work/download_log.jsonl, so a player's download changes
+no tracked file; a research download that should be kept is logged with
+`--evidence evidence/download_log.jsonl`, the committed log. Requests go
 through aoa/research/http.py (paced, backs off on HTTP 429/5xx).
 
 tools/fetch_known_builds.py runs `known_builds` below: the 2.8.2 and 2.9.2
@@ -35,7 +37,8 @@ from aoa import builds, cli
 from aoa.research.http import polite_open
 
 MANIFEST = cli.ROOT / "manifest" / "downloads.json"
-LOG = cli.ROOT / "evidence" / "download_log.jsonl"
+LOG = cli.WORK / "download_log.jsonl"
+COMMITTED_LOG = "evidence/download_log.jsonl"
 # Other uploads of the same bytes, tried after the manifest's direct URL.
 MIRRORS = {
     "2.8.2": ["https://archive.org/download/cda_20260908/CDA%2006-2002.iso/"
@@ -113,9 +116,14 @@ def download(url, part, open_url):
     return status, final_url, headers
 
 
-def fetch(version, out_dir, *, client=False, name=None, manifest=MANIFEST, log=LOG,
-          open_url=polite_open, say=print):
-    """Download and verify one manifest entry into out_dir; returns the final path or None."""
+def fetch(version, out_dir, *, client=False, name=None, manifest=MANIFEST, log=None,
+          open_url=None, say=print):
+    """Download and verify one manifest entry into out_dir; returns the final path or None.
+
+    The provenance record goes to `log` (default work/download_log.jsonl).
+    """
+    log = log or LOG
+    open_url = open_url or polite_open
     entry = entry_for(version, manifest)
     want = expected(entry, client)
     candidates = urls(entry, client)
@@ -149,6 +157,7 @@ def fetch(version, out_dir, *, client=False, name=None, manifest=MANIFEST, log=L
         }
         if want["md5"]:
             record.update(md5=got[2], expected_md5=want["md5"])
+        Path(log).parent.mkdir(parents=True, exist_ok=True)
         with open(log, "a", encoding="utf-8") as f:
             f.write(json.dumps(record) + "\n")
         if ok:
@@ -170,6 +179,12 @@ def legacy_argv(argv):
     return argv
 
 
+def add_log_option(ap):
+    ap.add_argument("--evidence", metavar="PATH",
+                    help=f"append the provenance record to PATH instead of work/download_log.jsonl "
+                         f"(the committed log is {COMMITTED_LOG})")
+
+
 def main(argv=None) -> int:
     argv = sys.argv[1:] if argv is None else list(argv)
     ap = cli.parser(__doc__)
@@ -178,11 +193,11 @@ def main(argv=None) -> int:
                     help="folder to save the file in (default: builds/VERSION)")
     ap.add_argument("--client", action="store_true", help="fetch the direct client instead of the installer")
     ap.add_argument("--manifest", default=str(MANIFEST), help="download manifest (default: manifest/downloads.json)")
-    ap.add_argument("--log", default=str(LOG), help="provenance log to append to (default: evidence/download_log.jsonl)")
+    add_log_option(ap)
     a = ap.parse_args(legacy_argv(argv))
     out = a.out or cli.ROOT / "builds" / a.version
     try:
-        final = fetch(a.version, out, client=a.client, manifest=a.manifest, log=a.log)
+        final = fetch(a.version, out, client=a.client, manifest=a.manifest, log=a.evidence)
     except FetchError as error:
         sys.exit(f"fetch: {error}")
     return 0 if final else 1
@@ -199,17 +214,17 @@ def known_builds(argv=None) -> int:
 
 Each goes to builds/<folder>/aoa-current.exe (the 2.9.2 one to
 builds/v2.9.2_2004_FamilyGamePack3/, where tools/setup_game.ps1 looks for it)
-through aoa/research/fetch.py: size, SHA-256 and provenance log as for
-`tools/fetch.py VERSION`. Nothing is executed. A file already there is checked
+through aoa/research/fetch.py: size, SHA-256 and provenance log (work/,
+or --evidence PATH) as for `tools/fetch.py VERSION`. Nothing is executed. A file already there is checked
 and kept. The output folder must be given explicitly; a name starting with
 "-" is refused.
 """)
     ap.add_argument("out_dir", type=cli.output_dir, help="folder to save the builds in, e.g. builds/")
-    ap.add_argument("--log", default=str(LOG), help="provenance log to append to (default: evidence/download_log.jsonl)")
+    add_log_option(ap)
     a = ap.parse_args(argv)
     ok = True
     for version, folder in KNOWN_BUILDS.items():
-        final = fetch(version, Path(a.out_dir) / folder, name=KNOWN_NAME, log=a.log)
+        final = fetch(version, Path(a.out_dir) / folder, name=KNOWN_NAME, log=a.evidence)
         ok &= final is not None
         print(f"{'OK' if final else 'FAILED':8}  {folder}  {Path(a.out_dir) / folder / KNOWN_NAME}")
     return 0 if ok else 1

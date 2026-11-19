@@ -128,4 +128,4 @@ asset-review/level-data.json	python -I tools/run.py archive.analysis.audit_level
 asset-review/summary.json	python -I tools/run.py aoa.research.compare_version_assets --evidence evidence/asset-review	2026-10-25 (committed)	-	
 asset-review/verification.json	no generator in the repository	2026-10-25 (committed)	-	
 code-clues.json	no generator in the repository	2026-10-25 (committed)	docs/code-clues.md	
-download_log.jsonl	python -I tools/fetch.py VERSION (appends one record per download)	2026-10-25 (committed)	aoa/research/fetch.py docs/findings.md tests/test_research.py	
+download_log.jsonl	python -I tools/fetch.py VERSION --evidence PATH (appends one record per download)	2026-10-25 (committed)	aoa/research/fetch.py docs/findings.md tests/test_research.py	

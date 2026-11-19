@@ -144,6 +144,25 @@ class Fetch(unittest.TestCase):
         with self.assertRaises(fetch.FetchError):
             self.run_fetch({})
 
+    def test_default_log_is_in_work_not_evidence(self):
+        committed = ROOT / "evidence" / "download_log.jsonl"
+        before = committed.stat()
+        self.assertEqual(fetch.LOG, ROOT / "work" / "download_log.jsonl")
+        work_log = self.tmp / "work" / "download_log.jsonl"
+        http, _ = polite({self.entry["direct_url"]: self.PAYLOAD})
+        with mock.patch.object(fetch, "LOG", work_log), mock.patch.object(fetch, "polite_open", http.open), \
+                contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(fetch.main(["9.9.9", "--out", str(self.tmp / "a"), "--manifest", str(self.manifest)]), 0)
+            # The launcher's call: the old MANIFEST VERSION OUT_DIR form.
+            self.assertEqual(fetch.main([str(self.manifest), "9.9.9", str(self.tmp / "b")]), 0)
+            chosen = self.tmp / "kept.jsonl"
+            fetch.main(["9.9.9", "--out", str(self.tmp / "c"), "--manifest", str(self.manifest),
+                        "--evidence", str(chosen)])
+        self.assertEqual(len(work_log.read_text(encoding="utf-8").splitlines()), 2)
+        self.assertEqual(len(chosen.read_text(encoding="utf-8").splitlines()), 1)
+        after = committed.stat()
+        self.assertEqual((before.st_size, before.st_mtime_ns), (after.st_size, after.st_mtime_ns))
+
     def test_both_command_forms_parse(self):
         seen = []
 
