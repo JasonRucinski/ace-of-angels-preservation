@@ -43,6 +43,8 @@ BUILD = STORE / 'build'
 HOSTS = {'aceofangels.com', 'flyingrockllc.com', 'aoahost.com'}
 BLOCK_EXT = {'.exe', '.zip', '.rar', '.7z', '.bin', '.aoa', '.odb', '.mp3', '.wmv', '.avi', '.mov', '.mpg', '.mpeg', '.dll', '.cab', '.iso'}
 CSS_URL = re.compile(r'url\(\s*[\"\']?([^\)\"\']+)[\"\']?\s*\)', re.I)
+# The 20 October 2026 research handoff; its documented capture URLs seed the crawl.
+HANDOFF = ROOT / 'data' / 'research-handoff-2026-10-20.txt'
 CAPTURE = re.compile(r'https?://web\.archive\.org/web/(\d{14})[a-z_]*/(https?://[^\s<>\"\']+)')
 
 
@@ -128,7 +130,7 @@ class Mirror:
         return key
 
     def seed(self):
-        handoff = (ROOT / 'docs' / 'history' / '2026-10-20-research-handoff.txt').read_text('utf-8')
+        handoff = HANDOFF.read_text('utf-8')
         for line in handoff.splitlines():
             for m in CAPTURE.finditer(line):
                 self.enqueue(m[2].rstrip(').,;'), m[1])

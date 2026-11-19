@@ -7,7 +7,7 @@ Usage:
   ZipFile.testzip(), hashes every member, flags MZ/PE signatures regardless
   of extension, and compares against the handoff's Appendix C inventory
   when a handoff is given and has one for <version> (only
-  docs/history/2026-10-20-research-handoff.txt does); otherwise the
+  data/research-handoff-2026-10-20.txt does); otherwise the
   appendix_c fields are null.
 * Extracts a fixed set of members of interest to <out_dir>/members/ using
   "<index>_<basename>" names (member paths are never trusted).

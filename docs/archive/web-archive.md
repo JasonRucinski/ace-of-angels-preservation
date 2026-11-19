@@ -13,7 +13,7 @@ The source URL inventories were recovered from Wayback CDX on 21 October 2026:
 Each query uses `output=json`, `filter=statuscode:200`, `collapse=urlkey`, and
 `fl=timestamp,original,mimetype,statuscode,digest,length`. These inventories are
 discovery evidence, not proof that every response body remains retrievable.
-Documented snapshot URLs in `docs/history/2026-10-20-research-handoff.txt` seed the crawl.
+Documented snapshot URLs in `data/research-handoff-2026-10-20.txt` seed the crawl.
 Recovery is limited to captures through 2011. Later indexed captures include
 a reset WordPress installation and domain-parking redirects, rather than the
 original game website.

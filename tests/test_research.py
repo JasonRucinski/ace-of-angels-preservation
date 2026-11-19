@@ -320,6 +320,12 @@ class Cdx(unittest.TestCase):
             site = json.loads((out / "wayback-site-index.json").read_text(encoding="utf-8"))
             self.assertEqual(site[1:], [CAPTURE_ROW])
 
+    def test_handoff_seeds_the_crawl(self):
+        # The 20 October handoff moved from docs/history/ to data/: the crawl's seed list reads it.
+        self.assertEqual(rwa.HANDOFF.relative_to(ROOT).as_posix(), "data/research-handoff-2026-10-20.txt")
+        captures = rwa.CAPTURE.findall(rwa.HANDOFF.read_text(encoding="utf-8"))
+        self.assertTrue(captures, "no Wayback capture URLs in the handoff")
+
     def test_cdx_subcommand_parses_and_old_flags_still_do(self):
         seen = []
         with mock.patch.object(rwa, "write_cdx_indexes", lambda out, names, http: seen.append((out, names))):

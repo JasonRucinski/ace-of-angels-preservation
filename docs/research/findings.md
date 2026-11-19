@@ -169,7 +169,7 @@ Still missing:
 ```
 py -3.12 -m venv .venv && .venv/Scripts/python -m pip install -r requirements-research.txt
 python -I tools/fetch.py manifest/downloads.json 2.7.1 originals/2.7.1
-python -I tools/run.py archive.analysis.inventory <installer> <ver> [docs/history/2026-10-20-research-handoff.txt] work/<ver>
+python -I tools/run.py archive.analysis.inventory <installer> <ver> [data/research-handoff-2026-10-20.txt] work/<ver>
 python -I tools/run.py aoa.research.version_probe | packet_sizes.py | config_records.py | dispatch_table.py | send_sites.py ...
 python -I tools/run.py archive.analysis.emulate_cipher / archive.analysis.emulate_codec_271   (see each script's docstring)
 ```
