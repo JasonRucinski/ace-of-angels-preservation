@@ -17,6 +17,7 @@ CI = (
     "test_cli_help", "test_polite_http", "test_install_wrapper", "test_make_vessel_combat",
     "test_imports", "test_layering", "test_builds", "test_pe", "test_map_registry",
     "test_research", "test_installer", "test_emulation", "test_procmem", "test_evidence_index",
+    "test_tools_index",
 )
 # The texture pack builder is a Windows player tool that needs Pillow from
 # requirements-texture.txt, which only the Windows CI job installs.

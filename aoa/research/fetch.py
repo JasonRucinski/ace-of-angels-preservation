@@ -189,7 +189,10 @@ def main(argv=None) -> int:
 
 
 def known_builds(argv=None) -> int:
-    """Command line of tools/fetch_known_builds.py."""
+    """Download the verified 2.8.2 and 2.9.2 installers into the folders docs/play.md names.
+
+    The command line of tools/fetch_known_builds.py.
+    """
     ap = cli.parser("""Download the verified 2.8.2 and 2.9.2 installers and check them.
 
     python3 -I tools/fetch_known_builds.py builds/
