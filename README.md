@@ -139,24 +139,25 @@ terrain support. Map position and completed-session count persist; pilots,
 scores and bans reset with each new game process.
 
 Follow the [Linux setup and operating guide](docs/linux-host.md). Match limits
-and maps are configured in `/etc/ace-of-angels/rotation.json`; the repository
-includes an [example configuration](deploy/linux/rotation.json.example) and a
+and maps are configured in `/etc/ace-of-angels/host.json`, the same settings
+format as the Windows host window; the repository includes an
+[example configuration](deploy/linux/host.json.example) and a
 [deployment verification record](evidence/2.9.2/linux_rotation_20261026.json).
 
 ## ⚡ Quick start
 
-On Windows 10/11 with [Python 3.12](https://www.python.org/downloads/) and Git:
+On Windows 10/11:
 
-```powershell
-git clone https://github.com/JasonRucinski/ace-of-angels-preservation.git ace-of-angels
-cd ace-of-angels
-py -3.12 -m venv .venv
-.venv\Scripts\python.exe -m pip install -r requirements.txt
-.venv\Scripts\python.exe -I tools\fetch_known_builds.py builds\
-```
+1. Install [Python](https://www.python.org/downloads/) 3.10 or later, with
+   **Add python.exe to PATH** ticked. No packages are needed.
+2. Download this project (**Code → Download ZIP**) and extract it.
+3. Double-click `Play.cmd` and follow its setup checklist: it downloads the
+   2.9.2 installer from archive.org (35 MB, after asking), unpacks it,
+   applies the fixes and helps you add the graphics wrapper.
 
-Then download the [dgVoodoo2 2.87.5 wrapper](https://github.com/dege-diosg/dgVoodoo2/releases/download/v2.87.5/dgVoodoo2_87_5.zip)
-and follow [docs/play.md](docs/play.md) from step 3.
+To host, double-click `Host.cmd`. Details and the command-line fallback:
+[docs/play.md](docs/play.md). The windows were rebuilt on 16 November 2026
+and have not yet been run on Windows ([status](docs/STATUS.md)).
 
 ## 🗂️ Repository layout
 

@@ -7,42 +7,42 @@ prepares the local diagnostic client, not a released internet game.
 
 ## Client launcher and visual options
 
-Double-click `Play.cmd`, or run:
+Double-click `Play.cmd`, or run `python -I tools/client_launcher.py
+[GAME_FOLDER]`. The player window (`aoa/launchers/play_app.py`, rebuilt 16
+November 2026) opens on a setup checklist until the game is ready, then has
+three tabs: **Play**, **Join a friend** and **Options**. The game folder is
+remembered in `work/settings.json`, shared with the host window. The first-run
+steps are in [play.md](play.md#3-double-click-playcmd-and-follow-the-checklist).
 
-```powershell
-.venv\Scripts\python.exe -I tools/client_launcher.py
-# Optional: select a different installation
-.venv\Scripts\python.exe -I tools/client_launcher.py game/another-copy
-```
+The **Options** tab reads the installed settings each time the game folder is
+read. Its checkboxes come from the patch registry
+(`aoa/client/patches/__init__.py`), in the registry's groups, with player
+wording and a hover text from `aoa/launchers/catalog.py`:
 
-The window reads the actual installed settings when it opens or when you browse
-to another game folder. **Apply** saves and verifies the choices; **Play** also
-starts the checked client with that game folder as its working directory.
-Selections persist in the executable, wrapper configuration and texture archives.
-Close the game first; applying changes is blocked while AOACLIENT.EXE is running.
+- **Fixes (recommended):** widescreen ship-selection screen, smoother frame
+  timing, the visibility fix, power-up pickups.
+- **Visual extras:** distant objects, the F2 chase camera and F4 orbit view
+  (with the player's own ship).
+- **Experimental:** asteroid-only or solid-world meshes, station-only or
+  full world detail, 32-bit textures.
+- **Graphics quality (needs the wrapper):** anti-aliasing, anisotropic
+  filtering, point-sample preservation, generated mipmaps, per-pixel
+  lighting, and the replacement texture pack when one is installed or saved.
 
-Each visual addition has its own checkbox:
-
-- Extended distant-object visibility, solid-world meshes or asteroid-only meshes.
-- Full world detail or station-only detail, and 32-bit texture loading.
-- Smoother frame timing, corrected visibility math, F2 chase camera and F4
-  orbit view with the player's ship, and widescreen ship-selection framing.
-- Wrapper anti-aliasing, anisotropic filtering, point-sample preservation,
-  generated mipmaps and per-pixel lighting.
-- Replacement texture pack, when installed or previously saved by the launcher.
-
-Selecting a full-world option unchecks its limited-only alternative. Turning
-off the chase camera also removes its two own-ship rendering patches.
-**Original visuals (all off)** clears all these visual options. Compatibility
-fixes, restored native terrain and server-provided map content remain active;
-the separate **Restored power-up pickups** checkbox controls that gameplay fix.
-This preset is the original visual behavior with the compatibility layer,
-not an exact unpatched executable.
+Ticking one side of a declared conflict turns the other off and says so in a
+line under the boxes. Turning off the chase camera also removes its two
+own-ship rendering patches. **Recommended** sets the registry defaults;
+**Original visuals** keeps the fixes and turns every visual and experimental
+option off (the original visual behavior with the compatibility layer, not
+an unpatched executable). **Apply** saves and verifies; nothing changes until
+then. **Restore the original game** runs `prepare undo`; **Install JRMAP
+terrain** runs the `map_viewer.py install` conversion. Close the game first:
+changes are blocked while AOACLIENT.EXE is running.
 
 Unchecked wrapper effects use application-controlled values (or `false` for
 the two boolean options). Existing custom enabled values, such as 4x AA, are
-preserved until their checkbox changes. Re-enabling uses the values shown in
-the launcher. Missing wrapper or replacement pack options are disabled.
+preserved until their checkbox changes. Missing wrapper or replacement pack
+options are disabled.
 
 Disabling an installed texture pack saves hash-checked copies as
 `<ARCHIVE>.launcher-texture-pack` and `_launcher_texture_pack.json` in the game
@@ -51,25 +51,21 @@ images, so the original upscale source folders are not needed. The existing
 `<ARCHIVE>.before-texture-pack` backups are retained. Do not delete the launcher
 cache if you want to re-enable the pack. No assets are downloaded.
 
-If the client carries an older variant of a patch (an older chase camera,
-ship-menu model or terrain hook), the launcher shows that option as on and
-says that **Apply** or **Play** updates it. The launcher has no control for
+If the client carries an older variant of a patch, the window shows that
+option as on and **Apply** updates it; the checklist's fixes step offers the
+update when the recorded patch level is older. The window has no control for
 the `--experimental-protection` probe, which works only with a loopback
-Station: if you set a remote Station, Apply switches the probe off and says
-so.
+server: pointing the game at another PC (Play on a friend, or Join) switches
+the probe off. **Play** and **Join** change only the server address; every
+other option keeps its installed state.
 
-The launcher preflights the selected patches and rolls back changed files if
-an apply operation fails. Existing setup backups and verification are retained.
-The checkboxes come from the patch registry
-(`aoa/client/patches/__init__.py`): every option patch with a label gets
-one, with its installed-state detection and on/off setting, and every
-declared conflict becomes a pair that unticks its other half.
-
-Verified on temporary game copies: individual visual patch off/on transitions,
-all-off launch validation, option persistence, mutually exclusive modes,
-wrapper preservation, failed-write rollback, texture cache off/on and corruption
-rejection, and Windows GUI checkbox wiring. This does not replace in-flight
-visual/performance acceptance for the individual experimental effects.
+Apply preflights the selected patches and rolls back changed files if it
+fails (`aoa/launchers/client_launcher.py`). Covered without the game by
+`tests/test_client_launcher.py` and `tests/test_launcher_logic.py` (the
+synthetic client); the rest of that suite needs the game. The window itself
+has been opened only on Linux under a virtual screen
+([status](STATUS.md#implemented-but-not-tested)). This does not replace
+in-flight visual/performance acceptance for the individual effects.
 
 ## Prepare an existing working folder
 

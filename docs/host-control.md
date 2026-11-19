@@ -1,98 +1,88 @@
-# Host control window
+# Host window
 
-Added 23 October 2026. `tools/host_control.py` is one window for running a
-host: start it, watch players and scores, message everyone, kick or ban,
-end a match, switch maps and stop. It runs the existing server
-(`tools/station_stub.py`) as a child process and uses that server's own
-status file and console commands, so the server behaves exactly as it does
-from the command line.
+`Host.cmd` opens the host window, "Ace of Angels Host": choose who can join,
+start a host, send players one line, watch players and scores, message
+everyone, kick or ban, end a match, change maps and stop. It runs the
+existing server (`tools/station_stub.py`) as a child process, with the
+command line from `HostConfig` (`aoa/host/config.py`) and the same supervisor
+as the headless host (`aoa/host/supervisor.py`): crash restarts, map rotation
+and recycling.
 
-## Opening it
+Rebuilt on 16 November 2026 and opened only on Linux under a virtual screen,
+never on Windows ([status](STATUS.md#implemented-but-not-tested)).
 
-Double-click `Host.cmd`, or run:
+## Hosting in four steps
 
-```powershell
-.venv/Scripts/python.exe -I tools/host_control.py
-```
+1. Double-click `Host.cmd`.
+2. Under **Who can join?** choose **This PC only**, **My home network** or
+   **Friends over a VPN**. The window finds this PC's address for that choice
+   and says when there is none (for a VPN: start the VPN app, then
+   **Refresh**).
+3. Click **Start**. The settings are checked first, off the window's thread;
+   anything that would stop the server is shown as one sentence before
+   anything starts.
+4. Copy the line under **Tell your players** and send it to them. In the
+   player window they paste it into **Join a friend** ([play.md](play.md#play-with-friends)).
 
-`--autostart` starts the host with the last-used settings as soon as the
-window opens. Settings are remembered in `work/host/host_control.json`. A
-saved value the window cannot use (a hand edit, or a file from an older
-version) falls back to its default, with a notice in the log pane and a
-warning box. Any error that stops the window is shown in a message box and
-written, with its traceback, to `work/logs/host.log`.
+For players on other PCs, Windows must also let them in: the **Firewall** box
+names the ports and address and has **Copy the commands** for the two
+`New-NetFirewallRule` lines of [lan-dogfight.md](lan-dogfight.md) or
+[vpn-dogfight.md](vpn-dogfight.md). Run them once in PowerShell opened as
+administrator. The window never runs them itself.
 
 ## Settings
 
 | Setting | What it does |
 |---|---|
-| Mode | **This PC only** (`local-guests` on 127.0.0.1, with the guest admission and sustained delivery that LAN and VPN players get), **LAN** (`lan-dogfight`) or **VPN (internet)** (`vpn-dogfight`) |
-| Host address | LAN/VPN only: pick this PC's address from the list (found automatically) or type it |
-| Map | Any of the 20 entries in [map-viewer.md](map-viewer.md); 11 have real content ([which](STATUS.md#maps)) |
-| Build map terrain | Sends the map so clients build it on flight entry. Clients need the online terrain hook, patch level 11 or later (the label says "terrain needs client patch level 11 or later"); without it they still join, in empty space |
-| Navigation buoys | Restore navigation markers for the selected map. Initially checked, preserving the previous automatic behavior when exported assets are available |
-| Turret trial | Restore five Arena1a turrets with firing disabled. Initially unchecked; this does not enable turret combat |
-| Warp gates trial | Restore all nine Arena1a gates with their original destinations. Initially unchecked; available only in **This PC only** mode |
-| Backdrop, max players, kill limit, time limit | Passed straight to the server; 0 turns a limit off. Defaults: 8 players, 20 kills, 10 minutes (the server's own defaults) |
-| Target ships | Passive hostile ships 12,000 units ahead of the spawn that T, J and missiles can target (`--target-ships`, [findings 9.45](findings.md)); 0 turns them off. Guns and missiles destroy them, the server keeping score of the damage ([findings 9.46](findings.md)), and they return after 15 s |
-| Game folder | Where `SCRTY.BIN` (and, for JRMAP, `jrmap292.trn`) is read from. With terrain on, JRMAP's power-up zones are passed to the host (`--powerup-zones`, [findings 9.44](findings.md)); clients need power-up pickup, patch level 19, to pick them up |
+| Who can join? | **This PC only** (`local-guests` on 127.0.0.1, with the guest admission and sustained delivery that LAN and VPN players get), **My home network** (`lan-dogfight`) or **Friends over a VPN** (`vpn-dogfight`) |
+| Address | This PC's address of that kind (home ranges or the VPN range `100.64.0.0/10`), found without sending anything; **Refresh** looks again |
+| Map | **One map**, or **Rotate through several maps** (players rejoin between maps). Only the 11 maps with real content are offered, each with its object count ([which](STATUS.md#maps)) |
+| Rules | Kills to win, minutes per match, players (0 turns a limit off). Defaults: 20 kills, 10 minutes, 8 players (the server's own) |
+| Advanced: backdrop, target ships | Backdrop is one of the five the client ships. Target ships are passive enemies ahead of the start point for practice; they come back 15 s after being destroyed ([findings 9.46](findings.md)) |
+| Advanced: map terrain | Sends the map so clients build it on flight entry; clients need patch level 11 or later. A rotation always has it on. With terrain, JRMAP's power-up zones are hosted (clients need patch level 19) |
+| Advanced: map objects | Navigation buoys, turret trial, warp gates trial. Each needs terrain and the map objects exported from the game files (`work/2.9.2/export/AOAOBJECTS`); the trials need Arena1a, and warp gates This PC only. An option that cannot be used is greyed out with the reason |
+| Advanced: ports, game folder | The three ports (UDP 5033 login, UDP 5031 arena, TCP 5034 server list) and the folder holding `SCRTY.BIN`, shared with the player window |
 
-The server checks every setting (`--print-config`) before it binds a port, so
-an address that isn't on this PC, or the wrong range for the mode, is
-refused with the server's own error message. The window shows what players
-need for LAN/VPN (hosts-file alias, `--station` value, firewall ports); see
-[lan-dogfight.md](lan-dogfight.md) and [vpn-dogfight.md](vpn-dogfight.md).
-
-The **Map objects** checkboxes require terrain and the original exported assets
-in `work/2.9.2/export/AOAOBJECTS` with their `_export.json` manifest beside that
-directory. Unavailable options are unchecked and disabled, with the reason shown.
-Changing maps, mode or terrain can clear incompatible selections; recheck them
-when returning to a supported configuration. Choices are saved on successful start.
-
-Use **Start host**, or **Load map (restart)** if the host is already running, to
-apply checkbox changes. Connected players must quit and rejoin; the checkboxes
-do not change objects during an active flight. The status panel shows the object
-counts from the running host, even while you edit the next run's settings.
-Turret and warp trials retain the [documented limitations](arena1a-rebuild.md):
-editor orientation and live gameplay acceptance remain unverified.
+The settings are saved in `work/settings.json` (its `host` object is a
+`HostConfig` file as it stands). `python -I tools/aoa_host.py run
+work/settings.json` runs the same host without the window. The old
+`work/host/host_control.json` is read once and left in place. A saved value
+that cannot be used is reset, with a line saying which.
 
 ## While it runs
 
-- **Status:** mode, map, match number, uptime, players / max, arena joins
-  used out of 49, Station logins, banned IPs and traffic counters, refreshed
-  every second from `work/host/<profile>-status.json`. If the file stops
-  updating for more than 8 seconds, the status line says the host may be
-  stuck.
-- **Players (sorted by kills):** slot, temporary pilot name, kills, deaths,
-  ping, traffic, idle time and whether the player is in flight.
-- **Kick / Ban selected:** removes the player; Ban also refuses their IP
+- **Tell your players:** the line to copy, and what their game needs
+  (for example "Players need patch level 11 or later for map terrain").
+- **Status:** map, match, uptime, players out of the maximum, arena joins used
+  out of 49 (a rotation restarts itself before the limit) and banned
+  addresses, read every half second from `work/host/<profile>-status.json`.
+  "not responding" appears when the file stops updating.
+- **Players:** slot, pilot, kills, deaths, ping, idle time, flying.
+- **Kick / Ban:** after a question. Ban also refuses the player's address
   until the host restarts.
-- **End match:** finishes the current match and announces the result.
-- **Send message to all:** an arena text message to everyone in flight
-  (printable ASCII, up to 120 characters).
-- **Host log:** the server's own output.
+- **End match** and **Message … Send to all** (printable ASCII, up to 120
+  characters).
+- **Host log:** the server's own output and the supervisor's notes.
 
 ## Changing maps and stopping
 
-**Load map (restart)** first checks the new settings. If they are invalid it
-shows the error and the running host carries on; nothing is announced or
-stopped. Valid settings stop the host cleanly and start it again on the map
-now selected. Connected players get an arena message and must quit the game
-and rejoin, because a client builds terrain only once per flight session. The
-window asks first if anyone is connected.
+**Change map** first checks the new settings. If they cannot start, it says
+why and the running host carries on; nothing is announced or stopped. Valid
+settings send players an arena message, stop the host cleanly and start it on
+the new map. Players must quit the game and rejoin, because a client builds
+terrain only once per flight session. The window asks first if anyone is
+connected.
 
-**Stop host** sends the console `quit` command. Players get "Host is shutting
-down", and the server runs its normal cleanup and prints its final traffic
-and kill counts. If it hasn't exited after 10 seconds, it is terminated.
-Closing the window offers to stop a running host.
+**Stop host** asks the server to quit (players get "Host is shutting down")
+and waits for its cleanup, off the window's thread; after 10 seconds it is
+terminated. Closing the window offers to stop a running host.
 
-If the host crashes (a non-zero exit after running for 5 seconds), the window
-restarts it after 5 seconds, at most three times in 10 minutes, with the
-settings that run had (not later edits in the window): the one restart policy
-of `aoa/host/supervisor.py`, which `tools/aoa_host.py` and
-`start_lan_dogfight.ps1` use too. Players must rejoin after a restart. Each
-start also writes that run's settings to `work/host/host.json`, in the format
-the headless host reads (`python -I tools/aoa_host.py run work/host/host.json`).
+If the host crashes, it is restarted with the settings that run had, at most
+three times in 10 minutes and 5 s apart, and only after a run of at least
+5 s, as the headless host does. A host that cannot start is not restarted:
+the window shows the server's reason in plain words (for example, an address
+that is no longer this PC's) with the server output under **Show details**.
+Each start also writes that run's settings to `work/host/host.json`.
 
 ## Server console additions
 
@@ -102,26 +92,20 @@ Two commands were added to the server console (also usable from
 - `say <text>`: arena message to everyone in flight.
 - `quit`: tell players, then stop with normal cleanup (exit code 0).
 
-## Verification (23 October 2026)
+## Verification
 
-- `tests/test_host_control.py` starts the real server (ephemeral ports)
-  through the same process wrapper. It checks the status file, `say`, a clean
-  `quit` with cleanup output, settings refused before starting, and the
-  arguments for every map and mode. It is part of `verify_local.py`.
-- Live, on this PC, with the real window's buttons and a real 2.9.2 client
-  (scratch copy):
-  - Start on CTF_arena: the client joined, the table showed it in flight,
-    and its terrain list held 55 objects.
-  - Load map → JRMAP: the host restarted with exit code 0; after the client
-    rejoined, it built 18 JRMAP objects and showed in the table again.
-  - End match and Stop host: both exited with code 0, with the server's
-    cleanup output.
-  - `say` reached 1 connected player, and the client stayed connected for
-    the next 60 seconds.
-- Not tested: LAN/VPN mode with players on other machines, kick/ban with a
-  real client, and automatic crash restart.
-- Changed on 13 November 2026 and not yet run on Windows: "This PC only"
-  now uses `local-guests` (the live check above used `local-relay`), the
-  saved-settings check, the error log and the check before "Load map".
-  These are covered by game-free tests in `test_host_control.py` only.
-  Current status: [STATUS.md](STATUS.md#implemented-but-not-tested).
+- 16 November 2026, Linux only: `tests/test_launcher_windows.py` builds the
+  window in each `--demo` state under a virtual screen; the screenshots are
+  in [docs/restructure/screens/](restructure/screens/). The real window was
+  also driven on Linux with a stand-in key file: Start (This PC only), the
+  status and log, Change map to Arena1a and Stop all worked against the real
+  server. `tests/test_launcher_logic.py` covers its decisions without a
+  window, and `tests/test_host_control.py` runs a real server through the
+  same supervisor when `game/2.9.2/SCRTY.BIN` exists.
+- 23 October 2026, on Windows, with the window of that time (since rebuilt)
+  and a real 2.9.2 client: start on CTF_arena, the client joined and built 55
+  objects; Load map → JRMAP restarted the host and the client rejoined with
+  18 JRMAP objects; End match, Stop host and `say` worked.
+- Not tested: the rebuilt window on Windows, LAN/VPN mode with players on
+  other machines, kick/ban with a real client, and automatic crash restart
+  ([STATUS.md](STATUS.md#implemented-but-not-tested)).

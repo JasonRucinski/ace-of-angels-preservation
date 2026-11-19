@@ -49,6 +49,24 @@ A real internet session between separate connections has
   per-player ping, bandwidth and idle time, and automatic restart after a crash
   (at most three restarts within 10 minutes).
 
+## With the windows (the short path)
+
+Since 16 November 2026 the two windows do the steps below for you, except the
+firewall rules, which they show for you to copy. They have been opened only on
+Linux under a virtual screen, never on Windows ([status](STATUS.md#implemented-but-not-tested)).
+
+- **Host:** double-click `Host.cmd`, choose **Friends over a VPN**, check the address it
+  found, copy the two firewall commands from the **Firewall** box into
+  PowerShell opened as administrator (once), click **Start**, and send players
+  the line under **Tell your players** ([host-control.md](host-control.md)).
+- **Each player:** in `Play.cmd`, open **Join a friend**, paste the line and
+  click **Check**. When the address is a VPN address, which is longer than the game's 11-character field, so the game uses the name `aoavpn` for it: the window shows the exact hosts-file
+  line (for example `100.101.102.103 aoavpn`) with **Copy** and **Open Notepad as
+  administrator**; it never edits the file itself. Then **Join**: only the
+  server address changes ([play.md](play.md#play-with-friends)).
+
+The rest of this page is the same route by hand.
+
 ## Host setup
 
 For a dedicated Linux machine, use [Minimal Linux host](linux-host.md).

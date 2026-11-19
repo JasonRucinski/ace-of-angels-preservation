@@ -106,7 +106,11 @@ Do not reinstall the example over an existing configuration during later
 updates. The example selects 10 kills or 15 minutes, with native terrain
 enabled; see section 5 to change it. `host.json` uses the same settings format
 (`HostConfig`, `aoa/host/config.py`) as the `work/host/host.json` the Windows
-host window writes for each run; an unknown setting is refused with its name.
+host window writes for each run, and as the `host` object of the launchers'
+`work/settings.json`; an unknown setting is refused with its name.
+`aoa_host.py` also reads a whole `work/settings.json` (its `host` object, with
+its `game_folder`), so settings chosen in the Windows host window can be
+copied here as they are; replace the game folder with `paths.key` as above.
 
 The unit file runs `tools/aoa_host.py run /etc/ace-of-angels/host.json`. That
 script is a shim for `aoa/host/headless.py`, so the host needs `aoa/` as well

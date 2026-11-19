@@ -19,6 +19,24 @@ also admitted two synthetic guests through real UDP/TCP listeners on the host's
 assigned IPv4, using ephemeral ports. Neither result establishes separate-PC
 firewall access, actual kills or real-client capacity.
 
+## With the windows (the short path)
+
+Since 16 November 2026 the two windows do the steps below for you, except the
+firewall rules, which they show for you to copy. They have been opened only on
+Linux under a virtual screen, never on Windows ([status](STATUS.md#implemented-but-not-tested)).
+
+- **Host:** double-click `Host.cmd`, choose **My home network**, check the address it
+  found, copy the two firewall commands from the **Firewall** box into
+  PowerShell opened as administrator (once), click **Start**, and send players
+  the line under **Tell your players** ([host-control.md](host-control.md)).
+- **Each player:** in `Play.cmd`, open **Join a friend**, paste the line and
+  click **Check**. When the address fits the game's 11-character field (as `192.168.0.61` does), the game uses it directly and no hosts file is needed; a longer one goes through the name `aoalan`: the window shows the exact hosts-file
+  line (for example `192.168.0.61 aoalan`) with **Copy** and **Open Notepad as
+  administrator**; it never edits the file itself. Then **Join**: only the
+  server address changes ([play.md](play.md#play-with-friends)).
+
+The rest of this page is the same route by hand.
+
 ## Host setup
 
 Use the existing repository Python environment and your own extracted game files.
