@@ -27,18 +27,19 @@ Playing and hosting need no packages. Analysis and emulation need
 
 | File | What it does |
 |---|---|
+| `aoa_host.py` | *shim* for `aoa.host.headless`: Run, check or inspect a host from one settings file: the headless host. |
 | `aoa_version.py` | *shim* for `aoa.research.version`: Read the compiled-in version of an Ace of Angels client (AOACLIENT.EXE). |
 | `aoapack.py` | *shim* for `aoa.formats.aoapack`: Reader for AoA CDataHandler archives (*.aoa) and the CCompress codec. |
 | `build_texture_pack.py` | *shim* for `aoa.client.build_texture_pack`: Build the 2x skin pack from your own 2.9.2 game files. |
 | `client_launcher.cmd` | Windows shortcut: Kept so existing shortcuts work: the launcher is now Play.cmd in the repository root. |
-| `client_launcher.py` | *shim* for `aoa.launchers.client_launcher`: Launch the client with individually selectable visual additions. |
+| `client_launcher.py` | *shim* for `aoa.launchers.play_app`: The player window, "Ace of Angels" (Play.cmd): setup checklist, Play, Join a friend, Options. |
 | `dedicated_host.py` | *shim* for `aoa.host.dedicated`: Supervise fresh game sessions, persistent map rotation and a status watchdog. |
 | `export_assets.py` | *shim* for `aoa.maps.export_assets`: Turn extracted AoA archive entries into a browsable asset tree. |
 | `fetch.py` | *shim* for `aoa.research.fetch`: Download a recovered build listed in manifest/downloads.json and verify it. |
 | `fetch_known_builds.py` | *shim* for `aoa.research.fetch.known_builds`: Download the verified 2.8.2 and 2.9.2 installers into the folders docs/play.md names. |
 | `gob2obj.py` | *shim* for `aoa.formats.gob`: Convert AoA .Gob models (from AoAObjects.odb) to Wavefront OBJ + MTL. |
 | `host_control.cmd` | Windows shortcut: Kept so existing shortcuts work: the launcher is now Host.cmd in the repository root. |
-| `host_control.py` | *shim* for `aoa.launchers.host_control`: One window to run an Ace of Angels host: start, watch, change map, stop. |
+| `host_control.py` | *shim* for `aoa.launchers.host_app`: The host window, "Ace of Angels Host" (Host.cmd): set up, start, share, watch, change map. |
 | `ia_disc_find.py` | *shim* for `aoa.research.ia_disc_find`: Search inside archive.org disc images for files matching a pattern. |
 | `install_wrapper.py` | *shim* for `aoa.client.install_wrapper`: Install the dgVoodoo2 DirectX 7 wrapper and a DPI-aware manifest into a game folder. |
 | `make_install.py` | *shim* for `aoa.client.make_install`: Build a playable game folder from a Wise/ZIP installer without running it. |
@@ -53,7 +54,7 @@ Playing and hosting need no packages. Analysis and emulation need
 | `scene2obj.py` | *shim* for `aoa.formats.scene`: Rebuild AoA scene-layout .Gob files (arenas, bases, asteroid fields) as one OBJ. |
 | `setup_game.ps1` | PowerShell: Build a playable Ace of Angels 2.9.2 folder for Windows 10/11 from the original installer. |
 | `start_lan_dogfight.ps1` | PowerShell: Start the private LAN or VPN dogfight relay. Does not change firewall or client files. |
-| `station_stub.py` | *shim* for `aoa.host.server`: Local stand-in for the AoA Station server (UDP), for observing the real client. |
+| `station_stub.py` | *shim* for `aoa.host.cli`: The stand-in Station and arena server's command line (tools/station_stub.py). |
 | `test.py` | *shim* for `tests.runner`: Run test suites, each in its own `python -I` process, and summarize. |
 | `texture_pack.py` | *shim* for `aoa.client.texture_pack`: Install or remove replacement TGA skins in a game folder's archives. |
 | `verify_local.py` | Run the supported local regression gate; does not launch a real client. |
@@ -92,47 +93,51 @@ Client preparation: the prepare engine, its base step, texture pack and install.
 
 | Module | Command line | What it is |
 |---|---|---|
-| `aoa.client.base` |  | Stability fixes that let the 2.9.2 AoA client run on modern Windows. |
+| `aoa.client.asm` |  | Just enough of an x86 assembler for the client patches' code caves. |
+| `aoa.client.base` |  | Former home of the logger patches (now aoa/client/patches/logger.py). |
 | `aoa.client.build_texture_pack` | yes | Build the 2x skin pack from your own 2.9.2 game files. |
 | `aoa.client.install_wrapper` | yes | Install the dgVoodoo2 DirectX 7 wrapper and a DPI-aware manifest into a game folder. |
+| `aoa.client.layout` |  | Where the client patches put new code and runtime state: one table. |
 | `aoa.client.make_install` | yes | Build a playable game folder from a Wise/ZIP installer without running it. |
 | `aoa.client.prepare` | yes | Prepare/check/undo/launch the supported 2.9.2 client using the user's files. |
 | `aoa.client.texture_pack` | yes | Install or remove replacement TGA skins in a game folder's archives. |
 
 ## aoa.client.experiments
 
-Superseded offline patch experiments, kept until phase 2 archives them.
+Bytes of the archived culling experiment, kept for aoa.emulation.render_pipeline.
 
 | Module | Command line | What it is |
 |---|---|---|
-| `aoa.client.experiments.render_clock_experiment` | yes | Offline-only QPC clock experiment. |
-| `aoa.client.experiments.render_culling_experiment` | yes | Reversible culling correction restricted to the isolated offline baseline. |
+| `aoa.client.experiments.render_culling_experiment` |  | The offline culling experiment's bytes, as aoa.emulation.render_pipeline's default patch. |
 
 ## aoa.client.patches
 
-Client patches, one module per patch.
+The registry: every client patch, in the order prepare applies and reports them.
 
 | Module | Command line | What it is |
 |---|---|---|
 | `aoa.client.patches.archive_terminator` |  | NUL-terminate archive data decompressed by the 2.9.2 client (findings 9.29). |
-| `aoa.client.patches.asteroid_render` | yes | Opt-in 2.9.2 asteroid mesh rendering instead of distant cached billboards. |
+| `aoa.client.patches.asteroid_render` |  | Opt-in 2.9.2 asteroid mesh rendering instead of distant cached billboards. |
+| `aoa.client.patches.background_network` |  | Keep an inactive flying client reading the network (findings 9.24). |
+| `aoa.client.patches.base` |  | A client patch as data, and the generic code that reads and writes one. |
 | `aoa.client.patches.cursor_warp` |  | 2.9.2 in-game cursor warp fix; library only, reversible known site. |
 | `aoa.client.patches.explicit_protection` |  | Opt-in 2.9.2 protection setter prototype; no files written here. |
 | `aoa.client.patches.frame_clock` |  | Millisecond game clock from QueryPerformanceCounter, plus a timer-frame gate. |
+| `aoa.client.patches.logger` |  | Stability fixes that let the 2.9.2 AoA client run on modern Windows. |
 | `aoa.client.patches.menu_aspect` |  | 2.9.2 ship-selection framing fix; library only, reversible known sites. |
-| `aoa.client.patches.object_persistence` | yes | Keep distant world models visible with their existing authored LODs. |
+| `aoa.client.patches.object_persistence` |  | Keep distant world models visible with their existing authored LODs. |
 | `aoa.client.patches.online_terrain` |  | Online terrain hook: the server picks a map with the flight-entry marker. |
 | `aoa.client.patches.own_ship_menu` |  | Keep your own hull drawn after the fighter menu previewed its model. |
 | `aoa.client.patches.own_ship_model` |  | Give the player's own ship a drawable 3D model for the F2 chase camera. |
-| `aoa.client.patches.physics_timestep` |  | Reversible zero-time physics guard for the stability-patched 2.9.2 client. |
+| `aoa.client.patches.physics_timestep` |  | Zero-time physics guard for the 2.9.2 client (findings 9.10). |
 | `aoa.client.patches.powerup_pickup` |  | Let server-placed power-ups be picked up, and come back after a pickup. |
-| `aoa.client.patches.solid_world_render` | yes | Keep world model groups on their mesh path to the existing far horizon. |
-| `aoa.client.patches.station_detail` | yes | Pin Hy_base1 child mesh selection to its original closest detail level. |
-| `aoa.client.patches.station_host` |  | Startup Station hostname of the stability-patched 2.9.2 client. |
-| `aoa.client.patches.texture32` | yes | Load 24/32-bit TGA textures as ARGB8888 instead of RGB565/ARGB4444. |
+| `aoa.client.patches.solid_world_render` |  | Keep world model groups on their mesh path to the existing far horizon. |
+| `aoa.client.patches.station_detail` |  | Pin Hy_base1 child mesh selection to its original closest detail level. |
+| `aoa.client.patches.station_host` |  | The startup Station hostname field of the 2.9.2 client. |
+| `aoa.client.patches.texture32` |  | Load 24/32-bit TGA textures as ARGB8888 instead of RGB565/ARGB4444. |
 | `aoa.client.patches.third_person` |  | Third-person cameras for the 2.9.2 client: F2 chase, F4 orbit. |
 | `aoa.client.patches.visibility_fix` |  | Bounded trigonometry in the 2.9.2 visibility routine (render-pipeline-audit.md). |
-| `aoa.client.patches.world_detail` | yes | Select closest authored mesh/texture variants for solid world model groups. |
+| `aoa.client.patches.world_detail` |  | Select closest authored mesh/texture variants for solid world model groups. |
 
 ## aoa.emulation
 
@@ -177,16 +182,41 @@ Host: the arena server, its configuration, delivery, operations and headless run
 
 | Module | Command line | What it is |
 |---|---|---|
+| `aoa.host.cli` | yes | The stand-in Station and arena server's command line (tools/station_stub.py). |
+| `aoa.host.combat` |  | Combat ledgers of the relay: victim-reported deaths and server-tagged missiles. |
+| `aoa.host.config` |  | HostConfig: one host's settings, the only builder of the server command line. |
+| `aoa.host.console` |  | The host's operator side: the player table, the status file contents and console commands. |
 | `aoa.host.dedicated` | yes | Supervise fresh game sessions, persistent map rotation and a status watchdog. |
+| `aoa.host.defaults` |  | The one table of host facts and defaults: profiles, networks, ports, aliases, backdrops, match limits and the managed-session settings. |
 | `aoa.host.delivery` |  | Sustained ordered 0x1B delivery within the 2.9.2 client's 30-ID history. |
+| `aoa.host.diagnostics` |  | Diagnostic delivery: the bounded 30-event reliable engine. |
+| `aoa.host.flagdoc` | yes | The server flag table of docs/local-server.md, generated from the server's argparse. |
+| `aoa.host.headless` | yes | Run, check or inspect a host from one settings file: the headless host. |
 | `aoa.host.make_vessel_combat` | yes | Generate aoa/host/vessel_combat.py: per-vessel simple HP and gun damage (findings 9.46). |
+| `aoa.host.match` |  | Match limits and results of the relay's dogfight. |
 | `aoa.host.net_impair` |  | Metered UDP sockets with optional server-side delay/loss impairment. |
+| `aoa.host.object_slots` |  | World-object indices and tags of everything the server places, from one table. |
 | `aoa.host.ops` |  | Host operator helpers: atomic status file and a bounded stdin console. |
 | `aoa.host.runtime` |  | Bounded local Station configuration, logging and TCP list transport. |
-| `aoa.host.server` | yes | Local stand-in for the AoA Station server (UDP), for observing the real client. |
+| `aoa.host.server` |  | The stand-in Station and arena server for one host run: ArenaServer. |
+| `aoa.host.sessions` |  | Station sessions: admission, guest pilots, aliases and the arena lease. |
+| `aoa.host.spawn` |  | Where relay players spawn. |
+| `aoa.host.supervisor` |  | Run the server as a child process and keep it running. |
+| `aoa.host.transport` |  | UDP transport of one host run: the Station and arena sockets, ingress limits, one reliable envelope per datagram and the client version gate. |
 | `aoa.host.turret_trial` |  | Opt-in, inactive five-turret Arena1a placement trial. |
 | `aoa.host.vessel_combat` |  | Generated by aoa/host/make_vessel_combat.py; do not edit (findings 9.46). |
+| `aoa.host.vessels` |  | The fighters a host offers, and the arena messages that name one. |
 | `aoa.host.warp_trial` |  | Opt-in Arena1a gates using recovered native models and destinations. |
+
+## aoa.host.objects
+
+Map objects the host places: power-ups, target ships, navigation buoys and the trials.
+
+| Module | Command line | What it is |
+|---|---|---|
+| `aoa.host.objects.powerups` |  | Server-placed power-ups. |
+| `aoa.host.objects.targets` |  | Passive server-owned target ships. |
+| `aoa.host.objects.test_object` |  | The diagnostic passive mission ship (--experimental-object). |
 
 ## aoa.launchers
 
@@ -194,8 +224,19 @@ Launcher windows for players and hosts.
 
 | Module | Command line | What it is |
 |---|---|---|
-| `aoa.launchers.client_launcher` | yes | Launch the client with individually selectable visual additions. |
-| `aoa.launchers.host_control` | yes | One window to run an Ace of Angels host: start, watch, change map, stop. |
+| `aoa.launchers.catalog` |  | What the two windows offer, and the words they use for it. |
+| `aoa.launchers.client_launcher` | yes | The client options behind the player window's Options tab: read, check, apply with rollback. |
+| `aoa.launchers.game_folder` |  | Look at a game folder and say what state it is in; changes nothing. |
+| `aoa.launchers.host_app` | yes | The host window, "Ace of Angels Host" (Host.cmd): set up, start, share, watch, change map. |
+| `aoa.launchers.host_control` | yes | The host window's old module name: main() opens aoa/launchers/host_app.py. |
+| `aoa.launchers.hosting` |  | The host window's decisions, without a window: settings to HostConfig, the checks before Start, the line to share, the firewall commands, the status text and the map change that validates before it restarts. |
+| `aoa.launchers.install` |  | The player's first-run steps, in order. |
+| `aoa.launchers.join` |  | Join a friend's server: read what the host shared, decide how the game reaches it, check it. |
+| `aoa.launchers.netinfo` |  | This PC's IPv4 addresses, each classified, using the standard library only. |
+| `aoa.launchers.play_app` | yes | The player window, "Ace of Angels" (Play.cmd): setup checklist, Play, Join a friend, Options. |
+| `aoa.launchers.serve` |  | Serve one map on this PC for viewing: `map_viewer.py serve` and `make_map.py serve`. |
+| `aoa.launchers.settings` |  | The launchers' one settings file: work/settings.json. |
+| `aoa.launchers.tkcommon` |  | What both windows share: a worker thread for slow work, the error dialog and its log file, hover help, the look, and a start-up guard. |
 
 ## aoa.live
 
@@ -240,8 +281,12 @@ Network protocol: datagram codec, movement and object status messages.
 
 | Module | Command line | What it is |
 |---|---|---|
+| `aoa.protocol.arena` |  | Arena messages of the 2.9.2 client: ship and player loads, teams, removals, collisions, text. |
 | `aoa.protocol.codec` | yes | AoA UDP datagram codec (CComm layer), as implemented by the 2.7.1 client. |
+| `aoa.protocol.messages` |  | Constants every message module shares: the NUL pad byte and the log names of datagram types. |
 | `aoa.protocol.motion` |  | Recovered 2.9.2 safe movement prefix; not authoritative game physics. |
+| `aoa.protocol.station` |  | Station and handshake messages of the 2.9.2 client: connect acks, reliable acks, pilots, pings. |
+| `aoa.protocol.tcp_list` |  | Station TCP replies: the game-server list, the custom-config list and the reply framing. |
 | `aoa.protocol.turret_groups` |  | Native turret-group status codec; the turret-trial host sends it to keep turrets disabled. |
 
 ## aoa.reel
@@ -309,6 +354,9 @@ Frozen offline-baseline experiment scripts and their tests.
 |---|---|---|
 | `archive.offline_baseline.compare_render_clocks` | yes | Replay measured Windows clocks through the original 2.9.2 camera builder. |
 | `archive.offline_baseline.prepare_offline_baseline` | yes | Build an isolated offline diagnostic client; never launch or register it. |
+| `archive.offline_baseline.render_clock_experiment` | yes | Offline-only QPC clock experiment (archived). |
+| `archive.offline_baseline.render_culling_experiment` | yes | Reversible culling correction restricted to the isolated offline baseline (archived). |
 | `archive.offline_baseline.seed_offline_velocity` | yes | Seed one synthetic coast test in the isolated offline baseline only. |
-| `archive.offline_baseline.test_render_clock_experiment` | yes | Execute the experimental clock with controlled Windows counter results. |
+| `archive.offline_baseline.test_render_clock_experiment` | yes | The archived clock experiment's own configure(); needs the game. |
+| `archive.offline_baseline.test_render_culling` | yes | Regression tests for the actual offline culling machine-code patch. |
 | `archive.offline_baseline.test_render_motion` | yes | Deterministic original-x86 camera and timer regressions; no UI or client launch. |
