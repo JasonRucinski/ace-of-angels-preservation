@@ -19,7 +19,7 @@ CI = (
     "test_host_config", "test_supervisor", "test_arena_server", "test_launcher_logic",
     "test_launcher_windows",
     "test_research", "test_installer", "test_emulation", "test_procmem", "test_evidence_index",
-    "test_tools_index",
+    "test_tools_index", "test_doc_links",
     # Client suites with game-free halves: cave emulation and code checks (unicorn).
     "test_frame_clock", "test_menu_aspect", "test_visibility_fix",
 )
