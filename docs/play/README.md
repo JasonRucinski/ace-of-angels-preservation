@@ -115,19 +115,8 @@ an issue with what worked and what didn't.
 
 ## Troubleshooting
 
-| Symptom | Fix |
-|---|---|
-| `Play.cmd` says Python was not found | Install Python 3.10 or later with **Add python.exe to PATH** ticked, then double-click `Play.cmd` again. |
-| A window shows an error | It names what happened and what to do; **Show details** has the rest, also saved in `work\logs\launcher.log` (player) or `work\logs\host.log` (host). |
-| A taskbar button appears but no login screen | Open **Setup** and do step 4 (**Register**). After moving the game folder, register again. |
-| Hangs or crashes at start | Remove any compatibility mode from `AOACLIENT.EXE` (Properties → Compatibility). The game breaks under them. |
-| **Play Online** is greyed out | The game cannot find its server. Use **Join a friend** and **Check**, or choose **Play on: This PC**. |
-| Server list fails, or the login works but flight doesn't | The host's firewall: the host window's **Firewall** box has the two commands to copy. |
-| Step 2 says a file is changed | The folder is not a clean 2.9.2 copy. Choose another folder, or rename `game\2.9.2` and unpack again. |
-
-More detail: [running-on-windows-11.md](../research/windows-11.md) (what was
-broken and why) and [client-setup.md](../reference/client-patches.md) (every patch, the undo
-and the checks).
+Symptoms and fixes, and what the setup script does by hand:
+[troubleshooting.md](troubleshooting.md).
 
 ## Without the window (fallback)
 

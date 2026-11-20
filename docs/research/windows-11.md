@@ -18,52 +18,15 @@ overflow the stack in the shim engine (AcGenral.dll) with dgVoodoo.
 
 ## Setup
 
-For the current supported local workflow, use
-[client-setup.md](../reference/client-patches.md). `prepare_client.py` now composes the logger,
-physics and configurable Station-host fixes with exact undo and a checked
-launcher. The setup script below calls it. `patch_client.py`,
-`local_station.py` and `physics_timestep.py` are now libraries only: their
+The setup steps that stood here are in [play/README.md](../play/README.md);
+what `setup_game.ps1` does, and the skin-registration symptom, are in
+[play/troubleshooting.md](../play/troubleshooting.md#setting-up-by-hand-what-setup_gameps1-does).
+`patch_client.py`, `local_station.py` and `physics_timestep.py` are now
+libraries only: their
 standalone command lines were removed on 13 November 2026, because they
 changed the executable without updating `_client_setup.json` and broke a
 prepared client. Where this document mentions them, it describes earlier
 experiments.
-
-Run this yourself in a normal PowerShell window (not from a sandboxed agent
-shell — its registry writes are invisible to programs you launch, and the
-login dialog then silently never appears):
-
-```powershell
-powershell -ExecutionPolicy Bypass -File tools\setup_game.ps1
-```
-
-If `game\2.9.2` already exists and only the registration is missing:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File tools\register_activeskin.ps1 game\2.9.2\ACTIVESKIN.OCX
-```
-
-Symptom of a missing registration: a taskbar button appears, no login dialog,
-and the log stops at `(LoginTrace) Restore()..End` without
-`initializing login dialog` (MFC's `DoModal` for dialog 127 fails because the
-ActiveSkin controls cannot be created).
-
-It needs the project's `.venv` and stops with the commands to create it if
-`.venv` is missing. This builds `game\2.9.2\` (gitignored) from
-`originals\2.9.2\aoa_2.9.2_installer_2.11.1.exe`, or, if that file is absent,
-from `builds\v2.9.2_2004_FamilyGamePack3\aoa-current.exe` where
-`fetch_known_builds.py` saves it, without running the installer,
-patches the client, registers the skin control for the current user, and
-installs the wrapper from `originals\wrappers\dgvoodoo2-2.87.5\dgVoodoo2_87_5.zip`
-(official GitHub release v2.87.5, 9,268,078 bytes, SHA-256
-`5ffde6927f7355ca3fdd5d785b581256a8e6539fa13e395a891ade6ba1040850`) plus an
-`AOACLIENT.EXE.manifest` declaring DPI awareness (without it, at 125% scaling
-the game renders at 1536x864 and is upscaled). Pass `-Wrapper ""` for native
-DirectX 7. If the default wrapper zip is absent, it continues with native
-DirectX 7 and prints how to add the wrapper later; a `-Wrapper` path you name
-must exist, or it stops. Then
-run `game\2.9.2\AOACLIENT.EXE` and choose **Play Offline** → **Play**, or
-**Tutorial Mode**. Undo the registration with
-`tools\register_activeskin.ps1 game\2.9.2\ACTIVESKIN.OCX -Unregister`.
 
 ## What was broken
 
