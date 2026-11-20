@@ -157,7 +157,7 @@ Recovered 60 geometry instances in outerchange and 10 in irrosa01 in expanded
 exports. Their resolved object counts plus safe zones match prior live counts
 (616 / 457). Audited all 17 node-layout Gobs; gameplay markers remain separate
 from asset availability. Six tests pass, including original comparison-code
-emulation. See [map-node findings](../play/map-viewer.md#unfilled-node-investigation-26-october-2026)
+emulation. See [map-node findings](log.md#unfilled-node-investigation-from-playmap-viewermd)
 and `evidence/2.9.2/map_nodes_20261026.json`. No client/server deployment changed.
 
 Unattended Linux host (26 Oct 2026): deployed `tools/dedicated_host.py` under
@@ -220,6 +220,34 @@ press is still unconfirmed. Patch version 21 (`third-person-camera-v3`,
 27 Oct) fixes orbit-view objects blinking: culling used the orbit camera
 only when the millisecond clock had not moved ([findings 9.48](findings.md#s9-48)).
 Plain F2 turned out to be bound by default ("Toggle Mentor"); plain F4 is free.
+
+### Unfilled-node investigation (from play/map-viewer.md)
+
+The export resolver now follows the original graphics lookup's first,
+case-insensitive prefix match, preserving archive order from `_export.json`.
+`HyBase2La0` resolves to `HyBase2Lay`; `outerchange`'s five `ast_fld_10`
+through `ast_fld_14` references resolve to `ast_fld_d`, the first matching
+layout in the archive. Without archive provenance, ambiguous prefixes are
+left unresolved. Object lookup takes precedence over layout lookup.
+
+This restores **60 geometry instances in outerchange and 10 in irrosa01**
+to expanded exports. The former now has 615 resolved object records plus
+one safe zone; the latter has 456 plus one safe zone. These agree with the
+previous live counts of 616 and 457. The original client already resolves
+these references; this change fixes the analysis/export tools, not gameplay.
+
+`archive/analysis/audit_map_nodes.py` inventories all 17 node-layout Gobs and writes
+[counts and remaining node classes](../../evidence/2.9.2/map_nodes_20261026.json)
+(a re-run writes `work/evidence/2.9.2/` unless given `--evidence PATH`).
+Full records and regenerated OBJ files are local under `work/map-node-review/`.
+Object assets being available does not mean they spawn: ship-only components
+still depend on native controller flags. Turret/flag gameplay, service-marker
+definitions, warp links and helper semantics remain unimplemented or unverified.
+Helper classifications are based on names, not proof of their original behavior.
+
+Verification: all 337 archive entries passed CRC checks; six node tests pass,
+including executing the original prefix-comparison routine in x86 emulation
+with CRT string/uppercase calls stubbed. No live-client changes were made.
 
 ## 25 October 2026
 

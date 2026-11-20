@@ -4,6 +4,7 @@ Each table sits between marker comments and is written by a module with
 --write and --check (aoa.cli.DocBlock). When a test here fails, regenerate:
 
     python -I tools/run.py aoa.client.patchdoc --write     docs/reference/client-patches.md
+    python -I tools/run.py aoa.maps.mapdoc --write         docs/reference/maps.md
 
 The server flag table (aoa.host.flagdoc) is checked by test_host_data and
 the tools index (aoa.tools_index) by test_tools_index.
@@ -16,7 +17,7 @@ import unittest
 
 from aoa import cli
 
-GENERATORS = ("aoa.client.patchdoc", "aoa.host.flagdoc", "aoa.tools_index")
+GENERATORS = ("aoa.client.patchdoc", "aoa.maps.mapdoc", "aoa.host.flagdoc", "aoa.tools_index")
 
 
 def block_text(block):
@@ -58,6 +59,16 @@ class GeneratedTables(unittest.TestCase):
                     self.assertIn(f"`{prepare.flag(p.option)}`", text)
         for option, alias in prepare.FLAG_ALIASES.items():
             self.assertIn(f"`{alias}`", text)
+
+    def test_map_table_lists_every_map_in_index_order(self):
+        from aoa.maps import mapdoc, registry
+        rows = [line for line in block_text(mapdoc.BLOCK).splitlines() if re.match(r"^\| \d+ \|", line)]
+        self.assertEqual([row.split("|")[2].strip() for row in rows], list(registry.MAP_NAMES))
+        for row, name in zip(rows, registry.MAP_NAMES):
+            with self.subTest(map=name):
+                self.assertIn(f"| {registry.CONTENT[name]} |", row)
+        self.assertEqual(mapdoc.objects_and_note("Arena1a"), ("239", "main arena"))
+        self.assertEqual(mapdoc.objects_and_note("Hittest"), ("0", "loads nothing alone"))
 
 
 if __name__ == "__main__":

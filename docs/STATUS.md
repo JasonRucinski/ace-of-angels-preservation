@@ -32,7 +32,7 @@ it is 22 today.
 ## Maps
 
 The terrain hook has a table of 20 entries: the 19 layouts in the 2.9.2
-archives plus JRMAP from the 2.0.0 editor file ([map-viewer.md](play/map-viewer.md#maps)).
+archives plus JRMAP from the 2.0.0 editor file ([map-viewer.md](reference/maps.md#maps)).
 
 - **11 have real content:** the 9 full layouts (Arena1a, CTF_arena,
   CTF_arena_b, newterrain, outerchange, ast_fld_a, ast_fld_b, ast_fld_c,

@@ -321,6 +321,7 @@ Maps: placements, custom maps and objects, export and preview.
 | `aoa.maps.make_map` | yes | Build a new map from a JSON spec as a native 2.9.2 terrain file (*.TRN). |
 | `aoa.maps.make_object` | yes | Add a new placeable object to a play copy's object database from a glTF model. |
 | `aoa.maps.map_viewer` | yes | Fly around any recovered map in the 2.9.2 client, one map per server run. |
+| `aoa.maps.mapdoc` | yes | The map table of docs/reference/maps.md, generated from the map registry. |
 | `aoa.maps.navigation` |  | Server-owned navigation placements from the user's original maps. |
 | `aoa.maps.registry` |  | The maps the online terrain hook can load, with their markers, spawns and notes. |
 | `aoa.maps.render_map_previews` | yes | Render recovered map exports into a local HTML gallery; no game is launched. |
