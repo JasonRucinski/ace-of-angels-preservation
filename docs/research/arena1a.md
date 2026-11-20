@@ -56,7 +56,7 @@ Close the client, prepare it, and start the probe:
 
 ```powershell
 .venv/Scripts/python.exe -I tools/prepare_client.py prepare game/2.9.2/AOACLIENT.EXE --station localhost
-.venv/Scripts/python.exe -I tools/station_stub.py game/2.9.2/SCRTY.BIN work/arena1a-online.jsonl --profile local-relay --map Arena1a --experimental-terrain
+.venv/Scripts/python.exe -I tools/station_stub.py game/2.9.2/SCRTY.BIN work/arena1a-online.jsonl --profile local-relay --map Arena1a --terrain
 ```
 
 Since 23 October, client patch version 11 replaces this hook with

@@ -112,10 +112,10 @@ zero in the single-precision fixture. See
 [fix evidence](../../../evidence/2.9.2/render_culling_fix.json).
 
 ```powershell
-.venv\Scripts\python.exe -I tools/test.py test_render_culling
+.venv\Scripts\python.exe -I tools/test.py archive.offline_baseline.test_render_culling
 # Close the isolated baseline before either operation:
-.venv\Scripts\python.exe -I tools/run.py aoa.client.experiments.render_culling_experiment --undo
-.venv\Scripts\python.exe -I tools/run.py aoa.client.experiments.render_culling_experiment
+.venv\Scripts\python.exe -I tools/run.py archive.offline_baseline.render_culling_experiment --undo
+.venv\Scripts\python.exe -I tools/run.py archive.offline_baseline.render_culling_experiment
 ```
 
 Undo culling **before** changing/removing the clock experiment: the older clock

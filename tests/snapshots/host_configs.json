@@ -292,7 +292,7 @@
   }
  },
  "docs": {
-  "game/2.9.2/SCRTY.BIN work/arena1a-online.jsonl --profile local-relay --map Arena1a --experimental-terrain": {
+  "game/2.9.2/SCRTY.BIN work/arena1a-online.jsonl --profile local-relay --map Arena1a --terrain": {
    "argv": [
     "game/2.9.2/SCRTY.BIN",
     "work/arena1a-online.jsonl",
@@ -300,7 +300,7 @@
     "local-relay",
     "--map",
     "Arena1a",
-    "--experimental-terrain"
+    "--terrain"
    ],
    "config": {
     "ack": true,

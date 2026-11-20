@@ -20,6 +20,7 @@ CI = (
     "test_launcher_windows",
     "test_research", "test_installer", "test_emulation", "test_procmem", "test_evidence_index",
     "test_tools_index", "test_doc_links", "test_doc_tables",
+    "test_doc_commands",
     # Client suites with game-free halves: cave emulation and code checks (unicorn).
     "test_frame_clock", "test_menu_aspect", "test_visibility_fix",
 )

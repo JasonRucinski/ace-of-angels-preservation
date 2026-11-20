@@ -171,8 +171,8 @@ Undo that patch first before using the clock commands below; their image checks
 reject the additional culling edits.
 
 ```powershell
-.venv\Scripts\python.exe -I tools/run.py aoa.client.experiments.render_clock_experiment --undo
-.venv\Scripts\python.exe -I tools/run.py aoa.client.experiments.render_clock_experiment
+.venv\Scripts\python.exe -I tools/run.py archive.offline_baseline.render_clock_experiment --undo
+.venv\Scripts\python.exe -I tools/run.py archive.offline_baseline.render_clock_experiment
 ```
 
 `seed_offline_velocity.py PID` provides a one-shot synthetic coast fixture for
