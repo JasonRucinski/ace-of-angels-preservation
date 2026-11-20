@@ -8,7 +8,8 @@ explicit <a id="..."> anchors). A link may not point into the ignored
 builds/, game/, originals/, wb/ or work/ folders, or outside the
 repository, and may not land on a stub: the three-line page left at a doc's
 old path that says where it moved. The GitHub links of the issue templates
-are held to the same rules.
+are held to the same rules. docs/README.md must list every doc under docs/
+once (the restructure record by its README).
 
     python -I tools/test.py test_doc_links
 """
@@ -149,6 +150,22 @@ class DocLinks(unittest.TestCase):
             with self.subTest(stub=stub):
                 target = LINK.search((ROOT / stub).read_text(encoding="utf-8"))
                 self.assertIsNone(check_target(stub, next(g for g in target.groups() if g)))
+
+    def test_the_docs_index_lists_every_doc_once(self):
+        # docs/README.md lists each doc under docs/ once; the restructure record by its README.
+        index = ROOT / "docs/README.md"
+        linked = []
+        for _, line in prose_lines(index.read_text(encoding="utf-8")):
+            for m in LINK.finditer(line):
+                target = next(g for g in m.groups() if g)
+                if not re.match(r"^[a-z][a-z0-9+.-]*:", target) and target.partition("#")[0]:
+                    linked.append((index.parent / target.partition("#")[0]).resolve().relative_to(ROOT).as_posix())
+        docs = [p for p in tracked("docs/*.md", "docs/**/*.md")
+                if p != "docs/README.md" and not is_stub(ROOT / p)
+                and (not p.startswith("docs/restructure/") or p == "docs/restructure/README.md")]
+        for doc in docs:
+            with self.subTest(doc=doc):
+                self.assertEqual(linked.count(doc), 1, f"{doc} should be listed once in docs/README.md")
 
     def test_the_checker_catches_what_it_should(self):
         # Guards the parser: each of these must be reported.

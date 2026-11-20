@@ -5,12 +5,12 @@ records quote commands as they were), stubs excepted. A command is a
 `tools/<name>.py`, `.ps1` or `.cmd` in a fenced code block (with `\\`, `` ` ``
 and `^` continuations joined) or in an inline code span. Each named
 `tools/<name>.py` must exist and have a `main`; `tools/run.py MODULE` must
-name a module of aoa/ or archive/ that exists and has a `main` (a template
-such as `aoa.client.patches.<name>` is not checked), and `tools/test.py`
-must name suites that exist. For each command line, every `--flag` before a
-`--` separator must appear in that command's `--help` (its subcommand's,
-when the first argument is one). The help text is obtained only through the
-sandbox of tests/test_cli_help.py: a
+name a module of aoa/ or archive/ that exists and has a `main` (a
+placeholder such as `MODULE` or `aoa.client.patches.<name>` is not
+checked), and `tools/test.py` must name suites that exist. For each command
+line, every `--flag` before a `--` separator must appear in that command's
+`--help` (its subcommand's, when the first argument is one). The help text
+is obtained only through the sandbox of tests/test_cli_help.py: a
 throw-away copy of the repository, an empty working directory, network and
 child processes blocked. A tool whose --help needs an optional package that
 is not installed is skipped with its name.
@@ -86,6 +86,11 @@ def documented():
         for number, tool, args in commands((ROOT / doc).read_text(encoding="utf-8")):
             found.append((doc, number, tool, args))
     return found
+
+
+def template(word):
+    """A placeholder in a documented command: `MODULE`, `aoa.client.patches.<name>`."""
+    return "<" in word or bool(re.fullmatch(r"[A-Z][A-Z0-9_]*", word))
 
 
 def module_file(name):
@@ -171,7 +176,7 @@ class DocCommands(unittest.TestCase):
                 self.assertTrue(path.is_file(), f"{doc}:{number}: {tool} does not exist")
                 if tool.endswith(".py"):
                     self.assertTrue(MAIN.search(path.read_text(encoding="utf-8")), f"{tool} has no main")
-                if tool == "tools/run.py" and args and not args[0].startswith("-") and "<" not in args[0]:
+                if tool == "tools/run.py" and args and not args[0].startswith("-") and not template(args[0]):
                     module = args[0]
                     self.assertRegex(module, MODULE, f"{doc}:{number}: run.py {module} is not a module name")
                     source = module_file(module)
@@ -184,7 +189,7 @@ class DocCommands(unittest.TestCase):
     def test_every_documented_flag_is_in_the_help(self):
         for doc, number, tool, args in self.commands:
             used = flags(args)
-            if not tool.endswith(".py") or not used:
+            if not tool.endswith(".py") or not used or (tool == "tools/run.py" and args and template(args[0])):
                 continue
             target, rest = tool, args
             if tool == "tools/run.py" and args and MODULE.match(args[0]):
@@ -217,6 +222,8 @@ class DocCommands(unittest.TestCase):
         self.assertEqual(flags(found[2][2]), [])
         self.assertEqual(suites(found[2][2]), ["test_cli_help"])
         self.assertEqual(suites(["--tier", "ci"]), [])
+        self.assertTrue(template("MODULE") and template("aoa.client.patches.<name>"))
+        self.assertFalse(template("aoa.formats.trn"))
         self.assertEqual(subcommands("usage: x {prepare,check}\n\npositional arguments:\n  ACTION\n"
                                      "    undo     restore\n\noptions:\n"), {"prepare", "check", "undo"})
 

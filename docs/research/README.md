@@ -22,4 +22,4 @@ what was found on a day and how it was checked, and stays as it was written.
   (indexed in `evidence/INDEX.tsv`).
 
 The list of records, with what each covers, is in the
-[docs index](../README.md).
+[docs index](../README.md#research-records).
