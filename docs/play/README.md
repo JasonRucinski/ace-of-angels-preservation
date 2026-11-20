@@ -129,7 +129,10 @@ powershell -ExecutionPolicy Bypass -File tools\setup_game.ps1
 .venv\Scripts\python.exe -I tools\prepare_client.py launch game\2.9.2\AOACLIENT.EXE
 ```
 
-`setup_game.ps1` expects the wrapper ZIP (if any) at
+`fetch_known_builds.py` saves the 2.9.2 installer (from archive.org) and the
+2.8.2 one (from Discmaster, with archive.org as the mirror) under `builds\`,
+each checked against its known hash and never run. `setup_game.ps1` expects
+the wrapper ZIP (if any) at
 `originals\wrappers\dgvoodoo2-2.87.5\dgVoodoo2_87_5.zip`. To point the client
 at a friend's server without the window, see
 [Each player, by hand](../host/README.md#each-player-by-hand).

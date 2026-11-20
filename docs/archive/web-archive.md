@@ -18,7 +18,18 @@ Recovery is limited to captures through 2011. Later indexed captures include
 a reset WordPress installation and domain-parking redirects, rather than the
 original game website.
 
+The `cdx` subcommand writes those two inventories again (and the forum-version
+list that `--import-forum-versions` reads) to `work/`, or to `--out DIR`,
+through the same paced Wayback helper; `--only NAME` picks one, and an
+existing file is never replaced. The site and forum queries are the ones
+above. The query behind `wayback-forum-versions.json` was not recorded, so
+its entry (every distinct 200 capture, `collapse=digest`) is a
+reconstruction that has not been run against the live service.
+
 ```powershell
+# Rebuild the CDX inventories (only if they are missing).
+.venv/Scripts/python.exe -I tools/restore_web_archive.py cdx
+
 # Initial import and recovery; later invocations resume the ledger.
 .venv/Scripts/python.exe -I tools/restore_web_archive.py --import-indexes --recover --limit 5000
 

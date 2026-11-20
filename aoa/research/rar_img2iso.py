@@ -1,4 +1,4 @@
-"""The old name of `aoa.research.disc_image rar`; CONTEXT.md still names it.
+"""The old name of `aoa.research.disc_image rar`; the research log's tool table of 20 October 2026 names it.
 
     python -I tools/run.py aoa.research.rar_img2iso disc.rar "Disc.img" disc.iso
 """

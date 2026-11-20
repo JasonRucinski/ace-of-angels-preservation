@@ -1,4 +1,4 @@
-"""The old name of `aoa.research.disc_image iso`; CONTEXT.md still names it.
+"""The old name of `aoa.research.disc_image iso`; the research log's tool table of 20 October 2026 names it.
 
     7z e -so dvd.7z image.mdf | python -I tools/run.py aoa.research.iso_stream_extract '(?i)angel|aoa' outdir
 """

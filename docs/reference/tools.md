@@ -369,13 +369,13 @@ Archive.org and Wayback research tools behind one polite HTTP helper.
 | `aoa.research.http` |  | One polite way to fetch from archive.org and the Wayback Machine. |
 | `aoa.research.ia_disc_find` | yes | Search inside archive.org disc images for files matching a pattern. |
 | `aoa.research.ia_fulltext` | yes | Full-text search of archive.org's scanned books and magazines (OCR text). |
-| `aoa.research.ia_fulltext_context` | yes | *shim*: The old name of `aoa.research.ia_fulltext context`; data/magazine-mentions.md still names it. |
-| `aoa.research.ia_fulltext_search` | yes | *shim*: The old name of `aoa.research.ia_fulltext search`; data/magazine-mentions.md still names it. |
-| `aoa.research.iso_stream_extract` | yes | *shim*: The old name of `aoa.research.disc_image iso`; CONTEXT.md still names it. |
-| `aoa.research.rar_img2iso` | yes | *shim*: The old name of `aoa.research.disc_image rar`; CONTEXT.md still names it. |
+| `aoa.research.ia_fulltext_context` | yes | *shim*: The old name of `aoa.research.ia_fulltext context`; the research log's tool table of 20 October 2026 names it. |
+| `aoa.research.ia_fulltext_search` | yes | *shim*: The old name of `aoa.research.ia_fulltext search`; the research log's tool table of 20 October 2026 names it. |
+| `aoa.research.iso_stream_extract` | yes | *shim*: The old name of `aoa.research.disc_image iso`; the research log's tool table of 20 October 2026 names it. |
+| `aoa.research.rar_img2iso` | yes | *shim*: The old name of `aoa.research.disc_image rar`; the research log's tool table of 20 October 2026 names it. |
 | `aoa.research.restore_web_archive` | yes | Recover a private, read-only mirror from the documented Wayback captures. |
 | `aoa.research.version` | yes | Read the compiled-in version of an Ace of Angels client (AOACLIENT.EXE). |
-| `aoa.research.version_probe` | yes | *shim*: The old name of `tools/aoa_version.py CLIENT --detail`; docs/research/findings.md still names it. |
+| `aoa.research.version_probe` | yes | *shim*: The old name of `tools/aoa_version.py CLIENT --detail`; kept so older commands keep working. |
 | `aoa.research.wayback` | yes | List, and optionally download, every build the Wayback Machine saved from Flying Rock's sites. |
 
 ### archive.analysis

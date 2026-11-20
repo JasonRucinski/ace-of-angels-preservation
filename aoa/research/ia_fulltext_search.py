@@ -1,4 +1,4 @@
-"""The old name of `aoa.research.ia_fulltext search`; data/magazine-mentions.md still names it.
+"""The old name of `aoa.research.ia_fulltext search`; the research log's tool table of 20 October 2026 names it.
 
     python -I tools/run.py aoa.research.ia_fulltext_search data/
 """
