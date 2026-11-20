@@ -469,7 +469,7 @@ ordering and authoritative simulation remain open. `local-guests` adds unique
 pilot names and Station-ticket/arena binding with revocation, while retaining
 explicit legacy diagnostic profiles. These are local limits, not public auth.
 See [client setup](../reference/client-patches.md), [local protocol](../reference/protocol.md),
-[release specification](../roadmap/authoritative-server.md), and findings 9.17–9.20.
+[release specification](../roadmap/authoritative-server.md#first-playable-release-specification), and findings 9.17–9.20.
 Inbound reliable envelopes are now deduplicated per channel/endpoint (last 64
 IDs); duplicates are still ACKed, and only handshakes are re-answered. 46 tests
 pass; see [findings 9.21](findings.md#s9-21).

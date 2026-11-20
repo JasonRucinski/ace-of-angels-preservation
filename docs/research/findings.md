@@ -1284,7 +1284,7 @@ does this. `SetupWorldMode` (`0x44B900`) is entered from the Station
 dialog's arena login (`0x4563B0`). It is not an exit path. A
 server-initiated return to Station, or an end-of-match transition, needs
 further client analysis or the maintained protocol change in
-[first-playable-release.md](../roadmap/authoritative-server.md).
+[first-playable-release.md](../roadmap/authoritative-server.md#first-playable-release-specification).
 
 <a id="s9-23"></a>
 ### 9.23 Real-client check (21 October 2026)
@@ -1542,7 +1542,7 @@ therefore relays fire state, receives death reports with the killer's tag,
 and owns scoring, death broadcast and respawn policy. It does not run
 hit-scan itself. This is a fairness and cheating limitation of the original
 protocol, to be weighed against the authoritative-combat goal in
-[first-playable-release.md](../roadmap/authoritative-server.md).
+[first-playable-release.md](../roadmap/authoritative-server.md#first-playable-release-specification).
 
 **Not yet handled by the server.** `0x37` (no score, no death broadcast or
 `0x38`/`0x56`/`0x42` updates), forwarding of `0x48` to its target, missile

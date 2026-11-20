@@ -937,7 +937,7 @@
     "warp_trial": null
    },
    "sources": [
-    "docs/client-extension-gate.md"
+    "docs/roadmap/authoritative-server.md"
    ]
   },
   "game/2.9.2/SCRTY.BIN work/station-pilots.jsonl --tcp 5034 --ack --arena --seconds 900": {

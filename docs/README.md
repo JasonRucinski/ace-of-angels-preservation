@@ -60,5 +60,5 @@ Reverse-engineering notes. Addresses refer to the hash-verified 2.7.1 or 2.9.2
 |---|---|
 | [internet-server-todo.md](roadmap/internet-server.md) | Roadmap for a real internet server, maps and performance |
 | [modernization-todo.md](roadmap/modernization.md) | Roadmap for client and game modernization |
-| [first-playable-release.md](roadmap/authoritative-server.md) | Specification for an authoritative first release (deferred) |
-| [client-extension-gate.md](client-extension-gate.md) | Gate for client changes an authoritative server would need |
+| [first-playable-release.md](roadmap/authoritative-server.md#first-playable-release-specification) | Specification for an authoritative first release (deferred) |
+| [client-extension-gate.md](roadmap/authoritative-server.md#authoritative-client-extension-gate) | Gate for client changes an authoritative server would need |

@@ -69,7 +69,7 @@ flag only when needed. It remains subject to stale-event ordering, has no
 session generation, and the flag also affects ammunition consumption.
 Unpatched clients interpret this message as a toggle. Do not mix these wire
 semantics in a gameplay profile; the single-client diagnostic requires the
-operator's prepared-client check. See [client-extension-gate.md](../client-extension-gate.md).
+operator's prepared-client check. See [client-extension-gate.md](../roadmap/authoritative-server.md#authoritative-client-extension-gate).
 
 ## Movement observations and complete-prefix parsing
 

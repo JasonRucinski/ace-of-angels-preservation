@@ -72,7 +72,7 @@ CTF_arena_b and ast_fld_a.
 | Turret trial (five Arena1a turrets, firing disabled) | Original-code probes and socket tests ([turret_groups_20261026.json](../evidence/2.9.2/turret_groups_20261026.json)) | A client in flight with the trial loaded. Orientation is not sent; the model is a provisional choice. |
 | Warp gate trial (nine Arena1a gates) | Headless original-code and socket checks ([warp_headless_20261027.json](../evidence/2.9.2/warp_headless_20261027.json)) | A gate seen in the game, or a transit. Orientation and real collision bounds are not restored. |
 | Optional rendering patches and wrapper quality | Original-code emulation tests; asteroid and solid-world rendering confirmed by the owner in flight (22 Oct) | Distant objects, world detail and the wrapper quality options in flight; performance of any of them ([client-setup.md](reference/client-patches.md)). |
-| Experimental protection probe (`--experimental-protection`) | Emulation | It has not passed the manual client gate ([client-extension-gate.md](client-extension-gate.md)). |
+| Experimental protection probe (`--experimental-protection`) | Emulation | It has not passed the manual client gate ([client-extension-gate.md](roadmap/authoritative-server.md#authoritative-client-extension-gate)). |
 
 ## Does not exist
 

@@ -181,7 +181,7 @@ An optional `--experimental-protection` preparation flag adds the localhost
 explicit-state prototype. It is off for ordinary inputs and preserved when
 already installed; `--no-experimental-protection` removes only this patch.
 It changes `0x81` wire semantics and has not passed the manual client gate.
-See [client-extension-gate.md](../client-extension-gate.md) before using it.
+See [client-extension-gate.md](../roadmap/authoritative-server.md#authoritative-client-extension-gate) before using it.
 
 Optional distant objects (`distant-world-objects-v1`, patch version 22) extend
 the world-model horizon to 4,500,000 units and lower the projected-size cutoff

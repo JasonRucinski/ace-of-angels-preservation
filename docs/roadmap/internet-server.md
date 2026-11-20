@@ -35,7 +35,7 @@ host; Windows-hosted separate-PC play is still unrecorded. See
 [STATUS.md](../STATUS.md).)
 
 The approved authoritative completion plan starts with the
-[client-extension gate](../client-extension-gate.md). An opt-in protection setter
+[client-extension gate](authoritative-server.md#authoritative-client-extension-gate). An opt-in protection setter
 and original-code position/input/ammunition probes are now implemented.
 The gate remains open: manual checks and the other client extensions are
 required before dependent transport, slot reuse or authoritative gameplay.
@@ -95,7 +95,7 @@ binds loopback; changing that address alone is not a release.
 
 - [x] Choose a first mode: eight-player free-for-all dogfight with `Ym Khtat`
   initially. This is the implementation target, not a playable-mode claim.
-  See [first-playable-release.md](authoritative-server.md).
+  See [first-playable-release.md](authoritative-server.md#first-playable-release-specification).
 - [ ] Choose one layout, preferably CTF_arena or Arena1a after validating
   geometry and collision. Do not require CTF rules for the first dogfight.
 - [x] Define the full match loop: connect, choose pilot/ship, spawn, fly,
