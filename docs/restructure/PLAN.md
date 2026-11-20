@@ -243,16 +243,41 @@ handling). The windows themselves cannot be run here: see section 4.
 
 ### Phase 4. Docs
 
-- [ ] Docs tree: `play/`, `host/`, `create/`, `reference/`, `research/`,
+- [x] Docs tree: `play/`, `host/`, `create/`, `reference/`, `research/`,
   `roadmap/`, `archive/`. `findings.md` becomes the research log under
   `research/` with real anchors.
-- [ ] Generated references: tool index from module docstrings, server flag
+- [x] Generated references: tool index from module docstrings, server flag
   table from argparse, patch table from the registry, defaults from the
   catalog.
-- [ ] `README.md` is the front door, `CONTEXT.md` the research record,
+- [x] `README.md` is the front door, `CONTEXT.md` the research record,
   `CLAUDE.md` the working rules for the whole project (it still describes
   archive research only), `CONTRIBUTING.md` the design rules above.
-- [ ] CI checks links and that documented commands parse.
+- [x] CI checks links and that documented commands parse.
+
+Done 20 Nov ([briefs/phase4.md](briefs/phase4.md), [README.md](README.md)):
+every doc moved with `git mv` into its reader's folder, with a stub at each
+old `docs/*.md` path and every in-repo link rewritten; the host pages share
+one `host/README.md` and `host/console.md`; the client-setup, map-viewer
+and Windows 11 docs split by reader, the two authoritative-server documents
+merged, and dated verification prose moved unchanged to
+`research/log.md`, which also holds CONTEXT.md's old changelog in date
+order; `findings.md` has `<a id="s9-N">` anchors and a contents list.
+Generated tables: patches (`aoa.client.patchdoc`), maps
+(`aoa.maps.mapdoc`), host defaults (`aoa.host.defaultsdoc`), server flags
+(`aoa.host.flagdoc`) and the tools index (`aoa.tools_index`, now in
+`docs/reference/tools.md` only), all on one `aoa.cli.DocBlock` and checked
+by `tests/test_doc_tables.py`. New CI suites: `test_doc_links` (links,
+anchors, stubs, ignored folders, the docs index lists every doc once) and
+`test_doc_commands` (tools, modules, suites and flags of every documented
+command, help read through the `test_cli_help` sandbox); `--tier ci`
+passes 48 of 50 on Linux, the two unicorn suites skipping because the
+research packages could not be installed in this session. Not done:
+`evidence/INDEX.tsv` still cites the old doc paths in its `cited_by`
+column, and `config/client-2.9.2.json` names `docs/assets.md` (both outside
+the phase's files; the stubs keep them resolvable); the roadmaps were moved,
+not refreshed (audit D-13); the compatibility module names of 2c are now
+named only by the dated tool table in the research log and could go.
+Nothing in this phase was run on Windows.
 
 ## 4. What cannot be verified in the cloud
 
