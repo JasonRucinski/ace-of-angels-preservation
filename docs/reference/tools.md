@@ -241,6 +241,7 @@ Host: the arena server, its configuration, delivery, operations and headless run
 | `aoa.host.console` |  | The host's operator side: the player table, the status file contents and console commands. |
 | `aoa.host.dedicated` | yes | Supervise fresh game sessions, persistent map rotation and a status watchdog. |
 | `aoa.host.defaults` |  | The one table of host facts and defaults: profiles, networks, ports, aliases, backdrops, match limits and the managed-session settings. |
+| `aoa.host.defaultsdoc` | yes | The host defaults tables of docs/host/README.md, generated from aoa/host/defaults.py. |
 | `aoa.host.delivery` |  | Sustained ordered 0x1B delivery within the 2.9.2 client's 30-ID history. |
 | `aoa.host.diagnostics` |  | Diagnostic delivery: the bounded 30-event reliable engine. |
 | `aoa.host.flagdoc` | yes | The server flag table of docs/host/server-reference.md, generated from the server's argparse. |

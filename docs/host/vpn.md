@@ -10,11 +10,9 @@ As with the [LAN dogfight](lan.md), the original 2.9.2 clients handle
 flight, weapons and damage. The host relays events, assigns temporary pilots
 and counts client-reported kills.
 
-Status, 22 October 2026: implemented and verified on loopback only
-(`tests/test_internet_play.py`, including a session under 60 ms RTT, 3% loss
-and 1% duplication; [full gate: 77 tests and nine emulators](../../evidence/2.9.2/local_gate_20261022_internet_play.json)).
-A real internet session between separate connections has
-**not** been recorded yet ([status](../STATUS.md)). See [Acceptance](#acceptance) below.
+What has been checked: [STATUS.md](../STATUS.md#implemented-but-not-tested), and the
+[22 October 2026 record](../research/log.md#vpn-profile-on-loopback-from-hostvpnmd).
+See [Acceptance](#acceptance) below.
 
 ## Why a VPN and not port forwarding
 
@@ -44,28 +42,16 @@ A real internet session between separate connections has
   the same VPN address removes it at once rather than after the 30-second
   timeout. The host serves 49 arena joins per run before it needs a
   restart. A rejoining player gets a new temporary pilot name and a zero score.
-- **Operator tools** (also available on LAN through the launcher): a console
-  (`status`, `kick <slot>`, `ban <slot>`, `end`, `say <text>`, `quit`, `help`), a status file with
-  per-player ping, bandwidth and idle time, and automatic restart after a crash
-  (at most three restarts within 10 minutes).
+- **Operator tools** (also available on LAN through the launcher): a
+  [console](console.md#host-console), a [status file](console.md#the-status-file)
+  with per-player ping, bandwidth and idle time, and
+  [automatic restart after a crash](console.md#crash-restarts).
 
 ## With the windows (the short path)
 
-Since 16 November 2026 the two windows do the steps below for you, except the
-firewall rules, which they show for you to copy. They have been opened only on
-Linux under a virtual screen, never on Windows ([status](../STATUS.md#implemented-but-not-tested)).
-
-- **Host:** double-click `Host.cmd`, choose **Friends over a VPN**, check the address it
-  found, copy the two firewall commands from the **Firewall** box into
-  PowerShell opened as administrator (once), click **Start**, and send players
-  the line under **Tell your players** ([host-control.md](host-window.md)).
-- **Each player:** in `Play.cmd`, open **Join a friend**, paste the line and
-  click **Check**. When the address is a VPN address, which is longer than the game's 11-character field, so the game uses the name `aoavpn` for it: the window shows the exact hosts-file
-  line (for example `100.101.102.103 aoavpn`) with **Copy** and **Open Notepad as
-  administrator**; it never edits the file itself. Then **Join**: only the
-  server address changes ([play.md](../play/README.md#play-with-friends)).
-
-The rest of this page is the same route by hand.
+The host and player windows do the steps below for you, except the firewall
+rules: see [the short path](README.md#with-the-windows-the-short-path). The
+rest of this page is the same route by hand.
 
 ## Host setup
 
@@ -114,71 +100,16 @@ If the host PC also plays, it is a client like the others. Use the same
    path: `ping 100.101.102.103` (use the host's address). With Tailscale,
    `tailscale ping 100.101.102.103` also reports whether the connection is
    direct or relayed. A relayed (DERP) connection works but adds latency.
-2. Use matching 2.9.2 assets and the supported setup from
-   [client setup](../reference/client-patches.md). Close the game.
-3. As administrator, edit `C:\Windows\System32\drivers\etc\hosts` and add
-   `100.101.102.103 aoavpn` (the host's VPN address). The client's Station name
-   field is limited to 11 characters, which most VPN addresses exceed, so the
-   short alias is required.
-4. Prepare, check and launch:
-
-```powershell
-.venv/Scripts/python.exe -I tools/prepare_client.py prepare game/2.9.2/AOACLIENT.EXE --station aoavpn --no-experimental-protection
-.venv/Scripts/python.exe -I tools/prepare_client.py check game/2.9.2/AOACLIENT.EXE
-.venv/Scripts/python.exe -I tools/prepare_client.py launch game/2.9.2/AOACLIENT.EXE
-```
-
-   It changes only the Station and switches the protection probe off; every other
-   client option keeps its installed state.
-
-5. Log in with dummy values, choose Play Online, your temporary pilot and
+2. Set up the client as in [Each player, by hand](README.md#each-player-by-hand),
+   with the hosts-file line `100.101.102.103 aoavpn` (the host's VPN address)
+   and `--station aoavpn`. The client's Station name field is limited to 11
+   characters, which most VPN addresses exceed, so the short alias is required.
+3. Log in with dummy values, choose Play Online, your temporary pilot and
    **VPN Dogfight**.
 
 **If you crash or drop out:** restart the game and log in again. Your old ship
 disappears and you get a fresh pilot. Do not keep a crashed client window open
 while rejoining.
-
-## Host console
-
-Type into the host window:
-
-| Command | Effect |
-|---|---|
-| `status` | Slot, pilot, kills/deaths, ping, inbound/outbound kbit/s and idle seconds per player |
-| `kick 3` | Sends "You were removed by the host" and removes slot 3. The client then shows `Server Not Responding`. They may rejoin. |
-| `ban 3` | Kick, and ignore that VPN address until the host restarts |
-| `end` | Finish the current match now and announce the result |
-| `say <text>` | Arena message to everyone in flight |
-| `quit` | Tell players the host is stopping, then stop with normal cleanup |
-| `help` | List the commands |
-
-The status file has the same per-player data plus uptime, joins used, reliable
-messages pending/expired and traffic totals. If its `updated_utc` stops
-advancing, the host loop has stopped. It contains no IP addresses or login data.
-
-## Lag testing before inviting people
-
-The host can add artificial delay, jitter and loss to its own traffic, so a LAN
-session can rehearse internet conditions without extra tools. Both directions
-are affected, so the RTT setting is the added round trip. The
-launcher prints a yellow warning while this is on. Never use it for real play.
-
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File tools/start_lan_dogfight.ps1 -HostAddress 192.168.0.61 -TestRttMs 80 -TestLossPercent 1
-```
-
-Run the grid that the [roadmap](../roadmap/internet-server.md#7-performance-and-enjoyable-play-gates--both-applications)
-specifies: 30, 80 and 150 ms with 0, 1 and 3% loss. At each step, record:
-
-- whether remote ships move smoothly or snap (relay snapshots refresh once a second)
-- whether hits the shooter sees are counted (damage is computed on the victim's PC)
-- whether kills, deaths, respawns and score records always arrive
-- whether joins complete, how long they take, and whether rejoining works
-- ping and kbit/s from `status`
-
-The LAN profile keeps best-effort delivery unless it is started with the Python
-option `--sustained-delivery`. Test that option on LAN with the
-same grid to separate delivery effects from latency effects.
 
 ## Acceptance
 

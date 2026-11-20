@@ -5,6 +5,7 @@ Each table sits between marker comments and is written by a module with
 
     python -I tools/run.py aoa.client.patchdoc --write     docs/reference/client-patches.md
     python -I tools/run.py aoa.maps.mapdoc --write         docs/reference/maps.md
+    python -I tools/run.py aoa.host.defaultsdoc --write    docs/host/README.md
 
 The server flag table (aoa.host.flagdoc) is checked by test_host_data and
 the tools index (aoa.tools_index) by test_tools_index.
@@ -17,7 +18,8 @@ import unittest
 
 from aoa import cli
 
-GENERATORS = ("aoa.client.patchdoc", "aoa.maps.mapdoc", "aoa.host.flagdoc", "aoa.tools_index")
+GENERATORS = ("aoa.client.patchdoc", "aoa.maps.mapdoc", "aoa.host.defaultsdoc",
+              "aoa.host.flagdoc", "aoa.tools_index")
 
 
 def block_text(block):
@@ -69,6 +71,21 @@ class GeneratedTables(unittest.TestCase):
                 self.assertIn(f"| {registry.CONTENT[name]} |", row)
         self.assertEqual(mapdoc.objects_and_note("Arena1a"), ("239", "main arena"))
         self.assertEqual(mapdoc.objects_and_note("Hittest"), ("0", "loads nothing alone"))
+
+    def test_defaults_tables_show_every_value(self):
+        from aoa.host import defaults, defaultsdoc
+        text = block_text(defaultsdoc.BLOCK)
+        for profile in defaults.PROFILES:
+            self.assertIn(f"| `{profile}` |", text)
+        for key, port in defaults.PORTS.items():
+            self.assertIn(f"| {defaultsdoc.PORTS[key]} | {port} |", text)
+        for key, value in {**defaults.LIMITS, **defaults.MANAGED}.items():
+            label, unit = {**defaultsdoc.LIMITS, **defaultsdoc.MANAGED}[key]
+            self.assertIn(f"| {label} | {value}{unit} |", text)
+        for feature, level in defaults.CLIENT_PATCH_LEVELS.items():
+            self.assertIn(f"| {feature} | {level} or later |", text)
+        for name in defaults.OBJECT_PROFILES:
+            self.assertIn(f"| {defaultsdoc.OBJECTS[name]} |", text)
 
 
 if __name__ == "__main__":

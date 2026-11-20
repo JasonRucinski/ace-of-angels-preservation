@@ -103,10 +103,8 @@ address. The window shows the exact line, with **Copy** and **Open Notepad
 as administrator**: add the line at the end of the file, save, and choose
 **Check** again. The window never edits the hosts file itself.
 
-Never forward the game ports through your router: the old protocol has no
-real authentication. The VPN route keeps the host reachable only by people
-you invite. The full runbooks: [lan-dogfight.md](../host/lan.md) and
-[vpn-dogfight.md](../host/vpn.md).
+Hosting, the shared steps (ports, firewall, the hosts name) and joining by
+hand: [host/README.md](../host/README.md).
 
 Matches are free-for-all: 20 kills or 10 minutes, then scores reset and play
 continues. Separate PCs have played over a LAN only through the
@@ -144,12 +142,8 @@ powershell -ExecutionPolicy Bypass -File tools\setup_game.ps1
 
 `setup_game.ps1` expects the wrapper ZIP (if any) at
 `originals\wrappers\dgvoodoo2-2.87.5\dgVoodoo2_87_5.zip`. To point the client
-at a friend's server without the window (every other option keeps its
-state):
-
-```powershell
-.venv\Scripts\python.exe -I tools\prepare_client.py prepare game\2.9.2\AOACLIENT.EXE --station aoalan --no-experimental-protection
-```
+at a friend's server without the window, see
+[Each player, by hand](../host/README.md#each-player-by-hand).
 
 To undo the client changes, or remove the skin registration:
 

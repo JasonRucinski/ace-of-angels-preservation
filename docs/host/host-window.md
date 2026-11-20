@@ -64,6 +64,9 @@ that cannot be used is reset, with a line saying which.
   characters).
 - **Host log:** the server's own output and the supervisor's notes.
 
+The commands behind these buttons, and the status file, are described in
+[console.md](console.md).
+
 ## Changing maps and stopping
 
 **Change map** first checks the new settings. If they cannot start, it says
@@ -77,35 +80,14 @@ connected.
 and waits for its cleanup, off the window's thread; after 10 seconds it is
 terminated. Closing the window offers to stop a running host.
 
-If the host crashes, it is restarted with the settings that run had, at most
-three times in 10 minutes and 5 s apart, and only after a run of at least
-5 s, as the headless host does. A host that cannot start is not restarted:
-the window shows the server's reason in plain words (for example, an address
-that is no longer this PC's) with the server output under **Show details**.
+If the host crashes, it is restarted as every host is ([crash restarts](console.md#crash-restarts));
+a host that cannot start shows the server's reason in plain words, with the
+server output under **Show details**.
 Each start also writes that run's settings to `work/host/host.json`.
-
-## Server console additions
-
-Two commands were added to the server console (also usable from
-`start_lan_dogfight.ps1`):
-
-- `say <text>`: arena message to everyone in flight.
-- `quit`: tell players, then stop with normal cleanup (exit code 0).
 
 ## Verification
 
-- 16 November 2026, Linux only: `tests/test_launcher_windows.py` builds the
-  window in each `--demo` state under a virtual screen; the screenshots are
-  in [docs/restructure/screens/](../restructure/screens/). The real window was
-  also driven on Linux with a stand-in key file: Start (This PC only), the
-  status and log, Change map to Arena1a and Stop all worked against the real
-  server. `tests/test_launcher_logic.py` covers its decisions without a
-  window, and `tests/test_host_control.py` runs a real server through the
-  same supervisor when `game/2.9.2/SCRTY.BIN` exists.
-- 23 October 2026, on Windows, with the window of that time (since rebuilt)
-  and a real 2.9.2 client: start on CTF_arena, the client joined and built 55
-  objects; Load map → JRMAP restarted the host and the client rejoined with
-  18 JRMAP objects; End match, Stop host and `say` worked.
-- Not tested: the rebuilt window on Windows, LAN/VPN mode with players on
-  other machines, kick/ban with a real client, and automatic crash restart
-  ([STATUS.md](../STATUS.md#implemented-but-not-tested)).
+The dated records: [16 November 2026](../research/log.md#the-host-window-rebuilt-from-hosthost-windowmd),
+on Linux, and [23 October 2026](../research/log.md#the-host-window-on-windows-from-hosthost-windowmd),
+on Windows with the window of that time. What is still untested:
+[STATUS.md](../STATUS.md#implemented-but-not-tested).

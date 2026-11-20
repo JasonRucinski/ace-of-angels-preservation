@@ -13,29 +13,13 @@ exercised this profile. Separate PCs have fought only through the
 separate PCs, and any player count above two, have not been recorded
 ([status](../STATUS.md)). Start with two players, then test four and eight.
 
-Verification: [65 tests and eight emulators passed](../../evidence/2.9.2/local_gate_20261021_lan_dogfight.json).
-A separate [same-PC LAN-address check](../../evidence/2.9.2/lan_binding_20261021.json)
-also admitted two synthetic guests through real UDP/TCP listeners on the host's
-assigned IPv4, using ephemeral ports. Neither result establishes separate-PC
-firewall access, actual kills or real-client capacity.
+The dated checks of this profile: [research log, 21 October 2026](../research/log.md#lan-profile-checks-from-hostlanmd).
 
 ## With the windows (the short path)
 
-Since 16 November 2026 the two windows do the steps below for you, except the
-firewall rules, which they show for you to copy. They have been opened only on
-Linux under a virtual screen, never on Windows ([status](../STATUS.md#implemented-but-not-tested)).
-
-- **Host:** double-click `Host.cmd`, choose **My home network**, check the address it
-  found, copy the two firewall commands from the **Firewall** box into
-  PowerShell opened as administrator (once), click **Start**, and send players
-  the line under **Tell your players** ([host-control.md](host-window.md)).
-- **Each player:** in `Play.cmd`, open **Join a friend**, paste the line and
-  click **Check**. When the address fits the game's 11-character field (as `192.168.0.61` does), the game uses it directly and no hosts file is needed; a longer one goes through the name `aoalan`: the window shows the exact hosts-file
-  line (for example `192.168.0.61 aoalan`) with **Copy** and **Open Notepad as
-  administrator**; it never edits the file itself. Then **Join**: only the
-  server address changes ([play.md](../play/README.md#play-with-friends)).
-
-The rest of this page is the same route by hand.
+The host and player windows do the steps below for you, except the firewall
+rules: see [the short path](README.md#with-the-windows-the-short-path), which
+covers home networks and VPNs. The rest of this page is the same route by hand.
 
 ## Host setup
 
@@ -67,14 +51,12 @@ allow rule if necessary. To remove these two rules later:
 Remove-NetFirewallRule -Name AoA-LAN-UDP,AoA-LAN-TCP
 ```
 
-Start the host, leaving the terminal open. It accepts console commands
-(`status`, `kick <slot>`, `ban <slot>`, `end`, `say <text>`, `quit`, `help`),
-writes `work/host/lan-dogfight-status.json` every two seconds (the same file
-the host window reads) and restarts itself after a
-crash (at most three times in 10 minutes); see
-[the VPN runbook](vpn.md#host-console). `-TestRttMs`, `-TestJitterMs`
-and `-TestLossPercent` rehearse internet conditions on the LAN
-([lag testing](vpn.md#lag-testing-before-inviting-people)).
+Start the host, leaving the terminal open. It accepts the
+[console commands](console.md#host-console), writes
+`work/host/lan-dogfight-status.json` ([the status file](console.md#the-status-file))
+and [restarts itself after a crash](console.md#crash-restarts). `-TestRttMs`,
+`-TestJitterMs` and `-TestLossPercent` rehearse internet conditions on the LAN
+([lag testing](console.md#lag-testing-before-inviting-people)).
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File tools/start_lan_dogfight.ps1 -HostAddress 192.168.0.61
@@ -103,34 +85,9 @@ port fails startup. Existing diagnostic/local profiles still bind `127.0.0.1`.
 
 ## Each client PC (including the host if it also plays)
 
-1. Use matching existing 2.9.2 assets and the supported Windows setup from
-   [client setup](../reference/client-patches.md). Keep the existing graphics wrapper and
-   stability fixes. There is no automatic asset download or redistribution.
-2. Close the game. Open Notepad as administrator and edit
-   `C:\Windows\System32\drivers\etc\hosts`. Add one line:
-   `192.168.0.61 aoalan`. Replace an old `aoalan` mapping instead of adding
-   conflicting entries. Save as `hosts`, not `hosts.txt`.
-3. In a normal terminal at the repository root, prepare and check the client:
-
-```powershell
-.venv/Scripts/python.exe -I tools/prepare_client.py prepare game/2.9.2/AOACLIENT.EXE --station aoalan --no-experimental-protection
-.venv/Scripts/python.exe -I tools/prepare_client.py check game/2.9.2/AOACLIENT.EXE
-```
-
-It changes only the Station and switches the protection probe off; every other
-client option keeps its installed state.
-The short `aoalan` alias fits the client's 11-character startup hostname field.
-Verify resolution returns the host address:
-
-```powershell
-[System.Net.Dns]::GetHostAddresses('aoalan')
-```
-
-4. Launch the game yourself:
-
-```powershell
-.venv/Scripts/python.exe -I tools/prepare_client.py launch game/2.9.2/AOACLIENT.EXE
-```
+Set up each client as in [Each player, by hand](README.md#each-player-by-hand),
+with the hosts-file line `192.168.0.61 aoalan` (the host's LAN address) and
+`--station aoalan`. Then:
 
 Use dummy username/password values. If the login dialog retains an old Station
 IP, set it to the host's LAN IPv4. Choose Play Online, your assigned temporary
@@ -141,10 +98,6 @@ For map inspection, add `-Map Arena1a` to the PowerShell launcher (Python:
 `-Backdrop` / `--backdrop` accepts `spacebkgd`, `spacebkgd2`, `spacebkgd3`,
 `spacebkgd5` or `spacebkgd6`. Use matching local assets on every client.
 The map names do not establish complete map collision or CTF mechanics.
-
-To return to localhost, close the game, prepare it with `--station localhost`,
-and remove only your `aoalan` hosts-file entry. Existing exact client undo remains
-available through `prepare_client.py undo`; do not delete unrelated hosts entries.
 
 ## What a session does
 

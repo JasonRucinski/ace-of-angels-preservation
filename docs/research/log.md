@@ -13,6 +13,19 @@ The entries from 20 to 27 October 2026 were section 2, "Status", of
 unchanged (only put in date order). Sections headed "from" a page are dated
 notes moved out of that guide, which links back here.
 
+## 16 November 2026
+
+### The host window, rebuilt (from host/host-window.md)
+
+- 16 November 2026, Linux only: `tests/test_launcher_windows.py` builds the
+  window in each `--demo` state under a virtual screen; the screenshots are
+  in [docs/restructure/screens/](../restructure/screens/). The real window was
+  also driven on Linux with a stand-in key file: Start (This PC only), the
+  status and log, Change map to Arena1a and Stop all worked against the real
+  server. `tests/test_launcher_logic.py` covers its decisions without a
+  window, and `tests/test_host_control.py` runs a real server through the
+  same supervisor when `game/2.9.2/SCRTY.BIN` exists.
+
 ## 27 October 2026
 
 Client visual launcher (27 Oct 2026; rebased onto patch version 22 on
@@ -249,6 +262,35 @@ Verification: all 337 archive entries passed CRC checks; six node tests pass,
 including executing the original prefix-comparison routine in x86 emulation
 with CRT string/uppercase calls stubbed. No live-client changes were made.
 
+### Linux host deployed (from host/linux.md)
+
+Verified on 26 October 2026: Ubuntu Server 24.04.4 on Proxmox, with the small
+VM allocation above. All 15 server suites passed (87 tests passed, 11 skipped
+for missing game assets), including clean SIGINT shutdown. The deployed
+service recovered after a forced process crash and a guest reboot. Two
+synthetic clients on a separate Windows computer passed Station, arena,
+combat and respawn checks over the LAN before and after reboot.
+Later that day, the user confirmed entering the arena and flying around from
+their real Windows client connected to this host over the LAN, then reported
+combat, damage and destruction between two separate Windows PCs. A read-only
+server audit confirmed two valid player deaths, one per fighting slot, missile
+activity from both slots, normal client quits and healthy service operation.
+Client scoreboard display, visible respawns and the VPN/internet path still
+need direct acceptance checks. See the
+[deployment verification](../../evidence/2.9.2/linux_host_20261026.json) and
+[two-PC combat audit](../../evidence/2.9.2/linux_two_pc_combat_20261026.json).
+
+### Unattended rotation (from host/linux.md)
+
+Verified on the Linux VM on 26 October 2026: a 10-kill match from two synthetic
+Windows clients advanced to CTF_arena_b, where they could rejoin and fight.
+A deliberately stalled game process recovered automatically, and a guest
+reboot retained the selected map. All 16 suites passed on Linux and Windows.
+Timed rotation was tested with an accelerated timer; the deployed limit is
+900 seconds. Native terrain markers/spawns are verified in protocol tests;
+visual map loading after real-client rejoin remains an acceptance check.
+See the [rotation verification](../../evidence/2.9.2/linux_rotation_20261026.json).
+
 ## 25 October 2026
 
 Patch version 18 (`online-terrain-v3`, 25 Oct 2026, [findings 9.42](findings.md#s9-42)):
@@ -346,6 +388,13 @@ patch. The shooter reports its gun hits in its `0x1F` upload (submask 2,
 Shield HP, sends `0x45` RemoveObject (blow up) at 0, and reloads the ship 15 s
 later. Verified live with one client; missile kills and two clients are untested.
 
+### The host window on Windows (from host/host-window.md)
+
+- 23 October 2026, on Windows, with the window of that time (since rebuilt)
+  and a real 2.9.2 client: start on CTF_arena, the client joined and built 55
+  objects; Load map → JRMAP restarted the host and the client rejoined with
+  18 JRMAP objects; End match, Stop host and `say` worked.
+
 ## 22 October 2026
 
 Internet play (22 Oct 2026): friends on other connections play through a private
@@ -367,6 +416,14 @@ names are unknown. `Curt3` now parses completely (2 teams, 5 AI groups, orders,
 `TestScene` layout yields 178 nodes (hierarchy not decoded). Ruled out: no
 orphaned bytes in any of 41 archives, no installer slack, no extra scenarios.
 Other missions were server-side and are in no client.
+
+### VPN profile on loopback (from host/vpn.md)
+
+Status, 22 October 2026: implemented and verified on loopback only
+(`tests/test_internet_play.py`, including a session under 60 ms RTT, 3% loss
+and 1% duplication; [full gate: 77 tests and nine emulators](../../evidence/2.9.2/local_gate_20261022_internet_play.json)).
+A real internet session between separate connections has
+**not** been recorded yet ([status](../STATUS.md)). See [Acceptance](../host/vpn.md#acceptance).
 
 ## 21 October 2026
 
@@ -457,6 +514,14 @@ assigns missile tags, echoes `0x2A` to all players and relays one `0x30` impact 
 Run `.venv\Scripts\python.exe -I tools/verify_local.py` (needs `unicorn`) for the full synthetic/emulation gate;
 combat, collision, real-client transition checks and external release gates
 are still incomplete. Do not describe the overall internet todo as finished.
+
+### LAN profile checks (from host/lan.md)
+
+Verification: [65 tests and eight emulators passed](../../evidence/2.9.2/local_gate_20261021_lan_dogfight.json).
+A separate [same-PC LAN-address check](../../evidence/2.9.2/lan_binding_20261021.json)
+also admitted two synthetic guests through real UDP/TCP listeners on the host's
+assigned IPv4, using ephemeral ports. Neither result establishes separate-PC
+firewall access, actual kills or real-client capacity.
 
 ## 20 October 2026
 

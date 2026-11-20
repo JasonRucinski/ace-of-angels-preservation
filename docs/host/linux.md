@@ -26,21 +26,9 @@ process between maps, recycling its admission counters. Persistent service opera
 yet provide persistent pilot accounts or scores. Verify startup and recovery
 on each deployment, and real gameplay separately from synthetic tests.
 
-Verified on 26 October 2026: Ubuntu Server 24.04.4 on Proxmox, with the small
-VM allocation above. All 15 server suites passed (87 tests passed, 11 skipped
-for missing game assets), including clean SIGINT shutdown. The deployed
-service recovered after a forced process crash and a guest reboot. Two
-synthetic clients on a separate Windows computer passed Station, arena,
-combat and respawn checks over the LAN before and after reboot.
-Later that day, the user confirmed entering the arena and flying around from
-their real Windows client connected to this host over the LAN, then reported
-combat, damage and destruction between two separate Windows PCs. A read-only
-server audit confirmed two valid player deaths, one per fighting slot, missile
-activity from both slots, normal client quits and healthy service operation.
-Client scoreboard display, visible respawns and the VPN/internet path still
-need direct acceptance checks. See the
-[deployment verification](../../evidence/2.9.2/linux_host_20261026.json) and
-[two-PC combat audit](../../evidence/2.9.2/linux_two_pc_combat_20261026.json).
+The deployment of 26 October 2026, its checks and the two-PC combat that
+followed are recorded in the
+[research log](../research/log.md#linux-host-deployed-from-hostlinuxmd).
 `dedicated_host.py` changed on 13 November 2026 (shared defaults, required
 `--bind-address`, status path); that version passes `test_dedicated_host.py`
 but has not been deployed yet. Current status: [STATUS.md](../STATUS.md).
@@ -206,14 +194,8 @@ For real-client internet acceptance, record these checks:
 
 ## 5. Unattended rotation and recovery
 
-Verified on the Linux VM on 26 October 2026: a 10-kill match from two synthetic
-Windows clients advanced to CTF_arena_b, where they could rejoin and fight.
-A deliberately stalled game process recovered automatically, and a guest
-reboot retained the selected map. All 16 suites passed on Linux and Windows.
-Timed rotation was tested with an accelerated timer; the deployed limit is
-900 seconds. Native terrain markers/spawns are verified in protocol tests;
-visual map loading after real-client rejoin remains an acceptance check.
-See the [rotation verification](../../evidence/2.9.2/linux_rotation_20261026.json).
+The rotation was verified on the Linux VM on 26 October 2026
+([research log](../research/log.md#unattended-rotation-from-hostlinuxmd)).
 
 Edit `/etc/ace-of-angels/host.json` (`maps`, the limits and the `managed`
 group), run `aoa_host.py check` on it, then restart `aoa-host` to apply changes.
