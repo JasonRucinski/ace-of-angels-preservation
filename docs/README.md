@@ -1,62 +1,96 @@
-# Documentation index
+# Documentation
 
-Most of these documents are working notes, written as the investigation went.
-They are dated, careful to separate what was verified from what was inferred,
-and sometimes refer to "the user" (the project owner) who ran live tests.
-Newest results are in [findings.md](findings.md) and the status section of
-[CONTEXT.md](../CONTEXT.md).
+Every document, once, by who it is for. The kind says how to read it:
 
-## Playing
+- **guide**: how to do something; kept current.
+- **reference**: facts to look up. Tables marked *generated* are written from
+  the code and a CI test fails when one is stale.
+- **log**: a dated research record, kept as it was written; later results
+  are new entries that link back (see [Research records](#research-records)).
+- **roadmap**: proposed work, not a claim that it is done.
 
-| Document | What it covers |
-|---|---|
-| [play.md](play.md) | **Start here.** From nothing to flying offline, then with friends |
-| [lan-dogfight.md](lan-dogfight.md) | Hosting and joining on one home network |
-| [vpn-dogfight.md](vpn-dogfight.md) | Playing over the internet through a private VPN, host console, lag testing |
-| [linux-host.md](linux-host.md) | Minimal Linux host with a systemd service, LAN checks and a VPN path |
-| [host-control.md](host-control.md) | The host window: players, scores, kick/ban, map switching |
-| [map-viewer.md](map-viewer.md) | Loading any of the 20 recovered maps in the client |
-| [custom-maps.md](custom-maps.md) | Building new maps from a JSON spec; the first one, Crucible |
-| [custom-objects.md](custom-objects.md) | Adding new objects from glTF models; the first one, NASA's Bennu |
-| [hype-reel.md](hype-reel.md) | Filming scripted shots of the real client and cutting the highlight reel |
-| [texture-pack.md](texture-pack.md) | Optional sharper ship and station skins, built from your own copy |
-| [running-on-windows-11.md](running-on-windows-11.md) | Why the client crashed on modern Windows and how it was fixed |
-| [client-setup.md](client-setup.md) | Every client patch, its address, the undo and the checks |
+What works today and what is untested is stated in one place only:
+[STATUS.md](STATUS.md) (reference). How to contribute, the house rules and
+where each kind of doc goes: [CONTRIBUTING.md](../CONTRIBUTING.md).
 
-## History and preservation
+## Players
 
-| Document | What it covers |
-|---|---|
-| [CONTEXT.md](../CONTEXT.md) | The research record: recovered builds, the company, the universe, revival evidence, what was searched |
-| [../data/magazine-mentions.md](../data/magazine-mentions.md) | 2000–2006 magazine coverage, with archive links |
-| [version-assets.md](version-assets.md) | What differs across the six recovered versions |
-| [level-data.md](level-data.md) | Maps, scenarios and missions found in the clients |
-| [hosting-assets.md](hosting-assets.md) | Inventory of the 2.9.2 maps, backdrops and scenario |
-| [assets.md](assets.md) | Extracting models and textures for study (output is never committed) |
-| [private-web-archive.md](private-web-archive.md) | Rebuilding the old website and forums from the Wayback Machine |
+| Document | Kind | What it covers |
+|---|---|---|
+| [play/README.md](play/README.md) | guide | **Start here.** From nothing to flying offline on Windows 10/11, then joining friends |
+| [play/launcher.md](play/launcher.md) | guide | The player window's Options: what each group does, Apply, undo, the texture pack switch |
+| [play/troubleshooting.md](play/troubleshooting.md) | guide | Symptoms and fixes; what `setup_game.ps1` does by hand |
+| [play/texture-pack.md](play/texture-pack.md) | guide | Optional sharper ship and station skins, built from your own copy |
+| [play/map-viewer.md](play/map-viewer.md) | guide | Flying around any of the 20 recovered map layouts |
 
-## How the game works
+## Hosts
 
-Reverse-engineering notes. Addresses refer to the hash-verified 2.7.1 or 2.9.2
-`AOACLIENT.EXE` named in each document.
+| Document | Kind | What it covers |
+|---|---|---|
+| [host/README.md](host/README.md) | guide, generated defaults | **Start here.** This PC, home network, VPN or Linux; ports, firewall, the hosts name; each player's steps; the defaults tables |
+| [host/host-window.md](host/host-window.md) | guide | The host window: who can join, start, share, players, change map |
+| [host/lan.md](host/lan.md) | guide | Hosting on a home network by hand, and LAN acceptance |
+| [host/vpn.md](host/vpn.md) | guide | Friends on other connections through a private VPN |
+| [host/linux.md](host/linux.md) | guide | The unattended Linux service: setup, rotation, recovery |
+| [host/console.md](host/console.md) | guide | Console commands, the status file, crash restarts, lag testing |
+| [host/server-reference.md](host/server-reference.md) | reference, generated flags | Server profiles, every server flag, logs, sessions and limits |
 
-| Document | What it covers |
-|---|---|
-| [findings.md](findings.md) | The main log: network protocol, cipher, packet formats, and every fix (sections 9.x) |
-| [local-protocol.md](local-protocol.md) | The protocol subset the stand-in server implements |
-| [message-types.md](message-types.md) | Table of message types, senders and receivers |
-| [code-clues.md](code-clues.md) | Other recovered code paths and source-path clues |
-| [local-server.md](local-server.md) | Server profiles, options and logs |
-| [arena1a.md](arena1a.md) | Recovering the Arena1a map |
-| [render-pipeline-audit.md](render-pipeline-audit.md) | Rendering bugs found by emulation |
-| [asteroid-rendering.md](asteroid-rendering.md) | The asteroid size-popping investigation |
-| [offline-rendering-baseline.md](offline-rendering-baseline.md) | Rendering baseline for the offline mission |
+## Map makers and video
+
+| Document | Kind | What it covers |
+|---|---|---|
+| [create/custom-maps.md](create/custom-maps.md) | guide | Building new maps from a JSON spec; the first one, Crucible |
+| [create/custom-objects.md](create/custom-objects.md) | guide | Adding new objects from glTF models; the first one, NASA's Bennu |
+| [create/hype-reel.md](create/hype-reel.md) | guide | Filming scripted shots of the real client and cutting the highlight reel |
+
+## Contributors
+
+Reverse-engineering references. Addresses refer to the hash-verified 2.7.1 or
+2.9.2 `AOACLIENT.EXE` named in each document.
+
+| Document | Kind | What it covers |
+|---|---|---|
+| [reference/client-patches.md](reference/client-patches.md) | reference, generated patch table | Every client patch, its addresses, the undo and the checks |
+| [reference/protocol.md](reference/protocol.md) | reference | The protocol subset the stand-in server implements |
+| [reference/message-types.md](reference/message-types.md) | reference, generated | Message types, senders and receivers (by `aoa.analysis.message_table`) |
+| [reference/maps.md](reference/maps.md) | reference, generated map table | The 20 loadable maps, how the client loads one, the 2.9.2 map and scenario assets |
+| [reference/asset-formats.md](reference/asset-formats.md) | reference | The `.Gob` and `.Sco` formats; extracting models and textures for study |
+| [reference/versions.md](reference/versions.md) | reference | What differs across the six recovered versions |
+| [reference/tools.md](reference/tools.md) | reference, generated index | Every command and module |
+| [restructure/README.md](restructure/README.md) | log | The November 2026 restructure: plan, briefs, audits, what still needs Windows |
+
+## Researchers
+
+| Document | Kind | What it covers |
+|---|---|---|
+| [../CONTEXT.md](../CONTEXT.md) | log | The archive research record: builds, the company, the universe, revival, what was searched, next steps |
+| [../data/magazine-mentions.md](../data/magazine-mentions.md) | reference | 2000–2006 magazine coverage, with archive links |
+| [archive/web-archive.md](archive/web-archive.md) | guide | Rebuilding the old website and forums from the Wayback Machine |
+| [images/SOURCES.md](images/SOURCES.md) | reference | Where each README image came from, with hashes |
+
+### Research records
+
+| Document | Kind | What it covers |
+|---|---|---|
+| [research/README.md](research/README.md) | guide | How the records are kept and added to |
+| [research/log.md](research/log.md) | log | The development log by date, newest first |
+| [research/findings.md](research/findings.md) | log | Static protocol findings (sections 1–8) and every live investigation and client fix (9.1–9.48) |
+| [research/windows-11.md](research/windows-11.md) | log | Why the client crashed on modern Windows and how it was fixed (20 October 2026) |
+| [research/level-data.md](research/level-data.md) | log | Maps, scenarios and missions found in the clients (22 October 2026) |
+| [research/code-clues.md](research/code-clues.md) | log | Other recovered code paths and source-path clues |
+| [research/arena1a.md](research/arena1a.md) | log | Recovering the Arena1a map |
+| [research/arena1a-trials.md](research/arena1a-trials.md) | log | Arena1a navigation buoys, turret and warp gate trials (26–27 October 2026) |
+| [research/rendering/pipeline-audit.md](research/rendering/pipeline-audit.md) | log | Rendering bugs found by emulation |
+| [research/rendering/asteroids.md](research/rendering/asteroids.md) | log | The asteroid size-popping investigation and the rendering patches |
+| [research/rendering/offline-baseline.md](research/rendering/offline-baseline.md) | log | Rendering baseline for the offline mission |
 
 ## Plans
 
-| Document | What it covers |
-|---|---|
-| [internet-server-todo.md](internet-server-todo.md) | Roadmap for a real internet server, maps and performance |
-| [modernization-todo.md](modernization-todo.md) | Roadmap for client and game modernization |
-| [first-playable-release.md](first-playable-release.md) | Specification for an authoritative first release (deferred) |
-| [client-extension-gate.md](client-extension-gate.md) | Gate for client changes an authoritative server would need |
+| Document | Kind | What it covers |
+|---|---|---|
+| [roadmap/internet-server.md](roadmap/internet-server.md) | roadmap | A real internet server, maps and performance |
+| [roadmap/modernization.md](roadmap/modernization.md) | roadmap | Client and game modernization |
+| [roadmap/authoritative-server.md](roadmap/authoritative-server.md) | roadmap | The deferred authoritative server: first release specification and client-extension gate |
+
+The pages at the old `docs/*.md` paths are stubs that say where each one
+moved.

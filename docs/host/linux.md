@@ -1,0 +1,240 @@
+# Minimal Linux host
+
+First milestone: a dedicated Linux host runs independently of an SSH session,
+starts at boot, and accepts two clients on the LAN. Then add Tailscale for
+internet play. Start with Ubuntu 24.04 LTS and Python 3.12.
+The Python server uses only the standard library;
+no pip packages, GPU, Wine, Windows executable or desktop session are needed.
+
+For a first test on an existing Proxmox host, create a separate Ubuntu Server
+VM with **1 vCPU, 2 GiB RAM and a 12 GiB disk**, using its existing LAN bridge
+and DHCP. Install SSH and `qemu-guest-agent` in the guest. Check the node's
+available capacity before allocating the VM. The game runs in the guest;
+the Proxmox management host does not need game packages.
+
+You can verify the Linux service on a trusted LAN before installing Tailscale:
+set `AOA_BIND_ADDRESS` to the VM's private LAN IPv4 address. `vpn-dogfight`
+accepts private LAN addresses and keeps sustained delivery enabled. Players
+on that LAN use the VM's address for their `aoavpn` hosts entry. Internet
+players still need the VPN setup below. Record the DHCP lease or reserve its
+address before relying on unattended restarts, because the configured bind
+address must remain assigned to the VM.
+
+This is the existing `vpn-dogfight` relay under a dedicated session controller.
+Pilots, scores and bans are temporary. The controller starts a fresh game
+process between maps, recycling its admission counters. Persistent service operation does not
+yet provide persistent pilot accounts or scores. Verify startup and recovery
+on each deployment, and real gameplay separately from synthetic tests.
+
+The deployment of 26 October 2026, its checks and the two-PC combat that
+followed are recorded in the
+[research log](../research/log.md#linux-host-deployed-from-hostlinuxmd).
+`dedicated_host.py` changed on 13 November 2026 (shared defaults, required
+`--bind-address`, status path); that version passes `test_dedicated_host.py`
+but has not been deployed yet. Current status: [STATUS.md](../STATUS.md).
+
+## 1. Prepare the Linux machine
+
+Use an ordinary SSH account with sudo access. Install Python:
+
+```sh
+sudo apt-get update
+sudo apt-get install -y python3
+python3 --version
+```
+
+For LAN-only testing, use the VM's private IPv4 address and continue with
+section 2. For internet play, follow the
+[official Tailscale Linux installation instructions](https://tailscale.com/docs/install/linux),
+then connect the host with `sudo tailscale up` and record `tailscale ip -4`.
+Use the normal Linux TUN interface, not userspace proxy mode: the server must
+bind its own VPN IPv4 address. Enable `tailscaled` at boot and configure device
+key expiry for an unattended server in the Tailscale admin console.
+
+Share only this machine with the invited players. Configure Tailscale access
+controls to permit **UDP 5031 and 5033, TCP 5034** from those players, with SSH
+administration limited to the operator. Keep those game ports closed on the
+public interface/provider firewall. The host binds only its VPN address.
+See [Tailscale sharing](https://tailscale.com/docs/features/sharing) and the
+[VPN runbook](vpn.md) for the client connection path.
+
+## 2. Upload this checkout and your key
+
+From PowerShell in this repository, replace the SSH destination and the key
+path. Upload the current files so local changes are included even before a
+GitHub release. The key comes from your own extracted 2.9.2 installation;
+never commit it or substitute a synthetic test key for real play.
+
+```powershell
+$LinuxHost = 'your-user@your-linux-host'
+ssh $LinuxHost 'mkdir -p aoa-upload'
+scp -r aoa tests tools deploy "${LinuxHost}:aoa-upload/"
+scp game/2.9.2/SCRTY.BIN "${LinuxHost}:aoa-upload/SCRTY.BIN"
+```
+
+On Linux, install the files with a separate service account:
+
+```sh
+id aoa >/dev/null 2>&1 || sudo useradd --system --user-group --home-dir /var/lib/ace-of-angels --shell /usr/sbin/nologin aoa
+sudo install -d -m 0755 /opt/ace-of-angels
+sudo cp -R ~/aoa-upload/aoa ~/aoa-upload/tests ~/aoa-upload/tools /opt/ace-of-angels/
+sudo chown -R root:root /opt/ace-of-angels/aoa /opt/ace-of-angels/tests /opt/ace-of-angels/tools
+sudo chmod -R a+rX /opt/ace-of-angels/aoa /opt/ace-of-angels/tests /opt/ace-of-angels/tools
+sudo install -d -o root -g aoa -m 0750 /etc/ace-of-angels
+sudo install -o root -g aoa -m 0640 ~/aoa-upload/SCRTY.BIN /etc/ace-of-angels/SCRTY.BIN
+sudo install -o root -g aoa -m 0640 ~/aoa-upload/deploy/linux/host.json.example /etc/ace-of-angels/host.json
+sudo install -o root -g root -m 0644 ~/aoa-upload/deploy/linux/aoa-host.service /etc/systemd/system/aoa-host.service
+sudoedit /etc/ace-of-angels/host.json
+```
+
+Set `bind_address` to the VM's private LAN address for the first test, or the
+actual `tailscale ip -4` result for VPN play. Keep `"max_players": 2` for the
+first session (without it the host allows 8, as the Windows host window does).
+Do not reinstall the example over an existing configuration during later
+updates. The example selects 10 kills or 15 minutes, with native terrain
+enabled; see section 5 to change it. `host.json` uses the same settings format
+(`HostConfig`, `aoa/host/config.py`) as the `work/host/host.json` the Windows
+host window writes for each run, and as the `host` object of the launchers'
+`work/settings.json`; an unknown setting is refused with its name.
+`aoa_host.py` also reads a whole `work/settings.json` (its `host` object, with
+its `game_folder`), so settings chosen in the Windows host window can be
+copied here as they are; replace the game folder with `paths.key` as above.
+
+The unit file runs `tools/aoa_host.py run /etc/ace-of-angels/host.json`. That
+script is a shim for `aoa/host/headless.py`, so the host needs `aoa/` as well
+as `tools/` and `deploy/` (`tests/` only for the checks below). By hand:
+`python3 -I tools/aoa_host.py check /etc/ace-of-angels/host.json` validates
+every map of the rotation, assets and key included, without opening sockets
+or writing state; `status` prints the status file. `--profile`,
+`--bind-address` and `--map` override the file for one run.
+
+**Hosts set up before 15 November 2026** used `host.env` and `rotation.json`
+with `tools/dedicated_host.py`. That command still works with its arguments,
+and `aoa_host.py run /etc/ace-of-angels/rotation.json` reads the same pair
+(`AOA_BIND_ADDRESS` and `AOA_MAX_PLAYERS` from the environment or the
+`host.env` beside it). To move to the new unit, write a `host.json` from
+`deploy/linux/host.json.example` with your address, player count and rotation
+settings, check it, then install the new unit file and restart the service.
+
+## 3. Check and start
+
+Run the game-free checks first (synthetic clients on loopback):
+
+```sh
+cd /opt/ace-of-angels
+python3 -I tools/test.py test_station_runtime test_internet_play test_dedicated_host
+sudo -u aoa wc -c /etc/ace-of-angels/SCRTY.BIN
+sudo systemd-analyze verify /etc/systemd/system/aoa-host.service
+```
+
+The key must be exactly 256 bytes. The tests use temporary synthetic keys and
+do not verify your real game key or a real VPN path.
+
+```sh
+sudo systemctl daemon-reload
+sudo systemctl enable --now aoa-host
+sudo systemctl status aoa-host --no-pager
+sudo journalctl -u aoa-host -n 40 --no-pager
+sudo cat /var/lib/ace-of-angels/status.json
+sudo ss -lntup | grep -E ':5031|:5033|:5034'
+```
+
+Verify all three listeners use the configured address. `updated_utc` in the status
+file should advance every two seconds; check it again after a few seconds.
+An `active` systemd state alone does not prove the game loop is healthy.
+
+The service starts the host controller after the network (and Tailscale
+when enabled). The controller restarts a crashed game process itself, with
+the settings and map it had, at most three times in ten minutes (5 seconds
+apart); after that it exits with an error, and systemd retries the controller
+every 30 seconds, up to four starts in ten minutes. Planned map changes happen
+inside the controller and consume neither budget. A missing VPN
+address, incorrect key or occupied port is visible in the journal. After
+fixing a failure or connecting a slow VPN, recover with:
+
+```sh
+sudo systemctl reset-failed aoa-host
+sudo systemctl start aoa-host
+```
+
+Normal logs rotate in `/var/lib/ace-of-angels/host.jsonl` through `.3` (about
+4 MiB total for newly created logs). The status file contains current player
+counts, admission usage, traffic, delivery counters, game PID and a `lifecycle`
+section with limits, next map and restart countdown. This service
+has no interactive console or remote kick/ban interface. Use SSH and
+`systemctl stop`, `start` or `restart aoa-host` for service control. Stopping
+uses SIGINT to close sockets and drain logs; players must relaunch and rejoin.
+
+Service behavior follows the [systemd service](https://www.freedesktop.org/software/systemd/man/latest/systemd.service.html)
+and [execution](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html)
+references. The process runs as `aoa`, with read-only code/configuration and
+a writable state directory. `KillMode=mixed` sends the initial stop signal to
+the controller, which stops its child cleanly; systemd can still kill remaining
+processes on timeout ([systemd.kill](https://www.freedesktop.org/software/systemd/man/latest/systemd.kill.html)).
+
+## 4. Join from Windows and record the first result
+
+Use the [VPN client instructions](vpn.md#each-player): add the host's
+configured address as `aoavpn` in the Windows hosts file, prepare the supported 2.9.2
+client for that Station name, and select **VPN Dogfight**. Each player's VPN
+connection must be active for VPN play; LAN clients can connect directly.
+The rotation enables native terrain. Both clients need the online terrain
+hook, **patch level 11 or later** (current preparation gives level 22).
+Older clients may connect without displaying the selected terrain. The initial
+playlist uses original layout assets; it needs no extra JRMAP terrain file.
+
+For real-client internet acceptance, record these checks:
+
+- Two real clients on separate internet connections join, see each other,
+  fight, score and respawn; record ping and direct/relayed Tailscale paths.
+- Close the SSH session; the game continues. Restart a client and rejoin.
+- Stop/start the service; logs flush and both clients can relaunch and rejoin.
+- Reboot the Linux machine; Tailscale and the game service return, status
+  updates resume and clients can join again.
+
+## 5. Unattended rotation and recovery
+
+The rotation was verified on the Linux VM on 26 October 2026
+([research log](../research/log.md#unattended-rotation-from-hostlinuxmd)).
+
+Edit `/etc/ace-of-angels/host.json` (`maps`, the limits and the `managed`
+group), run `aoa_host.py check` on it, then restart `aoa-host` to apply changes.
+An unknown setting is refused with its name; a `"comment"` text is allowed.
+A setting left out takes the host default. The shipped example is:
+
+| Setting | Behavior |
+|---|---|
+| Maps | `CTF_arena` → `CTF_arena_b` → `ast_fld_a` → repeat |
+| Kill limit | First pilot to **10 kills** ends the session (host default: 20) |
+| Time limit | **900 seconds (15 minutes)** from first flight entry; whichever limit comes first (host default: 600 seconds) |
+| Restart warning | Announce next map, allow **30 seconds** to quit, then pause **5 seconds** before reopening |
+| Arena admissions | Recycle at **40**, before the hard lifetime limit of 49 |
+| Station admissions | Recycle at **56**, before the hard lifetime limit of 64 |
+| Empty used session | Recycle after **5 minutes** without arena players; an unused server stays idle |
+| Health timeout | Stop an unresponsive game process after **30 seconds** without fresh status, then restart it (the crash budget above) |
+
+During the countdown, the arena disappears from new server listings and new
+logins/joins are refused; connected players still receive announcements and
+can quit. The match result remains available until the process closes.
+**Players must quit/relaunch and rejoin after a map change.** The original
+client has no verified server-driven return-to-Station or terrain reload path.
+The automation makes server operation unattended; it does not add seamless
+client transitions. The map name and native flight-entry marker change together.
+
+Rotation state is saved atomically in
+`/var/lib/ace-of-angels/rotation-state.json`. A completed session advances the
+map; a crash or manual restart resumes the saved map with a fresh match.
+This also survives a VM reboot. Admission cleanup advances the playlist too.
+The timer stops when the arena empties and starts again at the next flight
+entry; the idle cleanup prevents a used empty session lingering indefinitely.
+
+Pilots, scores and bans reset with each fresh game process. Only the selected
+map and completed-session counter persist. Logs record `match_end`,
+`session_restart_scheduled` and `session_restart` with the reason and map names.
+The controller verifies status belongs to its own child, so an old status file
+cannot satisfy the health check. Repeated crashes still exhaust both restart
+budgets and require fixing the cause before `systemctl reset-failed aoa-host`.
+
+Direct `station_stub.py` launches retain their existing same-map round behavior
+unless `--managed-session` is supplied. Their lifetime admission limits still
+require a manual restart. Dedicated service sessions handle that recycling.

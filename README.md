@@ -13,15 +13,15 @@
 <p align="center">
   <img alt="Era: 2000–2006" src="https://img.shields.io/badge/era-2000%E2%80%932006-6b4f9e">
   <img alt="Builds recovered: 6" src="https://img.shields.io/badge/builds%20recovered-6-c9a227">
-  <img alt="Playable on Windows 10/11" src="https://img.shields.io/badge/playable-Windows%2010%2F11-2b7bb9">
-  <img alt="Multiplayer: LAN / VPN" src="https://img.shields.io/badge/multiplayer-LAN%20%2F%20VPN-3a9a5b">
+  <img alt="Playable on Windows 11; Windows 10 untested" src="https://img.shields.io/badge/playable-Windows%2011-2b7bb9">
+  <img alt="Multiplayer: LAN; VPN untested" src="https://img.shields.io/badge/multiplayer-LAN%20%C2%B7%20VPN%20untested-3a9a5b">
   <a href="LICENSE"><img alt="Licence: MIT" src="https://img.shields.io/badge/licence-MIT-555"></a>
 </p>
 
 <p align="center">
-  <a href="docs/play.md"><b>Play it</b></a> ·
-  <a href="docs/play.md#play-with-friends"><b>Host a game</b></a> ·
-  <a href="docs/linux-host.md"><b>Linux server</b></a> ·
+  <a href="docs/play/README.md"><b>Play it</b></a> ·
+  <a href="docs/host/README.md"><b>Host a game</b></a> ·
+  <a href="docs/host/linux.md"><b>Linux server</b></a> ·
   <a href="CONTEXT.md"><b>Research record</b></a> ·
   <a href="docs/README.md"><b>Docs</b></a> ·
   <a href="CONTRIBUTING.md"><b>Contribute</b></a>
@@ -81,9 +81,9 @@ Its servers went dark, and the company was dissolved in 2011.
 | | |
 |---|---|
 | 📦 **Builds** | Six client versions recovered, hashed and versioned: full installers 2.0.0, 2.7.1, 2.8.0, 2.8.2 and 2.9.2, plus a 2.3.1 replacement client. Sources and hashes: [`manifest/downloads.json`](manifest/downloads.json). |
-| 🎮 **Playable today** | The 2.9.2 client runs on Windows 10/11 with crash, timing and display fixes. The offline training mission plays. |
-| 🌐 **Multiplayer** | A new stand-in server, written from reverse engineering, lets friends dogfight over a LAN or a private VPN: guns, missiles, kills, scoreboard, ship changes, 20 maps, power-ups and a host control window. |
-| 🐧 **Dedicated Linux host** | An unattended systemd service with automatic map rotation, kill/time limits, admission recycling, a stalled-process watchdog and rotation state that survives reboot. [Setup and operation](docs/linux-host.md). |
+| 🎮 **Playable today** | The 2.9.2 client runs on Windows 11 with crash, timing and display fixes, and the offline training mission plays (Windows 10 has not been tried). |
+| 🌐 **Multiplayer** | A new stand-in server, written from reverse engineering, lets friends dogfight over a LAN (a private VPN is implemented but untested): guns, missiles, kills, scoreboard, ship changes, power-ups and a host window. The client can load all 20 recovered map layouts; 11 of them have real content ([which maps](docs/STATUS.md#maps)). |
+| 🐧 **Dedicated Linux host** | An unattended systemd service with automatic map rotation, kill/time limits, admission recycling, a stalled-process watchdog and rotation state that survives reboot. [Setup and operation](docs/host/linux.md). |
 | 📜 **History** | Magazine coverage, company records, trademarks, the old website and forums (restored from the Wayback Machine), and the state of revival attempts. |
 
 No game files are in this repository. The tools download the original
@@ -95,86 +95,65 @@ See [NOTICE.md](NOTICE.md).
 > [!IMPORTANT]
 >
 > - **Two separate Windows PCs have fought through the Linux host over LAN.**
->   The operator reported damage and destruction; server logs confirm two valid
->   player deaths, one per player. [Session verification](evidence/2.9.2/linux_two_pc_combat_20261026.json).
-> - Automatic rotation, watchdog recovery and reboot persistence were checked
->   on the Linux VM. Map-transition tests used simulated Windows clients;
->   visual terrain loading after real-client rejoin still needs acceptance.
-> - Internet/VPN play remains unverified between separate connections.
->   Players must quit/relaunch and rejoin between maps; transitions are not seamless.
+>   A Windows-hosted LAN game and VPN play between separate connections have
+>   not been recorded yet.
+> - Players must quit, relaunch and rejoin between maps.
 > - This is a trusted-friends relay, not a public server. There are no accounts,
 >   and the original clients decide hits and damage.
 > - No CTF rules, AI missions or persistent pilots yet. Practice target ships
 >   can be destroyed, but they are passive and never fire back.
+>
+> What was checked, how, and what is still untested: [docs/STATUS.md](docs/STATUS.md).
 
 ## 🧭 Start here
 
-| I want to… | Go to |
-|---|---|
-| Play it on Windows 10/11 | [docs/play.md](docs/play.md) |
-| Host a game for friends | [docs/play.md#play-with-friends](docs/play.md#play-with-friends) |
-| Get sharper ship and station skins | [docs/texture-pack.md](docs/texture-pack.md) |
-| Run an unattended Linux server | [docs/linux-host.md](docs/linux-host.md) |
-| Read the history and what was found | [CONTEXT.md](CONTEXT.md), then [docs/](docs/README.md) |
-| Help reverse-engineer the client or server protocol | [docs/README.md](docs/README.md#how-the-game-works) and [docs/findings.md](docs/findings.md) |
-| Help find missing builds or old material | [CONTRIBUTING.md](CONTRIBUTING.md#leads-and-old-material) |
+| I am… | Start with | Then |
+|---|---|---|
+| A player on Windows | [docs/play/README.md](docs/play/README.md) | [Troubleshooting](docs/play/troubleshooting.md), [sharper skins](docs/play/texture-pack.md), [any map](docs/play/map-viewer.md) |
+| Hosting for friends | [docs/host/README.md](docs/host/README.md) | [Host window](docs/host/host-window.md), [Linux service](docs/host/linux.md), [console](docs/host/console.md) |
+| Making maps, objects or video | [docs/create/custom-maps.md](docs/create/custom-maps.md) | [Objects](docs/create/custom-objects.md), [highlight reel](docs/create/hype-reel.md) |
+| Contributing code or reverse engineering | [CONTRIBUTING.md](CONTRIBUTING.md) | [References](docs/README.md#contributors), [tools](docs/reference/tools.md), [findings](docs/research/findings.md) |
+| Researching the history or hunting builds | [CONTEXT.md](CONTEXT.md) | [Research records](docs/README.md#researchers), [leads wanted](CONTRIBUTING.md#leads-and-old-material) |
 
-## 🐧 Dedicated Linux host
-
-The host runs on Ubuntu Server 24.04 with Python 3.12 and no pip dependencies,
-GPU or desktop session. The first deployment uses **1 vCPU, 2 GiB RAM and a
-12 GiB disk** in a Proxmox VM. Start on a trusted LAN, then follow the VPN
-runbook when ready to test internet access.
-
-| Default | Behavior |
-|---|---|
-| Map rotation | `CTF_arena` → `CTF_arena_b` → `ast_fld_a` → repeat |
-| Match limit | First pilot to **10 kills**, or **15 minutes** from flight entry |
-| Map change | **30-second warning**, followed by a **5-second intermission** |
-| Admission recycling | Fresh process before the lifetime join limits, plus cleanup of used empty sessions |
-| Recovery | Status watchdog and bounded crash restarts; current map resumes after a VM reboot |
-
-The server handles those transitions automatically. **Players must relaunch
-and rejoin after each map change**, using the prepared client with native
-terrain support. Map position and completed-session count persist; pilots,
-scores and bans reset with each new game process.
-
-Follow the [Linux setup and operating guide](docs/linux-host.md). Match limits
-and maps are configured in `/etc/ace-of-angels/rotation.json`; the repository
-includes an [example configuration](deploy/linux/rotation.json.example) and a
-[deployment verification record](evidence/2.9.2/linux_rotation_20261026.json).
+What works and what is untested: [docs/STATUS.md](docs/STATUS.md). Every
+document, by reader: [docs/README.md](docs/README.md).
 
 ## ⚡ Quick start
 
-On Windows 10/11 with [Python 3.12](https://www.python.org/downloads/) and Git:
+On Windows 10/11:
 
-```powershell
-git clone https://github.com/JasonRucinski/ace-of-angels-preservation.git ace-of-angels
-cd ace-of-angels
-py -3.12 -m venv .venv
-.venv\Scripts\python.exe -m pip install -r requirements.txt
-.venv\Scripts\python.exe -I tools\fetch_known_builds.py builds\
-```
+1. Install [Python](https://www.python.org/downloads/) 3.10 or later, with
+   **Add python.exe to PATH** ticked. No packages are needed.
+2. Download this project (**Code → Download ZIP**) and extract it.
+3. Double-click `Play.cmd` and follow its setup checklist: it downloads the
+   2.9.2 installer from archive.org (35 MB, after asking), unpacks it,
+   applies the fixes and helps you add the graphics wrapper.
 
-Then download the [dgVoodoo2 2.87.5 wrapper](https://github.com/dege-diosg/dgVoodoo2/releases/download/v2.87.5/dgVoodoo2_87_5.zip)
-and follow [docs/play.md](docs/play.md) from step 3.
+To host, double-click `Host.cmd` ([hosting](docs/host/README.md)). Details and
+the command-line fallback: [docs/play/README.md](docs/play/README.md). The
+windows were rebuilt on 16 November 2026 and have not yet been run on Windows
+([status](docs/STATUS.md#implemented-but-not-tested)).
 
 ## 🗂️ Repository layout
 
 | Path | Contents |
 |---|---|
-| [`docs/`](docs/README.md) | Guides, research write-ups, protocol notes and roadmaps, with an index |
-| [`tools/`](tools/README.md) | Player scripts, the stand-in server, client patches, analysis tools and tests, with an index |
+| `Play.cmd`, `Host.cmd` | The player and host windows |
+| [`aoa/`](aoa/) | The code, as one Python package: file formats, protocol, maps, client patches, the host, the launchers, research and analysis |
+| [`tools/`](tools/README.md) | The commands people run, mostly shims for `aoa` modules; [every command](docs/reference/tools.md) |
+| [`tests/`](tests/) | Every test suite, run by `tools/test.py` ([how](CONTRIBUTING.md#tests)) |
+| [`archive/`](archive/README.md) | Frozen one-off scripts whose results are committed under `evidence/` |
+| [`docs/`](docs/README.md) | Guides, references, research records and roadmaps, indexed by reader |
 | [`deploy/linux/`](deploy/linux/) | Linux systemd service and example host/rotation configuration |
-| [`CONTEXT.md`](CONTEXT.md) | The research record: builds, sources, what was searched, next steps |
+| [`CONTEXT.md`](CONTEXT.md) | The archive research record: builds, sources, what was searched, next steps |
 | `manifest/` | Where each recovered build came from, with hashes |
-| `evidence/` | Machine-readable results behind each claim in the docs |
-| `data/` | Archive search logs and magazine mentions |
+| `evidence/` | Machine-readable results behind each claim in the docs ([index](evidence/INDEX.tsv)) |
+| `data/` | Archive search logs, magazine mentions, the 20 October research handoff |
 | `config/` | Client configuration records |
-| `CLAUDE.md` | Working rules for AI coding agents (and a good summary for humans) |
+| [`CLAUDE.md`](CLAUDE.md) | Working rules for coding agents |
 
-`builds/`, `game/`, `originals/`, `wb/` and `work/` are created locally and
-never committed.
+`builds/`, `game/`, `originals/`, `wb/`, `work/` and `media/` are created
+locally and never committed.
 
 ## 🤝 Contributing
 

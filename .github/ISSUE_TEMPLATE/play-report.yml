@@ -13,6 +13,7 @@ body:
         - Multiplayer on one PC
         - LAN dogfight
         - VPN dogfight
+        - Linux host
     validations:
       required: true
   - type: textarea

@@ -1,0 +1,183 @@
+old_path	new_path	keeps_tools_shim	note
+tools/dialogs.py	aoa/analysis/dialogs.py		
+tools/dispatch_table.py	aoa/analysis/dispatch_table.py		
+tools/explore.py	aoa/analysis/explore.py		
+tools/match_funcs.py	aoa/analysis/match_funcs.py		
+tools/message_table.py	aoa/analysis/message_table.py		
+tools/packet_sizes.py	aoa/analysis/packet_sizes.py		
+tools/pe_util.py	aoa/analysis/pe_util.py		Phase 2: stdlib PE mapper split to aoa/formats/pe.py
+tools/send_sites.py	aoa/analysis/send_sites.py		
+tools/cli_util.py	aoa/cli.py		
+tools/patch_client.py	aoa/client/base.py		Phase 2: base step + asm helpers; PRISTINE hash moves to aoa/builds.py
+tools/build_texture_pack.py	aoa/client/build_texture_pack.py	yes	
+tools/render_clock_experiment.py	aoa/client/experiments/render_clock_experiment.py		byte-identical to frame_clock; Phase 2 repoints its importers (test_frame_clock, test_render_culling) and archives it
+tools/render_culling_experiment.py	aoa/client/experiments/render_culling_experiment.py		superseded by visibility_fix; Phase 2 removes its importers (render_pipeline, test_visibility_fix, test_render_culling) and archives it
+tools/install_wrapper.py	aoa/client/install_wrapper.py	yes	
+tools/make_install.py	aoa/client/make_install.py	yes	
+tools/archive_terminator.py	aoa/client/patches/archive_terminator.py		
+tools/asteroid_render.py	aoa/client/patches/asteroid_render.py		
+tools/cursor_warp.py	aoa/client/patches/cursor_warp.py		
+tools/explicit_protection.py	aoa/client/patches/explicit_protection.py		
+tools/frame_clock.py	aoa/client/patches/frame_clock.py		
+tools/menu_aspect.py	aoa/client/patches/menu_aspect.py		
+tools/object_persistence.py	aoa/client/patches/object_persistence.py		
+tools/online_terrain.py	aoa/client/patches/online_terrain.py		Phase 2: MAPS registry moves to aoa/maps/registry.py; cave stays here
+tools/own_ship_menu.py	aoa/client/patches/own_ship_menu.py		
+tools/own_ship_model.py	aoa/client/patches/own_ship_model.py		
+tools/physics_timestep.py	aoa/client/patches/physics_timestep.py		
+tools/powerup_pickup.py	aoa/client/patches/powerup_pickup.py		
+tools/solid_world_render.py	aoa/client/patches/solid_world_render.py		
+tools/station_detail.py	aoa/client/patches/station_detail.py		
+tools/local_station.py	aoa/client/patches/station_host.py		Phase 2: constants only; legacy CLI removed
+tools/texture32.py	aoa/client/patches/texture32.py		
+tools/third_person.py	aoa/client/patches/third_person.py		
+tools/visibility_fix.py	aoa/client/patches/visibility_fix.py		
+tools/world_detail.py	aoa/client/patches/world_detail.py		
+tools/prepare_client.py	aoa/client/prepare.py	yes	Phase 2: registry-driven engine
+tools/texture_pack.py	aoa/client/texture_pack.py	yes	
+tools/emulate_archive_terminator.py	aoa/emulation/check_archive_terminator.py		
+tools/emulate_client_extensions.py	aoa/emulation/check_client_extensions.py		
+tools/emulate_motion_state.py	aoa/emulation/check_motion_state.py		
+tools/emulate_movement.py	aoa/emulation/check_movement.py		
+tools/emulate_ordered_events.py	aoa/emulation/check_ordered_events.py		
+tools/emulate_reliable_history.py	aoa/emulation/check_reliable_history.py		
+tools/emulate_station_aliases.py	aoa/emulation/check_station_aliases.py		
+tools/emulate_station_request.py	aoa/emulation/check_station_request.py		
+tools/emulate_terrain_nodes.py	aoa/emulation/check_terrain_nodes.py		
+tools/emulate_codec.py	aoa/emulation/emu.py		Phase 2: Emu library stays; 2.7.1-only CLI goes to archive/
+tools/audit_render_pipeline.py	aoa/emulation/render_pipeline.py		library for test_render_culling/test_visibility_fix; Phase 2 removes its dependency on the archived culling experiment
+tools/emulate_warp_trial.py	aoa/emulation/warp_trial.py		
+tools/aoacrypt.py	aoa/formats/aoacrypt.py		
+tools/aoapack.py	aoa/formats/aoapack.py	yes	
+tools/gob2obj.py	aoa/formats/gob.py	yes	
+tools/decode_legacy_layout.py	aoa/formats/legacy_layout.py		
+tools/decode_scenario.py	aoa/formats/scenario.py		
+tools/scene2obj.py	aoa/formats/scene.py	yes	
+tools/sco_dump.py	aoa/formats/sco.py		
+tools/decode_trn.py	aoa/formats/trn.py		
+tools/wise_extract.py	aoa/formats/wise.py		
+tools/dedicated_host.py	aoa/host/dedicated.py	yes	Phase 2/3: thin front-end on the shared supervisor
+tools/reliable_window.py	aoa/host/delivery.py		
+tools/make_vessel_combat.py	aoa/host/make_vessel_combat.py		
+tools/net_impair.py	aoa/host/net_impair.py		
+tools/host_ops.py	aoa/host/ops.py		
+tools/station_runtime.py	aoa/host/runtime.py		Phase 2: HostConfig + defaults table; eventlog/transport split
+tools/station_stub.py	aoa/host/server.py	yes	Phase 2: becomes ArenaServer class, then splits (sessions, combat, match, objects, protocol builders)
+tools/turret_trial.py	aoa/host/turret_trial.py		
+tools/vessel_combat.py	aoa/host/vessel_combat.py		
+tools/warp_trial.py	aoa/host/warp_trial.py		
+tools/client_launcher.py	aoa/launchers/client_launcher.py	yes	Phase 3: replaced by aoa/launchers/play_app.py on the shared core
+tools/host_control.py	aoa/launchers/host_control.py	yes	Phase 3: replaced by aoa/launchers/host_app.py on the shared core
+tools/inspect_arena.py	aoa/live/arena.py		
+tools/crashdbg.py	aoa/live/crashdbg.py		
+tools/measure_frame_pacing.py	aoa/live/frame_pacing.py		
+tools/sample_rendering.py	aoa/live/sample_rendering.py		
+tools/verify_navigation_buoys.py	aoa/live/verify_navigation_buoys.py		
+tools/verify_turret_trial.py	aoa/live/verify_turret_trial.py		
+tools/verify_warp_trial.py	aoa/live/verify_warp_trial.py		
+tools/audit_arena1a.py	aoa/maps/arena1a_audit.py		kept only because check_terrain_nodes imports it
+tools/check_arena_geometry.py	aoa/maps/arena_geometry.py		
+tools/export_assets.py	aoa/maps/export_assets.py	yes	
+tools/export_legacy_models.py	aoa/maps/export_legacy_models.py		
+tools/audit_object_lod.py	aoa/maps/lod.py		library for four patch tests
+tools/make_map.py	aoa/maps/make_map.py	yes	
+tools/make_object.py	aoa/maps/make_object.py	yes	
+tools/map_viewer.py	aoa/maps/map_viewer.py	yes	
+tools/navigation_buoys.py	aoa/maps/navigation.py		
+tools/render_map_previews.py	aoa/maps/render_map_previews.py		
+tools/render_obj.py	aoa/maps/render_obj.py	yes	
+tools/audit_turret_groups.py	aoa/maps/turret_hierarchy.py		used by the server (hierarchy); Phase 2 drops its audit CLI to archive/
+tools/audit_warp_gates.py	aoa/maps/warp_routes.py		used by the server (routes); Phase 2 drops its audit CLI to archive/ and breaks the import cycle
+tools/aoanet.py	aoa/protocol/codec.py		
+tools/relay_motion.py	aoa/protocol/motion.py		
+tools/turret_groups.py	aoa/protocol/turret_groups.py		
+tools/compare_version_assets.py	aoa/research/compare_version_assets.py		
+tools/fetch.py	aoa/research/fetch.py	yes	
+tools/fetch_known_builds.py	aoa/research/fetch_known_builds.py	yes	Phase 2: merged into manifest-driven fetch
+tools/polite_http.py	aoa/research/http.py		
+tools/ia_disc_find.py	aoa/research/ia_disc_find.py	yes	
+tools/ia_fulltext_context.py	aoa/research/ia_fulltext_context.py		
+tools/ia_fulltext_search.py	aoa/research/ia_fulltext_search.py		
+tools/iso_stream_extract.py	aoa/research/iso_stream_extract.py		
+tools/rar_img2iso.py	aoa/research/rar_img2iso.py		
+tools/restore_web_archive.py	aoa/research/restore_web_archive.py	yes	
+tools/aoa_version.py	aoa/research/version.py	yes	
+tools/version_probe.py	aoa/research/version_probe.py		Phase 2: merged into version
+tools/wayback_builds.py	aoa/research/wayback_builds.py	yes	
+tools/arena_inventory.py	archive/analysis/arena_inventory.py		
+tools/audit_arena1a_rebuild.py	archive/analysis/audit_arena1a_rebuild.py		
+tools/audit_level_data.py	archive/analysis/audit_level_data.py		
+tools/audit_map_nodes.py	archive/analysis/audit_map_nodes.py		
+tools/compare_client_resources.py	archive/analysis/compare_client_resources.py		
+tools/config_records.py	archive/analysis/config_records.py		
+tools/emulate_cipher.py	archive/analysis/emulate_cipher.py		
+tools/gun_table.py	archive/analysis/gun_table.py		
+tools/inventory.py	archive/analysis/inventory.py		
+tools/offline_refs.py	archive/analysis/offline_refs.py		
+tools/pe_facts.py	archive/analysis/pe_facts.py		
+tools/server_senders.py	archive/analysis/server_senders.py		
+tools/compare_render_clocks.py	archive/offline_baseline/compare_render_clocks.py		
+tools/prepare_offline_baseline.py	archive/offline_baseline/prepare_offline_baseline.py		
+tools/seed_offline_velocity.py	archive/offline_baseline/seed_offline_velocity.py		
+tools/test_render_clock_experiment.py	archive/offline_baseline/test_render_clock_experiment.py		
+tools/test_render_motion.py	archive/offline_baseline/test_render_motion.py		
+tools/test_aoapack_write.py	tests/test_aoapack_write.py		
+tools/test_asteroid_render.py	tests/test_asteroid_render.py		
+tools/test_build_texture_pack.py	tests/test_build_texture_pack.py		
+tools/test_cli_help.py	tests/test_cli_help.py		
+tools/test_client_extensions.py	tests/test_client_extensions.py		
+tools/test_client_launcher.py	tests/test_client_launcher.py		
+tools/test_combat_delivery.py	tests/test_combat_delivery.py		
+tools/test_cursor_warp.py	tests/test_cursor_warp.py		
+tools/test_dedicated_host.py	tests/test_dedicated_host.py		
+tools/test_frame_clock.py	tests/test_frame_clock.py		
+tools/test_guest_admission.py	tests/test_guest_admission.py		
+tools/test_host_argv.py	tests/test_host_argv.py		
+tools/test_host_control.py	tests/test_host_control.py		
+tools/test_install_wrapper.py	tests/test_install_wrapper.py		
+tools/test_internet_play.py	tests/test_internet_play.py		
+tools/test_lan_dogfight.py	tests/test_lan_dogfight.py		
+tools/test_make_map.py	tests/test_make_map.py		
+tools/test_make_object.py	tests/test_make_object.py		
+tools/test_make_vessel_combat.py	tests/test_make_vessel_combat.py		
+tools/test_menu_aspect.py	tests/test_menu_aspect.py		
+tools/test_navigation_buoys.py	tests/test_navigation_buoys.py		
+tools/test_network_bounds.py	tests/test_network_bounds.py		
+tools/test_object_lod.py	tests/test_object_lod.py		
+tools/test_object_persistence.py	tests/test_object_persistence.py		
+tools/test_object_persistence_pipeline.py	tests/test_object_persistence_pipeline.py		
+tools/test_online_terrain.py	tests/test_online_terrain.py		
+tools/test_patch_layout.py	tests/test_patch_layout.py		
+tools/test_physics_timestep.py	tests/test_physics_timestep.py		
+tools/test_polite_http.py	tests/test_polite_http.py		
+tools/test_powerup_pickup.py	tests/test_powerup_pickup.py		
+tools/test_powerups.py	tests/test_powerups.py		
+tools/test_prepare_client.py	tests/test_prepare_client.py		
+tools/test_reel.py	tests/test_reel.py		
+tools/test_relay_motion.py	tests/test_relay_motion.py		
+tools/test_relay_recovery.py	tests/test_relay_recovery.py		
+tools/test_render_culling.py	tests/test_render_culling.py		Phase 2: visibility parts merge into test_visibility_fix, rest archived
+tools/test_scene_nodes.py	tests/test_scene_nodes.py		
+tools/test_solid_world_render.py	tests/test_solid_world_render.py		
+tools/test_station_detail.py	tests/test_station_detail.py		
+tools/test_station_runtime.py	tests/test_station_runtime.py		
+tools/test_station_sessions.py	tests/test_station_sessions.py		
+tools/test_station_stub.py	tests/test_station_stub.py		
+tools/test_target_ships.py	tests/test_target_ships.py		
+tools/test_texture32.py	tests/test_texture32.py		
+tools/test_third_person.py	tests/test_third_person.py		
+tools/test_turret_groups.py	tests/test_turret_groups.py		
+tools/test_turret_trial.py	tests/test_turret_trial.py		
+tools/test_visibility_fix.py	tests/test_visibility_fix.py		
+tools/test_warp_headless.py	tests/test_warp_headless.py		
+tools/test_warp_trial.py	tests/test_warp_trial.py		
+tools/test_world_detail.py	tests/test_world_detail.py		
+tools/verify_local.py	tools/verify_local.py		
+tools/reel/	aoa/reel/		whole folder, incl. shots.json and edit.json
+tools/setup_game.ps1	tools/setup_game.ps1		stays; Phase 3 wizard supersedes it (kept as fallback)
+tools/register_activeskin.ps1	tools/register_activeskin.ps1		stays; called by the wizard
+tools/client_login.ps1	tools/dev/client_login.ps1		test/reel driver, not player-facing
+tools/start_lan_dogfight.ps1	tools/start_lan_dogfight.ps1		Phase 3: becomes a two-line wrapper around the headless host
+tools/client_launcher.cmd	Play.cmd		Phase 3: root-level double-click stub; old path kept as a forwarder
+tools/host_control.cmd	Host.cmd		Phase 3: root-level double-click stub; old path kept as a forwarder
+tools/README.md	docs/reference/tools.md		Phase 4: generated index
