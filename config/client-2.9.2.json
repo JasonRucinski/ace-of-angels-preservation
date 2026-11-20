@@ -50,7 +50,7 @@
       "initial_bytes": 1230636,
       "initial_sha256": "449420494f9cca3aea3d98170ec23fbc69c9330bbf27bf8256281b0bdb5d908f",
       "max_bytes": 33554432,
-      "reason": "Original client appends decoded WAVs on first run; see docs/assets.md"
+      "reason": "Original client appends decoded WAVs on first run; see docs/reference/asset-formats.md"
     }
   }
 }

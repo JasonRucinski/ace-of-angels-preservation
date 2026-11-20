@@ -17,88 +17,88 @@ file	generator	date	cited_by	notes
 2.7.1/installer_inventory.json	python -I tools/run.py archive.analysis.inventory INSTALLER 2.7.1 [HANDOFF] OUT (OUT/inventory.json)	2026-10-25 (committed)	archive/README.md	
 2.7.1/offline_refs.json	python -I tools/run.py archive.analysis.offline_refs CLIENT FLAGS_VA PATH	2026-10-25 (committed)	archive/README.md	
 2.7.1/packet_sizes.json	python -I tools/run.py aoa.analysis.packet_sizes CLIENT PATH	2026-10-25 (committed)	aoa/analysis/message_table.py	
-2.7.1/packet_sizes.txt	python -I tools/run.py aoa.analysis.packet_sizes CLIENT PATH (text companion)	2026-10-25 (committed)	docs/findings.md	
+2.7.1/packet_sizes.txt	python -I tools/run.py aoa.analysis.packet_sizes CLIENT PATH (text companion)	2026-10-25 (committed)	docs/research/findings.md	
 2.7.1/pe_facts.json	python -I tools/run.py archive.analysis.pe_facts CLIENT PATH	2026-10-25 (committed)	archive/README.md	
-2.7.1/send_sites.json	python -I tools/run.py aoa.analysis.send_sites CLIENT evidence/2.7.1/packet_sizes.json PATH	2026-10-25 (committed)	aoa/analysis/message_table.py docs/findings.md	
-2.7.1/server_senders.json	python -I tools/run.py archive.analysis.server_senders CLIENT_271 evidence/2.7.1/send_sites.json CLIENT_292 PATH	2026-10-25 (committed)	archive/README.md docs/findings.md	
+2.7.1/send_sites.json	python -I tools/run.py aoa.analysis.send_sites CLIENT evidence/2.7.1/packet_sizes.json PATH	2026-10-25 (committed)	aoa/analysis/message_table.py docs/research/findings.md	
+2.7.1/server_senders.json	python -I tools/run.py archive.analysis.server_senders CLIENT_271 evidence/2.7.1/send_sites.json CLIENT_292 PATH	2026-10-25 (committed)	archive/README.md docs/research/findings.md	
 2.7.1/version_probe.json	python -I tools/aoa_version.py CLIENT --detail --out PATH	2026-10-25 (committed)	-	
 2.7.1/world_offline_refs.json	python -I tools/run.py archive.analysis.offline_refs CLIENT FLAGS_VA PATH (world flag)	2026-10-25 (committed)	archive/README.md	
-2.9.2/archive_terminator_emulation.json	python -I tools/run.py aoa.emulation.check_archive_terminator CLIENT.EXE.orig PATH	2026-10-25 (committed)	docs/findings.md	
+2.9.2/archive_terminator_emulation.json	python -I tools/run.py aoa.emulation.check_archive_terminator CLIENT.EXE.orig PATH	2026-10-25 (committed)	docs/research/findings.md	
 2.9.2/archives.json	python -I tools/aoapack.py extract CLIENT ARCHIVE OUT (one _index.json per archive, combined by hand)	2026-10-25 (committed)	aoa/maps/navigation.py archive/analysis/audit_warp_gates.py	
-2.9.2/arena1a_audit_20261021.json	python -I tools/run.py archive.analysis.audit_arena1a --evidence PATH	2026-10-21	aoa/maps/arena1a_audit.py archive/README.md archive/analysis/audit_arena1a.py docs/arena1a.md	
-2.9.2/arena1a_native_nodes_20261021.json	python -I tools/run.py aoa.emulation.check_terrain_nodes CLIENT.EXE.orig PATH	2026-10-21	docs/arena1a.md	
-2.9.2/arena1a_rebuild_20261026.json	python -I tools/run.py archive.analysis.audit_arena1a_rebuild --evidence PATH	2026-10-26	CONTEXT.md archive/README.md archive/analysis/audit_arena1a_rebuild.py docs/arena1a-rebuild.md	
-2.9.2/arena_inventory.json	python -I tools/run.py archive.analysis.arena_inventory EXPORT_DIR SCENES_DIR PATH	2026-10-25 (committed)	archive/README.md docs/findings.md docs/hosting-assets.md	
+2.9.2/arena1a_audit_20261021.json	python -I tools/run.py archive.analysis.audit_arena1a --evidence PATH	2026-10-21	aoa/maps/arena1a_audit.py archive/README.md archive/analysis/audit_arena1a.py docs/research/arena1a.md	
+2.9.2/arena1a_native_nodes_20261021.json	python -I tools/run.py aoa.emulation.check_terrain_nodes CLIENT.EXE.orig PATH	2026-10-21	docs/research/arena1a.md	
+2.9.2/arena1a_rebuild_20261026.json	python -I tools/run.py archive.analysis.audit_arena1a_rebuild --evidence PATH	2026-10-26	CONTEXT.md archive/README.md archive/analysis/audit_arena1a_rebuild.py docs/research/arena1a-trials.md	
+2.9.2/arena_inventory.json	python -I tools/run.py archive.analysis.arena_inventory EXPORT_DIR SCENES_DIR PATH	2026-10-25 (committed)	archive/README.md docs/research/findings.md docs/reference/maps.md	
 2.9.2/asteroid_render_20261022.json	no generator in the repository	2026-10-22	-	
 2.9.2/cipher_emulation.json	python -I tools/run.py archive.analysis.emulate_cipher CLIENT KEY256.BIN ENC_VA DEC_VA PATH	2026-10-25 (committed)	archive/README.md	
-2.9.2/client_extension_gate_20261021.json	python -I tools/run.py aoa.emulation.check_client_extensions CLIENT.EXE.orig PATH	2026-10-21	docs/internet-server-todo.md	
-2.9.2/combat_live_20261021.json	no generator in the repository	2026-10-21	docs/findings.md	
+2.9.2/client_extension_gate_20261021.json	python -I tools/run.py aoa.emulation.check_client_extensions CLIENT.EXE.orig PATH	2026-10-21	docs/roadmap/internet-server.md	
+2.9.2/combat_live_20261021.json	no generator in the repository	2026-10-21	docs/research/findings.md	
 2.9.2/config_records.json	python -I tools/run.py archive.analysis.config_records CLIENT 64 ANCHOR PATH	2026-10-25 (committed)	-	
 2.9.2/config_records.txt	python -I tools/run.py archive.analysis.config_records CLIENT 64 ANCHOR PATH (text companion)	2026-10-25 (committed)	-	
-2.9.2/ctf_geometry_20261021.json	python -I tools/run.py aoa.maps.arena_geometry (writes work/ctf-arena-validation.json, copied by hand)	2026-10-21	docs/internet-server-todo.md	
-2.9.2/custom_map_crucible_20261027.json	no generator in the repository	2026-10-27	CONTEXT.md docs/custom-maps.md	
-2.9.2/custom_object_bennu_20261027.json	no generator in the repository	2026-10-27	CONTEXT.md docs/custom-maps.md docs/custom-objects.md	
+2.9.2/ctf_geometry_20261021.json	python -I tools/run.py aoa.maps.arena_geometry (writes work/ctf-arena-validation.json, copied by hand)	2026-10-21	docs/roadmap/internet-server.md	
+2.9.2/custom_map_crucible_20261027.json	no generator in the repository	2026-10-27	CONTEXT.md docs/create/custom-maps.md	
+2.9.2/custom_object_bennu_20261027.json	no generator in the repository	2026-10-27	CONTEXT.md docs/create/custom-maps.md docs/create/custom-objects.md	
 2.9.2/dialogs.json	python -I tools/run.py aoa.analysis.dialogs CLIENT PATH	2026-10-25 (committed)	-	
 2.9.2/dispatch_base.json	python -I tools/run.py aoa.analysis.dispatch_table CLIENT SWITCH_VA PATH	2026-10-25 (committed)	aoa/analysis/message_table.py	
 2.9.2/dispatch_extra.json	python -I tools/run.py aoa.analysis.dispatch_table CLIENT SWITCH_VA PATH	2026-10-25 (committed)	aoa/analysis/message_table.py	
-2.9.2/frame_pacing_20261023.json	no generator in the repository (runs of aoa.live.frame_pacing PID OUT on Windows, combined by hand)	2026-10-23	docs/findings.md	
-2.9.2/function_matches.json	python -I tools/run.py aoa.analysis.match_funcs REF_271 CLIENT_292 PATH name=va ...	2026-10-25 (committed)	docs/findings.md	
-2.9.2/gun_table.json	python -I tools/run.py archive.analysis.gun_table CLIENT PATH	2026-10-25 (committed)	CONTEXT.md aoa/host/make_vessel_combat.py archive/README.md docs/findings.md tests/test_make_vessel_combat.py	
+2.9.2/frame_pacing_20261023.json	no generator in the repository (runs of aoa.live.frame_pacing PID OUT on Windows, combined by hand)	2026-10-23	docs/research/findings.md	
+2.9.2/function_matches.json	python -I tools/run.py aoa.analysis.match_funcs REF_271 CLIENT_292 PATH name=va ...	2026-10-25 (committed)	docs/research/findings.md	
+2.9.2/gun_table.json	python -I tools/run.py archive.analysis.gun_table CLIENT PATH	2026-10-25 (committed)	CONTEXT.md aoa/host/make_vessel_combat.py archive/README.md docs/research/findings.md tests/test_make_vessel_combat.py	
 2.9.2/installer_inventory.json	python -I tools/run.py archive.analysis.inventory INSTALLER 2.9.2 [HANDOFF] OUT (OUT/inventory.json)	2026-10-25 (committed)	archive/README.md	
-2.9.2/lan_binding_20261021.json	no generator in the repository	2026-10-21	docs/STATUS.md docs/internet-server-todo.md docs/lan-dogfight.md	
-2.9.2/linux_host_20261026.json	no generator in the repository	2026-10-26	CONTEXT.md docs/STATUS.md docs/linux-host.md	
-2.9.2/linux_rotation_20261026.json	no generator in the repository	2026-10-26	CONTEXT.md README.md docs/STATUS.md docs/linux-host.md	
-2.9.2/linux_two_pc_combat_20261026.json	no generator in the repository	2026-10-26	CONTEXT.md docs/STATUS.md docs/linux-host.md	
-2.9.2/local_gate_20261021.json	python -I tools/verify_local.py --report PATH	2026-10-21	docs/findings.md docs/internet-server-todo.md	
-2.9.2/local_gate_20261021_arena1a.json	python -I tools/verify_local.py --report PATH	2026-10-21	docs/arena1a.md	
-2.9.2/local_gate_20261021_client_extensions.json	python -I tools/verify_local.py --report PATH	2026-10-21	docs/internet-server-todo.md	
-2.9.2/local_gate_20261021_dedup.json	python -I tools/verify_local.py --report PATH	2026-10-21	docs/findings.md	
-2.9.2/local_gate_20261021_lan_dogfight.json	python -I tools/verify_local.py --report PATH	2026-10-21	docs/internet-server-todo.md docs/lan-dogfight.md	
-2.9.2/local_gate_20261021_missiles.json	python -I tools/verify_local.py --report PATH	2026-10-21	docs/internet-server-todo.md	
-2.9.2/local_gate_20261021_ordered_combat.json	python -I tools/verify_local.py --report PATH	2026-10-21	docs/internet-server-todo.md	
-2.9.2/local_gate_20261021_ordered_events.json	python -I tools/verify_local.py --report PATH	2026-10-21	docs/internet-server-todo.md	
-2.9.2/local_gate_20261021_realclient.json	python -I tools/verify_local.py --report PATH	2026-10-21	docs/findings.md	
-2.9.2/local_gate_20261022_internet_play.json	python -I tools/verify_local.py --report PATH	2026-10-22	docs/vpn-dogfight.md	
-2.9.2/map_nodes_20261026.json	python -I tools/run.py archive.analysis.audit_map_nodes --evidence PATH	2026-10-26	CONTEXT.md archive/README.md archive/analysis/audit_map_nodes.py docs/map-viewer.md	
-2.9.2/map_viewer_tour_20261023.json	no generator in the repository	2026-10-23	aoa/live/verify_navigation_buoys.py docs/STATUS.md docs/map-viewer.md	
-2.9.2/missile_live_20261021.json	no generator in the repository	2026-10-21	docs/findings.md docs/internet-server-todo.md	
-2.9.2/motion_state_emulation.json	python -I tools/run.py aoa.emulation.check_motion_state CLIENT.EXE.orig PATH	2026-10-25 (committed)	docs/findings.md docs/local-protocol.md	
-2.9.2/movement_emulation.json	python -I tools/run.py aoa.emulation.check_movement CLIENT.EXE.orig PATH	2026-10-25 (committed)	docs/findings.md	
-2.9.2/navigation_buoys_all_maps_20261026.json	no generator in the repository	2026-10-26	docs/STATUS.md docs/arena1a-rebuild.md	
-2.9.2/object_lod_audit.json	python -I tools/run.py aoa.maps.lod PATH	2026-10-25 (committed)	docs/offline-rendering-baseline.md	
-2.9.2/object_persistence_20261027.json	no generator in the repository	2026-10-27	CONTEXT.md docs/asteroid-rendering.md	
+2.9.2/lan_binding_20261021.json	no generator in the repository	2026-10-21	docs/STATUS.md docs/roadmap/internet-server.md docs/host/lan.md	
+2.9.2/linux_host_20261026.json	no generator in the repository	2026-10-26	CONTEXT.md docs/STATUS.md docs/host/linux.md	
+2.9.2/linux_rotation_20261026.json	no generator in the repository	2026-10-26	CONTEXT.md README.md docs/STATUS.md docs/host/linux.md	
+2.9.2/linux_two_pc_combat_20261026.json	no generator in the repository	2026-10-26	CONTEXT.md docs/STATUS.md docs/host/linux.md	
+2.9.2/local_gate_20261021.json	python -I tools/verify_local.py --report PATH	2026-10-21	docs/research/findings.md docs/roadmap/internet-server.md	
+2.9.2/local_gate_20261021_arena1a.json	python -I tools/verify_local.py --report PATH	2026-10-21	docs/research/arena1a.md	
+2.9.2/local_gate_20261021_client_extensions.json	python -I tools/verify_local.py --report PATH	2026-10-21	docs/roadmap/internet-server.md	
+2.9.2/local_gate_20261021_dedup.json	python -I tools/verify_local.py --report PATH	2026-10-21	docs/research/findings.md	
+2.9.2/local_gate_20261021_lan_dogfight.json	python -I tools/verify_local.py --report PATH	2026-10-21	docs/roadmap/internet-server.md docs/host/lan.md	
+2.9.2/local_gate_20261021_missiles.json	python -I tools/verify_local.py --report PATH	2026-10-21	docs/roadmap/internet-server.md	
+2.9.2/local_gate_20261021_ordered_combat.json	python -I tools/verify_local.py --report PATH	2026-10-21	docs/roadmap/internet-server.md	
+2.9.2/local_gate_20261021_ordered_events.json	python -I tools/verify_local.py --report PATH	2026-10-21	docs/roadmap/internet-server.md	
+2.9.2/local_gate_20261021_realclient.json	python -I tools/verify_local.py --report PATH	2026-10-21	docs/research/findings.md	
+2.9.2/local_gate_20261022_internet_play.json	python -I tools/verify_local.py --report PATH	2026-10-22	docs/host/vpn.md	
+2.9.2/map_nodes_20261026.json	python -I tools/run.py archive.analysis.audit_map_nodes --evidence PATH	2026-10-26	CONTEXT.md archive/README.md archive/analysis/audit_map_nodes.py docs/play/map-viewer.md	
+2.9.2/map_viewer_tour_20261023.json	no generator in the repository	2026-10-23	aoa/live/verify_navigation_buoys.py docs/STATUS.md docs/play/map-viewer.md	
+2.9.2/missile_live_20261021.json	no generator in the repository	2026-10-21	docs/research/findings.md docs/roadmap/internet-server.md	
+2.9.2/motion_state_emulation.json	python -I tools/run.py aoa.emulation.check_motion_state CLIENT.EXE.orig PATH	2026-10-25 (committed)	docs/research/findings.md docs/reference/protocol.md	
+2.9.2/movement_emulation.json	python -I tools/run.py aoa.emulation.check_movement CLIENT.EXE.orig PATH	2026-10-25 (committed)	docs/research/findings.md	
+2.9.2/navigation_buoys_all_maps_20261026.json	no generator in the repository	2026-10-26	docs/STATUS.md docs/research/arena1a-trials.md	
+2.9.2/object_lod_audit.json	python -I tools/run.py aoa.maps.lod PATH	2026-10-25 (committed)	docs/research/rendering/offline-baseline.md	
+2.9.2/object_persistence_20261027.json	no generator in the repository	2026-10-27	CONTEXT.md docs/research/rendering/asteroids.md	
 2.9.2/object_persistence_review_20261027.json	no generator in the repository	2026-10-27	-	
-2.9.2/object_spawn_live.json	no generator in the repository	2026-10-25 (committed)	docs/findings.md	
-2.9.2/online_terrain_20261022.json	no generator in the repository	2026-10-22	docs/STATUS.md docs/arena1a.md	
-2.9.2/orbit_camera_20261027.json	no generator in the repository	2026-10-27	docs/STATUS.md docs/findings.md	
-2.9.2/ordered_combat_history_20261021.json	python -I tools/run.py aoa.emulation.check_reliable_history CLIENT.EXE.orig PATH (an earlier report)	2026-10-21	docs/internet-server-todo.md	check_reliable_history's report before the receive probes were split
-2.9.2/ordered_events_20261021.json	python -I tools/run.py aoa.emulation.check_ordered_events CLIENT.EXE.orig PATH	2026-10-21	docs/client-extension-gate.md docs/internet-server-todo.md	
+2.9.2/object_spawn_live.json	no generator in the repository	2026-10-25 (committed)	docs/research/findings.md	
+2.9.2/online_terrain_20261022.json	no generator in the repository	2026-10-22	docs/STATUS.md docs/research/arena1a.md	
+2.9.2/orbit_camera_20261027.json	no generator in the repository	2026-10-27	docs/STATUS.md docs/research/findings.md	
+2.9.2/ordered_combat_history_20261021.json	python -I tools/run.py aoa.emulation.check_reliable_history CLIENT.EXE.orig PATH (an earlier report)	2026-10-21	docs/roadmap/internet-server.md	check_reliable_history's report before the receive probes were split
+2.9.2/ordered_events_20261021.json	python -I tools/run.py aoa.emulation.check_ordered_events CLIENT.EXE.orig PATH	2026-10-21	docs/roadmap/authoritative-server.md docs/roadmap/internet-server.md	
 2.9.2/packet_sizes.json	python -I tools/run.py aoa.analysis.packet_sizes CLIENT PATH	2026-10-25 (committed)	-	
 2.9.2/packet_sizes.txt	python -I tools/run.py aoa.analysis.packet_sizes CLIENT PATH (text companion)	2026-10-25 (committed)	-	
 2.9.2/pe_facts.json	python -I tools/run.py archive.analysis.pe_facts CLIENT PATH	2026-10-25 (committed)	archive/README.md tests/support_patches.py tests/test_patch_layout.py	
-2.9.2/physics_timestep_live.json	no generator in the repository	2026-10-25 (committed)	docs/findings.md	
-2.9.2/powerups_live_20261025.json	no generator in the repository	2026-10-25	docs/STATUS.md docs/findings.md	
-2.9.2/real_client_check_20261021.json	no generator in the repository	2026-10-21	docs/findings.md docs/internet-server-todo.md	
-2.9.2/reliable_history_emulation.json	python -I tools/run.py aoa.emulation.check_reliable_history CLIENT.EXE.orig PATH	2026-10-25 (committed)	docs/findings.md docs/local-server.md	
+2.9.2/physics_timestep_live.json	no generator in the repository	2026-10-25 (committed)	docs/research/findings.md	
+2.9.2/powerups_live_20261025.json	no generator in the repository	2026-10-25	docs/STATUS.md docs/research/findings.md	
+2.9.2/real_client_check_20261021.json	no generator in the repository	2026-10-21	docs/research/findings.md docs/roadmap/internet-server.md	
+2.9.2/reliable_history_emulation.json	python -I tools/run.py aoa.emulation.check_reliable_history CLIENT.EXE.orig PATH	2026-10-25 (committed)	docs/research/findings.md docs/host/server-reference.md	
 2.9.2/render_clock_comparison.json	python -I tools/run.py archive.offline_baseline.compare_render_clocks PATH	2026-10-25 (committed)	archive/README.md	
-2.9.2/render_culling_fix.json	no generator in the repository (an install record; its emulation part is aoa.emulation.render_pipeline's)	2026-10-25 (committed)	docs/render-pipeline-audit.md	
-2.9.2/render_pipeline_audit.json	python -I tools/run.py aoa.emulation.render_pipeline PATH	2026-10-25 (committed)	docs/render-pipeline-audit.md	
-2.9.2/safe_zones_20261025.json	no generator in the repository	2026-10-25	archive/analysis/audit_arena1a_rebuild.py docs/STATUS.md docs/findings.md	
+2.9.2/render_culling_fix.json	no generator in the repository (an install record; its emulation part is aoa.emulation.render_pipeline's)	2026-10-25 (committed)	docs/research/rendering/pipeline-audit.md	
+2.9.2/render_pipeline_audit.json	python -I tools/run.py aoa.emulation.render_pipeline PATH	2026-10-25 (committed)	docs/research/rendering/pipeline-audit.md	
+2.9.2/safe_zones_20261025.json	no generator in the repository	2026-10-25	archive/analysis/audit_arena1a_rebuild.py docs/STATUS.md docs/research/findings.md	
 2.9.2/send_sites.json	python -I tools/run.py aoa.analysis.send_sites CLIENT evidence/2.9.2/packet_sizes.json PATH	2026-10-25 (committed)	aoa/analysis/message_table.py	
 2.9.2/solid_world_render_20261022.json	no generator in the repository	2026-10-22	-	
-2.9.2/station_aliases_emulation.json	python -I tools/run.py aoa.emulation.check_station_aliases CLIENT.EXE.orig PATH	2026-10-25 (committed)	docs/findings.md	
-2.9.2/station_arena_live.json	no generator in the repository	2026-10-25 (committed)	docs/findings.md	
+2.9.2/station_aliases_emulation.json	python -I tools/run.py aoa.emulation.check_station_aliases CLIENT.EXE.orig PATH	2026-10-25 (committed)	docs/research/findings.md	
+2.9.2/station_arena_live.json	no generator in the repository	2026-10-25 (committed)	docs/research/findings.md	
 2.9.2/station_detail_20261022.json	no generator in the repository	2026-10-22	-	
-2.9.2/station_request_emulation.json	python -I tools/run.py aoa.emulation.check_station_request CLIENT.EXE.orig PATH	2026-10-25 (committed)	docs/findings.md docs/local-server.md	
-2.9.2/target_ships_damage_live_20261025.json	no generator in the repository	2026-10-25	docs/STATUS.md docs/findings.md	
-2.9.2/target_ships_live_20261025.json	no generator in the repository	2026-10-25	docs/findings.md	
-2.9.2/texture_pack_20261023.json	no generator in the repository	2026-10-23	docs/client-setup.md	
-2.9.2/turret_groups_20261026.json	python -I tools/run.py archive.analysis.audit_turret_groups --evidence PATH	2026-10-26	archive/README.md archive/analysis/audit_turret_groups.py docs/STATUS.md docs/arena1a-rebuild.md	
-2.9.2/two_client_motion.json	no generator in the repository	2026-10-25 (committed)	docs/findings.md	
+2.9.2/station_request_emulation.json	python -I tools/run.py aoa.emulation.check_station_request CLIENT.EXE.orig PATH	2026-10-25 (committed)	docs/research/findings.md docs/host/server-reference.md	
+2.9.2/target_ships_damage_live_20261025.json	no generator in the repository	2026-10-25	docs/STATUS.md docs/research/findings.md	
+2.9.2/target_ships_live_20261025.json	no generator in the repository	2026-10-25	docs/research/findings.md	
+2.9.2/texture_pack_20261023.json	no generator in the repository	2026-10-23	docs/reference/client-patches.md	
+2.9.2/turret_groups_20261026.json	python -I tools/run.py archive.analysis.audit_turret_groups --evidence PATH	2026-10-26	archive/README.md archive/analysis/audit_turret_groups.py docs/STATUS.md docs/research/arena1a-trials.md	
+2.9.2/two_client_motion.json	no generator in the repository	2026-10-25 (committed)	docs/research/findings.md	
 2.9.2/version_probe.json	python -I tools/aoa_version.py CLIENT --detail --out PATH	2026-10-25 (committed)	-	
 2.9.2/visibility_fix_20261023.json	no generator in the repository	2026-10-23	-	
-2.9.2/warp_gates_20261026.json	python -I tools/run.py archive.analysis.audit_warp_gates --evidence PATH	2026-10-26	archive/README.md archive/analysis/audit_warp_gates.py docs/arena1a-rebuild.md	
-2.9.2/warp_headless_20261027.json	python -I tools/test.py test_warp_headless -- --report PATH	2026-10-27	docs/STATUS.md docs/arena1a-rebuild.md	
+2.9.2/warp_gates_20261026.json	python -I tools/run.py archive.analysis.audit_warp_gates --evidence PATH	2026-10-26	archive/README.md archive/analysis/audit_warp_gates.py docs/research/arena1a-trials.md	
+2.9.2/warp_headless_20261027.json	python -I tools/test.py test_warp_headless -- --report PATH	2026-10-27	docs/STATUS.md docs/research/arena1a-trials.md	
 2.9.2/warp_trial_20261026.json	no generator in the repository	2026-10-26	-	
 2.9.2/world_detail_20261022.json	no generator in the repository	2026-10-22	-	
 archive/2.9.2/local_gate_20261021_combat.json	python -I tools/verify_local.py --report PATH	2026-10-21	-	
@@ -123,9 +123,9 @@ asset-review/2.8.2.json	python -I tools/run.py aoa.research.compare_version_asse
 asset-review/2.9.2-version.json	python -I tools/aoa_version.py CLIENT --detail --out PATH	2026-10-25 (committed)	-	
 asset-review/2.9.2.json	python -I tools/run.py aoa.research.compare_version_assets --evidence evidence/asset-review	2026-10-25 (committed)	-	
 asset-review/arena1a-node-comparison.json	no generator in the repository	2026-10-25 (committed)	-	
-asset-review/client-resources.json	python -I tools/run.py archive.analysis.compare_client_resources --evidence PATH	2026-10-25 (committed)	archive/README.md archive/analysis/compare_client_resources.py docs/version-assets.md	
-asset-review/level-data.json	python -I tools/run.py archive.analysis.audit_level_data --evidence PATH	2026-10-25 (committed)	archive/README.md archive/analysis/audit_level_data.py docs/level-data.md	
+asset-review/client-resources.json	python -I tools/run.py archive.analysis.compare_client_resources --evidence PATH	2026-10-25 (committed)	archive/README.md archive/analysis/compare_client_resources.py docs/reference/versions.md	
+asset-review/level-data.json	python -I tools/run.py archive.analysis.audit_level_data --evidence PATH	2026-10-25 (committed)	archive/README.md archive/analysis/audit_level_data.py docs/research/level-data.md	
 asset-review/summary.json	python -I tools/run.py aoa.research.compare_version_assets --evidence evidence/asset-review	2026-10-25 (committed)	-	
 asset-review/verification.json	no generator in the repository	2026-10-25 (committed)	-	
-code-clues.json	no generator in the repository	2026-10-25 (committed)	docs/code-clues.md	
-download_log.jsonl	python -I tools/fetch.py VERSION --evidence PATH (appends one record per download)	2026-10-25 (committed)	aoa/research/fetch.py docs/findings.md tests/test_research.py	
+code-clues.json	no generator in the repository	2026-10-25 (committed)	docs/research/code-clues.md	
+download_log.jsonl	python -I tools/fetch.py VERSION --evidence PATH (appends one record per download)	2026-10-25 (committed)	aoa/research/fetch.py docs/research/findings.md tests/test_research.py	
