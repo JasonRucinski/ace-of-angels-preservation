@@ -34,7 +34,8 @@ Before relying on the branch, run on Windows with the game:
   install, hosts file, the running-game check, Play) have not run at all.
 - The elevation, registry and firewall steps of the launchers, and the
   PowerShell scripts (`start_lan_dogfight.ps1`, `setup_game.ps1`).
-- The Windows job of CI, and the Linux job with the research packages
-  installed (`--strict`).
+- The Windows job of CI. (The Linux job's command, `tools/test.py --tier ci
+  --strict` on Python 3.12 with `requirements-research.txt` installed, was
+  run in the cloud session on 20 November 2026: 50 of 50 suites passed.)
 
 What is verified and what is untested today: [STATUS.md](../STATUS.md).
