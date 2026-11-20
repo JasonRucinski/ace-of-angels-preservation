@@ -1,4 +1,4 @@
-"""tools/README.md is the current output of aoa.tools_index; game-free.
+"""The index in docs/reference/tools.md is the current output of aoa.tools_index; game-free.
 
 When this fails, regenerate it: python -I tools/run.py aoa.tools_index --write
 
@@ -12,9 +12,14 @@ from aoa.paths import ROOT
 
 class ToolsIndex(unittest.TestCase):
     def test_committed_index_is_current(self):
-        committed = (ROOT / "tools/README.md").read_text(encoding="utf-8")
-        self.assertEqual(committed, tools_index.render(),
-                         "tools/README.md is out of date: python -I tools/run.py aoa.tools_index --write")
+        self.assertEqual(tools_index.BLOCK.committed(), tools_index.BLOCK.current(),
+                         "docs/reference/tools.md is out of date: python -I tools/run.py aoa.tools_index --write")
+
+    def test_tools_readme_points_at_the_index(self):
+        # One generated copy: tools/README.md only links it.
+        readme = (ROOT / "tools/README.md").read_text(encoding="utf-8")
+        self.assertIn("(../docs/reference/tools.md)", readme)
+        self.assertNotIn(tools_index.BLOCK.begin, readme)
 
     def test_every_command_and_module_is_listed(self):
         text = tools_index.render()

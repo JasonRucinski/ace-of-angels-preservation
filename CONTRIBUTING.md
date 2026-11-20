@@ -51,14 +51,29 @@ House rules, from how the project has worked so far:
 - **Be gentle with archive.org and the Wayback Machine**: pause between
   requests and back off on HTTP 429.
 
+## Tests
+
 Before opening a pull request, run the tests that cover your change, and the
-full gate if you have the game set up:
+full gate if you have the game set up. `tools/test.py` runs suites, each in
+its own `python -I` process; the lists are in `tests/tiers.py`:
 
 ```powershell
+.venv\Scripts\python.exe -I tools\test.py --tier ci
+.venv\Scripts\python.exe -I tools\test.py test_station_stub
 .venv\Scripts\python.exe -I tools\verify_local.py
 ```
 
-The tests that need no game files also run in CI on every pull request.
+`--tier ci` runs the suites that need no game files; CI runs them on every
+push and pull request, on Windows and Ubuntu, with the packages of
+`requirements-research.txt` installed and `--strict`
+([`.github/workflows/tests.yml`](.github/workflows/tests.yml)). Without those
+packages, a suite that needs `unicorn`, `capstone` or `pefile` is reported as
+skipped.
+
+`verify_local.py` runs the supported regression gate: the suites in the
+`LOCAL` list of `tests/tiers.py` (most, not all, of the `test_*.py` files) and
+the emulators, about 10 minutes. It does not launch the game, but it needs a
+prepared `game\2.9.2` folder (it reads the original `AOACLIENT.EXE.orig`).
 
 ## Searching tips
 
