@@ -6,7 +6,7 @@
 <title>Ace of Angels (2002 space combat game) preservation project</title>
 <meta name="description" content="Ace of Angels is the online 3D space combat sim by Flying Rock Enterprises that won Technical Excellence at the 2002 Independent Games Festival. This project recovered its builds, makes it run on Windows 11 and hosts multiplayer again.">
 <link rel="canonical" href="https://jasonrucinski.github.io/ace-of-angels-preservation/">
-<meta name="theme-color" content="#060812">
+<meta name="theme-color" content="#000000">
 <link rel="icon" href="images/logo.jpg">
 
 <meta property="og:type" content="website">
@@ -49,47 +49,82 @@
 }
 </script>
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&display=swap">
 <style>
+  /* The look of the official site, aceofangels.com (2001-2006), taken from its
+     own art: black pages, gold metallic small-caps titles ("A Living Game"),
+     blue bracketed section headers ("[ News ]") and framed "Spotlight" panels. */
   :root {
-    --bg: #060812; --panel: #0e1324; --line: #222a44;
-    --text: #e6e8f0; --muted: #a9b1c9; --gold: #f0e2aa; --link: #9cc3ff;
-  }
-  @media (prefers-color-scheme: light) {
-    :root { --bg: #f6f5f0; --panel: #ffffff; --line: #ddd9cc;
-            --text: #1b1d26; --muted: #545a6e; --gold: #7a5c00; --link: #1f5fbf; }
+    color-scheme: dark;
+    --bg: #000000; --panel: #07080c; --frame: #2a2a24; --frame-hi: #4a4735;
+    --text: #c9cbd2; --muted: #8d919c;
+    --gold-hi: #f1e9b0; --gold: #dfd795; --gold-lo: #938f65;
+    --blue: #0067cf; --blue-hi: #3b93ec; --blue-line: #00376e;
   }
   * { box-sizing: border-box; }
   body { margin: 0; background: var(--bg); color: var(--text);
-         font: 17px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
-  a { color: var(--link); }
-  .wrap { max-width: 980px; margin: 0 auto; padding: 0 16px; }
-  header.hero { position: relative; color: #e6e8f0; background: #060812; overflow: hidden; }
-  header.hero img.bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .35; }
-  header.hero .wrap { position: relative; display: flex; gap: 32px; align-items: center; padding-top: 56px; padding-bottom: 56px; }
-  header.hero img.logo { width: 132px; height: auto; flex: none; }
-  header.hero h1 { margin: 0 0 8px; font-size: clamp(30px, 6vw, 52px); line-height: 1.1; color: #f0e2aa; }
-  header.hero p { margin: 0; color: #d4d9e8; font-size: 19px; }
-  nav.links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
-  nav.links a { color: #060812; background: #f0e2aa; text-decoration: none; font-weight: 600;
-                padding: 8px 14px; border-radius: 6px; }
-  nav.links a.alt { background: transparent; color: #f0e2aa; border: 1px solid #f0e2aa; }
-  section { padding: 36px 0 8px; }
-  h2 { font-size: 26px; margin: 0 0 12px; color: var(--gold); }
-  .note { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; color: var(--muted); }
-  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-  .grid figure { margin: 0; }
-  .grid img { width: 100%; height: auto; display: block; border-radius: 6px; border: 1px solid var(--line); }
-  figcaption { font-size: 14px; color: var(--muted); margin-top: 4px; }
-  .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; }
-  .card h3 { margin: 0 0 6px; font-size: 18px; }
-  .card p { margin: 0; color: var(--muted); font-size: 15px; }
-  ol li, ul li { margin-bottom: 6px; }
-  footer { border-top: 1px solid var(--line); margin-top: 40px; padding: 20px 0 40px; color: var(--muted); font-size: 14px; }
+         font: 15px/1.65 Verdana, Tahoma, "DejaVu Sans", sans-serif; }
+  a { color: var(--blue-hi); }
+  a:hover { color: var(--gold); }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 16px; }
+
+  .gold { font-family: Cinzel, "Trajan Pro", Georgia, serif; font-variant: small-caps; letter-spacing: .04em;
+          background: linear-gradient(180deg, var(--gold-hi) 0%, var(--gold) 45%, var(--gold-lo) 100%);
+          -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+  .banner { display: block; margin: 0 auto; max-width: 100%; height: auto; }
+  header.hero { position: relative; background: #000; overflow: hidden; border-bottom: 1px solid var(--frame); }
+  header.hero img.bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .28; }
+  header.hero::after { content: ""; position: absolute; inset: 0;
+                       background: linear-gradient(90deg, #000 0%, rgba(0,0,0,.75) 45%, rgba(0,0,0,.2) 100%); }
+  header.hero .wrap { position: relative; z-index: 1; display: flex; gap: 28px; align-items: center;
+                      padding-top: 40px; padding-bottom: 44px; }
+  header.hero img.logo { width: 140px; height: auto; flex: none; }
+  header.hero h1 { margin: 0; font-size: clamp(34px, 6.5vw, 58px); line-height: 1.05; font-weight: 700; }
+  header.hero .tagline { margin: 2px 0 12px; font-size: clamp(18px, 3vw, 24px); }
+  header.hero p { margin: 0; color: #d2d4da; max-width: 560px; }
+
+  nav.links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+  nav.links a { font-family: Verdana, Tahoma, sans-serif; font-weight: bold; font-size: 14px; text-decoration: none;
+                color: var(--blue-hi); padding: 6px 14px; background: #000;
+                border: 1px solid var(--blue); box-shadow: inset 0 0 8px rgba(0,103,207,.45); }
+  nav.links a:hover { color: #fff; background: #001b36; }
+  nav.links a.alt { color: var(--gold); border-color: var(--gold-lo); box-shadow: none; }
+
+  section { padding: 30px 0 6px; }
+  /* The blue bracketed header of the old site: a line, [ title ], a line. */
+  h2 { display: flex; align-items: center; gap: 0; margin: 0 0 16px;
+       font: bold 19px/1 Verdana, Tahoma, sans-serif; color: var(--blue-hi); letter-spacing: .02em; }
+  h2::before, h2::after { content: ""; height: 2px; background: linear-gradient(90deg, transparent, var(--blue)); }
+  h2::before { width: 40px; }
+  h2::after { flex: 1; background: linear-gradient(90deg, var(--blue), transparent); }
+  h2 span { padding: 6px 14px; border: 2px solid var(--blue); border-top-color: transparent; border-bottom-color: transparent;
+            border-radius: 3px; box-shadow: inset 0 0 10px rgba(0,103,207,.35); text-shadow: 0 0 8px rgba(59,147,236,.5); }
+
+  .note { border: 1px solid var(--frame); background: var(--panel); padding: 10px 14px; color: var(--muted); }
+  .frame { border: 1px solid var(--frame-hi); outline: 1px solid #000; box-shadow: 0 0 0 3px var(--frame), 0 0 14px rgba(0,0,0,.9); }
+  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .grid figure, .spot figure { margin: 0; }
+  .grid img, .spot img { width: 100%; height: auto; display: block; }
+  figcaption { font-size: 12px; color: var(--muted); margin-top: 6px; text-transform: uppercase; letter-spacing: .06em; }
+  .spot { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; align-items: start; }
+  .spot img { aspect-ratio: 9 / 10; object-fit: contain; background: #000; }
+  .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .card { background: var(--panel); padding: 14px 16px; }
+  .card h3 { margin: 0 0 6px; font-size: 20px; font-weight: 700; }
+  .card p { margin: 0; color: var(--muted); font-size: 14px; }
+  ol li { margin-bottom: 6px; }
+  code { color: var(--gold); font-size: 14px; }
+  .small { font-size: 12px; color: var(--muted); }
+  footer { border-top: 1px solid var(--frame); margin-top: 40px; padding: 20px 0 30px; color: var(--muted); font-size: 12px; text-align: center; }
+  footer .banner { margin-bottom: 14px; }
   @media (max-width: 720px) {
-    header.hero .wrap { flex-direction: column; align-items: flex-start; gap: 16px; padding-top: 32px; padding-bottom: 32px; }
+    header.hero .wrap { flex-direction: column; align-items: flex-start; gap: 14px; padding-top: 24px; padding-bottom: 28px; }
     header.hero img.logo { width: 96px; }
     .grid, .cards { grid-template-columns: 1fr; }
+    .spot { grid-template-columns: repeat(2, 1fr); }
   }
 </style>
 </head>
@@ -101,7 +136,8 @@
     <img class="logo" src="images/logo.jpg" width="176" height="238"
          alt="Ace of Angels game logo (Flying Rock Enterprises): a gold A over a ring">
     <div>
-      <h1>Ace of Angels</h1>
+      <h1 class="gold">Ace of Angels</h1>
+      <div class="tagline gold">A Living Game</div>
       <p>The online 3D space combat sim by Flying Rock Enterprises, winner of
          Technical Excellence at the 2002 Independent Games Festival. Its
          servers went dark; this project brings it back.</p>
@@ -122,7 +158,7 @@
 </section>
 
 <section>
-  <h2>The game</h2>
+  <h2><span>The game</span></h2>
   <p><em>Ace of Angels</em> was an online space fighter game built by a small team in
   Marietta, Georgia, "since 1996". Set in the early 26th century in the
   <strong>Known Sphere</strong> (8 races, 10 nations), it promised 40+ fighters,
@@ -133,40 +169,46 @@
 
   <div class="grid">
     <figure>
-      <img src="images/screenshot-asteroids.jpg" width="640" height="480" loading="lazy"
+      <img class="frame" src="images/screenshot-asteroids.jpg" width="640" height="480" loading="lazy"
            alt="Ace of Angels screenshot: a fighter among asteroids, with the ship systems and damage panels open">
       <figcaption>Among the asteroids</figcaption>
     </figure>
     <figure>
-      <img src="images/screenshot-asteroid-base.jpg" width="800" height="600" loading="lazy"
+      <img class="frame" src="images/screenshot-asteroid-base.jpg" width="800" height="600" loading="lazy"
            alt="Ace of Angels screenshot: green fighters docked at a station built on an asteroid">
       <figcaption>A station built on an asteroid</figcaption>
     </figure>
     <figure>
-      <img src="images/screenshot-strafing.jpg" width="640" height="480" loading="lazy"
+      <img class="frame" src="images/screenshot-strafing.jpg" width="640" height="480" loading="lazy"
            alt="Ace of Angels screenshot: a fighter strafes across an asteroid's surface">
       <figcaption>Strafing an asteroid's surface</figcaption>
     </figure>
     <figure>
-      <img src="images/screenshot-hangar.jpg" width="900" height="675" loading="lazy"
+      <img class="frame" src="images/screenshot-hangar.jpg" width="900" height="675" loading="lazy"
            alt="Ace of Angels screenshot: a fighter inside a station hangar bay">
       <figcaption>Inside a hangar bay</figcaption>
     </figure>
   </div>
-  <p style="font-size:14px;color:var(--muted)">Screenshots from the official site,
+  <div class="spot" style="margin-top:22px">
+    <figure><img class="frame" src="images/fighter-shrike.jpg" width="350" height="313" loading="lazy" alt="Ace of Angels Shrike fighter render"><figcaption>Shrike</figcaption></figure>
+    <figure><img class="frame" src="images/fighter-grathven.jpg" width="350" height="201" loading="lazy" alt="Ace of Angels Grathven fighter render"><figcaption>Grathven</figcaption></figure>
+    <figure><img class="frame" src="images/spotlight-zethi-deep-strike-group.jpg" width="225" height="255" loading="lazy" alt="Ace of Angels Spotlight art: the Zethi Deep Strike Group"><figcaption>Spotlight: Zethi Deep Strike Group</figcaption></figure>
+    <figure><img class="frame" src="images/spotlight-fighters-of-the-commonwealth.jpg" width="225" height="255" loading="lazy" alt="Ace of Angels Spotlight art: Fighters of the Commonwealth"><figcaption>Spotlight: Fighters of the Commonwealth</figcaption></figure>
+  </div>
+  <p class="small">Screenshots and art from the official site,
   aceofangels.com, as archived by the Wayback Machine. They belong to their owners.</p>
 </section>
 
 <section>
-  <h2>What the project has done</h2>
+  <h2><span>What the project has done</span></h2>
   <div class="cards">
-    <div class="card"><h3>Six builds recovered</h3>
+    <div class="card frame"><h3 class="gold">Six builds recovered</h3>
       <p>Client versions 2.0.0 to 2.9.2, found on magazine cover discs and in
       public archives, each downloaded, hashed and versioned.</p></div>
-    <div class="card"><h3>Runs on Windows 11</h3>
+    <div class="card frame"><h3 class="gold">Runs on Windows 11</h3>
       <p>Crash, timing and display fixes applied to your own copy, all reversible.
       The offline training mission plays. Windows 10 has not been tried yet.</p></div>
-    <div class="card"><h3>Multiplayer again</h3>
+    <div class="card frame"><h3 class="gold">Multiplayer again</h3>
       <p>A new stand-in server, written from reverse engineering, lets friends
       dogfight over a LAN, with a host window and a Linux service.</p></div>
   </div>
@@ -177,7 +219,7 @@
 </section>
 
 <section>
-  <h2>Play it</h2>
+  <h2><span>Play it</span></h2>
   <ol>
     <li>Install <a href="https://www.python.org/downloads/">Python</a> 3.10 or later, with
       <strong>Add python.exe to PATH</strong> ticked.</li>
@@ -192,7 +234,7 @@
 </section>
 
 <section>
-  <h2>Help find what is missing</h2>
+  <h2><span>Help find what is missing</span></h2>
   <p>Still wanted: magazine cover discs from 2001 to 2004 with an Ace of Angels demo or
   beta, the early-2001 demo, manuals, screenshots, forum posts, and anything from former
   Flying Rock staff or players. Open a
@@ -205,6 +247,8 @@
 
 <footer>
   <div class="wrap">
+    <img class="banner" src="images/banner.jpg" width="468" height="60" loading="lazy"
+         alt="The original aceofangels.com link banner"><br>
     An unofficial, non-commercial preservation project, not affiliated with Flying Rock
     Enterprises. <em>Ace of Angels</em> and its art belong to their owners
     (<a href="https://github.com/JasonRucinski/ace-of-angels-preservation/blob/main/NOTICE.md">notice</a>).

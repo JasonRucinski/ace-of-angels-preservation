@@ -9,6 +9,14 @@ touches this folder or `docs/images/`, copying `docs/images/*.jpg` into
 
 - `index.html`: the page, with its title, description, link-preview tags and
   a schema.org `VideoGame` description of the game.
+- The look follows the official site, aceofangels.com (2001–2006), as its
+  own art shows it: black pages, gold metallic small-caps titles in Cinzel
+  (a Trajan-style face, from Google Fonts; "A Living Game" and the
+  "AceofAngels.com" banner used this style), blue bracketed section headers
+  after the site's `[ News ]` header image, and framed panels like its
+  "Spotlight" art. The old pages' HTML could not be fetched when this was
+  made, so colours were sampled from the site's images in `docs/images/`,
+  not from its stylesheet.
 - `og-image.jpg`: the 1280×640 link-preview image, also suitable for the
   repository's social preview (Settings → Social preview). Made from
   `docs/images/screenshot-flight.jpg` and `docs/images/logo.jpg`.
