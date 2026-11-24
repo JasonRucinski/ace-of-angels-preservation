@@ -14,7 +14,7 @@
 <p align="center">
   <img alt="Era: 2000–2006" src="https://img.shields.io/badge/era-2000%E2%80%932006-6b4f9e">
   <img alt="Builds recovered: 6" src="https://img.shields.io/badge/builds%20recovered-6-c9a227">
-  <img alt="Playable on Windows 11; Windows 10 untested" src="https://img.shields.io/badge/playable-Windows%2011-2b7bb9">
+  <img alt="Playable on Windows 11" src="https://img.shields.io/badge/playable-Windows%2011-2b7bb9">
   <img alt="Multiplayer: LAN; VPN untested" src="https://img.shields.io/badge/multiplayer-LAN%20%C2%B7%20VPN%20untested-3a9a5b">
   <a href="LICENSE"><img alt="Licence: MIT" src="https://img.shields.io/badge/licence-MIT-555"></a>
 </p>
@@ -83,7 +83,7 @@ Its servers went dark, and the company was dissolved in 2011.
 | | |
 |---|---|
 | 📦 **Builds** | Six client versions recovered, hashed and versioned: full installers 2.0.0, 2.7.1, 2.8.0, 2.8.2 and 2.9.2, plus a 2.3.1 replacement client. Sources and hashes: [`manifest/downloads.json`](manifest/downloads.json). |
-| 🎮 **Playable today** | The 2.9.2 client runs on Windows 11 with crash, timing and display fixes, and the offline training mission plays (Windows 10 has not been tried). |
+| 🎮 **Playable today** | The 2.9.2 client runs on Windows 11 with crash, timing and display fixes, and the offline training mission plays. |
 | 🌐 **Multiplayer** | A new stand-in server, written from reverse engineering, lets friends dogfight over a LAN (a private VPN is implemented but untested): guns, missiles, kills, scoreboard, ship changes, power-ups and a host window. The client can load all 20 recovered map layouts; 11 of them have real content ([which maps](docs/STATUS.md#maps)). |
 | 🐧 **Dedicated Linux host** | An unattended systemd service with automatic map rotation, kill/time limits, admission recycling, a stalled-process watchdog and rotation state that survives reboot. [Setup and operation](docs/host/linux.md). |
 | 📜 **History** | Magazine coverage, company records, trademarks, the old website and forums (restored from the Wayback Machine), and the state of revival attempts. |
@@ -122,7 +122,7 @@ document, by reader: [docs/README.md](docs/README.md).
 
 ## ⚡ Quick start
 
-On Windows 11 (Windows 10 has not been tried yet):
+On Windows 11:
 
 1. Install [Python](https://www.python.org/downloads/) 3.10 or later, with
    **Add python.exe to PATH** ticked. No packages are needed.
