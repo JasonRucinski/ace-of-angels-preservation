@@ -1,13 +1,14 @@
 <p align="center">
   <img src="docs/images/logo.jpg"
-       alt="The Ace of Angels logo: a gold A over a ring, with the word Angels" width="150">
+       alt="Ace of Angels game logo (Flying Rock Enterprises): a gold A over a ring, with the word Angels" width="150">
 </p>
 
-<h1 align="center">Ace of Angels preservation project</h1>
+<h1 align="center">Ace of Angels (2002 space combat game): preservation project</h1>
 
 <p align="center">
   <em>Recovering, documenting and playing again</em> Ace of Angels, <em>the online 3D
-  space-combat sim by Flying Rock Enterprises (2000–2006).</em>
+  space combat sim by Flying Rock Enterprises of Marietta, Georgia, winner of
+  Technical Excellence at the 2002 Independent Games Festival.</em>
 </p>
 
 <p align="center">
@@ -29,14 +30,15 @@
 
 <p align="center">
   <img src="docs/images/screenshot-flight.jpg"
-       alt="In-game screenshot: a fighter skims a large hull, lit by a blue flare" width="820">
+       alt="Ace of Angels space combat screenshot: a fighter skims a large hull, lit by a blue flare" width="820">
   <br>
   <sub>In flight, from the screenshot gallery on the official site, aceofangels.com.</sub>
 </p>
 
 > [!NOTE]
-> Not to be confused with the K-pop group AOA ("Ace of Angels"). Searching?
-> Pair the name with "Flying Rock" or "space".
+> This is *Ace of Angels*, the 2002 PC space combat sim by Flying Rock
+> Enterprises, not the K-pop group AOA ("Ace of Angels"). Searching? Pair the
+> name with "Flying Rock" or "space".
 
 ## 🚀 The game
 
@@ -51,23 +53,23 @@ Its servers went dark, and the company was dissolved in 2011.
 <table>
   <tr>
     <td width="50%"><img src="docs/images/screenshot-asteroids.jpg"
-         alt="Screenshot: a fighter among asteroids, with the ship systems and damage panels open"></td>
+         alt="Ace of Angels screenshot: a fighter among asteroids, with the ship systems and damage panels open"></td>
     <td width="50%"><img src="docs/images/screenshot-asteroid-base.jpg"
-         alt="Screenshot: green fighters docked at a station built on an asteroid"></td>
+         alt="Ace of Angels screenshot: green fighters docked at a station built on an asteroid"></td>
   </tr>
   <tr>
     <td width="50%"><img src="docs/images/screenshot-strafing.jpg"
-         alt="Screenshot: a fighter strafes across an asteroid's surface, with the weapons config panel open"></td>
+         alt="Ace of Angels screenshot: a fighter strafes across an asteroid's surface, with the weapons config panel open"></td>
     <td width="50%"><img src="docs/images/screenshot-hangar.jpg"
-         alt="Screenshot: a fighter inside a station hangar bay"></td>
+         alt="Ace of Angels screenshot: a fighter inside a station hangar bay"></td>
   </tr>
 </table>
 
 <p align="center">
   <img src="docs/images/fighter-shrike.jpg"
-       alt="Render of the Shrike fighter" height="190">
+       alt="Ace of Angels Shrike fighter render" height="190">
   <img src="docs/images/fighter-grathven.jpg"
-       alt="Render of the Grathven fighter" height="190">
+       alt="Ace of Angels Grathven fighter render" height="190">
   <img src="docs/images/spotlight-zethi-deep-strike-group.jpg"
        alt="Promotional art: the Zethi Deep Strike Group" height="190">
   <img src="docs/images/spotlight-fighters-of-the-commonwealth.jpg"
@@ -120,7 +122,7 @@ document, by reader: [docs/README.md](docs/README.md).
 
 ## ⚡ Quick start
 
-On Windows 10/11:
+On Windows 11 (Windows 10 has not been tried yet):
 
 1. Install [Python](https://www.python.org/downloads/) 3.10 or later, with
    **Add python.exe to PATH** ticked. No packages are needed.
