@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://jasonrucinski.github.io/ace-of-angels-preservation/sitemap.xml
